@@ -6,10 +6,10 @@ This repo is the product. The public site is **not indexed yet** (`robots.txt` d
 
 ## Status
 
-- Spec frozen (scope, engine gates, pages, Wave 1 dossiers).
-- Snapshot engine runs locally: `python3 engine/snapshot.py`
-- GitHub → Vercel pipeline is the current milestone.
-- Location HTML from the wireframe is still pending.
+- Spec frozen. **Implementation contract for Codex:** `需求｜v1-Codex实现.md` (English stub: `CODEX-HANDOFF.md`).
+- Snapshot engine: `python3 engine/snapshot.py`
+- GitHub → Vercel is live and **noindex** (`https://northern-lights-tonight.vercel.app`).
+- Real product HTML (forecast pages, near-me, guides) is the next build, not this stub.
 
 ## Develop
 
