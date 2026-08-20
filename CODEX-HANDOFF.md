@@ -13,6 +13,9 @@ Then implement it in this repo (already on GitHub + Vercel). Do not start a new 
 - Homepage SSR must be the same for everyone (no IP city verdict).
 - State page headline = `primary_verdict_point` (Oregon = Baker City). Never max() sample points.
 - All verdicts and the 15-row US table must be in server HTML.
+- `/view` with no snapshot file → UNKNOWN only. Never compute aurora on the request path.
+- Unknown `/forecast/[slug]` → 404. Alias Boston→massachusetts etc. before routing.
+- Titles: section 5 of the Chinese contract (no “Live” / “Near You” on home).
 
 ## Done when
 

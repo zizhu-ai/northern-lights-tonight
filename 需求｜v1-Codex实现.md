@@ -6,7 +6,13 @@
 **生产：** https://northern-lights-tonight.vercel.app（已接 GitHub `main`）  
 **语言：** 页面全部美式英语。`html lang="en-US"`。
 
-本文件是 **Codex 的实现合同**。细则以引用文档为准，冲突时以本文件「冻结」条款为准。
+本文件是 **Codex 的实现合同**。细则以引用文档为准，冲突时以本文件「冻结」条款为准。线框只决定空间；Title、路由、`/view` 无快照时的行为以本节为准。
+
+**2026-08-20 线框审计后冻结（三条）：**
+
+1. **`/view` 无该点快照 → 只渲染 UNKNOWN**（南纬用独立「不可用」文案）。禁止请求时现算、禁止在 Vercel 跑 Python 引擎、禁止浏览器打 NOAA。线框里 Springfield `NO` 仅表示「若已有快照」。`FORECAST_FAR` / 远窗不 GO 是引擎单测，不依赖为任意坐标现算。  
+2. **路由只留一条：** 吸收表命中 → `/forecast/[slug]`；美国北半球非白名单 → `/view?lat=&lng=&name=`（lat/lng 三位小数）；南纬拒绝、不算 GO；**Wave 1 以外的 `/forecast/[slug]` 一律 404**（不要内部改写、不要 SSG 空壳）。`generateStaticParams` 仅 15 个 slug。  
+3. **文案与壳：** Title/OG = 本文第 5 节；`/view` 用第 4.1 节全站壳；结论卡字段 = 第 4.3 节（含 Confidence、Main issue）；答案段与卡同一事实。桌面右栏可放 Nearby 链，但主栏仍按 1→8，右栏不得替代小时轴/Why。
 
 | 文档 | 用途 |
 |---|---|
@@ -48,7 +54,7 @@ Codex 要做的是 **把 stub 换成线框里的真产品页**，并让快照在
 | URL | 索引（本轮） | 说明 |
 |---|---|---|
 | `/` | noindex | 主词枢纽。SSR 美国 15 地表。**禁止**按 IP/GPS 改 H1/主答案/OG |
-| `/forecast/[slug]` | noindex | 仅 Wave 1 这 15 个 slug；其它 slug → 404 或内部改写到 `/view`，**不要**生成可抓取空壳 |
+| `/forecast/[slug]` | noindex | 仅 Wave 1 这 15 个 slug；其它 slug **一律 404** |
 | `/near-me` | noindex | ZIP/城市/定位工具。提交后 **跳走**。`/near-me?*` 一律 noindex |
 | `/view` | noindex,follow | 非白名单坐标。无百科套话 |
 | `/guides/best-time-to-see-northern-lights` | noindex | 常青 |
@@ -70,7 +76,12 @@ Wave 1 slug（仅这些 forecast URL）：
 - Salt Lake City → `utah`
 - Northern Michigan → `michigan`
 
-路由：白名单 → `/forecast/[slug]`；其余美国北半球点 → `/view?lat=&lng=&name=`（规范化到小数点 3 位，避免无穷 URL）；南纬拒绝。
+路由（Find place / near-me / 直打 URL 同一套）：
+
+- 吸收表或 Wave 1 slug → `/forecast/[slug]`
+- 美国北半球、未建页 → `/view?lat=&lng=&name=`（lat/lng 四舍五入到 3 位小数，同一点同一 URL）
+- 南纬 → 不生成可算 GO 的页；可 404 或 view 上「not available in the southern hemisphere」
+- `/forecast/boston` 等非白名单 slug → **404**
 
 ---
 
@@ -94,7 +105,7 @@ Wave 1 slug（仅这些 forecast URL）：
 Vercel 构建读仓库里的 JSON，不会自己跑 Python。增加 GitHub Action：
 
 - 每 **20 分钟**（及 `workflow_dispatch`）跑 `python3 engine/snapshot.py`
-- 若 `snapshots/` 有实质变化则 commit + push `main`（或只 push snapshots 分支再部署；优先直接 push `main`，消息 `chore: refresh aurora snapshots`）
+- 若 `snapshots/` 有实质变化则 commit + **只 push `main`**，消息 `chore: refresh aurora snapshots`（不要第二条 snapshots 分支）
 - 用 `GITHUB_TOKEN`；配置 `contents: write`
 - 失败要在 Actions 里可见，不要静默
 - 不要提交 `engine/.cache/`
@@ -110,7 +121,7 @@ Vercel 构建读仓库里的 JSON，不会自己跑 Python。增加 GitHub Actio
 ### 4.1 全站壳
 
 - 顶栏：字标 → `/`；桌面链 Tonight / Near me / Guides；右上 Find place。
-- Find place：城市/州/ZIP + Use my location。**只有点击后才请求 GPS。** 命中白名单 → `/forecast/...`，否则 `/view`。
+- Find place：城市/州/ZIP + Use my location。**只有点击后才请求 GPS。** 吸收表或白名单 → `/forecast/[slug]`，美国其它点 → `/view?lat=&lng=&name=`。
 - 页脚：Tonight · Near me · Guides · How we decide · Not affiliated with NOAA。
 - 无登录。广告不做。
 - IP **不得**写入 SSR、H1、OG、JSON-LD、结论卡。客户端可把猜测城市放进搜索框且可改。
@@ -134,6 +145,8 @@ Vercel 构建读仓库里的 JSON，不会自己跑 Python。增加 GitHub Actio
 
 **第一屏（手机）：** H1 + 答案段 + 结论卡（含 Share）。小时轴紧挨卡下，可跨折页，必须在 SSR HTML。
 
+结论卡字段（不可删语义）：status 大词、一句人话、Best window、Main issue、Look north、**Confidence**、Updated、Share。
+
 答案段与卡同一事实，例如：
 
 ```
@@ -142,7 +155,6 @@ Best window 10:40 PM–12:10 AM.
 Main issue: mixed clouds.
 ```
 
-结论卡字段：status 大词、一句人话、Best window、Main issue、Look north、Confidence、Updated、Share。  
 过期 → UNKNOWN，禁止显示旧 GO。
 
 其下顺序：
@@ -176,9 +188,13 @@ H1：`Northern Lights Near Me`（不要用 Can You See Tonight）。
 
 ### 4.5 `/view`
 
-`Tonight near {Name}`。结论卡 + 小时 + Why。一句：live reading, not a full local guide。链最近 Wave 1 州/城。无 FAQ 套话。
+全站壳与 4.1 相同（含 Tonight / Near me / Guides），不要裁成只有 Find place。
 
-无档案远窗：最多 MAYBE + FORECAST_FAR。南纬：明确不可用，不要算 GO。
+H1：`Tonight near {Name}`。有快照：结论卡 + 小时 + Why。无 FAQ 套话。链最近 Wave 1 州/城。
+
+**无该坐标快照：只渲染 UNKNOWN + Try again，禁止现算。** 不要写「This is a live reading」当默认句；有快照时可以说 live reading, not a full local guide。
+
+无档案远窗（引擎侧、若将来为某点生成了快照）：最多 MAYBE + FORECAST_FAR，禁止 GO。南纬：独立不可用文案，不算 GO。
 
 ### 4.6 Where
 
@@ -264,7 +280,8 @@ Share 文案：`{Place} tonight: {STATUS} · {window}`。
 - [ ] `/forecast/alaska` 与 `/forecast/fairbanks` 今晚卡主句不同
 - [ ] `/forecast/chicago` 链回 illinois，不把 Wisconsin 的 GO 写进芝加哥卡
 - [ ] `/near-me` 跳转到 forecast 或 view；带 query 的 near-me noindex
-- [ ] `/view` noindex，无套话百科
+- [ ] `/view` noindex,follow；无快照时 UNKNOWN，不现算；南纬不可用；全站壳完整
+- [ ] `/forecast/boston` 等非白名单 slug 404
 - [ ] 指南与 methodology 可打开，英文可读
 - [ ] `robots.txt` 仍 Disallow `/`；无 sitemap 提交
 - [ ] 无登录、无 `/map`、无百分数
