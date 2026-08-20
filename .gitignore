@@ -12,3 +12,5 @@ engine/.cache/
 审计/*-audit-first.*
 审计/*-audit-resume.*
 .env*.local
+.vercel
+.env*
