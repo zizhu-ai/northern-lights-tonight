@@ -1,0 +1,311 @@
+{
+  "location_slug": "wisconsin",
+  "headline_point_id": "madison",
+  "headline_point_name": "Madison",
+  "generated_at": "2026-08-20T12:06:13.174096+00:00",
+  "valid_until": "2026-08-20T01:18:00+00:00",
+  "status": "MAYBE",
+  "confidence": "low",
+  "best_window_start": "2026-08-20T20:45:00-05:00",
+  "best_window_end": "2026-08-20T21:45:00-05:00",
+  "main_obstacle": "FORECAST_FAR",
+  "main_obstacle_text": "Later hours rely on a coarser forecast, not the live oval.",
+  "reason_codes": [
+    "FORECAST_FAR",
+    "AURORA_NO_REACH"
+  ],
+  "look_toward": "north",
+  "answer_sentence": "MAYBE in Wisconsin (Madison area). Best window 8:45 PM–9:45 PM CDT. Main issue: Later hours rely on a coarser forecast, not the live oval.",
+  "sources": {
+    "ovation_obs": "2026-08-19T23:50:00+00:00",
+    "ovation_fcst": "2026-08-20T00:38:00+00:00",
+    "ovation_ok": false
+  },
+  "points": [
+    {
+      "id": "bayfield",
+      "name": "Bayfield",
+      "status": "NO",
+      "confidence": "high",
+      "aurora_reach": "weak",
+      "cloud_block": "socked",
+      "urban": false,
+      "main_obstacle": "AURORA_NO_REACH"
+    },
+    {
+      "id": "madison",
+      "name": "Madison",
+      "status": "MAYBE",
+      "confidence": "low",
+      "aurora_reach": "weak",
+      "cloud_block": "clear",
+      "urban": false,
+      "main_obstacle": "FORECAST_FAR"
+    },
+    {
+      "id": "milwaukee",
+      "name": "Milwaukee",
+      "status": "MAYBE",
+      "confidence": "low",
+      "aurora_reach": "weak",
+      "cloud_block": "clear",
+      "urban": true,
+      "main_obstacle": "FORECAST_FAR"
+    }
+  ],
+  "windows": [
+    {
+      "start": "2026-08-20T19:45:00-05:00",
+      "end": "2026-08-20T20:15:00-05:00",
+      "skip": true,
+      "status": null,
+      "aurora_reach": null,
+      "cloud_block": "clear",
+      "source": null,
+      "codes": [
+        "NOT_DARK_YET"
+      ]
+    },
+    {
+      "start": "2026-08-20T20:15:00-05:00",
+      "end": "2026-08-20T20:45:00-05:00",
+      "skip": true,
+      "status": null,
+      "aurora_reach": null,
+      "cloud_block": "clear",
+      "source": null,
+      "codes": [
+        "NOT_DARK_YET"
+      ]
+    },
+    {
+      "start": "2026-08-20T20:45:00-05:00",
+      "end": "2026-08-20T21:15:00-05:00",
+      "skip": false,
+      "status": "MAYBE",
+      "aurora_reach": "weak",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "FORECAST_FAR"
+      ]
+    },
+    {
+      "start": "2026-08-20T21:15:00-05:00",
+      "end": "2026-08-20T21:45:00-05:00",
+      "skip": false,
+      "status": "MAYBE",
+      "aurora_reach": "weak",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "FORECAST_FAR"
+      ]
+    },
+    {
+      "start": "2026-08-20T21:45:00-05:00",
+      "end": "2026-08-20T22:15:00-05:00",
+      "skip": false,
+      "status": "NO",
+      "aurora_reach": "none",
+      "cloud_block": "mixed",
+      "source": "kp_forecast",
+      "codes": [
+        "AURORA_NO_REACH"
+      ]
+    },
+    {
+      "start": "2026-08-20T22:15:00-05:00",
+      "end": "2026-08-20T22:45:00-05:00",
+      "skip": false,
+      "status": "NO",
+      "aurora_reach": "none",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "AURORA_NO_REACH"
+      ]
+    },
+    {
+      "start": "2026-08-20T22:45:00-05:00",
+      "end": "2026-08-20T23:15:00-05:00",
+      "skip": false,
+      "status": "NO",
+      "aurora_reach": "none",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "AURORA_NO_REACH"
+      ]
+    },
+    {
+      "start": "2026-08-20T23:15:00-05:00",
+      "end": "2026-08-20T23:45:00-05:00",
+      "skip": false,
+      "status": "NO",
+      "aurora_reach": "none",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "AURORA_NO_REACH"
+      ]
+    },
+    {
+      "start": "2026-08-20T23:45:00-05:00",
+      "end": "2026-08-21T00:15:00-05:00",
+      "skip": false,
+      "status": "NO",
+      "aurora_reach": "none",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "AURORA_NO_REACH"
+      ]
+    },
+    {
+      "start": "2026-08-21T00:15:00-05:00",
+      "end": "2026-08-21T00:45:00-05:00",
+      "skip": false,
+      "status": "NO",
+      "aurora_reach": "none",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "AURORA_NO_REACH"
+      ]
+    },
+    {
+      "start": "2026-08-21T00:45:00-05:00",
+      "end": "2026-08-21T01:15:00-05:00",
+      "skip": false,
+      "status": "NO",
+      "aurora_reach": "none",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "AURORA_NO_REACH"
+      ]
+    },
+    {
+      "start": "2026-08-21T01:15:00-05:00",
+      "end": "2026-08-21T01:45:00-05:00",
+      "skip": false,
+      "status": "NO",
+      "aurora_reach": "none",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "AURORA_NO_REACH"
+      ]
+    },
+    {
+      "start": "2026-08-21T01:45:00-05:00",
+      "end": "2026-08-21T02:15:00-05:00",
+      "skip": false,
+      "status": "NO",
+      "aurora_reach": "none",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "AURORA_NO_REACH"
+      ]
+    },
+    {
+      "start": "2026-08-21T02:15:00-05:00",
+      "end": "2026-08-21T02:45:00-05:00",
+      "skip": false,
+      "status": "NO",
+      "aurora_reach": "none",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "AURORA_NO_REACH"
+      ]
+    },
+    {
+      "start": "2026-08-21T02:45:00-05:00",
+      "end": "2026-08-21T03:15:00-05:00",
+      "skip": false,
+      "status": "NO",
+      "aurora_reach": "none",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "AURORA_NO_REACH"
+      ]
+    },
+    {
+      "start": "2026-08-21T03:15:00-05:00",
+      "end": "2026-08-21T03:45:00-05:00",
+      "skip": false,
+      "status": "NO",
+      "aurora_reach": "none",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "AURORA_NO_REACH"
+      ]
+    },
+    {
+      "start": "2026-08-21T03:45:00-05:00",
+      "end": "2026-08-21T04:15:00-05:00",
+      "skip": false,
+      "status": "NO",
+      "aurora_reach": "none",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "AURORA_NO_REACH"
+      ]
+    },
+    {
+      "start": "2026-08-21T04:15:00-05:00",
+      "end": "2026-08-21T04:45:00-05:00",
+      "skip": false,
+      "status": "NO",
+      "aurora_reach": "none",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "AURORA_NO_REACH"
+      ]
+    },
+    {
+      "start": "2026-08-21T04:45:00-05:00",
+      "end": "2026-08-21T05:15:00-05:00",
+      "skip": false,
+      "status": "NO",
+      "aurora_reach": "none",
+      "cloud_block": "mixed",
+      "source": "kp_forecast",
+      "codes": [
+        "AURORA_NO_REACH"
+      ]
+    },
+    {
+      "start": "2026-08-21T05:15:00-05:00",
+      "end": "2026-08-21T05:45:00-05:00",
+      "skip": true,
+      "status": null,
+      "aurora_reach": null,
+      "cloud_block": "socked",
+      "source": null,
+      "codes": [
+        "NOT_DARK_YET"
+      ]
+    },
+    {
+      "start": "2026-08-21T05:45:00-05:00",
+      "end": "2026-08-21T06:15:00-05:00",
+      "skip": true,
+      "status": null,
+      "aurora_reach": null,
+      "cloud_block": "socked",
+      "source": null,
+      "codes": [
+        "NOT_DARK_YET"
+      ]
+    }
+  ],
+  "seo_indexable": false
+}

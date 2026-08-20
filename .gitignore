@@ -1,0 +1,14 @@
+node_modules/
+.next/
+out/
+engine/.cache/
+.vercel/
+.DS_Store
+*.log
+审计/*.raw
+审计/*.err
+审计/*.last
+审计/*-audit.meta
+审计/*-audit-first.*
+审计/*-audit-resume.*
+.env*.local
