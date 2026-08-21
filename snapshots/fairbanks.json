@@ -2,8 +2,8 @@
   "location_slug": "fairbanks",
   "headline_point_id": "fairbanks",
   "headline_point_name": "Fairbanks",
-  "generated_at": "2026-08-21T19:58:56.233346+00:00",
-  "valid_until": "2026-08-21T20:23:56.233346+00:00",
+  "generated_at": "2026-08-21T20:27:08.077244+00:00",
+  "valid_until": "2026-08-21T20:52:08.077244+00:00",
   "status": "MAYBE",
   "confidence": "low",
   "best_window_start": "2026-08-22T00:45:00-08:00",
@@ -18,8 +18,8 @@
   "look_toward": "north",
   "answer_sentence": "MAYBE in Fairbanks. Best window 12:45 AM–3:15 AM AKDT. Main issue: Any display would likely stay low on the northern horizon.",
   "sources": {
-    "ovation_obs": "2026-08-21T19:51:00+00:00",
-    "ovation_fcst": "2026-08-21T20:48:00+00:00",
+    "ovation_obs": "2026-08-21T20:20:00+00:00",
+    "ovation_fcst": "2026-08-21T21:17:00+00:00",
     "ovation_ok": true
   },
   "points": [
