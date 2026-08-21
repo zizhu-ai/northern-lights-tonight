@@ -300,25 +300,25 @@ Share 文案：`content/ui-copy.json` 的 `share.template`。时间格式：en-U
 
 ## 8. 验收清单（本轮）
 
-- [ ] push `main` 后 Vercel 生产更新
-- [ ] GitHub Action 能刷新 `snapshots/` 并部署
-- [ ] `/` SSR 含 15 行状态+链接，无 IP 某城卡，Title 无 Live/Near You
-- [ ] `/forecast/colorado` 首屏含 Fort Collins（H1 或 kicker/`headline_point_name`）；points 含 Denver；过期为 UNKNOWN 但仍见 Fort Collins
-- [ ] `/forecast/oregon` 首屏含 Baker City（过期时也要见）
-- [ ] `/forecast/alaska` HTML 含 `Statewide · headline: Fairbanks Interior`；`/forecast/fairbanks` HTML **不含**该句
-- [ ] `/forecast/chicago` 链回 illinois，不把 Wisconsin 的 GO 写进芝加哥卡
-- [ ] `/near-me` 跳转到 forecast 或 view；带 query 的 near-me noindex
-- [ ] `/view` noindex,follow；无快照时 UNKNOWN，不现算；南纬不可用；全站壳完整
-- [ ] `/forecast/boston` 首屏 HTML 含 Boston 文案与 Massachusetts CTA；其它未知 slug 404
-- [ ] 指南与 methodology 可打开，英文可读
-- [ ] `robots.txt` 仍 Disallow `/`；无 sitemap 提交
-- [ ] 无登录、无 `/map`、无百分数
-- [ ] 手机地点页：视口 **375×667 与 390×844**，不滚动即可见 H1、status 大词、Best window 整行；答案段允许被折页截断
-- [ ] 快照在 `valid_until` 之内：任意时刻打开 `/forecast/colorado`，结论卡 **不是** `stale_main_issue`（TTL = `generated_at + 25 分钟`，不被 OVATION 产品年龄截到写入当时就过期；NOAA 落后时仍可显示引擎 NO/MAYBE/UNKNOWN）
-- [ ] 皮肤为浅页 + 夜卡（Inter + Newsreader）；不是 stub 全黑页
-- [ ] `lat < 0` 的 `/view` 为 UNAVAILABLE，不 404、不算 GO
-- [ ] 指南与 methodology 正文来自 `content/guides/*.md`，不是模型现写
-- [ ] 搜空 / GPS 拒绝 / 未知 ZIP 用 `content/ui-copy.json`，不出现「你在某城今晚 MAYBE」
+- [x] push `main` 后 Vercel 生产更新
+- [x] GitHub Action 能刷新 `snapshots/` 并部署（已有 `workflow_dispatch` 成功；cron 尚未出现第二次 run）
+- [x] `/` SSR 含 15 行状态+链接，无 IP 某城卡，Title 无 Live/Near You
+- [x] `/forecast/colorado` 首屏含 Fort Collins（H1 或 kicker/`headline_point_name`）；points 含 Denver；过期为 UNKNOWN 但仍见 Fort Collins
+- [x] `/forecast/oregon` 首屏含 Baker City（过期时也要见）
+- [x] `/forecast/alaska` HTML 含 `Statewide · headline: Fairbanks Interior`；`/forecast/fairbanks` HTML **不含**该句
+- [x] `/forecast/chicago` 链回 illinois，不把 Wisconsin 的 GO 写进芝加哥卡
+- [x] `/near-me` 跳转到 forecast 或 view；带 query 的 near-me noindex
+- [x] `/view` noindex,follow；无快照时 UNKNOWN，不现算；南纬不可用；全站壳完整
+- [x] `/forecast/boston` 首屏 HTML 含 Boston 文案与 Massachusetts CTA；其它未知 slug 404
+- [x] 指南与 methodology 可打开，英文可读
+- [x] `robots.txt` 仍 Disallow `/`；无 sitemap 提交
+- [x] 无登录、无 `/map`、无百分数
+- [x] 手机地点页：视口 **375×667 与 390×844**，不滚动即可见 H1、status 大词、Best window 整行；答案段允许被折页截断
+- [x] 快照在 `valid_until` 之内：任意时刻打开 `/forecast/colorado`，结论卡 **不是** `stale_main_issue`（TTL = `generated_at + 25 分钟`，不被 OVATION 产品年龄截到写入当时就过期；NOAA 落后时仍可显示引擎 NO/MAYBE/UNKNOWN）
+- [x] 皮肤为浅页 + 夜卡（Inter + Newsreader）；不是 stub 全黑页
+- [x] `lat < 0` 的 `/view` 为 UNAVAILABLE，不 404、不算 GO
+- [x] 指南与 methodology 正文来自 `content/guides/*.md`，不是模型现写
+- [x] 搜空 / GPS 拒绝 / 未知 ZIP 用 `content/ui-copy.json`，不出现「你在某城今晚 MAYBE」
 
 ---
 
