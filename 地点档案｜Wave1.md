@@ -290,7 +290,7 @@
 
 **光污染：** Chicago is Bortle-class urban core. The lakefront looking north over Lake Michigan is slightly less obstructed than looking over the city, but skyglow is still severe.
 
-**要不要出城：** Yes. Downtown, the Loop, and the inner neighborhoods are the wrong place to stand. If the storm is strong, get north into southern Wisconsin or at least far enough from the skyline that the northern horizon is not orange.
+**要不要出城：** Downtown, the Loop, and the inner neighborhoods are the wrong place to stand. If you go out anyway on a strong storm, get north into southern Wisconsin or at least far enough from the skyline that the northern horizon is not orange.
 
 **本地障碍：** Extreme light pollution; lake-effect and marine clouds; horizon haze; a mid-latitude oval that only reaches the city in strong storms.
 
@@ -782,7 +782,7 @@
 
 **光污染：** Fairbanks and Anchorage are small compared with Lower 48 metros but still worth leaving. Interior dark sites beat both cities. Southeast Alaska is not a light problem — it is a rain problem.
 
-**要不要出城：** In Interior Alaska, yes: get out of Fairbanks glow (the city page covers that). Statewide, picking the Interior over Juneau matters more than picking a hill inside Anchorage.
+**要不要出城：** In Interior Alaska, get out of Fairbanks glow (the city page covers that). Statewide, picking the Interior over Juneau matters more than picking a hill inside Anchorage.
 
 **本地障碍：** Midnight sun from roughly May through late July; Southeast rain and cloud; Anchorage weather vs Interior cold/clear; ice fog and inversions around Fairbanks in deep winter.
 
@@ -849,7 +849,7 @@
 
 **光污染：** Fairbanks is a small city with a noticeable winter dome, especially in cold inversions. Local high points and dark roads outside town (Murphy Dome, Pedro Dome, Chena country) are the usual advice — named as regions, not as parking instructions.
 
-**要不要出城：** Yes, even here. Downtown Fairbanks is good enough on a strong overhead display and poor for a faint one. Get away from town lights and look north to east, which is the usual oval direction.
+**要不要出城：** Even here, downtown Fairbanks is good enough on a strong overhead display and poor for a faint one. Get away from town lights and look north to east, which is the usual oval direction.
 
 **本地障碍：** Not dark from late May through late July; ice fog and low cloud in deep winter; temperature inversions trapping moisture and glow; tour-bus traffic at well-known pullouts on peak nights.
 

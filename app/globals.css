@@ -605,9 +605,8 @@ input {
   }
 
   .wordmark {
-    overflow: hidden;
+    flex-shrink: 0;
     font-size: 13px;
-    text-overflow: ellipsis;
   }
 
   .site-nav {
@@ -677,10 +676,8 @@ input {
 }
 
 @media (max-width: 389px) {
-  .wordmark > span:last-child {
-    max-width: 142px;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  .wordmark {
+    font-size: 12px;
   }
 
   .find-place__trigger {

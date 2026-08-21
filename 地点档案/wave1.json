@@ -412,7 +412,7 @@
         "michigan"
       ],
       "light_pollution_note": "Chicago is Bortle-class urban core. The lakefront looking north over Lake Michigan is slightly less obstructed than looking over the city, but skyglow is still severe.",
-      "leave_city_advice": "Yes. Downtown, the Loop, and the inner neighborhoods are the wrong place to stand. If the storm is strong, get north into southern Wisconsin or at least far enough from the skyline that the northern horizon is not orange.",
+      "leave_city_advice": "Downtown, the Loop, and the inner neighborhoods are the wrong place to stand. If you go out anyway on a strong storm, get north into southern Wisconsin or at least far enough from the skyline that the northern horizon is not orange.",
       "north_south_split": null,
       "local_obstacles": "Extreme light pollution; lake-effect and marine clouds; horizon haze; a mid-latitude oval that only reaches the city in strong storms.",
       "best_months_note": "Event-driven year-round; longer nights September–March. A clear, cold night after a storm is more useful than a warm, hazy one.",
@@ -1165,7 +1165,7 @@
         "seattle"
       ],
       "light_pollution_note": "Fairbanks and Anchorage are small compared with Lower 48 metros but still worth leaving. Interior dark sites beat both cities. Southeast Alaska is not a light problem — it is a rain problem.",
-      "leave_city_advice": "In Interior Alaska, yes: get out of Fairbanks glow (the city page covers that). Statewide, picking the Interior over Juneau matters more than picking a hill inside Anchorage.",
+      "leave_city_advice": "In Interior Alaska, get out of Fairbanks glow (the city page covers that). Statewide, picking the Interior over Juneau matters more than picking a hill inside Anchorage.",
       "north_south_split": "Interior (Fairbanks belt) sits under the oval. Anchorage still sees aurora often but weaker and lower on the horizon. Juneau and the Inside Passage are wet; clouds, not Kp, are the usual failure. The North Slope has polar night in winter and midnight sun in summer — not the default tourist play.",
       "local_obstacles": "Midnight sun from roughly May through late July; Southeast rain and cloud; Anchorage weather vs Interior cold/clear; ice fog and inversions around Fairbanks in deep winter.",
       "best_months_note": "Practical viewing is late August through mid-April. September and March are the usual travel compromise (dark enough, less brutal than December). Tonight in June is almost always a darkness no, even if the oval is active.",
@@ -1238,7 +1238,7 @@
         "maine"
       ],
       "light_pollution_note": "Fairbanks is a small city with a noticeable winter dome, especially in cold inversions. Local high points and dark roads outside town (Murphy Dome, Pedro Dome, Chena country) are the usual advice — named as regions, not as parking instructions.",
-      "leave_city_advice": "Yes, even here. Downtown Fairbanks is good enough on a strong overhead display and poor for a faint one. Get away from town lights and look north to east, which is the usual oval direction.",
+      "leave_city_advice": "Even here, downtown Fairbanks is good enough on a strong overhead display and poor for a faint one. Get away from town lights and look north to east, which is the usual oval direction.",
       "north_south_split": null,
       "local_obstacles": "Not dark from late May through late July; ice fog and low cloud in deep winter; temperature inversions trapping moisture and glow; tour-bus traffic at well-known pullouts on peak nights.",
       "best_months_note": "Late August to mid-April. September and March are the common trip months. December–January are darkest and coldest. Solstice weeks are a darkness no.",
