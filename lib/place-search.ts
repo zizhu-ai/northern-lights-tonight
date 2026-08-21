@@ -95,7 +95,12 @@ export function viewRoute(lat: number, lng: number, name: string): string {
   return `/view?${params.toString()}`;
 }
 
-function haversineMiles(latA: number, lngA: number, latB: number, lngB: number): number {
+export function haversineMiles(
+  latA: number,
+  lngA: number,
+  latB: number,
+  lngB: number,
+): number {
   const toRadians = (degrees: number) => (degrees * Math.PI) / 180;
   const earthRadiusMiles = 3958.8;
   const deltaLat = toRadians(latB - latA);
