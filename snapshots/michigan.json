@@ -2,8 +2,8 @@
   "location_slug": "michigan",
   "headline_point_id": "traverse-city",
   "headline_point_name": "Traverse City",
-  "generated_at": "2026-08-21T11:18:23.582394+00:00",
-  "valid_until": "2026-08-21T11:43:23.582394+00:00",
+  "generated_at": "2026-08-21T11:45:59.022775+00:00",
+  "valid_until": "2026-08-21T12:10:59.022775+00:00",
   "status": "MAYBE",
   "confidence": "low",
   "best_window_start": "2026-08-21T22:45:00-04:00",
@@ -19,8 +19,8 @@
   "look_toward": "north",
   "answer_sentence": "MAYBE in Michigan (Traverse City area). Best window 10:45 PM–12:45 AM EDT. Main issue: Later hours rely on a coarser forecast, not the live oval.",
   "sources": {
-    "ovation_obs": "2026-08-21T11:10:00+00:00",
-    "ovation_fcst": "2026-08-21T12:04:00+00:00",
+    "ovation_obs": "2026-08-21T11:35:00+00:00",
+    "ovation_fcst": "2026-08-21T12:29:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -50,9 +50,9 @@
       "status": "MAYBE",
       "confidence": "low",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": null,
       "urban": true,
-      "main_obstacle": "FORECAST_FAR"
+      "main_obstacle": "DATA_MISSING_WEATHER"
     }
   ],
   "windows": [
