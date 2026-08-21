@@ -2,8 +2,8 @@
   "location_slug": "massachusetts",
   "headline_point_id": "newburyport",
   "headline_point_name": "Newburyport",
-  "generated_at": "2026-08-21T22:17:09.532797+00:00",
-  "valid_until": "2026-08-21T22:42:09.532797+00:00",
+  "generated_at": "2026-08-21T22:44:49.215420+00:00",
+  "valid_until": "2026-08-21T23:09:49.215420+00:00",
   "status": "NO",
   "confidence": "high",
   "best_window_start": null,
@@ -16,8 +16,8 @@
   "look_toward": "north",
   "answer_sentence": "NO (Newburyport area). Not worth a special trip tonight. Aurora activity is not expected to reach Massachusetts tonight.",
   "sources": {
-    "ovation_obs": "2026-08-21T22:10:00+00:00",
-    "ovation_fcst": "2026-08-21T23:07:00+00:00",
+    "ovation_obs": "2026-08-21T22:36:00+00:00",
+    "ovation_fcst": "2026-08-21T23:32:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -179,7 +179,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -191,7 +191,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -203,7 +203,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -215,7 +215,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "socked",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -227,7 +227,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "socked",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -239,7 +239,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "socked",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -251,7 +251,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "socked",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -263,7 +263,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "socked",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -275,7 +275,7 @@
       "skip": true,
       "status": null,
       "aurora_reach": null,
-      "cloud_block": "mixed",
+      "cloud_block": "socked",
       "source": null,
       "codes": [
         "NOT_DARK_YET"
@@ -287,7 +287,7 @@
       "skip": true,
       "status": null,
       "aurora_reach": null,
-      "cloud_block": "mixed",
+      "cloud_block": "socked",
       "source": null,
       "codes": [
         "NOT_DARK_YET"
@@ -299,7 +299,7 @@
       "skip": true,
       "status": null,
       "aurora_reach": null,
-      "cloud_block": "clear",
+      "cloud_block": "socked",
       "source": null,
       "codes": [
         "NOT_DARK_YET"

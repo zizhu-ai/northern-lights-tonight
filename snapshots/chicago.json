@@ -2,8 +2,8 @@
   "location_slug": "chicago",
   "headline_point_id": "chicago",
   "headline_point_name": "Chicago",
-  "generated_at": "2026-08-21T22:17:09.532797+00:00",
-  "valid_until": "2026-08-21T22:42:09.532797+00:00",
+  "generated_at": "2026-08-21T22:44:49.215420+00:00",
+  "valid_until": "2026-08-21T23:09:49.215420+00:00",
   "status": "NO",
   "confidence": "high",
   "best_window_start": null,
@@ -16,8 +16,8 @@
   "look_toward": "north",
   "answer_sentence": "NO. Not worth a special trip tonight. Aurora activity is not expected to reach Chicago tonight.",
   "sources": {
-    "ovation_obs": "2026-08-21T22:10:00+00:00",
-    "ovation_fcst": "2026-08-21T23:07:00+00:00",
+    "ovation_obs": "2026-08-21T22:36:00+00:00",
+    "ovation_fcst": "2026-08-21T23:32:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -27,7 +27,7 @@
       "status": "NO",
       "confidence": "high",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "socked",
       "urban": true,
       "main_obstacle": "AURORA_NO_REACH"
     }
@@ -39,7 +39,7 @@
       "skip": true,
       "status": null,
       "aurora_reach": null,
-      "cloud_block": "socked",
+      "cloud_block": "mixed",
       "source": null,
       "codes": [
         "NOT_DARK_YET"
@@ -63,7 +63,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "socked",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -75,7 +75,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "socked",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -87,7 +87,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "socked",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -99,7 +99,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -111,7 +111,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -279,7 +279,7 @@
       "skip": true,
       "status": null,
       "aurora_reach": null,
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "source": null,
       "codes": [
         "NOT_DARK_YET"
