@@ -2,11 +2,11 @@
   "location_slug": "alaska",
   "headline_point_id": "fairbanks",
   "headline_point_name": "Fairbanks",
-  "generated_at": "2026-08-21T08:41:18.735720+00:00",
-  "valid_until": "2026-08-21T09:06:18.735720+00:00",
+  "generated_at": "2026-08-21T09:19:48.543472+00:00",
+  "valid_until": "2026-08-21T09:44:48.543472+00:00",
   "status": "GO",
   "confidence": "high",
-  "best_window_start": "2026-08-21T02:15:00-08:00",
+  "best_window_start": "2026-08-21T02:45:00-08:00",
   "best_window_end": "2026-08-21T03:15:00-08:00",
   "main_obstacle": "AURORA_HORIZON_ONLY",
   "main_obstacle_text": "Any display would likely stay low on the northern horizon.",
@@ -16,10 +16,10 @@
     "FORECAST_FAR"
   ],
   "look_toward": "north",
-  "answer_sentence": "GO (Fairbanks area). Best window 2:15 AM–3:15 AM AKDT. Any display would likely stay low on the northern horizon.",
+  "answer_sentence": "GO (Fairbanks area). Best window 2:45 AM–3:15 AM AKDT. Any display would likely stay low on the northern horizon.",
   "sources": {
-    "ovation_obs": "2026-08-21T08:30:00+00:00",
-    "ovation_fcst": "2026-08-21T09:24:00+00:00",
+    "ovation_obs": "2026-08-21T09:09:00+00:00",
+    "ovation_fcst": "2026-08-21T10:04:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -38,47 +38,23 @@
       "name": "Anchorage",
       "status": "MAYBE",
       "confidence": "high",
-      "aurora_reach": "horizon",
+      "aurora_reach": "weak",
       "cloud_block": "clear",
       "urban": true,
-      "main_obstacle": "AURORA_HORIZON_ONLY"
+      "main_obstacle": "CLOUD_MIXED"
     },
     {
       "id": "juneau",
       "name": "Juneau",
       "status": "NO",
       "confidence": "high",
-      "aurora_reach": "horizon",
+      "aurora_reach": "weak",
       "cloud_block": "socked",
       "urban": false,
       "main_obstacle": "CLOUD_BLOCKED"
     }
   ],
   "windows": [
-    {
-      "start": "2026-08-21T00:15:00-08:00",
-      "end": "2026-08-21T00:45:00-08:00",
-      "skip": true,
-      "status": null,
-      "aurora_reach": null,
-      "cloud_block": "clear",
-      "source": null,
-      "codes": [
-        "NOT_DARK_YET"
-      ]
-    },
-    {
-      "start": "2026-08-21T00:45:00-08:00",
-      "end": "2026-08-21T01:15:00-08:00",
-      "skip": false,
-      "status": "MAYBE",
-      "aurora_reach": "weak",
-      "cloud_block": "mixed",
-      "source": "ovation",
-      "codes": [
-        "CLOUD_MIXED"
-      ]
-    },
     {
       "start": "2026-08-21T01:15:00-08:00",
       "end": "2026-08-21T01:45:00-08:00",
@@ -96,26 +72,23 @@
       "end": "2026-08-21T02:15:00-08:00",
       "skip": false,
       "status": "MAYBE",
-      "aurora_reach": "horizon",
+      "aurora_reach": "weak",
       "cloud_block": "mixed",
-      "source": "kp",
+      "source": "ovation",
       "codes": [
-        "AURORA_HORIZON_ONLY",
-        "CLOUD_MIXED",
-        "FORECAST_FAR"
+        "CLOUD_MIXED"
       ]
     },
     {
       "start": "2026-08-21T02:15:00-08:00",
       "end": "2026-08-21T02:45:00-08:00",
       "skip": false,
-      "status": "GO",
-      "aurora_reach": "horizon",
+      "status": "MAYBE",
+      "aurora_reach": "weak",
       "cloud_block": "clear",
-      "source": "kp",
+      "source": "ovation",
       "codes": [
-        "AURORA_HORIZON_ONLY",
-        "FORECAST_FAR"
+        "AURORA_HORIZON_ONLY"
       ]
     },
     {
