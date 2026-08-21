@@ -2,8 +2,8 @@
   "location_slug": "minnesota",
   "headline_point_id": "duluth",
   "headline_point_name": "Duluth",
-  "generated_at": "2026-08-21T10:20:34.566854+00:00",
-  "valid_until": "2026-08-21T10:45:34.566854+00:00",
+  "generated_at": "2026-08-21T10:55:25.040691+00:00",
+  "valid_until": "2026-08-21T11:20:25.040691+00:00",
   "status": "MAYBE",
   "confidence": "low",
   "best_window_start": "2026-08-21T21:45:00-05:00",
@@ -13,14 +13,13 @@
   "reason_codes": [
     "AURORA_NO_REACH",
     "AURORA_HORIZON_ONLY",
-    "CLOUD_MIXED",
     "FORECAST_FAR"
   ],
   "look_toward": "north",
   "answer_sentence": "MAYBE in Minnesota (Duluth area). Best window 9:45 PM–12:45 AM CDT. Main issue: Any display would likely stay low on the northern horizon.",
   "sources": {
-    "ovation_obs": "2026-08-21T10:11:00+00:00",
-    "ovation_fcst": "2026-08-21T11:03:00+00:00",
+    "ovation_obs": "2026-08-21T10:45:00+00:00",
+    "ovation_fcst": "2026-08-21T11:38:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -98,11 +97,10 @@
       "skip": false,
       "status": "MAYBE",
       "aurora_reach": "horizon",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": "kp_forecast",
       "codes": [
         "AURORA_HORIZON_ONLY",
-        "CLOUD_MIXED",
         "FORECAST_FAR"
       ]
     },
@@ -112,11 +110,10 @@
       "skip": false,
       "status": "MAYBE",
       "aurora_reach": "horizon",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": "kp_forecast",
       "codes": [
         "AURORA_HORIZON_ONLY",
-        "CLOUD_MIXED",
         "FORECAST_FAR"
       ]
     },
