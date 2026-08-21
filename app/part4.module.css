@@ -190,6 +190,22 @@
   line-height: 1.7;
 }
 
+.reader ul,
+.reader ol {
+  margin: 16px 0 0;
+  padding-left: 24px;
+  color: var(--ink-soft);
+  line-height: 1.7;
+}
+
+.reader li + li {
+  margin-top: 8px;
+}
+
+.reader code {
+  font-size: 0.9em;
+}
+
 .reader a {
   color: var(--ink);
   font-weight: 700;
