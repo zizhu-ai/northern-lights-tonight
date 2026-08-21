@@ -2,25 +2,24 @@
   "location_slug": "michigan",
   "headline_point_id": "traverse-city",
   "headline_point_name": "Traverse City",
-  "generated_at": "2026-08-21T13:54:26.681601+00:00",
-  "valid_until": "2026-08-21T14:19:26.681601+00:00",
+  "generated_at": "2026-08-21T14:25:11.175814+00:00",
+  "valid_until": "2026-08-21T14:50:11.175814+00:00",
   "status": "MAYBE",
   "confidence": "low",
   "best_window_start": "2026-08-21T22:45:00-04:00",
-  "best_window_end": "2026-08-22T01:15:00-04:00",
+  "best_window_end": "2026-08-22T01:45:00-04:00",
   "main_obstacle": "FORECAST_FAR",
   "main_obstacle_text": "Later hours rely on a coarser forecast, not the live oval.",
   "reason_codes": [
     "AURORA_NO_REACH",
     "FORECAST_FAR",
-    "CLOUD_MIXED",
-    "CLOUD_BLOCKED"
+    "CLOUD_MIXED"
   ],
   "look_toward": "north",
-  "answer_sentence": "MAYBE in Michigan (Traverse City area). Best window 10:45 PM–1:15 AM EDT. Main issue: Later hours rely on a coarser forecast, not the live oval.",
+  "answer_sentence": "MAYBE in Michigan (Traverse City area). Best window 10:45 PM–1:45 AM EDT. Main issue: Later hours rely on a coarser forecast, not the live oval.",
   "sources": {
-    "ovation_obs": "2026-08-21T13:43:00+00:00",
-    "ovation_fcst": "2026-08-21T14:41:00+00:00",
+    "ovation_obs": "2026-08-21T14:15:00+00:00",
+    "ovation_fcst": "2026-08-21T15:12:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -52,7 +51,7 @@
       "aurora_reach": "none",
       "cloud_block": "clear",
       "urban": true,
-      "main_obstacle": "CLOUD_MIXED"
+      "main_obstacle": "FORECAST_FAR"
     }
   ],
   "windows": [
@@ -62,7 +61,7 @@
       "skip": true,
       "status": null,
       "aurora_reach": null,
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": null,
       "codes": [
         "NOT_DARK_YET"
@@ -160,10 +159,9 @@
       "skip": false,
       "status": "MAYBE",
       "aurora_reach": "weak",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": "kp_forecast",
       "codes": [
-        "CLOUD_MIXED",
         "FORECAST_FAR"
       ]
     },
@@ -171,12 +169,13 @@
       "start": "2026-08-22T01:15:00-04:00",
       "end": "2026-08-22T01:45:00-04:00",
       "skip": false,
-      "status": "NO",
+      "status": "MAYBE",
       "aurora_reach": "weak",
-      "cloud_block": "socked",
+      "cloud_block": "mixed",
       "source": "kp_forecast",
       "codes": [
-        "CLOUD_BLOCKED"
+        "CLOUD_MIXED",
+        "FORECAST_FAR"
       ]
     },
     {
@@ -209,7 +208,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "socked",
+      "cloud_block": "mixed",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -245,7 +244,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -257,7 +256,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -269,7 +268,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"

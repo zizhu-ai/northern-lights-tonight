@@ -2,8 +2,8 @@
   "location_slug": "massachusetts",
   "headline_point_id": "newburyport",
   "headline_point_name": "Newburyport",
-  "generated_at": "2026-08-21T13:54:26.681601+00:00",
-  "valid_until": "2026-08-21T14:19:26.681601+00:00",
+  "generated_at": "2026-08-21T14:25:11.175814+00:00",
+  "valid_until": "2026-08-21T14:50:11.175814+00:00",
   "status": "NO",
   "confidence": "high",
   "best_window_start": null,
@@ -16,8 +16,8 @@
   "look_toward": "north",
   "answer_sentence": "NO (Newburyport area). Not worth a special trip tonight. Aurora activity is not expected to reach Massachusetts tonight.",
   "sources": {
-    "ovation_obs": "2026-08-21T13:43:00+00:00",
-    "ovation_fcst": "2026-08-21T14:41:00+00:00",
+    "ovation_obs": "2026-08-21T14:15:00+00:00",
+    "ovation_fcst": "2026-08-21T15:12:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -191,7 +191,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -203,7 +203,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -215,7 +215,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -227,7 +227,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -239,7 +239,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
