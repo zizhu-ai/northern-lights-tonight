@@ -22,6 +22,8 @@ DOSSIER = ROOT / "地点档案" / "wave1.json"
 OVATION_URL = "https://services.swpc.noaa.gov/json/ovation_aurora_latest.json"
 KP_URL = "https://services.swpc.noaa.gov/products/noaa-planetary-k-index-forecast.json"
 UA = "NorthernLightsTonight/0.1 (snapshot; local research)"
+# File TTL = our 10-minute refresh + deploy lag. NOAA product age is ovation_ok.
+SNAPSHOT_TTL = timedelta(minutes=25)
 
 REASON_COPY = {
     "AURORA_NO_REACH": "Aurora activity is not expected to reach {place} tonight.",
@@ -660,11 +662,7 @@ def snapshot_location(loc: dict, now_utc: datetime, ovation, kp_series, cloud_by
     head = next(p for p in points_out if p["id"] == headline_id)
 
     generated = now_utc
-    valid = generated + timedelta(minutes=25)
-    if ovation and ovation.get("fcst"):
-        cap = ovation["fcst"] + timedelta(minutes=40)
-        if valid > cap:
-            valid = cap
+    valid = generated + SNAPSHOT_TTL
 
     bw = head["best_window"]
     sentence = REASON_COPY.get(head["main_obstacle"], REASON_COPY["NONE"]).format(place=loc["name"])

@@ -97,7 +97,7 @@ Wave 1 slug（仅这些 forecast URL）：
 - 吸收表或 Wave 1 slug → `/forecast/[slug]`
 - 美国北半球、未建页 → `/view?lat=&lng=&name=`（lat/lng 四舍五入到 3 位小数，同一点同一 URL）
 - `lat < 0` → `/view?lat=&lng=&name=`，**UNAVAILABLE** 卡（`content/ui-copy.json` `south`）。不算 GO，不 404。无小时轴。
-- `/forecast/boston` 等非白名单 slug → **404**（吸收只发生在 Find place / near-me 提交时，不靠 rewrite）
+- `/forecast/boston` → 专用 not-found 页（首屏 HTML 即 `not_found.boston` + Massachusetts CTA，noindex）。其它非白名单 `/forecast/[slug]` → **404**。吸收只发生在 Find place / near-me 提交时，不靠 rewrite。`notFound()` 静态预渲染会吐空错误壳，所以波士顿不用 throw 404。
 
 ---
 
@@ -121,7 +121,8 @@ Wave 1 slug（仅这些 forecast URL）：
 Vercel 构建读仓库里的 JSON，不会自己跑 Python。增加 GitHub Action：
 
 - 每 **10 分钟**（及 `workflow_dispatch`）跑 `python3 engine/snapshot.py`
-- `valid_until` 默认 `generated_at + 25 分钟`，且不超过所用 OVATION Forecast Time + 40 分钟（与 `判断引擎｜门控规则.md` §10、`engine/snapshot.py` 一致）
+- `valid_until = generated_at + 25 分钟`（与 `判断引擎｜门控规则.md` §10、`engine/snapshot.py` 一致）。**不要**用 OVATION Forecast Time + 40 分钟截短文件 TTL。NOAA 过旧只走 `ovation_ok` / 近窗 UNKNOWN，不得把整份快照写成过期
+- 读快照的 `/`、`/forecast/[slug]`、Where 页：`revalidate = 600`，让 ISR 按刷新节奏重读 JSON，而不是只在 Vercel 重建时更新
 - 若 `snapshots/` 有变化则 commit（**含仅 `generated_at` / `valid_until` 变化**；安静夜也要提交，避免快照老化）+ **只 push `main`**，消息 `chore: refresh aurora snapshots`（不要第二条 snapshots 分支）
 - 用 `GITHUB_TOKEN`；配置 `contents: write`
 - 失败要在 Actions 里可见，不要静默
@@ -308,12 +309,12 @@ Share 文案：`content/ui-copy.json` 的 `share.template`。时间格式：en-U
 - [ ] `/forecast/chicago` 链回 illinois，不把 Wisconsin 的 GO 写进芝加哥卡
 - [ ] `/near-me` 跳转到 forecast 或 view；带 query 的 near-me noindex
 - [ ] `/view` noindex,follow；无快照时 UNKNOWN，不现算；南纬不可用；全站壳完整
-- [ ] `/forecast/boston` 等非白名单 slug 404
+- [ ] `/forecast/boston` 首屏 HTML 含 Boston 文案与 Massachusetts CTA；其它未知 slug 404
 - [ ] 指南与 methodology 可打开，英文可读
 - [ ] `robots.txt` 仍 Disallow `/`；无 sitemap 提交
 - [ ] 无登录、无 `/map`、无百分数
 - [ ] 手机地点页：视口 **375×667 与 390×844**，不滚动即可见 H1、status 大词、Best window 整行；答案段允许被折页截断
-- [ ] 快照在 `valid_until` 之内：任意时刻打开 `/forecast/colorado`，结论卡 **不是** `DATA_STALE` / `stale_main_issue`（依赖 10 分钟刷新 + 25 分钟 TTL）
+- [ ] 快照在 `valid_until` 之内：任意时刻打开 `/forecast/colorado`，结论卡 **不是** `stale_main_issue`（TTL = `generated_at + 25 分钟`，不被 OVATION 产品年龄截到写入当时就过期；NOAA 落后时仍可显示引擎 NO/MAYBE/UNKNOWN）
 - [ ] 皮肤为浅页 + 夜卡（Inter + Newsreader）；不是 stub 全黑页
 - [ ] `lat < 0` 的 `/view` 为 UNAVAILABLE，不 404、不算 GO
 - [ ] 指南与 methodology 正文来自 `content/guides/*.md`，不是模型现写
@@ -353,7 +354,7 @@ Share 文案：`content/ui-copy.json` 的 `share.template`。时间格式：en-U
 
 **Find place 匹配顺序：** 空输入 → `search_empty`；5 位数字 → ZIP；否则 aliases → Wave 1 名/slug → 其它 `places.keys`。`slug` 有值跳 forecast；仅坐标跳 view（`name` 用表里的 `name`）。GPS 成功：把 lat/lng 四舍五入到 3 位，在表里找最近的美国点（粗算即可），有 slug 用 slug，否则 view。GPS 失败不跳走。
 
-**404：** `/forecast/boston` 用 `not_found.boston` + 链 `/forecast/massachusetts`。其它未知 slug 用 `not_found.generic`。
+**404：** `/forecast/boston` 用 `not_found.boston` + 链 `/forecast/massachusetts`（专用静态页，首屏 HTML 就要有 CTA）。其它未知 slug 用 `not_found.generic`。
 
 ---
 

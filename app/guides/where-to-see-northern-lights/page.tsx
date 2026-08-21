@@ -12,6 +12,7 @@ import styles from "../../part4.module.css";
 const TITLE = "Where to See the Northern Lights in the US Tonight";
 
 export const dynamic = "force-static";
+export const revalidate = 600;
 
 export const metadata: Metadata = {
   title: TITLE,

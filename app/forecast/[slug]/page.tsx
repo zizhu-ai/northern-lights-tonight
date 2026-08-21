@@ -57,6 +57,7 @@ type ForecastState = {
 
 export const dynamic = "force-static";
 export const dynamicParams = false;
+export const revalidate = 600;
 
 export function generateStaticParams() {
   return WAVE_ONE_SLUGS.map((slug) => ({ slug }));
@@ -125,6 +126,7 @@ export default async function ForecastPage({ params }: PageProps) {
             place={dossier.name}
             alaskaKicker={slug === "alaska"}
             stale={state.stale}
+            tryAgain={!state.live}
           />
         </header>
 
