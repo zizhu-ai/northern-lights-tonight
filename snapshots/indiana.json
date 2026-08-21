@@ -2,8 +2,8 @@
   "location_slug": "indiana",
   "headline_point_id": "south-bend",
   "headline_point_name": "South Bend",
-  "generated_at": "2026-08-21T23:02:16.567282+00:00",
-  "valid_until": "2026-08-21T23:27:16.567282+00:00",
+  "generated_at": "2026-08-21T23:33:49.750898+00:00",
+  "valid_until": "2026-08-21T23:58:49.750898+00:00",
   "status": "NO",
   "confidence": "high",
   "best_window_start": null,
@@ -16,8 +16,8 @@
   "look_toward": "north",
   "answer_sentence": "NO (South Bend area). Not worth a special trip tonight. Aurora activity is not expected to reach Indiana tonight.",
   "sources": {
-    "ovation_obs": "2026-08-21T22:56:00+00:00",
-    "ovation_fcst": "2026-08-21T23:52:00+00:00",
+    "ovation_obs": "2026-08-21T23:25:00+00:00",
+    "ovation_fcst": "2026-08-22T00:22:00+00:00",
     "ovation_ok": true
   },
   "points": [
