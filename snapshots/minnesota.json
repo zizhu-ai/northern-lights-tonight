@@ -2,8 +2,8 @@
   "location_slug": "minnesota",
   "headline_point_id": "duluth",
   "headline_point_name": "Duluth",
-  "generated_at": "2026-08-21T18:57:37.749915+00:00",
-  "valid_until": "2026-08-21T19:22:37.749915+00:00",
+  "generated_at": "2026-08-21T19:24:13.538036+00:00",
+  "valid_until": "2026-08-21T19:49:13.538036+00:00",
   "status": "MAYBE",
   "confidence": "low",
   "best_window_start": "2026-08-21T23:15:00-05:00",
@@ -20,8 +20,8 @@
   "look_toward": "north",
   "answer_sentence": "MAYBE in Minnesota (Duluth area). Best window 11:15 PM–12:45 AM CDT. Main issue: Any display would likely stay low on the northern horizon.",
   "sources": {
-    "ovation_obs": "2026-08-21T18:50:00+00:00",
-    "ovation_fcst": "2026-08-21T19:48:00+00:00",
+    "ovation_obs": "2026-08-21T19:15:00+00:00",
+    "ovation_fcst": "2026-08-21T20:14:00+00:00",
     "ovation_ok": true
   },
   "points": [
