@@ -2,8 +2,8 @@
   "location_slug": "michigan",
   "headline_point_id": "traverse-city",
   "headline_point_name": "Traverse City",
-  "generated_at": "2026-08-21T07:11:49.984000+00:00",
-  "valid_until": "2026-08-21T07:36:49.984000+00:00",
+  "generated_at": "2026-08-21T07:58:51.968846+00:00",
+  "valid_until": "2026-08-21T08:23:51.968846+00:00",
   "status": "NO",
   "confidence": "high",
   "best_window_start": null,
@@ -16,20 +16,20 @@
   "look_toward": "north",
   "answer_sentence": "NO (Traverse City area). Not worth a special trip tonight. Aurora activity is not expected to reach Michigan tonight.",
   "sources": {
-    "ovation_obs": "2026-08-21T07:05:00+00:00",
-    "ovation_fcst": "2026-08-21T08:00:00+00:00",
+    "ovation_obs": "2026-08-21T07:50:00+00:00",
+    "ovation_fcst": "2026-08-21T08:45:00+00:00",
     "ovation_ok": true
   },
   "points": [
     {
       "id": "marquette",
       "name": "Marquette",
-      "status": "MAYBE",
-      "confidence": "low",
-      "aurora_reach": "weak",
-      "cloud_block": "mixed",
+      "status": "NO",
+      "confidence": "high",
+      "aurora_reach": "none",
+      "cloud_block": "socked",
       "urban": false,
-      "main_obstacle": "CLOUD_MIXED"
+      "main_obstacle": "AURORA_NO_REACH"
     },
     {
       "id": "traverse-city",
@@ -53,30 +53,6 @@
     }
   ],
   "windows": [
-    {
-      "start": "2026-08-21T02:45:00-04:00",
-      "end": "2026-08-21T03:15:00-04:00",
-      "skip": false,
-      "status": "NO",
-      "aurora_reach": "none",
-      "cloud_block": "clear",
-      "source": "ovation",
-      "codes": [
-        "AURORA_NO_REACH"
-      ]
-    },
-    {
-      "start": "2026-08-21T03:15:00-04:00",
-      "end": "2026-08-21T03:45:00-04:00",
-      "skip": false,
-      "status": "NO",
-      "aurora_reach": "none",
-      "cloud_block": "clear",
-      "source": "ovation",
-      "codes": [
-        "AURORA_NO_REACH"
-      ]
-    },
     {
       "start": "2026-08-21T03:45:00-04:00",
       "end": "2026-08-21T04:15:00-04:00",
@@ -108,7 +84,7 @@
       "status": "NO",
       "aurora_reach": "none",
       "cloud_block": "clear",
-      "source": "kp",
+      "source": "ovation",
       "codes": [
         "AURORA_NO_REACH"
       ]
