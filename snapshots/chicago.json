@@ -2,8 +2,8 @@
   "location_slug": "chicago",
   "headline_point_id": "chicago",
   "headline_point_name": "Chicago",
-  "generated_at": "2026-08-21T14:25:11.175814+00:00",
-  "valid_until": "2026-08-21T14:50:11.175814+00:00",
+  "generated_at": "2026-08-21T15:01:17.726355+00:00",
+  "valid_until": "2026-08-21T15:26:17.726355+00:00",
   "status": "NO",
   "confidence": "high",
   "best_window_start": null,
@@ -16,8 +16,8 @@
   "look_toward": "north",
   "answer_sentence": "NO. Not worth a special trip tonight. Aurora activity is not expected to reach Chicago tonight.",
   "sources": {
-    "ovation_obs": "2026-08-21T14:15:00+00:00",
-    "ovation_fcst": "2026-08-21T15:12:00+00:00",
+    "ovation_obs": "2026-08-21T14:49:00+00:00",
+    "ovation_fcst": "2026-08-21T15:47:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -87,7 +87,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -99,7 +99,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -111,7 +111,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -123,7 +123,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -159,7 +159,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
