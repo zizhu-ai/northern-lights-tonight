@@ -1,16 +1,16 @@
-"use client";
-
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 
 import copy from "@/content/ui-copy.json";
 
 import { PlaceSearchForm } from "./place-search-form";
 import styles from "@/app/part4.module.css";
 
-export function NotFoundContent() {
-  const pathname = usePathname();
-  const isBoston = pathname.toLowerCase().replace(/\/+$/, "") === "/forecast/boston";
+type NotFoundContentProps = {
+  variant?: "generic" | "boston";
+};
+
+export function NotFoundContent({ variant = "generic" }: NotFoundContentProps) {
+  const isBoston = variant === "boston";
 
   return (
     <main className={styles.notFound}>

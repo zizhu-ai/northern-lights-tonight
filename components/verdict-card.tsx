@@ -1,6 +1,7 @@
 import copy from "@/content/ui-copy.json";
 
 import { ShareButton } from "./share-button";
+import { TryAgainButton } from "./try-again-button";
 
 export type VerdictStatus = "GO" | "MAYBE" | "NO" | "UNKNOWN" | "UNAVAILABLE";
 export type VerdictConfidence = "high" | "medium" | "low";
@@ -14,6 +15,7 @@ type VerdictCardProps = {
   place?: string;
   alaskaKicker?: boolean;
   stale?: boolean;
+  tryAgain?: boolean;
 };
 
 const humanByStatus: Record<VerdictStatus, string> = {
@@ -39,6 +41,7 @@ export function VerdictCard({
   place,
   alaskaKicker = false,
   stale = false,
+  tryAgain = false,
 }: VerdictCardProps) {
   const displayStatus = stale ? "UNKNOWN" : status;
   const displayWindow =
@@ -86,7 +89,10 @@ export function VerdictCard({
 
       <div className="verdict-card__footer">
         <p>{updated}</p>
-        <ShareButton text={shareText} />
+        <div className="verdict-card__actions">
+          {tryAgain && displayStatus === "UNKNOWN" ? <TryAgainButton /> : null}
+          <ShareButton text={shareText} />
+        </div>
       </div>
     </section>
   );

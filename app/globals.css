@@ -480,6 +480,12 @@ input {
   gap: 16px;
 }
 
+.verdict-card__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .verdict-card__footer p {
   margin: 0;
   color: #aeb9c7;

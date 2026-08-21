@@ -33,6 +33,7 @@ export function FindPlace() {
   const triggerRef = useRef<HTMLButtonElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const panelRef = useRef<HTMLElement>(null);
+  const gpsGeneration = useRef(0);
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [error, setError] = useState<keyof typeof errorCopy | null>(null);
@@ -44,7 +45,7 @@ export function FindPlace() {
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        setOpen(false);
+        close();
         triggerRef.current?.focus();
       }
     };
@@ -53,6 +54,8 @@ export function FindPlace() {
   }, [open]);
 
   function close() {
+    gpsGeneration.current += 1;
+    setLocating(false);
     setOpen(false);
     setError(null);
   }
@@ -81,9 +84,11 @@ export function FindPlace() {
       return;
     }
 
+    const generation = ++gpsGeneration.current;
     setLocating(true);
     navigator.geolocation.getCurrentPosition(
       ({ coords }) => {
+        if (generation !== gpsGeneration.current) return;
         const lat = roundCoordinate(coords.latitude);
         const lng = roundCoordinate(coords.longitude);
         setLocating(false);
@@ -97,6 +102,7 @@ export function FindPlace() {
         router.push(routeForPlace(nearestPlace(lat, lng)));
       },
       (positionError) => {
+        if (generation !== gpsGeneration.current) return;
         setLocating(false);
         setError(positionError.code === 1 ? "gps_denied" : "gps_unavailable");
       },
@@ -131,7 +137,11 @@ export function FindPlace() {
         aria-expanded={open}
         aria-controls="find-place-panel"
         onClick={() => {
-          setOpen((current) => !current);
+          if (open) {
+            close();
+            return;
+          }
+          setOpen(true);
           setError(null);
         }}
       >
