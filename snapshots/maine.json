@@ -2,8 +2,8 @@
   "location_slug": "maine",
   "headline_point_id": "bangor",
   "headline_point_name": "Bangor",
-  "generated_at": "2026-08-21T16:04:56.768289+00:00",
-  "valid_until": "2026-08-21T16:29:56.768289+00:00",
+  "generated_at": "2026-08-21T16:47:13.948749+00:00",
+  "valid_until": "2026-08-21T17:12:13.948749+00:00",
   "status": "MAYBE",
   "confidence": "low",
   "best_window_start": "2026-08-21T22:45:00-04:00",
@@ -12,13 +12,14 @@
   "main_obstacle_text": "Later hours rely on a coarser forecast, not the live oval.",
   "reason_codes": [
     "AURORA_NO_REACH",
+    "CLOUD_MIXED",
     "FORECAST_FAR"
   ],
   "look_toward": "north",
   "answer_sentence": "MAYBE in Maine (Bangor area). Best window 10:45 PM–1:45 AM EDT. Main issue: Later hours rely on a coarser forecast, not the live oval.",
   "sources": {
-    "ovation_obs": "2026-08-21T15:56:00+00:00",
-    "ovation_fcst": "2026-08-21T16:52:00+00:00",
+    "ovation_obs": "2026-08-21T16:35:00+00:00",
+    "ovation_fcst": "2026-08-21T17:31:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -38,7 +39,7 @@
       "status": "MAYBE",
       "confidence": "low",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "urban": false,
       "main_obstacle": "FORECAST_FAR"
     },
@@ -48,9 +49,9 @@
       "status": "MAYBE",
       "confidence": "low",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": null,
       "urban": true,
-      "main_obstacle": "FORECAST_FAR"
+      "main_obstacle": "DATA_MISSING_WEATHER"
     }
   ],
   "windows": [
@@ -96,7 +97,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -108,7 +109,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -120,7 +121,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -132,7 +133,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -144,9 +145,10 @@
       "skip": false,
       "status": "MAYBE",
       "aurora_reach": "weak",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "source": "kp_forecast",
       "codes": [
+        "CLOUD_MIXED",
         "FORECAST_FAR"
       ]
     },
