@@ -1,4 +1,21 @@
 import type { Metadata } from "next";
+import { Inter, Newsreader } from "next/font/google";
+
+import { SiteFooter, SiteHeader } from "@/components/site-chrome";
+
+import "./globals.css";
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+const newsreader = Newsreader({
+  subsets: ["latin"],
+  variable: "--font-newsreader",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Northern Lights Tonight",
@@ -9,8 +26,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en-US">
-      <body style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif", margin: 0, background: "#0b1020", color: "#e8eef7" }}>
-        {children}
+      <body className={`${inter.variable} ${newsreader.variable}`}>
+        <SiteHeader />
+        <div className="site-content">{children}</div>
+        <SiteFooter />
       </body>
     </html>
   );
