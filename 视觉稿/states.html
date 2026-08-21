@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Visual mock · Verdict states</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@450;500;600;650;700;800&family=Newsreader:opsz,wght@16..72,500;16..72,600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="tokens.css" />
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html">Northern Lights Tonight</a>
+    <span class="kicker">UI · four verdicts</span>
+  </header>
+  <main class="page">
+    <h1 class="h1">Four cards, one skeleton</h1>
+    <p class="lead">Only the color, word, and a few fields change. Layout never rearranges. NO is gray, not alarm red. UNKNOWN is dashed-calm, not an error screen.</p>
+    <div class="gallery">
+      <section class="verdict verdict-go">
+        <div class="status-word">GO</div>
+        <p class="human">Conditions line up well enough to try.</p>
+        <dl class="meta">
+          <div><dt>Best window</dt><dd>11:00 PM – 1:20 AM</dd></div>
+          <div><dt>Main issue</dt><dd>None</dd></div>
+          <div><dt>Look</dt><dd>North</dd></div>
+          <div><dt>Confidence</dt><dd>High</dd></div>
+        </dl>
+        <div class="verdict-foot">
+          <span class="updated">Updated 4 minutes ago</span>
+          <button class="btn btn-ghost-dark btn-sm" type="button">Share</button>
+        </div>
+      </section>
+      <section class="verdict verdict-maybe">
+        <div class="status-word">MAYBE</div>
+        <p class="human">Not a definite show. Worth a look if you can get a dark north sky.</p>
+        <dl class="meta">
+          <div><dt>Best window</dt><dd>10:40 PM – 12:10 AM</dd></div>
+          <div><dt>Main issue</dt><dd>Clouds are the main uncertainty</dd></div>
+          <div><dt>Look</dt><dd>North</dd></div>
+          <div><dt>Confidence</dt><dd>Medium</dd></div>
+        </dl>
+        <div class="verdict-foot">
+          <span class="updated">Updated 6 minutes ago</span>
+          <button class="btn btn-ghost-dark btn-sm" type="button">Share</button>
+        </div>
+      </section>
+      <section class="verdict verdict-no">
+        <div class="status-word">NO</div>
+        <p class="human">Not worth a special trip tonight.</p>
+        <dl class="meta">
+          <div><dt>Best window</dt><dd>—</dd></div>
+          <div><dt>Main issue</dt><dd>Aurora is not expected to reach Ohio</dd></div>
+          <div><dt>Look</dt><dd>North</dd></div>
+          <div><dt>Confidence</dt><dd>High</dd></div>
+        </dl>
+        <div class="verdict-foot">
+          <span class="updated">Updated 4 minutes ago</span>
+          <button class="btn btn-ghost-dark btn-sm" type="button">Share</button>
+        </div>
+      </section>
+      <section class="verdict verdict-unknown">
+        <div class="status-word">UNKNOWN</div>
+        <p class="human">We are not guessing.</p>
+        <dl class="meta">
+          <div><dt>Best window</dt><dd>—</dd></div>
+          <div><dt>Main issue</dt><dd>Aurora data is unavailable right now</dd></div>
+          <div><dt>Look</dt><dd>—</dd></div>
+          <div><dt>Confidence</dt><dd>—</dd></div>
+        </dl>
+        <div class="verdict-foot">
+          <span class="updated">Try again when a snapshot exists</span>
+          <button class="btn btn-ghost-dark btn-sm" type="button">Try again</button>
+        </div>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

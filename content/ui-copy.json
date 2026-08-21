@@ -1,0 +1,94 @@
+{
+  "version": "ui-copy-v1",
+  "lang": "en-US",
+  "notes": [
+    "Frozen UI English. Do not LLM-rewrite. Engine reason templates still come from snapshot.py.",
+    "UNAVAILABLE is display-only for southern hemisphere. It is not a fifth engine status."
+  ],
+  "chrome": {
+    "wordmark": "Northern Lights Tonight",
+    "nav_tonight": "Tonight",
+    "nav_near_me": "Near me",
+    "nav_guides": "Guides",
+    "find_place": "Find place",
+    "find_place_title": "Find a place",
+    "input_placeholder": "City, state, or US ZIP",
+    "check": "Check",
+    "use_my_location": "Use my location",
+    "gps_privacy": "We use your location once. We do not store it.",
+    "footer_how": "How we decide",
+    "footer_noaa": "Not affiliated with NOAA.",
+    "open": "Open",
+    "share": "Share",
+    "try_again": "Try again",
+    "rest_of_night": "Rest of the night",
+    "skip_not_dark": "not dark yet"
+  },
+  "verdict": {
+    "go_human": "Conditions line up well enough to try.",
+    "maybe_human": "Not a definite show. Worth a look if you can get a dark north sky.",
+    "no_human": "Not worth a special trip tonight.",
+    "unknown_human": "We are not guessing.",
+    "confidence_high": "High",
+    "confidence_medium": "Medium",
+    "confidence_low": "Low",
+    "look_north": "North",
+    "window_none": "—",
+    "unknown_window": "—",
+    "alaska_kicker": "Statewide · headline: Fairbanks Interior",
+    "stale_main_issue": "Source data is too old to treat as live.",
+    "updated_minutes": "Updated {n} minutes ago",
+    "updated_just_now": "Updated just now"
+  },
+  "how_to_read": {
+    "go": "GO = worth trying",
+    "maybe": "MAYBE = possible, with obstacles",
+    "no": "NO = not worth a trip",
+    "unknown": "UNKNOWN = we are not guessing"
+  },
+  "errors": {
+    "search_empty": "Enter a US city, state, or ZIP.",
+    "search_no_match": "No match for that place. Try a city, state, or 5-digit ZIP.",
+    "search_not_us": "v1 only looks up US places. Try a US city or ZIP.",
+    "gps_denied": "Location permission is off. Search a city or ZIP instead.",
+    "gps_unavailable": "Could not read your location. Search a city or ZIP instead.",
+    "zip_not_found": "That ZIP is not in our list yet. Try the city name."
+  },
+  "south": {
+    "display_status": "UNAVAILABLE",
+    "human": "This reading is for the northern hemisphere. We do not score southern-hemisphere skies.",
+    "main_issue": "Southern hemisphere",
+    "hint": "Northern Lights Tonight covers the US and other northern-hemisphere sites."
+  },
+  "view": {
+    "live_disclaimer": "Live reading, not a full local guide.",
+    "unknown_main_issue": "Aurora data is unavailable right now."
+  },
+  "not_found": {
+    "title": "Page not found",
+    "generic": "We do not have a dedicated page at this URL.",
+    "boston": "We do not have a dedicated Boston URL.",
+    "boston_cta": "Massachusetts tonight",
+    "find_cta": "Or find another place."
+  },
+  "near_me": {
+    "lead": "Aurora is local. A ZIP or city tells us whether the oval can reach you, and whether clouds will block it.",
+    "why_title": "Why a place is required",
+    "why_body": "A national Kp number is not a local yes/no. Clouds, darkness, and magnetic latitude change by city."
+  },
+  "home": {
+    "lead": "It depends on your location. Check a US city, or read tonight’s local pages below.",
+    "what_time_title": "What time tonight?",
+    "what_time_body": "There is no single US clock time. After dark, often late. Use the window on your local page.",
+    "table_kicker": "Tonight in the US"
+  },
+  "share": {
+    "template": "{Place} tonight: {STATUS} · {window}",
+    "copied": "Copied"
+  },
+  "time": {
+    "locale": "en-US",
+    "hour12": true,
+    "example": "10:40 PM MT"
+  }
+}
