@@ -1,8 +1,8 @@
 {
   "meta": {
     "version": "wave1-dossier-v1",
-    "date": "2026-08-20",
-    "status": "filled_pending_engine",
+    "date": "2026-08-21",
+    "status": "wave1-nearby-filled",
     "notes": [
       "magnetic_latitude is a centered-dipole estimate using IGRF-13 2020 geomagnetic pole 80.65N, 72.68W. Not AACGM. Engine should prefer OVATION grid over Kp thresholds.",
       "typical_kp_* are integer bands for looking north from a dark site (horizon) vs near-overhead. Conservative. Replace with OVATION reach in the engine.",
@@ -71,7 +71,11 @@
       ],
       "cannibalization_pair": null,
       "nearby_slugs": [
-        "utah"
+        "utah",
+        "oregon",
+        "illinois",
+        "ohio",
+        "minnesota"
       ],
       "light_pollution_note": "The Front Range (Denver–Boulder–Colorado Springs) is a bright light dome. Northern plains and mountain parks north of I-70 are darker; going south into the San Luis Valley is darker but magnetically worse.",
       "leave_city_advice": "Leave Denver if you are trying at all. You need a dark north horizon, not a city skyline. Do not drive south expecting a better oval — go north or onto the eastern plains with a clear view of the northern sky.",
@@ -159,7 +163,8 @@
       "nearby_slugs": [
         "indiana",
         "michigan",
-        "chicago"
+        "chicago",
+        "illinois"
       ],
       "light_pollution_note": "Cleveland–Akron and Columbus are bright. The Lake Erie shore can be slightly better if you look north over water, but the urban skyglow still dominates near the cities.",
       "leave_city_advice": "Get out of Columbus. Northern Ohio near Lake Erie is the realistic part of the state. Look north over the lake from a dark stretch of shoreline, not from downtown Cleveland.",
@@ -243,8 +248,8 @@
       "nearby_slugs": [
         "ohio",
         "chicago",
-        "michigan",
-        "illinois"
+        "illinois",
+        "michigan"
       ],
       "light_pollution_note": "Indianapolis is a large light island. Northwest Indiana (Gary, Hammond, the inner dunes) sits under Chicago’s skyglow. South Bend and darker stretches of northern Indiana are the better in-state options.",
       "leave_city_advice": "Leave Indianapolis. Northern Indiana is the only part of the state worth a special trip in a strong storm. Do not treat the Chicago suburbs in Indiana as dark sky.",
@@ -472,7 +477,10 @@
       ],
       "cannibalization_pair": "Washington state is Wave 2 (eastern Washington is drier and darker). Oregon is the adjacent Wave 1 state. Do not treat Seattle as Washington.",
       "nearby_slugs": [
-        "oregon"
+        "oregon",
+        "alaska",
+        "minnesota",
+        "utah"
       ],
       "light_pollution_note": "Puget Sound is a bright urban corridor (Seattle–Tacoma–Everett). City parks are not dark sky. The Olympics and the east slopes of the Cascades are darker; the east side is also often clearer.",
       "leave_city_advice": "Leave downtown. Clouds are the usual Seattle killer — a darker but still socked-in hillside does not help. If the forecast is cloudy west of the Cascades and clearer east, the rain shadow matters more than driving ten minutes north.",
@@ -636,7 +644,10 @@
       ],
       "cannibalization_pair": "Boston has tonight queries but no Wave 1 city page. All Boston variants map here. Do not ship /forecast/boston until SERP is clearly separate.",
       "nearby_slugs": [
-        "maine"
+        "maine",
+        "ohio",
+        "michigan",
+        "minnesota"
       ],
       "light_pollution_note": "Boston–Providence is a dense coastal light corridor. The North Shore (beyond the inner suburbs) and the Berkshires are darker. Cape Cod is south of Boston and magnetically worse, not better.",
       "leave_city_advice": "Leave Boston. North toward the New Hampshire border or west into the Berkshires beats the harbor. Do not drive to the Cape for aurora.",
@@ -716,7 +727,10 @@
       ],
       "cannibalization_pair": null,
       "nearby_slugs": [
-        "massachusetts"
+        "massachusetts",
+        "minnesota",
+        "michigan",
+        "alaska"
       ],
       "light_pollution_note": "Portland and the southern coast are the bright part of a generally dark state. Baxter, the North Woods, and Aroostook are among the darkest Wave 1 locations in the Lower 48.",
       "leave_city_advice": "Leave Portland if you can. Interior and northern Maine beat the tourist coast. Acadia is darker than Boston but still coastal and south of the woods.",
@@ -797,7 +811,9 @@
       "cannibalization_pair": "Minneapolis and Duluth do not get Wave 1 city pages. Those tonight queries map here.",
       "nearby_slugs": [
         "wisconsin",
-        "michigan"
+        "michigan",
+        "alaska",
+        "maine"
       ],
       "light_pollution_note": "The Twin Cities are a large dome. Duluth is better but still a city. The Iron Range, Ely, and the Boundary Waters are the dark, high-latitude part of the state — among the best Lower 48 odds in this set.",
       "leave_city_advice": "Leave Minneapolis. North toward Duluth and beyond is the correct direction. The Boundary Waters / Ely latitude is the in-state destination on a moderate night.",
@@ -881,7 +897,8 @@
       "nearby_slugs": [
         "chicago",
         "indiana",
-        "wisconsin"
+        "wisconsin",
+        "ohio"
       ],
       "light_pollution_note": "Chicago’s dome covers a wide radius of northeastern Illinois. Rockford is better than the suburbs but still a city. Galena and the Mississippi palisades are the realistic in-state dark direction. Springfield and southern Illinois are much worse magnetically.",
       "leave_city_advice": "If you are in Chicago, use the Chicago page and leave the metro. If you are elsewhere in Illinois, go north and away from the Chicago glow — not south.",
@@ -959,7 +976,9 @@
       "cannibalization_pair": "Seattle is the adjacent city page (higher latitude, same marine-cloud problem). Eastern Oregon is clearer, not magnetically better.",
       "nearby_slugs": [
         "seattle",
-        "utah"
+        "utah",
+        "colorado",
+        "alaska"
       ],
       "light_pollution_note": "Portland is a sizable dome. The high desert (Bend, the east side) is much darker. Northeast Oregon (Baker City) is the better magnetic+darkness compromise; Bend is darker but slightly farther from the oval.",
       "leave_city_advice": "Leave Portland, and treat the Cascades as a cloud wall, not a viewing destination. If the west side is socked in, the dry east is the reason to drive.",
@@ -1043,7 +1062,10 @@
       ],
       "cannibalization_pair": "Salt Lake City tonight maps here. No Wave 1 SLC city page.",
       "nearby_slugs": [
-        "colorado"
+        "colorado",
+        "oregon",
+        "illinois",
+        "alaska"
       ],
       "light_pollution_note": "The Wasatch Front (Ogden–Salt Lake–Provo) is a bright valley dome. Looking north over the Great Salt Lake (Antelope Island) reduces ground lights in that direction. Northern Utah (Logan, the Idaho border) is the in-state magnetic upgrade. The west desert is darker but not farther north.",
       "leave_city_advice": "Leave downtown Salt Lake. A north-facing lake horizon is the local trick; driving north toward Logan / the Idaho line is the magnetic trick. Do not drive south to Zion for aurora.",
@@ -1137,7 +1159,10 @@
       ],
       "cannibalization_pair": "fairbanks: city tonight + local viewing. This page is statewide — Interior vs Southcentral vs Southeast, season, and where to go. Fairbanks-named queries go to the city page. “Best places in Alaska” stays here.",
       "nearby_slugs": [
-        "fairbanks"
+        "fairbanks",
+        "minnesota",
+        "maine",
+        "seattle"
       ],
       "light_pollution_note": "Fairbanks and Anchorage are small compared with Lower 48 metros but still worth leaving. Interior dark sites beat both cities. Southeast Alaska is not a light problem — it is a rain problem.",
       "leave_city_advice": "In Interior Alaska, yes: get out of Fairbanks glow (the city page covers that). Statewide, picking the Interior over Juneau matters more than picking a hill inside Anchorage.",
@@ -1208,7 +1233,9 @@
       ],
       "cannibalization_pair": "alaska: statewide season and regions. This page is Fairbanks tonight, darkness, and local glow. Tour keywords are mapped here but v1 does not sell tours.",
       "nearby_slugs": [
-        "alaska"
+        "alaska",
+        "minnesota",
+        "maine"
       ],
       "light_pollution_note": "Fairbanks is a small city with a noticeable winter dome, especially in cold inversions. Local high points and dark roads outside town (Murphy Dome, Pedro Dome, Chena country) are the usual advice — named as regions, not as parking instructions.",
       "leave_city_advice": "Yes, even here. Downtown Fairbanks is good enough on a strong overhead display and poor for a faint one. Get away from town lights and look north to east, which is the usual oval direction.",

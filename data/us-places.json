@@ -1,0 +1,1612 @@
+{
+  "version": "us-places-v1",
+  "date": "2026-08-21",
+  "country": "US",
+  "notes": [
+    "Match: normalize lowercase, strip punctuation. 5-digit ZIP exact on zips[].",
+    "If slug is set → /forecast/{slug}. If slug is null and lat>=0 → /view?lat&lng&name.",
+    "lat < 0 is never stored here; southern hemisphere is a coordinate rule, not a table row.",
+    "Unmatched query stays in the overlay (errors.search_no_match). Never 500.",
+    "v1 does not geocode outside this file. Do not call a live geocoder on the request path.",
+    "ZIP list is a lite metro set, not a full USPS dump. Unknown ZIP → errors.zip_not_found."
+  ],
+  "aliases": [
+    {
+      "keys": [
+        "boston",
+        "boston ma",
+        "boston, ma"
+      ],
+      "slug": "massachusetts"
+    },
+    {
+      "keys": [
+        "minneapolis",
+        "minneapolis mn",
+        "duluth",
+        "duluth mn"
+      ],
+      "slug": "minnesota"
+    },
+    {
+      "keys": [
+        "columbus",
+        "columbus oh",
+        "columbus ohio"
+      ],
+      "slug": "ohio"
+    },
+    {
+      "keys": [
+        "indianapolis",
+        "indianapolis in"
+      ],
+      "slug": "indiana"
+    },
+    {
+      "keys": [
+        "salt lake city",
+        "salt lake",
+        "slc",
+        "salt lake city ut"
+      ],
+      "slug": "utah"
+    },
+    {
+      "keys": [
+        "northern michigan",
+        "upper peninsula",
+        "up of michigan",
+        "the up"
+      ],
+      "slug": "michigan"
+    }
+  ],
+  "places": [
+    {
+      "name": "Colorado",
+      "lat": 40.5853,
+      "lng": -105.0844,
+      "tz": "America/Denver",
+      "slug": "colorado",
+      "keys": [
+        "colorado",
+        "co",
+        "fort collins",
+        "fort collins co"
+      ],
+      "zips": [
+        "80521",
+        "80524",
+        "80525"
+      ]
+    },
+    {
+      "name": "Denver, CO",
+      "lat": 39.7392,
+      "lng": -104.9903,
+      "tz": "America/Denver",
+      "slug": "colorado",
+      "keys": [
+        "denver",
+        "denver co",
+        "denver colorado"
+      ],
+      "zips": [
+        "80202",
+        "80203",
+        "80205"
+      ]
+    },
+    {
+      "name": "Ohio",
+      "lat": 39.9612,
+      "lng": -82.9988,
+      "tz": "America/New_York",
+      "slug": "ohio",
+      "keys": [
+        "ohio",
+        "oh"
+      ],
+      "zips": [
+        "43215"
+      ]
+    },
+    {
+      "name": "Columbus, OH",
+      "lat": 39.9612,
+      "lng": -82.9988,
+      "tz": "America/New_York",
+      "slug": "ohio",
+      "keys": [
+        "columbus",
+        "columbus oh",
+        "columbus ohio"
+      ],
+      "zips": [
+        "43215",
+        "43201"
+      ]
+    },
+    {
+      "name": "Cleveland, OH",
+      "lat": 41.4993,
+      "lng": -81.6944,
+      "tz": "America/New_York",
+      "slug": "ohio",
+      "keys": [
+        "cleveland",
+        "cleveland oh"
+      ],
+      "zips": [
+        "44113",
+        "44114"
+      ]
+    },
+    {
+      "name": "Cincinnati, OH",
+      "lat": 39.1031,
+      "lng": -84.512,
+      "tz": "America/New_York",
+      "slug": "ohio",
+      "keys": [
+        "cincinnati",
+        "cincinnati oh"
+      ],
+      "zips": [
+        "45202"
+      ]
+    },
+    {
+      "name": "Indiana",
+      "lat": 39.7684,
+      "lng": -86.1581,
+      "tz": "America/Indiana/Indianapolis",
+      "slug": "indiana",
+      "keys": [
+        "indiana",
+        "in"
+      ],
+      "zips": [
+        "46204"
+      ]
+    },
+    {
+      "name": "Indianapolis, IN",
+      "lat": 39.7684,
+      "lng": -86.1581,
+      "tz": "America/Indiana/Indianapolis",
+      "slug": "indiana",
+      "keys": [
+        "indianapolis",
+        "indianapolis in"
+      ],
+      "zips": [
+        "46204",
+        "46220"
+      ]
+    },
+    {
+      "name": "Michigan",
+      "lat": 44.3148,
+      "lng": -85.6024,
+      "tz": "America/Detroit",
+      "slug": "michigan",
+      "keys": [
+        "michigan",
+        "mi",
+        "northern michigan",
+        "upper peninsula",
+        "up michigan"
+      ],
+      "zips": [
+        "49855"
+      ]
+    },
+    {
+      "name": "Detroit, MI",
+      "lat": 42.3314,
+      "lng": -83.0458,
+      "tz": "America/Detroit",
+      "slug": "michigan",
+      "keys": [
+        "detroit",
+        "detroit mi"
+      ],
+      "zips": [
+        "48226"
+      ]
+    },
+    {
+      "name": "Grand Rapids, MI",
+      "lat": 42.9634,
+      "lng": -85.6681,
+      "tz": "America/Detroit",
+      "slug": "michigan",
+      "keys": [
+        "grand rapids",
+        "grand rapids mi"
+      ],
+      "zips": [
+        "49503"
+      ]
+    },
+    {
+      "name": "Marquette, MI",
+      "lat": 46.5436,
+      "lng": -87.3954,
+      "tz": "America/Detroit",
+      "slug": "michigan",
+      "keys": [
+        "marquette",
+        "marquette mi"
+      ],
+      "zips": [
+        "49855"
+      ]
+    },
+    {
+      "name": "Chicago, IL",
+      "lat": 41.8781,
+      "lng": -87.6298,
+      "tz": "America/Chicago",
+      "slug": "chicago",
+      "keys": [
+        "chicago",
+        "chicago il"
+      ],
+      "zips": [
+        "60601",
+        "60611",
+        "60614"
+      ]
+    },
+    {
+      "name": "Seattle, WA",
+      "lat": 47.6062,
+      "lng": -122.3321,
+      "tz": "America/Los_Angeles",
+      "slug": "seattle",
+      "keys": [
+        "seattle",
+        "seattle wa"
+      ],
+      "zips": [
+        "98101",
+        "98104"
+      ]
+    },
+    {
+      "name": "Wisconsin",
+      "lat": 43.7844,
+      "lng": -88.7879,
+      "tz": "America/Chicago",
+      "slug": "wisconsin",
+      "keys": [
+        "wisconsin",
+        "wi"
+      ],
+      "zips": [
+        "53703"
+      ]
+    },
+    {
+      "name": "Madison, WI",
+      "lat": 43.0731,
+      "lng": -89.4012,
+      "tz": "America/Chicago",
+      "slug": "wisconsin",
+      "keys": [
+        "madison",
+        "madison wi"
+      ],
+      "zips": [
+        "53703"
+      ]
+    },
+    {
+      "name": "Milwaukee, WI",
+      "lat": 43.0389,
+      "lng": -87.9065,
+      "tz": "America/Chicago",
+      "slug": "wisconsin",
+      "keys": [
+        "milwaukee",
+        "milwaukee wi"
+      ],
+      "zips": [
+        "53202"
+      ]
+    },
+    {
+      "name": "Massachusetts",
+      "lat": 42.4072,
+      "lng": -71.3824,
+      "tz": "America/New_York",
+      "slug": "massachusetts",
+      "keys": [
+        "massachusetts",
+        "ma",
+        "boston",
+        "boston ma"
+      ],
+      "zips": [
+        "02108",
+        "02101",
+        "02116"
+      ]
+    },
+    {
+      "name": "Boston, MA",
+      "lat": 42.3601,
+      "lng": -71.0589,
+      "tz": "America/New_York",
+      "slug": "massachusetts",
+      "keys": [
+        "boston",
+        "boston massachusetts"
+      ],
+      "zips": [
+        "02108",
+        "02109",
+        "02110"
+      ]
+    },
+    {
+      "name": "Maine",
+      "lat": 45.2538,
+      "lng": -69.4455,
+      "tz": "America/New_York",
+      "slug": "maine",
+      "keys": [
+        "maine",
+        "me"
+      ],
+      "zips": [
+        "04101"
+      ]
+    },
+    {
+      "name": "Portland, ME",
+      "lat": 43.6591,
+      "lng": -70.2568,
+      "tz": "America/New_York",
+      "slug": "maine",
+      "keys": [
+        "portland me",
+        "portland maine"
+      ],
+      "zips": [
+        "04101"
+      ]
+    },
+    {
+      "name": "Bangor, ME",
+      "lat": 44.8016,
+      "lng": -68.7712,
+      "tz": "America/New_York",
+      "slug": "maine",
+      "keys": [
+        "bangor",
+        "bangor me"
+      ],
+      "zips": [
+        "04401"
+      ]
+    },
+    {
+      "name": "Minnesota",
+      "lat": 46.7296,
+      "lng": -94.6859,
+      "tz": "America/Chicago",
+      "slug": "minnesota",
+      "keys": [
+        "minnesota",
+        "mn"
+      ],
+      "zips": [
+        "55401"
+      ]
+    },
+    {
+      "name": "Minneapolis, MN",
+      "lat": 44.9778,
+      "lng": -93.265,
+      "tz": "America/Chicago",
+      "slug": "minnesota",
+      "keys": [
+        "minneapolis",
+        "minneapolis mn"
+      ],
+      "zips": [
+        "55401",
+        "55403"
+      ]
+    },
+    {
+      "name": "Saint Paul, MN",
+      "lat": 44.9537,
+      "lng": -93.09,
+      "tz": "America/Chicago",
+      "slug": "minnesota",
+      "keys": [
+        "st paul",
+        "saint paul",
+        "st paul mn"
+      ],
+      "zips": [
+        "55101"
+      ]
+    },
+    {
+      "name": "Duluth, MN",
+      "lat": 46.7867,
+      "lng": -92.1005,
+      "tz": "America/Chicago",
+      "slug": "minnesota",
+      "keys": [
+        "duluth",
+        "duluth mn"
+      ],
+      "zips": [
+        "55802"
+      ]
+    },
+    {
+      "name": "Illinois",
+      "lat": 40.6331,
+      "lng": -89.3985,
+      "tz": "America/Chicago",
+      "slug": "illinois",
+      "keys": [
+        "illinois",
+        "il"
+      ],
+      "zips": [
+        "62701"
+      ]
+    },
+    {
+      "name": "Springfield, IL",
+      "lat": 39.7817,
+      "lng": -89.6501,
+      "tz": "America/Chicago",
+      "slug": "illinois",
+      "keys": [
+        "springfield il",
+        "springfield illinois"
+      ],
+      "zips": [
+        "62701"
+      ]
+    },
+    {
+      "name": "Oregon",
+      "lat": 44.7749,
+      "lng": -117.8344,
+      "tz": "America/Los_Angeles",
+      "slug": "oregon",
+      "keys": [
+        "oregon",
+        "or",
+        "baker city",
+        "baker city or"
+      ],
+      "zips": [
+        "97814"
+      ]
+    },
+    {
+      "name": "Portland, OR",
+      "lat": 45.5152,
+      "lng": -122.6784,
+      "tz": "America/Los_Angeles",
+      "slug": "oregon",
+      "keys": [
+        "portland or",
+        "portland oregon"
+      ],
+      "zips": [
+        "97201",
+        "97204"
+      ]
+    },
+    {
+      "name": "Bend, OR",
+      "lat": 44.0582,
+      "lng": -121.3153,
+      "tz": "America/Los_Angeles",
+      "slug": "oregon",
+      "keys": [
+        "bend",
+        "bend or"
+      ],
+      "zips": [
+        "97701"
+      ]
+    },
+    {
+      "name": "Utah",
+      "lat": 40.7608,
+      "lng": -111.891,
+      "tz": "America/Denver",
+      "slug": "utah",
+      "keys": [
+        "utah",
+        "ut",
+        "salt lake city",
+        "salt lake",
+        "slc"
+      ],
+      "zips": [
+        "84101"
+      ]
+    },
+    {
+      "name": "Salt Lake City, UT",
+      "lat": 40.7608,
+      "lng": -111.891,
+      "tz": "America/Denver",
+      "slug": "utah",
+      "keys": [
+        "salt lake city",
+        "salt lake city ut"
+      ],
+      "zips": [
+        "84101",
+        "84111"
+      ]
+    },
+    {
+      "name": "Alaska",
+      "lat": 64.8378,
+      "lng": -147.7164,
+      "tz": "America/Anchorage",
+      "slug": "alaska",
+      "keys": [
+        "alaska",
+        "ak"
+      ],
+      "zips": [
+        "99701"
+      ]
+    },
+    {
+      "name": "Fairbanks, AK",
+      "lat": 64.8378,
+      "lng": -147.7164,
+      "tz": "America/Anchorage",
+      "slug": "fairbanks",
+      "keys": [
+        "fairbanks",
+        "fairbanks ak"
+      ],
+      "zips": [
+        "99701",
+        "99709"
+      ]
+    },
+    {
+      "name": "New York, NY",
+      "lat": 40.7128,
+      "lng": -74.006,
+      "tz": "America/New_York",
+      "slug": null,
+      "keys": [
+        "new york",
+        "nyc",
+        "new york ny"
+      ],
+      "zips": [
+        "10001",
+        "10003"
+      ]
+    },
+    {
+      "name": "Philadelphia, PA",
+      "lat": 39.9526,
+      "lng": -75.1652,
+      "tz": "America/New_York",
+      "slug": null,
+      "keys": [
+        "philadelphia",
+        "philadelphia pa"
+      ],
+      "zips": [
+        "19102"
+      ]
+    },
+    {
+      "name": "Washington, DC",
+      "lat": 38.9072,
+      "lng": -77.0369,
+      "tz": "America/New_York",
+      "slug": null,
+      "keys": [
+        "washington dc",
+        "washington d.c.",
+        "dc"
+      ],
+      "zips": [
+        "20001"
+      ]
+    },
+    {
+      "name": "Baltimore, MD",
+      "lat": 39.2904,
+      "lng": -76.6122,
+      "tz": "America/New_York",
+      "slug": null,
+      "keys": [
+        "baltimore",
+        "baltimore md"
+      ],
+      "zips": [
+        "21201"
+      ]
+    },
+    {
+      "name": "Pittsburgh, PA",
+      "lat": 40.4406,
+      "lng": -79.9959,
+      "tz": "America/New_York",
+      "slug": null,
+      "keys": [
+        "pittsburgh",
+        "pittsburgh pa"
+      ],
+      "zips": [
+        "15222"
+      ]
+    },
+    {
+      "name": "Buffalo, NY",
+      "lat": 42.8864,
+      "lng": -78.8784,
+      "tz": "America/New_York",
+      "slug": null,
+      "keys": [
+        "buffalo",
+        "buffalo ny"
+      ],
+      "zips": [
+        "14202"
+      ]
+    },
+    {
+      "name": "Rochester, NY",
+      "lat": 43.1566,
+      "lng": -77.6088,
+      "tz": "America/New_York",
+      "slug": null,
+      "keys": [
+        "rochester ny"
+      ],
+      "zips": [
+        "14604"
+      ]
+    },
+    {
+      "name": "Albany, NY",
+      "lat": 42.6526,
+      "lng": -73.7562,
+      "tz": "America/New_York",
+      "slug": null,
+      "keys": [
+        "albany ny",
+        "albany"
+      ],
+      "zips": [
+        "12207"
+      ]
+    },
+    {
+      "name": "Hartford, CT",
+      "lat": 41.7658,
+      "lng": -72.6734,
+      "tz": "America/New_York",
+      "slug": null,
+      "keys": [
+        "hartford",
+        "hartford ct"
+      ],
+      "zips": [
+        "06103"
+      ]
+    },
+    {
+      "name": "Providence, RI",
+      "lat": 41.824,
+      "lng": -71.4128,
+      "tz": "America/New_York",
+      "slug": null,
+      "keys": [
+        "providence",
+        "providence ri"
+      ],
+      "zips": [
+        "02903"
+      ]
+    },
+    {
+      "name": "Burlington, VT",
+      "lat": 44.4759,
+      "lng": -73.2121,
+      "tz": "America/New_York",
+      "slug": null,
+      "keys": [
+        "burlington vt",
+        "burlington"
+      ],
+      "zips": [
+        "05401"
+      ]
+    },
+    {
+      "name": "Concord, NH",
+      "lat": 43.2081,
+      "lng": -71.5376,
+      "tz": "America/New_York",
+      "slug": null,
+      "keys": [
+        "concord nh"
+      ],
+      "zips": [
+        "03301"
+      ]
+    },
+    {
+      "name": "Spokane, WA",
+      "lat": 47.6588,
+      "lng": -117.426,
+      "tz": "America/Los_Angeles",
+      "slug": null,
+      "keys": [
+        "spokane",
+        "spokane wa"
+      ],
+      "zips": [
+        "99201"
+      ]
+    },
+    {
+      "name": "Boise, ID",
+      "lat": 43.615,
+      "lng": -116.2023,
+      "tz": "America/Boise",
+      "slug": null,
+      "keys": [
+        "boise",
+        "boise id"
+      ],
+      "zips": [
+        "83702"
+      ]
+    },
+    {
+      "name": "Billings, MT",
+      "lat": 45.7833,
+      "lng": -108.5007,
+      "tz": "America/Denver",
+      "slug": null,
+      "keys": [
+        "billings",
+        "billings mt"
+      ],
+      "zips": [
+        "59101"
+      ]
+    },
+    {
+      "name": "Missoula, MT",
+      "lat": 46.8721,
+      "lng": -113.994,
+      "tz": "America/Denver",
+      "slug": null,
+      "keys": [
+        "missoula",
+        "missoula mt"
+      ],
+      "zips": [
+        "59801"
+      ]
+    },
+    {
+      "name": "Helena, MT",
+      "lat": 46.5891,
+      "lng": -112.0391,
+      "tz": "America/Denver",
+      "slug": null,
+      "keys": [
+        "helena",
+        "helena mt"
+      ],
+      "zips": [
+        "59601"
+      ]
+    },
+    {
+      "name": "Cheyenne, WY",
+      "lat": 41.14,
+      "lng": -104.8202,
+      "tz": "America/Denver",
+      "slug": null,
+      "keys": [
+        "cheyenne",
+        "cheyenne wy"
+      ],
+      "zips": [
+        "82001"
+      ]
+    },
+    {
+      "name": "Casper, WY",
+      "lat": 42.8666,
+      "lng": -106.3131,
+      "tz": "America/Denver",
+      "slug": null,
+      "keys": [
+        "casper",
+        "casper wy"
+      ],
+      "zips": [
+        "82601"
+      ]
+    },
+    {
+      "name": "Rapid City, SD",
+      "lat": 44.0805,
+      "lng": -103.231,
+      "tz": "America/Denver",
+      "slug": null,
+      "keys": [
+        "rapid city",
+        "rapid city sd"
+      ],
+      "zips": [
+        "57701"
+      ]
+    },
+    {
+      "name": "Fargo, ND",
+      "lat": 46.8772,
+      "lng": -96.7898,
+      "tz": "America/Chicago",
+      "slug": null,
+      "keys": [
+        "fargo",
+        "fargo nd"
+      ],
+      "zips": [
+        "58102"
+      ]
+    },
+    {
+      "name": "Bismarck, ND",
+      "lat": 46.8083,
+      "lng": -100.7837,
+      "tz": "America/Chicago",
+      "slug": null,
+      "keys": [
+        "bismarck",
+        "bismarck nd"
+      ],
+      "zips": [
+        "58501"
+      ]
+    },
+    {
+      "name": "Sioux Falls, SD",
+      "lat": 43.546,
+      "lng": -96.7313,
+      "tz": "America/Chicago",
+      "slug": null,
+      "keys": [
+        "sioux falls",
+        "sioux falls sd"
+      ],
+      "zips": [
+        "57104"
+      ]
+    },
+    {
+      "name": "Des Moines, IA",
+      "lat": 41.5868,
+      "lng": -93.625,
+      "tz": "America/Chicago",
+      "slug": null,
+      "keys": [
+        "des moines",
+        "des moines ia"
+      ],
+      "zips": [
+        "50309"
+      ]
+    },
+    {
+      "name": "Omaha, NE",
+      "lat": 41.2565,
+      "lng": -95.9345,
+      "tz": "America/Chicago",
+      "slug": null,
+      "keys": [
+        "omaha",
+        "omaha ne"
+      ],
+      "zips": [
+        "68102"
+      ]
+    },
+    {
+      "name": "Kansas City, MO",
+      "lat": 39.0997,
+      "lng": -94.5786,
+      "tz": "America/Chicago",
+      "slug": null,
+      "keys": [
+        "kansas city",
+        "kansas city mo"
+      ],
+      "zips": [
+        "64105"
+      ]
+    },
+    {
+      "name": "St. Louis, MO",
+      "lat": 38.627,
+      "lng": -90.1994,
+      "tz": "America/Chicago",
+      "slug": null,
+      "keys": [
+        "st louis",
+        "saint louis",
+        "st louis mo"
+      ],
+      "zips": [
+        "63101"
+      ]
+    },
+    {
+      "name": "Oklahoma City, OK",
+      "lat": 35.4676,
+      "lng": -97.5164,
+      "tz": "America/Chicago",
+      "slug": null,
+      "keys": [
+        "oklahoma city",
+        "okc"
+      ],
+      "zips": [
+        "73102"
+      ]
+    },
+    {
+      "name": "Dallas, TX",
+      "lat": 32.7767,
+      "lng": -96.797,
+      "tz": "America/Chicago",
+      "slug": null,
+      "keys": [
+        "dallas",
+        "dallas tx"
+      ],
+      "zips": [
+        "75201"
+      ]
+    },
+    {
+      "name": "Houston, TX",
+      "lat": 29.7604,
+      "lng": -95.3698,
+      "tz": "America/Chicago",
+      "slug": null,
+      "keys": [
+        "houston",
+        "houston tx"
+      ],
+      "zips": [
+        "77002"
+      ]
+    },
+    {
+      "name": "Austin, TX",
+      "lat": 30.2672,
+      "lng": -97.7431,
+      "tz": "America/Chicago",
+      "slug": null,
+      "keys": [
+        "austin",
+        "austin tx"
+      ],
+      "zips": [
+        "78701"
+      ]
+    },
+    {
+      "name": "San Antonio, TX",
+      "lat": 29.4241,
+      "lng": -98.4936,
+      "tz": "America/Chicago",
+      "slug": null,
+      "keys": [
+        "san antonio",
+        "san antonio tx"
+      ],
+      "zips": [
+        "78205"
+      ]
+    },
+    {
+      "name": "Phoenix, AZ",
+      "lat": 33.4484,
+      "lng": -112.074,
+      "tz": "America/Phoenix",
+      "slug": null,
+      "keys": [
+        "phoenix",
+        "phoenix az"
+      ],
+      "zips": [
+        "85003"
+      ]
+    },
+    {
+      "name": "Tucson, AZ",
+      "lat": 32.2226,
+      "lng": -110.9747,
+      "tz": "America/Phoenix",
+      "slug": null,
+      "keys": [
+        "tucson",
+        "tucson az"
+      ],
+      "zips": [
+        "85701"
+      ]
+    },
+    {
+      "name": "Albuquerque, NM",
+      "lat": 35.0844,
+      "lng": -106.6504,
+      "tz": "America/Denver",
+      "slug": null,
+      "keys": [
+        "albuquerque",
+        "albuquerque nm"
+      ],
+      "zips": [
+        "87102"
+      ]
+    },
+    {
+      "name": "Las Vegas, NV",
+      "lat": 36.1699,
+      "lng": -115.1398,
+      "tz": "America/Los_Angeles",
+      "slug": null,
+      "keys": [
+        "las vegas",
+        "las vegas nv"
+      ],
+      "zips": [
+        "89101"
+      ]
+    },
+    {
+      "name": "Los Angeles, CA",
+      "lat": 34.0522,
+      "lng": -118.2437,
+      "tz": "America/Los_Angeles",
+      "slug": null,
+      "keys": [
+        "los angeles",
+        "la",
+        "los angeles ca"
+      ],
+      "zips": [
+        "90012"
+      ]
+    },
+    {
+      "name": "San Francisco, CA",
+      "lat": 37.7749,
+      "lng": -122.4194,
+      "tz": "America/Los_Angeles",
+      "slug": null,
+      "keys": [
+        "san francisco",
+        "sf",
+        "san francisco ca"
+      ],
+      "zips": [
+        "94102"
+      ]
+    },
+    {
+      "name": "Sacramento, CA",
+      "lat": 38.5816,
+      "lng": -121.4944,
+      "tz": "America/Los_Angeles",
+      "slug": null,
+      "keys": [
+        "sacramento",
+        "sacramento ca"
+      ],
+      "zips": [
+        "95814"
+      ]
+    },
+    {
+      "name": "San Diego, CA",
+      "lat": 32.7157,
+      "lng": -117.1611,
+      "tz": "America/Los_Angeles",
+      "slug": null,
+      "keys": [
+        "san diego",
+        "san diego ca"
+      ],
+      "zips": [
+        "92101"
+      ]
+    },
+    {
+      "name": "Anchorage, AK",
+      "lat": 61.2181,
+      "lng": -149.9003,
+      "tz": "America/Anchorage",
+      "slug": null,
+      "keys": [
+        "anchorage",
+        "anchorage ak"
+      ],
+      "zips": [
+        "99501"
+      ]
+    },
+    {
+      "name": "Juneau, AK",
+      "lat": 58.3019,
+      "lng": -134.4197,
+      "tz": "America/Juneau",
+      "slug": null,
+      "keys": [
+        "juneau",
+        "juneau ak"
+      ],
+      "zips": [
+        "99801"
+      ]
+    },
+    {
+      "name": "Honolulu, HI",
+      "lat": 21.3069,
+      "lng": -157.8583,
+      "tz": "Pacific/Honolulu",
+      "slug": null,
+      "keys": [
+        "honolulu",
+        "honolulu hi"
+      ],
+      "zips": [
+        "96813"
+      ]
+    },
+    {
+      "name": "Atlanta, GA",
+      "lat": 33.749,
+      "lng": -84.388,
+      "tz": "America/New_York",
+      "slug": null,
+      "keys": [
+        "atlanta",
+        "atlanta ga"
+      ],
+      "zips": [
+        "30303"
+      ]
+    },
+    {
+      "name": "Charlotte, NC",
+      "lat": 35.2271,
+      "lng": -80.8431,
+      "tz": "America/New_York",
+      "slug": null,
+      "keys": [
+        "charlotte",
+        "charlotte nc"
+      ],
+      "zips": [
+        "28202"
+      ]
+    },
+    {
+      "name": "Raleigh, NC",
+      "lat": 35.7796,
+      "lng": -78.6382,
+      "tz": "America/New_York",
+      "slug": null,
+      "keys": [
+        "raleigh",
+        "raleigh nc"
+      ],
+      "zips": [
+        "27601"
+      ]
+    },
+    {
+      "name": "Nashville, TN",
+      "lat": 36.1627,
+      "lng": -86.7816,
+      "tz": "America/Chicago",
+      "slug": null,
+      "keys": [
+        "nashville",
+        "nashville tn"
+      ],
+      "zips": [
+        "37203"
+      ]
+    },
+    {
+      "name": "Memphis, TN",
+      "lat": 35.1495,
+      "lng": -90.049,
+      "tz": "America/Chicago",
+      "slug": null,
+      "keys": [
+        "memphis",
+        "memphis tn"
+      ],
+      "zips": [
+        "38103"
+      ]
+    },
+    {
+      "name": "Louisville, KY",
+      "lat": 38.2527,
+      "lng": -85.7585,
+      "tz": "America/Kentucky/Louisville",
+      "slug": null,
+      "keys": [
+        "louisville",
+        "louisville ky"
+      ],
+      "zips": [
+        "40202"
+      ]
+    },
+    {
+      "name": "Richmond, VA",
+      "lat": 37.5407,
+      "lng": -77.436,
+      "tz": "America/New_York",
+      "slug": null,
+      "keys": [
+        "richmond",
+        "richmond va"
+      ],
+      "zips": [
+        "23219"
+      ]
+    },
+    {
+      "name": "Virginia Beach, VA",
+      "lat": 36.8529,
+      "lng": -75.978,
+      "tz": "America/New_York",
+      "slug": null,
+      "keys": [
+        "virginia beach"
+      ],
+      "zips": [
+        "23451"
+      ]
+    },
+    {
+      "name": "Miami, FL",
+      "lat": 25.7617,
+      "lng": -80.1918,
+      "tz": "America/New_York",
+      "slug": null,
+      "keys": [
+        "miami",
+        "miami fl"
+      ],
+      "zips": [
+        "33130"
+      ]
+    },
+    {
+      "name": "Tampa, FL",
+      "lat": 27.9506,
+      "lng": -82.4572,
+      "tz": "America/New_York",
+      "slug": null,
+      "keys": [
+        "tampa",
+        "tampa fl"
+      ],
+      "zips": [
+        "33602"
+      ]
+    },
+    {
+      "name": "Orlando, FL",
+      "lat": 28.5383,
+      "lng": -81.3792,
+      "tz": "America/New_York",
+      "slug": null,
+      "keys": [
+        "orlando",
+        "orlando fl"
+      ],
+      "zips": [
+        "32801"
+      ]
+    },
+    {
+      "name": "New Orleans, LA",
+      "lat": 29.9511,
+      "lng": -90.0715,
+      "tz": "America/Chicago",
+      "slug": null,
+      "keys": [
+        "new orleans",
+        "new orleans la"
+      ],
+      "zips": [
+        "70112"
+      ]
+    },
+    {
+      "name": "Toledo, OH",
+      "lat": 41.6528,
+      "lng": -83.5379,
+      "tz": "America/New_York",
+      "slug": null,
+      "keys": [
+        "toledo",
+        "toledo oh"
+      ],
+      "zips": [
+        "43604"
+      ]
+    },
+    {
+      "name": "Dayton, OH",
+      "lat": 39.7589,
+      "lng": -84.1916,
+      "tz": "America/New_York",
+      "slug": null,
+      "keys": [
+        "dayton",
+        "dayton oh"
+      ],
+      "zips": [
+        "45402"
+      ]
+    },
+    {
+      "name": "Fort Wayne, IN",
+      "lat": 41.0793,
+      "lng": -85.1394,
+      "tz": "America/Indiana/Indianapolis",
+      "slug": null,
+      "keys": [
+        "fort wayne",
+        "fort wayne in"
+      ],
+      "zips": [
+        "46802"
+      ]
+    },
+    {
+      "name": "Ann Arbor, MI",
+      "lat": 42.2808,
+      "lng": -83.743,
+      "tz": "America/Detroit",
+      "slug": null,
+      "keys": [
+        "ann arbor",
+        "ann arbor mi"
+      ],
+      "zips": [
+        "48104"
+      ]
+    },
+    {
+      "name": "Green Bay, WI",
+      "lat": 44.5133,
+      "lng": -88.0133,
+      "tz": "America/Chicago",
+      "slug": null,
+      "keys": [
+        "green bay",
+        "green bay wi"
+      ],
+      "zips": [
+        "54301"
+      ]
+    },
+    {
+      "name": "Peoria, IL",
+      "lat": 40.6936,
+      "lng": -89.589,
+      "tz": "America/Chicago",
+      "slug": null,
+      "keys": [
+        "peoria",
+        "peoria il"
+      ],
+      "zips": [
+        "61602"
+      ]
+    },
+    {
+      "name": "Rockford, IL",
+      "lat": 42.2711,
+      "lng": -89.094,
+      "tz": "America/Chicago",
+      "slug": null,
+      "keys": [
+        "rockford",
+        "rockford il"
+      ],
+      "zips": [
+        "61101"
+      ]
+    },
+    {
+      "name": "Cedar Rapids, IA",
+      "lat": 41.9778,
+      "lng": -91.6656,
+      "tz": "America/Chicago",
+      "slug": null,
+      "keys": [
+        "cedar rapids"
+      ],
+      "zips": [
+        "52401"
+      ]
+    },
+    {
+      "name": "Iowa City, IA",
+      "lat": 41.6611,
+      "lng": -91.5302,
+      "tz": "America/Chicago",
+      "slug": null,
+      "keys": [
+        "iowa city"
+      ],
+      "zips": [
+        "52240"
+      ]
+    },
+    {
+      "name": "Lincoln, NE",
+      "lat": 40.8136,
+      "lng": -96.7026,
+      "tz": "America/Chicago",
+      "slug": null,
+      "keys": [
+        "lincoln",
+        "lincoln ne"
+      ],
+      "zips": [
+        "68508"
+      ]
+    },
+    {
+      "name": "Wichita, KS",
+      "lat": 37.6872,
+      "lng": -97.3301,
+      "tz": "America/Chicago",
+      "slug": null,
+      "keys": [
+        "wichita",
+        "wichita ks"
+      ],
+      "zips": [
+        "67202"
+      ]
+    },
+    {
+      "name": "Tulsa, OK",
+      "lat": 36.154,
+      "lng": -95.9928,
+      "tz": "America/Chicago",
+      "slug": null,
+      "keys": [
+        "tulsa",
+        "tulsa ok"
+      ],
+      "zips": [
+        "74103"
+      ]
+    },
+    {
+      "name": "Colorado Springs, CO",
+      "lat": 38.8339,
+      "lng": -104.8214,
+      "tz": "America/Denver",
+      "slug": null,
+      "keys": [
+        "colorado springs"
+      ],
+      "zips": [
+        "80903"
+      ]
+    },
+    {
+      "name": "Boulder, CO",
+      "lat": 40.015,
+      "lng": -105.2705,
+      "tz": "America/Denver",
+      "slug": null,
+      "keys": [
+        "boulder",
+        "boulder co"
+      ],
+      "zips": [
+        "80302"
+      ]
+    },
+    {
+      "name": "Provo, UT",
+      "lat": 40.2338,
+      "lng": -111.6585,
+      "tz": "America/Denver",
+      "slug": null,
+      "keys": [
+        "provo",
+        "provo ut"
+      ],
+      "zips": [
+        "84601"
+      ]
+    },
+    {
+      "name": "Tacoma, WA",
+      "lat": 47.2529,
+      "lng": -122.4443,
+      "tz": "America/Los_Angeles",
+      "slug": null,
+      "keys": [
+        "tacoma",
+        "tacoma wa"
+      ],
+      "zips": [
+        "98402"
+      ]
+    },
+    {
+      "name": "Eugene, OR",
+      "lat": 44.0521,
+      "lng": -123.0868,
+      "tz": "America/Los_Angeles",
+      "slug": null,
+      "keys": [
+        "eugene",
+        "eugene or"
+      ],
+      "zips": [
+        "97401"
+      ]
+    },
+    {
+      "name": "Reno, NV",
+      "lat": 39.5296,
+      "lng": -119.8138,
+      "tz": "America/Los_Angeles",
+      "slug": null,
+      "keys": [
+        "reno",
+        "reno nv"
+      ],
+      "zips": [
+        "89501"
+      ]
+    }
+  ]
+}

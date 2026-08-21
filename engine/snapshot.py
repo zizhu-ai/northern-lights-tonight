@@ -660,7 +660,7 @@ def snapshot_location(loc: dict, now_utc: datetime, ovation, kp_series, cloud_by
     head = next(p for p in points_out if p["id"] == headline_id)
 
     generated = now_utc
-    valid = generated + timedelta(minutes=10)
+    valid = generated + timedelta(minutes=25)
     if ovation and ovation.get("fcst"):
         cap = ovation["fcst"] + timedelta(minutes=40)
         if valid > cap:
