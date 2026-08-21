@@ -2,22 +2,25 @@
   "location_slug": "minnesota",
   "headline_point_id": "duluth",
   "headline_point_name": "Duluth",
-  "generated_at": "2026-08-21T09:55:05.854335+00:00",
-  "valid_until": "2026-08-21T10:20:05.854335+00:00",
-  "status": "NO",
-  "confidence": "high",
-  "best_window_start": null,
-  "best_window_end": null,
-  "main_obstacle": "AURORA_NO_REACH",
-  "main_obstacle_text": "Aurora activity is not expected to reach Minnesota tonight.",
+  "generated_at": "2026-08-21T10:20:34.566854+00:00",
+  "valid_until": "2026-08-21T10:45:34.566854+00:00",
+  "status": "MAYBE",
+  "confidence": "low",
+  "best_window_start": "2026-08-21T21:45:00-05:00",
+  "best_window_end": "2026-08-22T00:45:00-05:00",
+  "main_obstacle": "AURORA_HORIZON_ONLY",
+  "main_obstacle_text": "Any display would likely stay low on the northern horizon.",
   "reason_codes": [
-    "AURORA_NO_REACH"
+    "AURORA_NO_REACH",
+    "AURORA_HORIZON_ONLY",
+    "CLOUD_MIXED",
+    "FORECAST_FAR"
   ],
   "look_toward": "north",
-  "answer_sentence": "NO (Duluth area). Not worth a special trip tonight. Aurora activity is not expected to reach Minnesota tonight.",
+  "answer_sentence": "MAYBE in Minnesota (Duluth area). Best window 9:45 PM–12:45 AM CDT. Main issue: Any display would likely stay low on the northern horizon.",
   "sources": {
-    "ovation_obs": "2026-08-21T09:46:00+00:00",
-    "ovation_fcst": "2026-08-21T10:38:00+00:00",
+    "ovation_obs": "2026-08-21T10:11:00+00:00",
+    "ovation_fcst": "2026-08-21T11:03:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -34,40 +37,28 @@
     {
       "id": "duluth",
       "name": "Duluth",
-      "status": "NO",
-      "confidence": "high",
+      "status": "MAYBE",
+      "confidence": "low",
       "aurora_reach": "none",
       "cloud_block": "clear",
       "urban": false,
-      "main_obstacle": "AURORA_NO_REACH"
+      "main_obstacle": "AURORA_HORIZON_ONLY"
     },
     {
       "id": "minneapolis",
       "name": "Minneapolis",
-      "status": "NO",
-      "confidence": "high",
+      "status": "MAYBE",
+      "confidence": "low",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": null,
       "urban": true,
-      "main_obstacle": "AURORA_NO_REACH"
+      "main_obstacle": "DATA_MISSING_WEATHER"
     }
   ],
   "windows": [
     {
-      "start": "2026-08-21T04:45:00-05:00",
-      "end": "2026-08-21T05:15:00-05:00",
-      "skip": false,
-      "status": "NO",
-      "aurora_reach": "none",
-      "cloud_block": "clear",
-      "source": "ovation",
-      "codes": [
-        "AURORA_NO_REACH"
-      ]
-    },
-    {
-      "start": "2026-08-21T05:15:00-05:00",
-      "end": "2026-08-21T05:45:00-05:00",
+      "start": "2026-08-21T20:15:00-05:00",
+      "end": "2026-08-21T20:45:00-05:00",
       "skip": true,
       "status": null,
       "aurora_reach": null,
@@ -78,8 +69,232 @@
       ]
     },
     {
-      "start": "2026-08-21T05:45:00-05:00",
-      "end": "2026-08-21T06:15:00-05:00",
+      "start": "2026-08-21T20:45:00-05:00",
+      "end": "2026-08-21T21:15:00-05:00",
+      "skip": true,
+      "status": null,
+      "aurora_reach": null,
+      "cloud_block": "clear",
+      "source": null,
+      "codes": [
+        "NOT_DARK_YET"
+      ]
+    },
+    {
+      "start": "2026-08-21T21:15:00-05:00",
+      "end": "2026-08-21T21:45:00-05:00",
+      "skip": false,
+      "status": "NO",
+      "aurora_reach": "none",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "AURORA_NO_REACH"
+      ]
+    },
+    {
+      "start": "2026-08-21T21:45:00-05:00",
+      "end": "2026-08-21T22:15:00-05:00",
+      "skip": false,
+      "status": "MAYBE",
+      "aurora_reach": "horizon",
+      "cloud_block": "mixed",
+      "source": "kp_forecast",
+      "codes": [
+        "AURORA_HORIZON_ONLY",
+        "CLOUD_MIXED",
+        "FORECAST_FAR"
+      ]
+    },
+    {
+      "start": "2026-08-21T22:15:00-05:00",
+      "end": "2026-08-21T22:45:00-05:00",
+      "skip": false,
+      "status": "MAYBE",
+      "aurora_reach": "horizon",
+      "cloud_block": "mixed",
+      "source": "kp_forecast",
+      "codes": [
+        "AURORA_HORIZON_ONLY",
+        "CLOUD_MIXED",
+        "FORECAST_FAR"
+      ]
+    },
+    {
+      "start": "2026-08-21T22:45:00-05:00",
+      "end": "2026-08-21T23:15:00-05:00",
+      "skip": false,
+      "status": "MAYBE",
+      "aurora_reach": "horizon",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "AURORA_HORIZON_ONLY",
+        "FORECAST_FAR"
+      ]
+    },
+    {
+      "start": "2026-08-21T23:15:00-05:00",
+      "end": "2026-08-21T23:45:00-05:00",
+      "skip": false,
+      "status": "MAYBE",
+      "aurora_reach": "horizon",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "AURORA_HORIZON_ONLY",
+        "FORECAST_FAR"
+      ]
+    },
+    {
+      "start": "2026-08-21T23:45:00-05:00",
+      "end": "2026-08-22T00:15:00-05:00",
+      "skip": false,
+      "status": "MAYBE",
+      "aurora_reach": "horizon",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "AURORA_HORIZON_ONLY",
+        "FORECAST_FAR"
+      ]
+    },
+    {
+      "start": "2026-08-22T00:15:00-05:00",
+      "end": "2026-08-22T00:45:00-05:00",
+      "skip": false,
+      "status": "MAYBE",
+      "aurora_reach": "horizon",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "AURORA_HORIZON_ONLY",
+        "FORECAST_FAR"
+      ]
+    },
+    {
+      "start": "2026-08-22T00:45:00-05:00",
+      "end": "2026-08-22T01:15:00-05:00",
+      "skip": false,
+      "status": "NO",
+      "aurora_reach": "none",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "AURORA_NO_REACH"
+      ]
+    },
+    {
+      "start": "2026-08-22T01:15:00-05:00",
+      "end": "2026-08-22T01:45:00-05:00",
+      "skip": false,
+      "status": "NO",
+      "aurora_reach": "none",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "AURORA_NO_REACH"
+      ]
+    },
+    {
+      "start": "2026-08-22T01:45:00-05:00",
+      "end": "2026-08-22T02:15:00-05:00",
+      "skip": false,
+      "status": "NO",
+      "aurora_reach": "none",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "AURORA_NO_REACH"
+      ]
+    },
+    {
+      "start": "2026-08-22T02:15:00-05:00",
+      "end": "2026-08-22T02:45:00-05:00",
+      "skip": false,
+      "status": "NO",
+      "aurora_reach": "none",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "AURORA_NO_REACH"
+      ]
+    },
+    {
+      "start": "2026-08-22T02:45:00-05:00",
+      "end": "2026-08-22T03:15:00-05:00",
+      "skip": false,
+      "status": "NO",
+      "aurora_reach": "none",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "AURORA_NO_REACH"
+      ]
+    },
+    {
+      "start": "2026-08-22T03:15:00-05:00",
+      "end": "2026-08-22T03:45:00-05:00",
+      "skip": false,
+      "status": "NO",
+      "aurora_reach": "none",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "AURORA_NO_REACH"
+      ]
+    },
+    {
+      "start": "2026-08-22T03:45:00-05:00",
+      "end": "2026-08-22T04:15:00-05:00",
+      "skip": false,
+      "status": "NO",
+      "aurora_reach": "none",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "AURORA_NO_REACH"
+      ]
+    },
+    {
+      "start": "2026-08-22T04:15:00-05:00",
+      "end": "2026-08-22T04:45:00-05:00",
+      "skip": false,
+      "status": "NO",
+      "aurora_reach": "none",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "AURORA_NO_REACH"
+      ]
+    },
+    {
+      "start": "2026-08-22T04:45:00-05:00",
+      "end": "2026-08-22T05:15:00-05:00",
+      "skip": false,
+      "status": "NO",
+      "aurora_reach": "none",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "AURORA_NO_REACH"
+      ]
+    },
+    {
+      "start": "2026-08-22T05:15:00-05:00",
+      "end": "2026-08-22T05:45:00-05:00",
+      "skip": true,
+      "status": null,
+      "aurora_reach": null,
+      "cloud_block": "clear",
+      "source": null,
+      "codes": [
+        "NOT_DARK_YET"
+      ]
+    },
+    {
+      "start": "2026-08-22T05:45:00-05:00",
+      "end": "2026-08-22T06:15:00-05:00",
       "skip": true,
       "status": null,
       "aurora_reach": null,
