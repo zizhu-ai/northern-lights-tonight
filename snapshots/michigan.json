@@ -2,12 +2,12 @@
   "location_slug": "michigan",
   "headline_point_id": "traverse-city",
   "headline_point_name": "Traverse City",
-  "generated_at": "2026-08-21T15:43:40.155615+00:00",
-  "valid_until": "2026-08-21T16:08:40.155615+00:00",
+  "generated_at": "2026-08-21T16:04:56.768289+00:00",
+  "valid_until": "2026-08-21T16:29:56.768289+00:00",
   "status": "MAYBE",
   "confidence": "low",
   "best_window_start": "2026-08-21T22:45:00-04:00",
-  "best_window_end": "2026-08-22T00:15:00-04:00",
+  "best_window_end": "2026-08-22T00:45:00-04:00",
   "main_obstacle": "CLOUD_MIXED",
   "main_obstacle_text": "Clouds are the main uncertainty.",
   "reason_codes": [
@@ -17,10 +17,10 @@
     "CLOUD_BLOCKED"
   ],
   "look_toward": "north",
-  "answer_sentence": "MAYBE in Michigan (Traverse City area). Best window 10:45 PM–12:15 AM EDT. Main issue: Clouds are the main uncertainty.",
+  "answer_sentence": "MAYBE in Michigan (Traverse City area). Best window 10:45 PM–12:45 AM EDT. Main issue: Clouds are the main uncertainty.",
   "sources": {
-    "ovation_obs": "2026-08-21T15:33:00+00:00",
-    "ovation_fcst": "2026-08-21T16:32:00+00:00",
+    "ovation_obs": "2026-08-21T15:56:00+00:00",
+    "ovation_fcst": "2026-08-21T16:52:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -62,7 +62,7 @@
       "skip": true,
       "status": null,
       "aurora_reach": null,
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "source": null,
       "codes": [
         "NOT_DARK_YET"
@@ -98,7 +98,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -147,12 +147,13 @@
       "start": "2026-08-22T00:15:00-04:00",
       "end": "2026-08-22T00:45:00-04:00",
       "skip": false,
-      "status": "NO",
+      "status": "MAYBE",
       "aurora_reach": "weak",
-      "cloud_block": "socked",
+      "cloud_block": "mixed",
       "source": "kp_forecast",
       "codes": [
-        "CLOUD_BLOCKED"
+        "CLOUD_MIXED",
+        "FORECAST_FAR"
       ]
     },
     {
@@ -197,7 +198,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "socked",
+      "cloud_block": "mixed",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"

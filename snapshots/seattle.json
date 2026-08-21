@@ -2,23 +2,24 @@
   "location_slug": "seattle",
   "headline_point_id": "seattle",
   "headline_point_name": "Seattle",
-  "generated_at": "2026-08-21T15:43:40.155615+00:00",
-  "valid_until": "2026-08-21T16:08:40.155615+00:00",
+  "generated_at": "2026-08-21T16:04:56.768289+00:00",
+  "valid_until": "2026-08-21T16:29:56.768289+00:00",
   "status": "MAYBE",
   "confidence": "low",
   "best_window_start": "2026-08-21T21:15:00-07:00",
   "best_window_end": "2026-08-21T22:45:00-07:00",
-  "main_obstacle": "FORECAST_FAR",
-  "main_obstacle_text": "Later hours rely on a coarser forecast, not the live oval.",
+  "main_obstacle": "CLOUD_MIXED",
+  "main_obstacle_text": "Clouds are the main uncertainty.",
   "reason_codes": [
+    "CLOUD_MIXED",
     "FORECAST_FAR",
     "AURORA_NO_REACH"
   ],
   "look_toward": "north",
-  "answer_sentence": "MAYBE in Seattle. Best window 9:15 PM–10:45 PM PDT. Main issue: Later hours rely on a coarser forecast, not the live oval.",
+  "answer_sentence": "MAYBE in Seattle. Best window 9:15 PM–10:45 PM PDT. Main issue: Clouds are the main uncertainty.",
   "sources": {
-    "ovation_obs": "2026-08-21T15:33:00+00:00",
-    "ovation_fcst": "2026-08-21T16:32:00+00:00",
+    "ovation_obs": "2026-08-21T15:56:00+00:00",
+    "ovation_fcst": "2026-08-21T16:52:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -28,9 +29,9 @@
       "status": "MAYBE",
       "confidence": "low",
       "aurora_reach": "weak",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "urban": true,
-      "main_obstacle": "FORECAST_FAR"
+      "main_obstacle": "CLOUD_MIXED"
     }
   ],
   "windows": [
@@ -64,9 +65,10 @@
       "skip": false,
       "status": "MAYBE",
       "aurora_reach": "weak",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "source": "kp_forecast",
       "codes": [
+        "CLOUD_MIXED",
         "FORECAST_FAR"
       ]
     },
@@ -76,9 +78,10 @@
       "skip": false,
       "status": "MAYBE",
       "aurora_reach": "weak",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "source": "kp_forecast",
       "codes": [
+        "CLOUD_MIXED",
         "FORECAST_FAR"
       ]
     },
@@ -88,9 +91,10 @@
       "skip": false,
       "status": "MAYBE",
       "aurora_reach": "weak",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "source": "kp_forecast",
       "codes": [
+        "CLOUD_MIXED",
         "FORECAST_FAR"
       ]
     },

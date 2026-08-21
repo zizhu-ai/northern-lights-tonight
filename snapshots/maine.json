@@ -2,8 +2,8 @@
   "location_slug": "maine",
   "headline_point_id": "bangor",
   "headline_point_name": "Bangor",
-  "generated_at": "2026-08-21T15:43:40.155615+00:00",
-  "valid_until": "2026-08-21T16:08:40.155615+00:00",
+  "generated_at": "2026-08-21T16:04:56.768289+00:00",
+  "valid_until": "2026-08-21T16:29:56.768289+00:00",
   "status": "MAYBE",
   "confidence": "low",
   "best_window_start": "2026-08-21T22:45:00-04:00",
@@ -12,14 +12,13 @@
   "main_obstacle_text": "Later hours rely on a coarser forecast, not the live oval.",
   "reason_codes": [
     "AURORA_NO_REACH",
-    "CLOUD_MIXED",
     "FORECAST_FAR"
   ],
   "look_toward": "north",
   "answer_sentence": "MAYBE in Maine (Bangor area). Best window 10:45 PM–1:45 AM EDT. Main issue: Later hours rely on a coarser forecast, not the live oval.",
   "sources": {
-    "ovation_obs": "2026-08-21T15:33:00+00:00",
-    "ovation_fcst": "2026-08-21T16:32:00+00:00",
+    "ovation_obs": "2026-08-21T15:56:00+00:00",
+    "ovation_fcst": "2026-08-21T16:52:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -39,7 +38,7 @@
       "status": "MAYBE",
       "confidence": "low",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "urban": false,
       "main_obstacle": "FORECAST_FAR"
     },
@@ -49,9 +48,9 @@
       "status": "MAYBE",
       "confidence": "low",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "urban": true,
-      "main_obstacle": "CLOUD_MIXED"
+      "main_obstacle": "FORECAST_FAR"
     }
   ],
   "windows": [
@@ -61,7 +60,7 @@
       "skip": true,
       "status": null,
       "aurora_reach": null,
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": null,
       "codes": [
         "NOT_DARK_YET"
@@ -73,7 +72,7 @@
       "skip": true,
       "status": null,
       "aurora_reach": null,
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": null,
       "codes": [
         "NOT_DARK_YET"
@@ -85,7 +84,7 @@
       "skip": true,
       "status": null,
       "aurora_reach": null,
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": null,
       "codes": [
         "NOT_DARK_YET"
@@ -97,7 +96,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -109,7 +108,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -121,7 +120,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -133,7 +132,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -145,10 +144,9 @@
       "skip": false,
       "status": "MAYBE",
       "aurora_reach": "weak",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": "kp_forecast",
       "codes": [
-        "CLOUD_MIXED",
         "FORECAST_FAR"
       ]
     },
@@ -158,10 +156,9 @@
       "skip": false,
       "status": "MAYBE",
       "aurora_reach": "weak",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": "kp_forecast",
       "codes": [
-        "CLOUD_MIXED",
         "FORECAST_FAR"
       ]
     },
@@ -183,10 +180,9 @@
       "skip": false,
       "status": "MAYBE",
       "aurora_reach": "weak",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": "kp_forecast",
       "codes": [
-        "CLOUD_MIXED",
         "FORECAST_FAR"
       ]
     },
@@ -196,10 +192,9 @@
       "skip": false,
       "status": "MAYBE",
       "aurora_reach": "weak",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": "kp_forecast",
       "codes": [
-        "CLOUD_MIXED",
         "FORECAST_FAR"
       ]
     },
@@ -209,10 +204,9 @@
       "skip": false,
       "status": "MAYBE",
       "aurora_reach": "weak",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": "kp_forecast",
       "codes": [
-        "CLOUD_MIXED",
         "FORECAST_FAR"
       ]
     },
@@ -222,7 +216,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -234,7 +228,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -246,7 +240,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"

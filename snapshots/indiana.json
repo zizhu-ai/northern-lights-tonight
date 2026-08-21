@@ -2,8 +2,8 @@
   "location_slug": "indiana",
   "headline_point_id": "south-bend",
   "headline_point_name": "South Bend",
-  "generated_at": "2026-08-21T15:43:40.155615+00:00",
-  "valid_until": "2026-08-21T16:08:40.155615+00:00",
+  "generated_at": "2026-08-21T16:04:56.768289+00:00",
+  "valid_until": "2026-08-21T16:29:56.768289+00:00",
   "status": "NO",
   "confidence": "high",
   "best_window_start": null,
@@ -16,8 +16,8 @@
   "look_toward": "north",
   "answer_sentence": "NO (South Bend area). Not worth a special trip tonight. Aurora activity is not expected to reach Indiana tonight.",
   "sources": {
-    "ovation_obs": "2026-08-21T15:33:00+00:00",
-    "ovation_fcst": "2026-08-21T16:32:00+00:00",
+    "ovation_obs": "2026-08-21T15:56:00+00:00",
+    "ovation_fcst": "2026-08-21T16:52:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -37,7 +37,7 @@
       "status": "NO",
       "confidence": "high",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "urban": false,
       "main_obstacle": "AURORA_NO_REACH"
     },
@@ -107,7 +107,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -119,7 +119,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -143,7 +143,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -155,7 +155,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -203,7 +203,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "socked",
+      "cloud_block": "mixed",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
