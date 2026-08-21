@@ -2,8 +2,8 @@
   "location_slug": "chicago",
   "headline_point_id": "chicago",
   "headline_point_name": "Chicago",
-  "generated_at": "2026-08-21T06:39:13.144573+00:00",
-  "valid_until": "2026-08-21T07:04:13.144573+00:00",
+  "generated_at": "2026-08-21T07:11:49.984000+00:00",
+  "valid_until": "2026-08-21T07:36:49.984000+00:00",
   "status": "NO",
   "confidence": "high",
   "best_window_start": null,
@@ -16,9 +16,9 @@
   "look_toward": "north",
   "answer_sentence": "NO. Not worth a special trip tonight. Aurora activity is not expected to reach Chicago tonight.",
   "sources": {
-    "ovation_obs": "2026-08-21T02:59:00+00:00",
-    "ovation_fcst": "2026-08-21T03:54:00+00:00",
-    "ovation_ok": false
+    "ovation_obs": "2026-08-21T07:05:00+00:00",
+    "ovation_fcst": "2026-08-21T08:00:00+00:00",
+    "ovation_ok": true
   },
   "points": [
     {
@@ -34,25 +34,13 @@
   ],
   "windows": [
     {
-      "start": "2026-08-21T01:15:00-05:00",
-      "end": "2026-08-21T01:45:00-05:00",
-      "skip": false,
-      "status": "NO",
-      "aurora_reach": "none",
-      "cloud_block": "clear",
-      "source": "kp",
-      "codes": [
-        "AURORA_NO_REACH"
-      ]
-    },
-    {
       "start": "2026-08-21T01:45:00-05:00",
       "end": "2026-08-21T02:15:00-05:00",
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
       "cloud_block": "clear",
-      "source": "kp",
+      "source": "ovation",
       "codes": [
         "AURORA_NO_REACH"
       ]
@@ -64,7 +52,7 @@
       "status": "NO",
       "aurora_reach": "none",
       "cloud_block": "clear",
-      "source": "kp",
+      "source": "ovation",
       "codes": [
         "AURORA_NO_REACH"
       ]
@@ -76,7 +64,7 @@
       "status": "NO",
       "aurora_reach": "none",
       "cloud_block": "clear",
-      "source": "kp",
+      "source": "ovation",
       "codes": [
         "AURORA_NO_REACH"
       ]
@@ -88,7 +76,7 @@
       "status": "NO",
       "aurora_reach": "none",
       "cloud_block": "clear",
-      "source": "kp",
+      "source": "ovation",
       "codes": [
         "AURORA_NO_REACH"
       ]
