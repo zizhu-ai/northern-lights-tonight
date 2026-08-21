@@ -2,8 +2,8 @@
   "location_slug": "colorado",
   "headline_point_id": "fort-collins",
   "headline_point_name": "Fort Collins",
-  "generated_at": "2026-08-21T15:01:17.726355+00:00",
-  "valid_until": "2026-08-21T15:26:17.726355+00:00",
+  "generated_at": "2026-08-21T15:43:40.155615+00:00",
+  "valid_until": "2026-08-21T16:08:40.155615+00:00",
   "status": "NO",
   "confidence": "high",
   "best_window_start": null,
@@ -16,8 +16,8 @@
   "look_toward": "north",
   "answer_sentence": "NO (Fort Collins area). Not worth a special trip tonight. Aurora activity is not expected to reach Colorado tonight.",
   "sources": {
-    "ovation_obs": "2026-08-21T14:49:00+00:00",
-    "ovation_fcst": "2026-08-21T15:47:00+00:00",
+    "ovation_obs": "2026-08-21T15:33:00+00:00",
+    "ovation_fcst": "2026-08-21T16:32:00+00:00",
     "ovation_ok": true
   },
   "points": [
