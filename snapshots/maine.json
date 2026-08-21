@@ -2,8 +2,8 @@
   "location_slug": "maine",
   "headline_point_id": "bangor",
   "headline_point_name": "Bangor",
-  "generated_at": "2026-08-21T17:13:46.474952+00:00",
-  "valid_until": "2026-08-21T17:38:46.474952+00:00",
+  "generated_at": "2026-08-21T17:46:40.074413+00:00",
+  "valid_until": "2026-08-21T18:11:40.074413+00:00",
   "status": "MAYBE",
   "confidence": "low",
   "best_window_start": "2026-08-21T22:45:00-04:00",
@@ -18,8 +18,8 @@
   "look_toward": "north",
   "answer_sentence": "MAYBE in Maine (Bangor area). Best window 10:45 PM–1:45 AM EDT. Main issue: Later hours rely on a coarser forecast, not the live oval.",
   "sources": {
-    "ovation_obs": "2026-08-21T17:05:00+00:00",
-    "ovation_fcst": "2026-08-21T18:01:00+00:00",
+    "ovation_obs": "2026-08-21T17:36:00+00:00",
+    "ovation_fcst": "2026-08-21T18:33:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -39,7 +39,7 @@
       "status": "MAYBE",
       "confidence": "low",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "urban": false,
       "main_obstacle": "FORECAST_FAR"
     },
@@ -51,7 +51,7 @@
       "aurora_reach": "none",
       "cloud_block": "clear",
       "urban": true,
-      "main_obstacle": "CLOUD_MIXED"
+      "main_obstacle": "FORECAST_FAR"
     }
   ],
   "windows": [
@@ -97,7 +97,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -109,7 +109,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
