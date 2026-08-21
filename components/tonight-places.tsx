@@ -5,7 +5,12 @@ import {
   WAVE_ONE_SLUGS,
   type ForecastDossier,
 } from "@/lib/forecast-places";
-import { formatWindow, loadLatest, type SnapshotRow } from "@/lib/snapshots";
+import {
+  formatWindow,
+  isSnapshotFresh,
+  loadLatest,
+  type SnapshotRow,
+} from "@/lib/snapshots";
 
 import styles from "./tonight-places.module.css";
 
@@ -35,7 +40,7 @@ export async function TonightPlaces({ grouped = false }: TonightPlacesProps) {
     return (
       <div className={styles.groups}>
         {STATUS_ORDER.map((status) => {
-          const group = rows.filter((row) => (row.snapshot?.status ?? "UNKNOWN") === status);
+          const group = rows.filter((row) => displayStatus(row.snapshot) === status);
           if (group.length === 0) return null;
           return (
             <section className={styles.group} key={status}>
@@ -50,16 +55,22 @@ export async function TonightPlaces({ grouped = false }: TonightPlacesProps) {
 
   const sorted = [...rows].sort(
     (a, b) =>
-      STATUS_ORDER.indexOf(a.snapshot?.status ?? "UNKNOWN") -
-      STATUS_ORDER.indexOf(b.snapshot?.status ?? "UNKNOWN"),
+      STATUS_ORDER.indexOf(displayStatus(a.snapshot)) -
+      STATUS_ORDER.indexOf(displayStatus(b.snapshot)),
   );
 
   return <div className={styles.list}>{sorted.map(renderRow)}</div>;
 }
 
+function displayStatus(snapshot: SnapshotRow | null): SnapshotRow["status"] {
+  if (!snapshot || !isSnapshotFresh(snapshot)) return "UNKNOWN";
+  return snapshot.status;
+}
+
 function renderRow({ dossier, snapshot }: TonightRow) {
-  const status = snapshot?.status ?? "UNKNOWN";
-  const window = snapshot
+  const live = snapshot ? isSnapshotFresh(snapshot) : false;
+  const status = displayStatus(snapshot);
+  const window = live && snapshot
     ? formatWindow(snapshot.best_window_start, snapshot.best_window_end, dossier.timezone)
     : "—";
 

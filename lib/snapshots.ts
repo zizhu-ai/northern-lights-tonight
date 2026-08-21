@@ -10,6 +10,8 @@ export type SnapshotRow = {
   best_window_end: string | null;
   main_obstacle: string;
   answer_sentence: string;
+  generated_at?: string;
+  valid_until?: string;
 };
 
 export type SnapshotBundle = {
@@ -75,9 +77,10 @@ export async function loadForecastSnapshot(
 }
 
 export function isSnapshotFresh(
-  snapshot: ForecastSnapshot,
+  snapshot: { valid_until?: string },
   now: Date = new Date(),
 ): boolean {
+  if (!snapshot.valid_until) return false;
   const validUntil = Date.parse(snapshot.valid_until);
   return Number.isFinite(validUntil) && now.getTime() <= validUntil;
 }
