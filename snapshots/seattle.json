@@ -2,36 +2,34 @@
   "location_slug": "seattle",
   "headline_point_id": "seattle",
   "headline_point_name": "Seattle",
-  "generated_at": "2026-08-21T20:27:08.077244+00:00",
-  "valid_until": "2026-08-21T20:52:08.077244+00:00",
-  "status": "MAYBE",
-  "confidence": "low",
-  "best_window_start": "2026-08-21T21:15:00-07:00",
-  "best_window_end": "2026-08-21T22:45:00-07:00",
-  "main_obstacle": "CLOUD_MIXED",
-  "main_obstacle_text": "Clouds are the main uncertainty.",
+  "generated_at": "2026-08-21T20:49:05.365196+00:00",
+  "valid_until": "2026-08-21T21:14:05.365196+00:00",
+  "status": "NO",
+  "confidence": "high",
+  "best_window_start": null,
+  "best_window_end": null,
+  "main_obstacle": "AURORA_NO_REACH",
+  "main_obstacle_text": "Aurora activity is not expected to reach Seattle tonight.",
   "reason_codes": [
-    "CLOUD_MIXED",
-    "FORECAST_FAR",
     "AURORA_NO_REACH"
   ],
   "look_toward": "north",
-  "answer_sentence": "MAYBE in Seattle. Best window 9:15 PM–10:45 PM PDT. Main issue: Clouds are the main uncertainty.",
+  "answer_sentence": "NO. Not worth a special trip tonight. Aurora activity is not expected to reach Seattle tonight.",
   "sources": {
-    "ovation_obs": "2026-08-21T20:20:00+00:00",
-    "ovation_fcst": "2026-08-21T21:17:00+00:00",
+    "ovation_obs": "2026-08-21T20:41:00+00:00",
+    "ovation_fcst": "2026-08-21T21:36:00+00:00",
     "ovation_ok": true
   },
   "points": [
     {
       "id": "seattle",
       "name": "Seattle",
-      "status": "MAYBE",
-      "confidence": "low",
-      "aurora_reach": "weak",
+      "status": "NO",
+      "confidence": "high",
+      "aurora_reach": "none",
       "cloud_block": "mixed",
       "urban": true,
-      "main_obstacle": "CLOUD_MIXED"
+      "main_obstacle": "AURORA_NO_REACH"
     }
   ],
   "windows": [
@@ -63,39 +61,36 @@
       "start": "2026-08-21T21:15:00-07:00",
       "end": "2026-08-21T21:45:00-07:00",
       "skip": false,
-      "status": "MAYBE",
-      "aurora_reach": "weak",
+      "status": "NO",
+      "aurora_reach": "none",
       "cloud_block": "mixed",
       "source": "kp_forecast",
       "codes": [
-        "CLOUD_MIXED",
-        "FORECAST_FAR"
+        "AURORA_NO_REACH"
       ]
     },
     {
       "start": "2026-08-21T21:45:00-07:00",
       "end": "2026-08-21T22:15:00-07:00",
       "skip": false,
-      "status": "MAYBE",
-      "aurora_reach": "weak",
+      "status": "NO",
+      "aurora_reach": "none",
       "cloud_block": "mixed",
       "source": "kp_forecast",
       "codes": [
-        "CLOUD_MIXED",
-        "FORECAST_FAR"
+        "AURORA_NO_REACH"
       ]
     },
     {
       "start": "2026-08-21T22:15:00-07:00",
       "end": "2026-08-21T22:45:00-07:00",
       "skip": false,
-      "status": "MAYBE",
-      "aurora_reach": "weak",
+      "status": "NO",
+      "aurora_reach": "none",
       "cloud_block": "mixed",
       "source": "kp_forecast",
       "codes": [
-        "CLOUD_MIXED",
-        "FORECAST_FAR"
+        "AURORA_NO_REACH"
       ]
     },
     {
@@ -152,7 +147,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -176,7 +171,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -188,7 +183,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -200,7 +195,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"

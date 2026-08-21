@@ -2,8 +2,8 @@
   "location_slug": "utah",
   "headline_point_id": "logan",
   "headline_point_name": "Logan",
-  "generated_at": "2026-08-21T20:27:08.077244+00:00",
-  "valid_until": "2026-08-21T20:52:08.077244+00:00",
+  "generated_at": "2026-08-21T20:49:05.365196+00:00",
+  "valid_until": "2026-08-21T21:14:05.365196+00:00",
   "status": "NO",
   "confidence": "high",
   "best_window_start": null,
@@ -16,8 +16,8 @@
   "look_toward": "north",
   "answer_sentence": "NO (Logan area). Not worth a special trip tonight. Aurora activity is not expected to reach Utah tonight.",
   "sources": {
-    "ovation_obs": "2026-08-21T20:20:00+00:00",
-    "ovation_fcst": "2026-08-21T21:17:00+00:00",
+    "ovation_obs": "2026-08-21T20:41:00+00:00",
+    "ovation_fcst": "2026-08-21T21:36:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -37,7 +37,7 @@
       "status": "NO",
       "confidence": "high",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "urban": true,
       "main_obstacle": "AURORA_NO_REACH"
     },
@@ -47,7 +47,7 @@
       "status": "NO",
       "confidence": "high",
       "aurora_reach": "none",
-      "cloud_block": null,
+      "cloud_block": "clear",
       "urban": false,
       "main_obstacle": "AURORA_NO_REACH"
     }
@@ -143,7 +143,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -191,7 +191,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -239,7 +239,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -251,7 +251,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -263,7 +263,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
