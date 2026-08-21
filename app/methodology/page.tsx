@@ -6,10 +6,12 @@ import {
   renderMarkdownBlocks,
 } from "@/components/guide-markdown";
 
+import { SITE_URL } from "@/lib/site";
+
 import styles from "../part4.module.css";
 
 const FILE_NAME = "methodology.md";
-const PAGE_URL = "https://northern-lights-tonight.vercel.app/methodology";
+const PAGE_URL = `${SITE_URL}/methodology`;
 
 export const dynamic = "force-static";
 

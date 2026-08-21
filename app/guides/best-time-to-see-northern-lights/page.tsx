@@ -6,11 +6,12 @@ import {
   renderMarkdownBlocks,
 } from "@/components/guide-markdown";
 
+import { SITE_URL } from "@/lib/site";
+
 import styles from "../../part4.module.css";
 
 const FILE_NAME = "best-time-to-see-northern-lights.md";
-const PAGE_URL =
-  "https://northern-lights-tonight.vercel.app/guides/best-time-to-see-northern-lights";
+const PAGE_URL = `${SITE_URL}/guides/best-time-to-see-northern-lights`;
 
 export const dynamic = "force-static";
 

@@ -21,9 +21,9 @@ import {
   type ForecastWindow,
 } from "@/lib/snapshots";
 
-import styles from "./page.module.css";
+import { SITE_URL } from "@/lib/site";
 
-const SITE_URL = "https://northern-lights-tonight.vercel.app";
+import styles from "./page.module.css";
 const REASON_COPY: Record<string, string> = {
   AURORA_NO_REACH: "Aurora activity is not expected to reach {place} tonight.",
   AURORA_HORIZON_ONLY: "Any display would likely stay low on the northern horizon.",
