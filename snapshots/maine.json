@@ -2,8 +2,8 @@
   "location_slug": "maine",
   "headline_point_id": "bangor",
   "headline_point_name": "Bangor",
-  "generated_at": "2026-08-21T09:19:48.543472+00:00",
-  "valid_until": "2026-08-21T09:44:48.543472+00:00",
+  "generated_at": "2026-08-21T09:55:05.854335+00:00",
+  "valid_until": "2026-08-21T10:20:05.854335+00:00",
   "status": "MAYBE",
   "confidence": "low",
   "best_window_start": "2026-08-21T22:45:00-04:00",
@@ -17,8 +17,8 @@
   "look_toward": "north",
   "answer_sentence": "MAYBE in Maine (Bangor area). Best window 10:45 PM–1:45 AM EDT. Main issue: Later hours rely on a coarser forecast, not the live oval.",
   "sources": {
-    "ovation_obs": "2026-08-21T09:09:00+00:00",
-    "ovation_fcst": "2026-08-21T10:04:00+00:00",
+    "ovation_obs": "2026-08-21T09:46:00+00:00",
+    "ovation_fcst": "2026-08-21T10:38:00+00:00",
     "ovation_ok": true
   },
   "points": [
