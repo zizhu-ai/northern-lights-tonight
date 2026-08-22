@@ -2,8 +2,8 @@
   "location_slug": "massachusetts",
   "headline_point_id": "newburyport",
   "headline_point_name": "Newburyport",
-  "generated_at": "2026-08-22T02:05:30.725222+00:00",
-  "valid_until": "2026-08-22T02:30:30.725222+00:00",
+  "generated_at": "2026-08-22T03:03:33.106290+00:00",
+  "valid_until": "2026-08-22T03:28:33.106290+00:00",
   "status": "NO",
   "confidence": "high",
   "best_window_start": null,
@@ -16,8 +16,8 @@
   "look_toward": "north",
   "answer_sentence": "NO (Newburyport area). Not worth a special trip tonight. Aurora activity is not expected to reach Massachusetts tonight.",
   "sources": {
-    "ovation_obs": "2026-08-22T01:55:00+00:00",
-    "ovation_fcst": "2026-08-22T02:51:00+00:00",
+    "ovation_obs": "2026-08-22T02:55:00+00:00",
+    "ovation_fcst": "2026-08-22T03:53:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -27,7 +27,7 @@
       "status": "NO",
       "confidence": "high",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "urban": false,
       "main_obstacle": "AURORA_NO_REACH"
     },
@@ -54,30 +54,6 @@
   ],
   "windows": [
     {
-      "start": "2026-08-21T21:45:00-04:00",
-      "end": "2026-08-21T22:15:00-04:00",
-      "skip": false,
-      "status": "NO",
-      "aurora_reach": "none",
-      "cloud_block": "clear",
-      "source": "ovation",
-      "codes": [
-        "AURORA_NO_REACH"
-      ]
-    },
-    {
-      "start": "2026-08-21T22:15:00-04:00",
-      "end": "2026-08-21T22:45:00-04:00",
-      "skip": false,
-      "status": "NO",
-      "aurora_reach": "none",
-      "cloud_block": "mixed",
-      "source": "ovation",
-      "codes": [
-        "AURORA_NO_REACH"
-      ]
-    },
-    {
       "start": "2026-08-21T22:45:00-04:00",
       "end": "2026-08-21T23:15:00-04:00",
       "skip": false,
@@ -96,7 +72,7 @@
       "status": "NO",
       "aurora_reach": "none",
       "cloud_block": "mixed",
-      "source": "kp",
+      "source": "ovation",
       "codes": [
         "AURORA_NO_REACH"
       ]
@@ -108,7 +84,7 @@
       "status": "NO",
       "aurora_reach": "none",
       "cloud_block": "mixed",
-      "source": "kp",
+      "source": "ovation",
       "codes": [
         "AURORA_NO_REACH"
       ]
@@ -167,7 +143,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "socked",
       "source": "kp",
       "codes": [
         "AURORA_NO_REACH"
@@ -179,7 +155,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "socked",
       "source": "kp",
       "codes": [
         "AURORA_NO_REACH"

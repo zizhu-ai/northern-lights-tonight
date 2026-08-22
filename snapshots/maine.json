@@ -2,8 +2,8 @@
   "location_slug": "maine",
   "headline_point_id": "bangor",
   "headline_point_name": "Bangor",
-  "generated_at": "2026-08-22T02:05:30.725222+00:00",
-  "valid_until": "2026-08-22T02:30:30.725222+00:00",
+  "generated_at": "2026-08-22T03:03:33.106290+00:00",
+  "valid_until": "2026-08-22T03:28:33.106290+00:00",
   "status": "NO",
   "confidence": "high",
   "best_window_start": null,
@@ -16,20 +16,20 @@
   "look_toward": "north",
   "answer_sentence": "NO (Bangor area). Not worth a special trip tonight. Aurora activity is not expected to reach Maine tonight.",
   "sources": {
-    "ovation_obs": "2026-08-22T01:55:00+00:00",
-    "ovation_fcst": "2026-08-22T02:51:00+00:00",
+    "ovation_obs": "2026-08-22T02:55:00+00:00",
+    "ovation_fcst": "2026-08-22T03:53:00+00:00",
     "ovation_ok": true
   },
   "points": [
     {
       "id": "presque-isle",
       "name": "Presque Isle",
-      "status": "MAYBE",
-      "confidence": "low",
-      "aurora_reach": "weak",
+      "status": "NO",
+      "confidence": "high",
+      "aurora_reach": "none",
       "cloud_block": "clear",
       "urban": false,
-      "main_obstacle": "AURORA_HORIZON_ONLY"
+      "main_obstacle": "AURORA_NO_REACH"
     },
     {
       "id": "bangor",
@@ -47,36 +47,12 @@
       "status": "NO",
       "confidence": "high",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "urban": true,
       "main_obstacle": "AURORA_NO_REACH"
     }
   ],
   "windows": [
-    {
-      "start": "2026-08-21T21:45:00-04:00",
-      "end": "2026-08-21T22:15:00-04:00",
-      "skip": false,
-      "status": "NO",
-      "aurora_reach": "none",
-      "cloud_block": "clear",
-      "source": "ovation",
-      "codes": [
-        "AURORA_NO_REACH"
-      ]
-    },
-    {
-      "start": "2026-08-21T22:15:00-04:00",
-      "end": "2026-08-21T22:45:00-04:00",
-      "skip": false,
-      "status": "NO",
-      "aurora_reach": "none",
-      "cloud_block": "clear",
-      "source": "ovation",
-      "codes": [
-        "AURORA_NO_REACH"
-      ]
-    },
     {
       "start": "2026-08-21T22:45:00-04:00",
       "end": "2026-08-21T23:15:00-04:00",
@@ -96,7 +72,7 @@
       "status": "NO",
       "aurora_reach": "none",
       "cloud_block": "clear",
-      "source": "kp",
+      "source": "ovation",
       "codes": [
         "AURORA_NO_REACH"
       ]
@@ -108,7 +84,7 @@
       "status": "NO",
       "aurora_reach": "none",
       "cloud_block": "clear",
-      "source": "kp",
+      "source": "ovation",
       "codes": [
         "AURORA_NO_REACH"
       ]
