@@ -2,8 +2,8 @@
   "location_slug": "utah",
   "headline_point_id": "logan",
   "headline_point_name": "Logan",
-  "generated_at": "2026-08-22T08:41:55.331286+00:00",
-  "valid_until": "2026-08-22T09:06:55.331286+00:00",
+  "generated_at": "2026-08-22T09:04:45.189638+00:00",
+  "valid_until": "2026-08-22T09:29:45.189638+00:00",
   "status": "NO",
   "confidence": "high",
   "best_window_start": null,
@@ -16,8 +16,8 @@
   "look_toward": "north",
   "answer_sentence": "NO (Logan area). Not worth a special trip tonight. Aurora activity is not expected to reach Utah tonight.",
   "sources": {
-    "ovation_obs": "2026-08-22T08:30:00+00:00",
-    "ovation_fcst": "2026-08-22T09:32:00+00:00",
+    "ovation_obs": "2026-08-22T08:56:00+00:00",
+    "ovation_fcst": "2026-08-22T09:56:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -53,18 +53,6 @@
     }
   ],
   "windows": [
-    {
-      "start": "2026-08-22T02:15:00-06:00",
-      "end": "2026-08-22T02:45:00-06:00",
-      "skip": false,
-      "status": "NO",
-      "aurora_reach": "none",
-      "cloud_block": "mixed",
-      "source": "ovation",
-      "codes": [
-        "AURORA_NO_REACH"
-      ]
-    },
     {
       "start": "2026-08-22T02:45:00-06:00",
       "end": "2026-08-22T03:15:00-06:00",
