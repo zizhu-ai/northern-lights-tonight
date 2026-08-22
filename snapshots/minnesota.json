@@ -2,8 +2,8 @@
   "location_slug": "minnesota",
   "headline_point_id": "duluth",
   "headline_point_name": "Duluth",
-  "generated_at": "2026-08-22T06:23:20.182364+00:00",
-  "valid_until": "2026-08-22T06:48:20.182364+00:00",
+  "generated_at": "2026-08-22T07:08:07.011170+00:00",
+  "valid_until": "2026-08-22T07:33:07.011170+00:00",
   "status": "NO",
   "confidence": "high",
   "best_window_start": null,
@@ -11,25 +11,26 @@
   "main_obstacle": "AURORA_NO_REACH",
   "main_obstacle_text": "Aurora activity is not expected to reach Minnesota tonight.",
   "reason_codes": [
-    "AURORA_NO_REACH"
+    "AURORA_NO_REACH",
+    "DATA_MISSING_WEATHER"
   ],
   "look_toward": "north",
   "answer_sentence": "NO (Duluth area). Not worth a special trip tonight. Aurora activity is not expected to reach Minnesota tonight.",
   "sources": {
-    "ovation_obs": "2026-08-22T06:16:00+00:00",
-    "ovation_fcst": "2026-08-22T07:16:00+00:00",
+    "ovation_obs": "2026-08-22T07:00:00+00:00",
+    "ovation_fcst": "2026-08-22T08:02:00+00:00",
     "ovation_ok": true
   },
   "points": [
     {
       "id": "ely",
       "name": "Ely",
-      "status": "MAYBE",
-      "confidence": "low",
-      "aurora_reach": "weak",
-      "cloud_block": "clear",
+      "status": "NO",
+      "confidence": "high",
+      "aurora_reach": "none",
+      "cloud_block": "mixed",
       "urban": false,
-      "main_obstacle": "AURORA_HORIZON_ONLY"
+      "main_obstacle": "AURORA_NO_REACH"
     },
     {
       "id": "duluth",
@@ -37,7 +38,7 @@
       "status": "NO",
       "confidence": "high",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": null,
       "urban": false,
       "main_obstacle": "AURORA_NO_REACH"
     },
@@ -54,27 +55,16 @@
   ],
   "windows": [
     {
-      "start": "2026-08-22T01:15:00-05:00",
-      "end": "2026-08-22T01:45:00-05:00",
-      "skip": false,
-      "status": "NO",
-      "aurora_reach": "none",
-      "cloud_block": "clear",
-      "source": "ovation",
-      "codes": [
-        "AURORA_NO_REACH"
-      ]
-    },
-    {
       "start": "2026-08-22T01:45:00-05:00",
       "end": "2026-08-22T02:15:00-05:00",
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": null,
       "source": "ovation",
       "codes": [
-        "AURORA_NO_REACH"
+        "AURORA_NO_REACH",
+        "DATA_MISSING_WEATHER"
       ]
     },
     {
@@ -83,10 +73,11 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": null,
       "source": "ovation",
       "codes": [
-        "AURORA_NO_REACH"
+        "AURORA_NO_REACH",
+        "DATA_MISSING_WEATHER"
       ]
     },
     {
@@ -95,10 +86,11 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
-      "source": "kp",
+      "cloud_block": null,
+      "source": "ovation",
       "codes": [
-        "AURORA_NO_REACH"
+        "AURORA_NO_REACH",
+        "DATA_MISSING_WEATHER"
       ]
     },
     {
@@ -107,10 +99,11 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
-      "source": "kp",
+      "cloud_block": null,
+      "source": "ovation",
       "codes": [
-        "AURORA_NO_REACH"
+        "AURORA_NO_REACH",
+        "DATA_MISSING_WEATHER"
       ]
     },
     {
@@ -119,10 +112,11 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": null,
       "source": "kp",
       "codes": [
-        "AURORA_NO_REACH"
+        "AURORA_NO_REACH",
+        "DATA_MISSING_WEATHER"
       ]
     },
     {
@@ -131,10 +125,11 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": null,
       "source": "kp",
       "codes": [
-        "AURORA_NO_REACH"
+        "AURORA_NO_REACH",
+        "DATA_MISSING_WEATHER"
       ]
     },
     {
@@ -143,10 +138,11 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": null,
       "source": "kp",
       "codes": [
-        "AURORA_NO_REACH"
+        "AURORA_NO_REACH",
+        "DATA_MISSING_WEATHER"
       ]
     },
     {
@@ -155,7 +151,7 @@
       "skip": true,
       "status": null,
       "aurora_reach": null,
-      "cloud_block": "clear",
+      "cloud_block": null,
       "source": null,
       "codes": [
         "NOT_DARK_YET"
@@ -167,7 +163,7 @@
       "skip": true,
       "status": null,
       "aurora_reach": null,
-      "cloud_block": "clear",
+      "cloud_block": null,
       "source": null,
       "codes": [
         "NOT_DARK_YET"
