@@ -2,8 +2,8 @@
   "location_slug": "massachusetts",
   "headline_point_id": "newburyport",
   "headline_point_name": "Newburyport",
-  "generated_at": "2026-08-22T04:57:04.854594+00:00",
-  "valid_until": "2026-08-22T05:22:04.854594+00:00",
+  "generated_at": "2026-08-22T05:23:01.717092+00:00",
+  "valid_until": "2026-08-22T05:48:01.717092+00:00",
   "status": "NO",
   "confidence": "high",
   "best_window_start": null,
@@ -16,8 +16,8 @@
   "look_toward": "north",
   "answer_sentence": "NO (Newburyport area). Not worth a special trip tonight. Aurora activity is not expected to reach Massachusetts tonight.",
   "sources": {
-    "ovation_obs": "2026-08-22T04:49:00+00:00",
-    "ovation_fcst": "2026-08-22T05:49:00+00:00",
+    "ovation_obs": "2026-08-22T05:15:00+00:00",
+    "ovation_fcst": "2026-08-22T06:14:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -37,7 +37,7 @@
       "status": "NO",
       "confidence": "high",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "urban": true,
       "main_obstacle": "AURORA_NO_REACH"
     },
@@ -53,18 +53,6 @@
     }
   ],
   "windows": [
-    {
-      "start": "2026-08-22T00:45:00-04:00",
-      "end": "2026-08-22T01:15:00-04:00",
-      "skip": false,
-      "status": "NO",
-      "aurora_reach": "none",
-      "cloud_block": "mixed",
-      "source": "ovation",
-      "codes": [
-        "AURORA_NO_REACH"
-      ]
-    },
     {
       "start": "2026-08-22T01:15:00-04:00",
       "end": "2026-08-22T01:45:00-04:00",
@@ -96,7 +84,7 @@
       "status": "NO",
       "aurora_reach": "none",
       "cloud_block": "socked",
-      "source": "kp",
+      "source": "ovation",
       "codes": [
         "AURORA_NO_REACH"
       ]
