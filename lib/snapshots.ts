@@ -1,6 +1,8 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 
+import copy from "@/content/ui-copy.json";
+
 export type SnapshotRow = {
   location_slug: string;
   headline_point_name: string;
@@ -9,7 +11,9 @@ export type SnapshotRow = {
   best_window_start: string | null;
   best_window_end: string | null;
   main_obstacle: string;
+  main_obstacle_text?: string;
   answer_sentence: string;
+  look_toward?: string;
   generated_at?: string;
   valid_until?: string;
 };
@@ -103,6 +107,42 @@ export function formatWindow(
   return timeZone
     ? `${window} ${formatZoneAbbreviation(b, timeZone)}`
     : window;
+}
+
+export function formatUpdatedAt(
+  iso: string | undefined | null,
+  timeZone: string = "America/New_York",
+  now: Date = new Date(),
+): string {
+  if (!iso) return "Updated —";
+  const generatedAt = Date.parse(iso);
+  if (!Number.isFinite(generatedAt)) return "Updated —";
+
+  const minutes = Math.max(0, Math.floor((now.getTime() - generatedAt) / 60_000));
+  if (minutes < 1) return copy.verdict.updated_just_now;
+  if (minutes < 60) {
+    return copy.verdict.updated_minutes.replace("{n}", String(minutes));
+  }
+
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) {
+    return hours === 1
+      ? copy.verdict.updated_hour
+      : copy.verdict.updated_hours.replace("{n}", String(hours));
+  }
+
+  const parts = new Intl.DateTimeFormat("en-US", {
+    weekday: "short",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+    timeZone,
+    timeZoneName: "shortGeneric",
+  }).formatToParts(new Date(generatedAt));
+  const pick = (type: Intl.DateTimeFormatPartTypes) =>
+    parts.find((part) => part.type === type)?.value ?? "";
+
+  return `Updated ${pick("weekday")} ${pick("hour")}:${pick("minute")} ${pick("dayPeriod")} ${pick("timeZoneName")}`;
 }
 
 export function formatZoneAbbreviation(date: Date, timeZone: string): string {

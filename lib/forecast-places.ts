@@ -37,6 +37,8 @@ const dossierBySlug = new Map(dossiers.map((dossier) => [dossier.slug, dossier])
 
 export const WAVE_ONE_SLUGS = dossiers.map((dossier) => dossier.slug);
 export const WAVE_ONE_SLUG_SET = new Set(WAVE_ONE_SLUGS);
+/** Homepage verdict uses this row from the 15-place table, not a national aggregate. */
+export const HOME_REPRESENTATIVE_SLUG = "fairbanks";
 
 export function getForecastDossier(slug: string): ForecastDossier | null {
   return dossierBySlug.get(slug) ?? null;

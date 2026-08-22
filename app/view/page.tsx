@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { PlaceSearchForm } from "@/components/place-search-form";
 import { VerdictCard } from "@/components/verdict-card";
 import copy from "@/content/ui-copy.json";
 import {
@@ -18,16 +19,22 @@ type ViewPageProps = {
   searchParams: Promise<Record<string, QueryValue>>;
 };
 
-type ViewParams = {
-  lat: number;
-  lng: number;
-  name: string;
-};
+type ViewParams =
+  | { hasCoords: false }
+  | { hasCoords: true; lat: number; lng: number; name: string };
 
 export async function generateMetadata({ searchParams }: ViewPageProps): Promise<Metadata> {
-  const { lat, name } = resolveViewParams(await searchParams);
-  const title = `Northern Lights Tonight Near ${name}`;
-  const description = lat < 0 ? copy.south.human : copy.view.unknown_main_issue;
+  const params = resolveViewParams(await searchParams);
+  if (!params.hasCoords) {
+    return {
+      title: copy.chrome.find_place_title,
+      description: copy.near_me.lead,
+      robots: { index: false, follow: true },
+    };
+  }
+
+  const title = `Northern Lights Tonight Near ${params.name}`;
+  const description = params.lat < 0 ? copy.south.human : copy.view.unknown_main_issue;
 
   return {
     title,
@@ -38,61 +45,89 @@ export async function generateMetadata({ searchParams }: ViewPageProps): Promise
 }
 
 export default async function ViewPage({ searchParams }: ViewPageProps) {
-  const { lat, lng, name } = resolveViewParams(await searchParams);
+  const params = resolveViewParams(await searchParams);
+
+  if (!params.hasCoords) {
+    return (
+      <main className={`tool-page ${styles.page} ${styles.narrow}`}>
+        <header className={styles.hero}>
+          <h1>{copy.chrome.find_place_title}</h1>
+        </header>
+        <div className={styles.search}>
+          <PlaceSearchForm />
+        </div>
+      </main>
+    );
+  }
+
+  const { lat, lng, name } = params;
   const unavailable = lat < 0;
   const nearby = closestWaveOnePlaces(lat, lng);
 
   return (
-    <main className={styles.page}>
-      <header className={styles.hero}>
-        <p className={styles.kicker}>
-          {lat.toFixed(3)}, {lng.toFixed(3)}
-        </p>
-        <h1>Tonight near {name}</h1>
-      </header>
-
-      <div className={styles.viewCard}>
-        <VerdictCard
-          status={unavailable ? "UNAVAILABLE" : "UNKNOWN"}
-          mainIssue={unavailable ? copy.south.main_issue : copy.view.unknown_main_issue}
-          confidence="low"
-          updated="Updated —"
-          place={name}
-        />
+    <main className={styles.home}>
+      <div className={`twilight-band ${styles.twilight}`}>
+        <div className={styles.inner}>
+          <header className={styles.hero}>
+            <p className={styles.kicker}>
+              {lat.toFixed(3)}, {lng.toFixed(3)}
+            </p>
+            <h1>Tonight near {name}</h1>
+          </header>
+        </div>
       </div>
 
-      {unavailable ? (
-        <p className={styles.hint}>{copy.south.hint}</p>
-      ) : (
-        <div className={styles.actions}>
-          <Link className={styles.tryAgain} href="/near-me">
-            {copy.chrome.try_again}
-          </Link>
+      <div className={styles.inner}>
+        <div className={styles.verdictSlot}>
+          <VerdictCard
+            status={unavailable ? "UNAVAILABLE" : "UNKNOWN"}
+            mainIssue={unavailable ? copy.south.main_issue : copy.view.unknown_main_issue}
+            confidence="low"
+            updated="Updated —"
+            place={name}
+          />
         </div>
-      )}
 
-      <section className={styles.nearby}>
-        <h2>Nearby</h2>
-        <ul className={styles.nearbyList}>
-          {nearby.map((place) => (
-            <li key={place.slug}>
-              <Link href={`/forecast/${place.slug}`}>{place.name} tonight</Link>
-            </li>
-          ))}
-        </ul>
-      </section>
+        {unavailable ? (
+          <p className={styles.hint}>{copy.south.hint}</p>
+        ) : null}
+
+        <section className={styles.nearby}>
+          <h2>Nearby</h2>
+          <ul className={styles.nearbyList}>
+            {nearby.map((place) => (
+              <li key={place.slug}>
+                <Link href={`/forecast/${place.slug}`}>{place.name} tonight</Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      </div>
     </main>
   );
 }
 
 function resolveViewParams(searchParams: Record<string, QueryValue>): ViewParams {
-  const rawLat = Number(firstValue(searchParams.lat));
-  const rawLng = Number(firstValue(searchParams.lng));
-  const lat = roundCoordinate(Number.isFinite(rawLat) ? rawLat : 0);
-  const lng = roundCoordinate(Number.isFinite(rawLng) ? rawLng : 0);
+  const latValue = firstValue(searchParams.lat);
+  const lngValue = firstValue(searchParams.lng);
+  const rawLat = Number(latValue);
+  const rawLng = Number(lngValue);
+  const hasCoords =
+    latValue !== undefined &&
+    lngValue !== undefined &&
+    latValue !== "" &&
+    lngValue !== "" &&
+    Number.isFinite(rawLat) &&
+    Number.isFinite(rawLng);
+
+  if (!hasCoords) return { hasCoords: false };
+
+  const lat = roundCoordinate(rawLat);
+  const lng = roundCoordinate(rawLng);
   const suppliedName = firstValue(searchParams.name)?.trim();
 
   return {
+    hasCoords: true,
     lat,
     lng,
     name: suppliedName || `${lat.toFixed(3)}, ${lng.toFixed(3)}`,

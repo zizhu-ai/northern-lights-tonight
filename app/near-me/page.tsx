@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 
 export default function NearMePage() {
   return (
-    <main className={`${styles.page} ${styles.narrow}`}>
+    <main className={`tool-page ${styles.page} ${styles.narrow}`}>
       <header className={styles.hero}>
         <h1>Northern Lights Near Me</h1>
         <p className={styles.lead}>{copy.near_me.lead}</p>
