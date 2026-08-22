@@ -2,8 +2,8 @@
   "location_slug": "ohio",
   "headline_point_id": "cleveland",
   "headline_point_name": "Cleveland",
-  "generated_at": "2026-08-22T13:59:52.993353+00:00",
-  "valid_until": "2026-08-22T14:24:52.993353+00:00",
+  "generated_at": "2026-08-22T14:25:26.762170+00:00",
+  "valid_until": "2026-08-22T14:50:26.762170+00:00",
   "status": "NO",
   "confidence": "high",
   "best_window_start": null,
@@ -16,8 +16,8 @@
   "look_toward": "north",
   "answer_sentence": "NO (Cleveland area). Not worth a special trip tonight. Aurora activity is not expected to reach Ohio tonight.",
   "sources": {
-    "ovation_obs": "2026-08-22T13:51:00+00:00",
-    "ovation_fcst": "2026-08-22T14:53:00+00:00",
+    "ovation_obs": "2026-08-22T14:14:00+00:00",
+    "ovation_fcst": "2026-08-22T15:18:00+00:00",
     "ovation_ok": true
   },
   "points": [
