@@ -2,8 +2,8 @@
   "location_slug": "colorado",
   "headline_point_id": "fort-collins",
   "headline_point_name": "Fort Collins",
-  "generated_at": "2026-08-22T18:15:58.567220+00:00",
-  "valid_until": "2026-08-22T18:40:58.567220+00:00",
+  "generated_at": "2026-08-22T18:50:38.885485+00:00",
+  "valid_until": "2026-08-22T19:15:38.885485+00:00",
   "status": "NO",
   "confidence": "high",
   "best_window_start": null,
@@ -16,8 +16,8 @@
   "look_toward": "north",
   "answer_sentence": "NO (Fort Collins area). Not worth a special trip tonight. Aurora activity is not expected to reach Colorado tonight.",
   "sources": {
-    "ovation_obs": "2026-08-22T18:05:00+00:00",
-    "ovation_fcst": "2026-08-22T19:07:00+00:00",
+    "ovation_obs": "2026-08-22T18:39:00+00:00",
+    "ovation_fcst": "2026-08-22T19:41:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -47,7 +47,7 @@
       "status": "NO",
       "confidence": "high",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "urban": false,
       "main_obstacle": "AURORA_NO_REACH"
     }
@@ -59,7 +59,7 @@
       "skip": true,
       "status": null,
       "aurora_reach": null,
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "source": null,
       "codes": [
         "NOT_DARK_YET"
@@ -155,7 +155,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -167,7 +167,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -179,7 +179,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
