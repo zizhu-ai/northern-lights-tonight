@@ -2,8 +2,8 @@
   "location_slug": "seattle",
   "headline_point_id": "seattle",
   "headline_point_name": "Seattle",
-  "generated_at": "2026-08-22T20:12:33.242369+00:00",
-  "valid_until": "2026-08-22T20:37:33.242369+00:00",
+  "generated_at": "2026-08-22T20:41:43.188229+00:00",
+  "valid_until": "2026-08-22T21:06:43.188229+00:00",
   "status": "NO",
   "confidence": "high",
   "best_window_start": null,
@@ -16,8 +16,8 @@
   "look_toward": "north",
   "answer_sentence": "NO. Not worth a special trip tonight. Aurora activity is not expected to reach Seattle tonight.",
   "sources": {
-    "ovation_obs": "2026-08-22T20:04:00+00:00",
-    "ovation_fcst": "2026-08-22T21:07:00+00:00",
+    "ovation_obs": "2026-08-22T20:30:00+00:00",
+    "ovation_fcst": "2026-08-22T21:32:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -87,7 +87,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -99,7 +99,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -111,7 +111,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -123,7 +123,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -135,7 +135,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -147,7 +147,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
