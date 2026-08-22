@@ -2,22 +2,22 @@
   "location_slug": "alaska",
   "headline_point_id": "fairbanks",
   "headline_point_name": "Fairbanks",
-  "generated_at": "2026-08-22T09:55:15.457711+00:00",
-  "valid_until": "2026-08-22T10:20:15.457711+00:00",
+  "generated_at": "2026-08-22T10:14:06.617047+00:00",
+  "valid_until": "2026-08-22T10:39:06.617047+00:00",
   "status": "MAYBE",
-  "confidence": "low",
+  "confidence": "high",
   "best_window_start": "2026-08-22T01:45:00-08:00",
   "best_window_end": "2026-08-22T03:15:00-08:00",
-  "main_obstacle": "DATA_MISSING_WEATHER",
-  "main_obstacle_text": "Cloud data is missing; activity may still be in range.",
+  "main_obstacle": "CLOUD_MIXED",
+  "main_obstacle_text": "Clouds are the main uncertainty.",
   "reason_codes": [
-    "DATA_MISSING_WEATHER"
+    "CLOUD_MIXED"
   ],
   "look_toward": "north",
-  "answer_sentence": "MAYBE in Alaska (Fairbanks area). Best window 1:45 AM–3:15 AM AKDT. Main issue: Cloud data is missing; activity may still be in range.",
+  "answer_sentence": "MAYBE in Alaska (Fairbanks area). Best window 1:45 AM–3:15 AM AKDT. Main issue: Clouds are the main uncertainty.",
   "sources": {
-    "ovation_obs": "2026-08-22T09:46:00+00:00",
-    "ovation_fcst": "2026-08-22T10:48:00+00:00",
+    "ovation_obs": "2026-08-22T10:05:00+00:00",
+    "ovation_fcst": "2026-08-22T11:08:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -25,11 +25,11 @@
       "id": "fairbanks",
       "name": "Fairbanks",
       "status": "MAYBE",
-      "confidence": "low",
+      "confidence": "high",
       "aurora_reach": "weak",
-      "cloud_block": null,
+      "cloud_block": "mixed",
       "urban": false,
-      "main_obstacle": "DATA_MISSING_WEATHER"
+      "main_obstacle": "CLOUD_MIXED"
     },
     {
       "id": "anchorage",
@@ -39,7 +39,7 @@
       "aurora_reach": "weak",
       "cloud_block": "socked",
       "urban": true,
-      "main_obstacle": "AURORA_HORIZON_ONLY"
+      "main_obstacle": "CLOUD_MIXED"
     },
     {
       "id": "juneau",
@@ -59,10 +59,10 @@
       "skip": false,
       "status": "MAYBE",
       "aurora_reach": "weak",
-      "cloud_block": null,
+      "cloud_block": "mixed",
       "source": "ovation",
       "codes": [
-        "DATA_MISSING_WEATHER"
+        "CLOUD_MIXED"
       ]
     },
     {
@@ -71,10 +71,10 @@
       "skip": false,
       "status": "MAYBE",
       "aurora_reach": "weak",
-      "cloud_block": null,
+      "cloud_block": "mixed",
       "source": "ovation",
       "codes": [
-        "DATA_MISSING_WEATHER"
+        "CLOUD_MIXED"
       ]
     },
     {
@@ -83,10 +83,10 @@
       "skip": false,
       "status": "MAYBE",
       "aurora_reach": "weak",
-      "cloud_block": null,
+      "cloud_block": "mixed",
       "source": "ovation",
       "codes": [
-        "DATA_MISSING_WEATHER"
+        "CLOUD_MIXED"
       ]
     },
     {
@@ -95,7 +95,7 @@
       "skip": true,
       "status": null,
       "aurora_reach": null,
-      "cloud_block": null,
+      "cloud_block": "mixed",
       "source": null,
       "codes": [
         "NOT_DARK_YET"
@@ -107,7 +107,7 @@
       "skip": true,
       "status": null,
       "aurora_reach": null,
-      "cloud_block": null,
+      "cloud_block": "mixed",
       "source": null,
       "codes": [
         "NOT_DARK_YET"
@@ -119,7 +119,7 @@
       "skip": true,
       "status": null,
       "aurora_reach": null,
-      "cloud_block": null,
+      "cloud_block": "mixed",
       "source": null,
       "codes": [
         "NOT_DARK_YET"
@@ -131,7 +131,7 @@
       "skip": true,
       "status": null,
       "aurora_reach": null,
-      "cloud_block": null,
+      "cloud_block": "mixed",
       "source": null,
       "codes": [
         "NOT_DARK_YET"
@@ -143,7 +143,7 @@
       "skip": true,
       "status": null,
       "aurora_reach": null,
-      "cloud_block": null,
+      "cloud_block": "mixed",
       "source": null,
       "codes": [
         "NOT_DARK_YET"
@@ -155,7 +155,7 @@
       "skip": true,
       "status": null,
       "aurora_reach": null,
-      "cloud_block": null,
+      "cloud_block": "mixed",
       "source": null,
       "codes": [
         "NOT_DARK_YET"
