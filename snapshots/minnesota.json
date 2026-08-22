@@ -2,8 +2,8 @@
   "location_slug": "minnesota",
   "headline_point_id": "duluth",
   "headline_point_name": "Duluth",
-  "generated_at": "2026-08-22T07:41:36.005112+00:00",
-  "valid_until": "2026-08-22T08:06:36.005112+00:00",
+  "generated_at": "2026-08-22T08:02:31.131796+00:00",
+  "valid_until": "2026-08-22T08:27:31.131796+00:00",
   "status": "NO",
   "confidence": "high",
   "best_window_start": null,
@@ -16,8 +16,8 @@
   "look_toward": "north",
   "answer_sentence": "NO (Duluth area). Not worth a special trip tonight. Aurora activity is not expected to reach Minnesota tonight.",
   "sources": {
-    "ovation_obs": "2026-08-22T07:30:00+00:00",
-    "ovation_fcst": "2026-08-22T08:32:00+00:00",
+    "ovation_obs": "2026-08-22T07:56:00+00:00",
+    "ovation_fcst": "2026-08-22T08:57:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -47,24 +47,12 @@
       "status": "NO",
       "confidence": "high",
       "aurora_reach": "none",
-      "cloud_block": null,
+      "cloud_block": "clear",
       "urban": true,
       "main_obstacle": "AURORA_NO_REACH"
     }
   ],
   "windows": [
-    {
-      "start": "2026-08-22T02:15:00-05:00",
-      "end": "2026-08-22T02:45:00-05:00",
-      "skip": false,
-      "status": "NO",
-      "aurora_reach": "none",
-      "cloud_block": "clear",
-      "source": "ovation",
-      "codes": [
-        "AURORA_NO_REACH"
-      ]
-    },
     {
       "start": "2026-08-22T02:45:00-05:00",
       "end": "2026-08-22T03:15:00-05:00",
