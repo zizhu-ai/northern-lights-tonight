@@ -2,8 +2,8 @@
   "location_slug": "colorado",
   "headline_point_id": "fort-collins",
   "headline_point_name": "Fort Collins",
-  "generated_at": "2026-08-22T22:12:37.664662+00:00",
-  "valid_until": "2026-08-22T22:37:37.664662+00:00",
+  "generated_at": "2026-08-22T22:40:20.466256+00:00",
+  "valid_until": "2026-08-22T23:05:20.466256+00:00",
   "status": "NO",
   "confidence": "high",
   "best_window_start": null,
@@ -16,8 +16,8 @@
   "look_toward": "north",
   "answer_sentence": "NO (Fort Collins area). Not worth a special trip tonight. Aurora activity is not expected to reach Colorado tonight.",
   "sources": {
-    "ovation_obs": "2026-08-22T22:07:00+00:00",
-    "ovation_fcst": "2026-08-22T23:06:00+00:00",
+    "ovation_obs": "2026-08-22T22:31:00+00:00",
+    "ovation_fcst": "2026-08-22T23:32:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -27,7 +27,7 @@
       "status": "NO",
       "confidence": "high",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "urban": false,
       "main_obstacle": "AURORA_NO_REACH"
     },
@@ -37,7 +37,7 @@
       "status": "NO",
       "confidence": "high",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "urban": true,
       "main_obstacle": "AURORA_NO_REACH"
     },
@@ -47,7 +47,7 @@
       "status": "NO",
       "confidence": "high",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "urban": false,
       "main_obstacle": "AURORA_NO_REACH"
     }
@@ -59,7 +59,7 @@
       "skip": true,
       "status": null,
       "aurora_reach": null,
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "source": null,
       "codes": [
         "NOT_DARK_YET"
@@ -71,7 +71,7 @@
       "skip": true,
       "status": null,
       "aurora_reach": null,
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "source": null,
       "codes": [
         "NOT_DARK_YET"
@@ -83,7 +83,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -95,7 +95,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -191,7 +191,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
