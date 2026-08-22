@@ -2,23 +2,23 @@
   "location_slug": "minnesota",
   "headline_point_id": "duluth",
   "headline_point_name": "Duluth",
-  "generated_at": "2026-08-22T04:23:41.893292+00:00",
-  "valid_until": "2026-08-22T04:48:41.893292+00:00",
+  "generated_at": "2026-08-22T04:57:04.854594+00:00",
+  "valid_until": "2026-08-22T05:22:04.854594+00:00",
   "status": "MAYBE",
   "confidence": "low",
-  "best_window_start": "2026-08-21T23:15:00-05:00",
-  "best_window_end": "2026-08-22T00:45:00-05:00",
-  "main_obstacle": "AURORA_HORIZON_ONLY",
-  "main_obstacle_text": "Any display would likely stay low on the northern horizon.",
+  "best_window_start": "2026-08-21T23:45:00-05:00",
+  "best_window_end": "2026-08-22T01:15:00-05:00",
+  "main_obstacle": "DATA_MISSING_WEATHER",
+  "main_obstacle_text": "Cloud data is missing; activity may still be in range.",
   "reason_codes": [
-    "AURORA_HORIZON_ONLY",
+    "DATA_MISSING_WEATHER",
     "AURORA_NO_REACH"
   ],
   "look_toward": "north",
-  "answer_sentence": "MAYBE in Minnesota (Duluth area). Best window 11:15 PM–12:45 AM CDT. Main issue: Any display would likely stay low on the northern horizon.",
+  "answer_sentence": "MAYBE in Minnesota (Duluth area). Best window 11:45 PM–1:15 AM CDT. Main issue: Cloud data is missing; activity may still be in range.",
   "sources": {
-    "ovation_obs": "2026-08-22T04:14:00+00:00",
-    "ovation_fcst": "2026-08-22T05:13:00+00:00",
+    "ovation_obs": "2026-08-22T04:49:00+00:00",
+    "ovation_fcst": "2026-08-22T05:49:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -38,9 +38,9 @@
       "status": "MAYBE",
       "confidence": "low",
       "aurora_reach": "weak",
-      "cloud_block": "clear",
+      "cloud_block": null,
       "urban": false,
-      "main_obstacle": "AURORA_HORIZON_ONLY"
+      "main_obstacle": "DATA_MISSING_WEATHER"
     },
     {
       "id": "minneapolis",
@@ -55,27 +55,15 @@
   ],
   "windows": [
     {
-      "start": "2026-08-21T23:15:00-05:00",
-      "end": "2026-08-21T23:45:00-05:00",
-      "skip": false,
-      "status": "MAYBE",
-      "aurora_reach": "weak",
-      "cloud_block": "clear",
-      "source": "ovation",
-      "codes": [
-        "AURORA_HORIZON_ONLY"
-      ]
-    },
-    {
       "start": "2026-08-21T23:45:00-05:00",
       "end": "2026-08-22T00:15:00-05:00",
       "skip": false,
       "status": "MAYBE",
       "aurora_reach": "weak",
-      "cloud_block": "clear",
+      "cloud_block": null,
       "source": "ovation",
       "codes": [
-        "AURORA_HORIZON_ONLY"
+        "DATA_MISSING_WEATHER"
       ]
     },
     {
@@ -84,22 +72,22 @@
       "skip": false,
       "status": "MAYBE",
       "aurora_reach": "weak",
-      "cloud_block": "clear",
+      "cloud_block": null,
       "source": "ovation",
       "codes": [
-        "AURORA_HORIZON_ONLY"
+        "DATA_MISSING_WEATHER"
       ]
     },
     {
       "start": "2026-08-22T00:45:00-05:00",
       "end": "2026-08-22T01:15:00-05:00",
       "skip": false,
-      "status": "NO",
-      "aurora_reach": "none",
-      "cloud_block": "clear",
-      "source": "kp",
+      "status": "MAYBE",
+      "aurora_reach": "weak",
+      "cloud_block": null,
+      "source": "ovation",
       "codes": [
-        "AURORA_NO_REACH"
+        "DATA_MISSING_WEATHER"
       ]
     },
     {
@@ -108,10 +96,11 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": null,
       "source": "kp",
       "codes": [
-        "AURORA_NO_REACH"
+        "AURORA_NO_REACH",
+        "DATA_MISSING_WEATHER"
       ]
     },
     {
@@ -120,10 +109,11 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": null,
       "source": "kp",
       "codes": [
-        "AURORA_NO_REACH"
+        "AURORA_NO_REACH",
+        "DATA_MISSING_WEATHER"
       ]
     },
     {
@@ -132,10 +122,11 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": null,
       "source": "kp",
       "codes": [
-        "AURORA_NO_REACH"
+        "AURORA_NO_REACH",
+        "DATA_MISSING_WEATHER"
       ]
     },
     {
@@ -144,10 +135,11 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": null,
       "source": "kp",
       "codes": [
-        "AURORA_NO_REACH"
+        "AURORA_NO_REACH",
+        "DATA_MISSING_WEATHER"
       ]
     },
     {
@@ -156,10 +148,11 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": null,
       "source": "kp",
       "codes": [
-        "AURORA_NO_REACH"
+        "AURORA_NO_REACH",
+        "DATA_MISSING_WEATHER"
       ]
     },
     {
@@ -168,10 +161,11 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": null,
       "source": "kp",
       "codes": [
-        "AURORA_NO_REACH"
+        "AURORA_NO_REACH",
+        "DATA_MISSING_WEATHER"
       ]
     },
     {
@@ -180,10 +174,11 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": null,
       "source": "kp",
       "codes": [
-        "AURORA_NO_REACH"
+        "AURORA_NO_REACH",
+        "DATA_MISSING_WEATHER"
       ]
     },
     {
@@ -192,10 +187,11 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": null,
       "source": "kp",
       "codes": [
-        "AURORA_NO_REACH"
+        "AURORA_NO_REACH",
+        "DATA_MISSING_WEATHER"
       ]
     },
     {
@@ -204,7 +200,7 @@
       "skip": true,
       "status": null,
       "aurora_reach": null,
-      "cloud_block": "clear",
+      "cloud_block": null,
       "source": null,
       "codes": [
         "NOT_DARK_YET"
@@ -216,7 +212,7 @@
       "skip": true,
       "status": null,
       "aurora_reach": null,
-      "cloud_block": "clear",
+      "cloud_block": null,
       "source": null,
       "codes": [
         "NOT_DARK_YET"

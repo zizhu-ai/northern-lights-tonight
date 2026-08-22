@@ -2,8 +2,8 @@
   "location_slug": "chicago",
   "headline_point_id": "chicago",
   "headline_point_name": "Chicago",
-  "generated_at": "2026-08-22T04:23:41.893292+00:00",
-  "valid_until": "2026-08-22T04:48:41.893292+00:00",
+  "generated_at": "2026-08-22T04:57:04.854594+00:00",
+  "valid_until": "2026-08-22T05:22:04.854594+00:00",
   "status": "NO",
   "confidence": "high",
   "best_window_start": null,
@@ -16,8 +16,8 @@
   "look_toward": "north",
   "answer_sentence": "NO. Not worth a special trip tonight. Aurora activity is not expected to reach Chicago tonight.",
   "sources": {
-    "ovation_obs": "2026-08-22T04:14:00+00:00",
-    "ovation_fcst": "2026-08-22T05:13:00+00:00",
+    "ovation_obs": "2026-08-22T04:49:00+00:00",
+    "ovation_fcst": "2026-08-22T05:49:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -27,31 +27,19 @@
       "status": "NO",
       "confidence": "high",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "urban": true,
       "main_obstacle": "AURORA_NO_REACH"
     }
   ],
   "windows": [
     {
-      "start": "2026-08-21T23:15:00-05:00",
-      "end": "2026-08-21T23:45:00-05:00",
-      "skip": false,
-      "status": "NO",
-      "aurora_reach": "none",
-      "cloud_block": "clear",
-      "source": "ovation",
-      "codes": [
-        "AURORA_NO_REACH"
-      ]
-    },
-    {
       "start": "2026-08-21T23:45:00-05:00",
       "end": "2026-08-22T00:15:00-05:00",
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "source": "ovation",
       "codes": [
         "AURORA_NO_REACH"
@@ -63,7 +51,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "source": "ovation",
       "codes": [
         "AURORA_NO_REACH"
@@ -76,7 +64,7 @@
       "status": "NO",
       "aurora_reach": "none",
       "cloud_block": "clear",
-      "source": "kp",
+      "source": "ovation",
       "codes": [
         "AURORA_NO_REACH"
       ]
@@ -99,7 +87,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": "kp",
       "codes": [
         "AURORA_NO_REACH"
@@ -111,7 +99,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": "kp",
       "codes": [
         "AURORA_NO_REACH"
@@ -123,7 +111,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": "kp",
       "codes": [
         "AURORA_NO_REACH"
@@ -183,7 +171,7 @@
       "skip": true,
       "status": null,
       "aurora_reach": null,
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "source": null,
       "codes": [
         "NOT_DARK_YET"
@@ -195,7 +183,7 @@
       "skip": true,
       "status": null,
       "aurora_reach": null,
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "source": null,
       "codes": [
         "NOT_DARK_YET"
