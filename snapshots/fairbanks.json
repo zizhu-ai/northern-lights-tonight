@@ -2,25 +2,25 @@
   "location_slug": "fairbanks",
   "headline_point_id": "fairbanks",
   "headline_point_name": "Fairbanks",
-  "generated_at": "2026-08-22T07:08:07.011170+00:00",
-  "valid_until": "2026-08-22T07:33:07.011170+00:00",
+  "generated_at": "2026-08-22T07:41:36.005112+00:00",
+  "valid_until": "2026-08-22T08:06:36.005112+00:00",
   "status": "MAYBE",
   "confidence": "high",
   "best_window_start": "2026-08-22T00:45:00-08:00",
   "best_window_end": "2026-08-22T03:15:00-08:00",
-  "main_obstacle": "AURORA_HORIZON_ONLY",
-  "main_obstacle_text": "Any display would likely stay low on the northern horizon.",
+  "main_obstacle": "CLOUD_MIXED",
+  "main_obstacle_text": "Clouds are the main uncertainty.",
   "reason_codes": [
-    "AURORA_HORIZON_ONLY",
     "CLOUD_MIXED",
+    "AURORA_HORIZON_ONLY",
     "LIGHT_POLLUTION",
     "FORECAST_FAR"
   ],
   "look_toward": "north",
-  "answer_sentence": "MAYBE in Fairbanks. Best window 12:45 AM–3:15 AM AKDT. Main issue: Any display would likely stay low on the northern horizon.",
+  "answer_sentence": "MAYBE in Fairbanks. Best window 12:45 AM–3:15 AM AKDT. Main issue: Clouds are the main uncertainty.",
   "sources": {
-    "ovation_obs": "2026-08-22T07:00:00+00:00",
-    "ovation_fcst": "2026-08-22T08:02:00+00:00",
+    "ovation_obs": "2026-08-22T07:30:00+00:00",
+    "ovation_fcst": "2026-08-22T08:32:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -29,25 +29,13 @@
       "name": "Fairbanks",
       "status": "MAYBE",
       "confidence": "high",
-      "aurora_reach": "horizon",
+      "aurora_reach": "weak",
       "cloud_block": "mixed",
       "urban": true,
-      "main_obstacle": "AURORA_HORIZON_ONLY"
+      "main_obstacle": "CLOUD_MIXED"
     }
   ],
   "windows": [
-    {
-      "start": "2026-08-21T22:45:00-08:00",
-      "end": "2026-08-21T23:15:00-08:00",
-      "skip": true,
-      "status": null,
-      "aurora_reach": null,
-      "cloud_block": "mixed",
-      "source": null,
-      "codes": [
-        "NOT_DARK_YET"
-      ]
-    },
     {
       "start": "2026-08-21T23:15:00-08:00",
       "end": "2026-08-21T23:45:00-08:00",
@@ -89,14 +77,11 @@
       "end": "2026-08-22T01:15:00-08:00",
       "skip": false,
       "status": "MAYBE",
-      "aurora_reach": "horizon",
+      "aurora_reach": "weak",
       "cloud_block": "mixed",
-      "source": "kp",
+      "source": "ovation",
       "codes": [
-        "AURORA_HORIZON_ONLY",
-        "CLOUD_MIXED",
-        "LIGHT_POLLUTION",
-        "FORECAST_FAR"
+        "CLOUD_MIXED"
       ]
     },
     {
