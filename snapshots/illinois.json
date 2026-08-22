@@ -2,8 +2,8 @@
   "location_slug": "illinois",
   "headline_point_id": "rockford",
   "headline_point_name": "Rockford",
-  "generated_at": "2026-08-22T20:41:43.188229+00:00",
-  "valid_until": "2026-08-22T21:06:43.188229+00:00",
+  "generated_at": "2026-08-22T21:01:22.448294+00:00",
+  "valid_until": "2026-08-22T21:26:22.448294+00:00",
   "status": "NO",
   "confidence": "high",
   "best_window_start": null,
@@ -16,8 +16,8 @@
   "look_toward": "north",
   "answer_sentence": "NO (Rockford area). Not worth a special trip tonight. Aurora activity is not expected to reach Illinois tonight.",
   "sources": {
-    "ovation_obs": "2026-08-22T20:30:00+00:00",
-    "ovation_fcst": "2026-08-22T21:32:00+00:00",
+    "ovation_obs": "2026-08-22T20:50:00+00:00",
+    "ovation_fcst": "2026-08-22T21:51:00+00:00",
     "ovation_ok": true
   },
   "points": [
