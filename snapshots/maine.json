@@ -2,8 +2,8 @@
   "location_slug": "maine",
   "headline_point_id": "bangor",
   "headline_point_name": "Bangor",
-  "generated_at": "2026-08-22T09:36:25.097906+00:00",
-  "valid_until": "2026-08-22T10:01:25.097906+00:00",
+  "generated_at": "2026-08-22T09:55:15.457711+00:00",
+  "valid_until": "2026-08-22T10:20:15.457711+00:00",
   "status": "NO",
   "confidence": "high",
   "best_window_start": null,
@@ -16,8 +16,8 @@
   "look_toward": "north",
   "answer_sentence": "NO (Bangor area). Not worth a special trip tonight. Aurora activity is not expected to reach Maine tonight.",
   "sources": {
-    "ovation_obs": "2026-08-22T09:25:00+00:00",
-    "ovation_fcst": "2026-08-22T10:26:00+00:00",
+    "ovation_obs": "2026-08-22T09:46:00+00:00",
+    "ovation_fcst": "2026-08-22T10:48:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -27,7 +27,7 @@
       "status": "NO",
       "confidence": "high",
       "aurora_reach": "none",
-      "cloud_block": null,
+      "cloud_block": "clear",
       "urban": false,
       "main_obstacle": "AURORA_NO_REACH"
     },
@@ -47,7 +47,7 @@
       "status": "NO",
       "confidence": "high",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": null,
       "urban": true,
       "main_obstacle": "AURORA_NO_REACH"
     }
