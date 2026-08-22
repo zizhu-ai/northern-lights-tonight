@@ -2,55 +2,54 @@
   "location_slug": "minnesota",
   "headline_point_id": "duluth",
   "headline_point_name": "Duluth",
-  "generated_at": "2026-08-22T22:40:20.466256+00:00",
-  "valid_until": "2026-08-22T23:05:20.466256+00:00",
-  "status": "MAYBE",
-  "confidence": "low",
-  "best_window_start": "2026-08-22T21:15:00-05:00",
-  "best_window_end": "2026-08-22T21:45:00-05:00",
-  "main_obstacle": "FORECAST_FAR",
-  "main_obstacle_text": "Later hours rely on a coarser forecast, not the live oval.",
+  "generated_at": "2026-08-22T23:00:14.980992+00:00",
+  "valid_until": "2026-08-22T23:25:14.980992+00:00",
+  "status": "NO",
+  "confidence": "high",
+  "best_window_start": null,
+  "best_window_end": null,
+  "main_obstacle": "AURORA_NO_REACH",
+  "main_obstacle_text": "Aurora activity is not expected to reach Minnesota tonight.",
   "reason_codes": [
-    "FORECAST_FAR",
     "AURORA_NO_REACH"
   ],
   "look_toward": "north",
-  "answer_sentence": "MAYBE in Minnesota (Duluth area). Best window 9:15 PM–9:45 PM CDT. Main issue: Later hours rely on a coarser forecast, not the live oval.",
+  "answer_sentence": "NO (Duluth area). Not worth a special trip tonight. Aurora activity is not expected to reach Minnesota tonight.",
   "sources": {
-    "ovation_obs": "2026-08-22T22:31:00+00:00",
-    "ovation_fcst": "2026-08-22T23:32:00+00:00",
+    "ovation_obs": "2026-08-22T22:49:00+00:00",
+    "ovation_fcst": "2026-08-22T23:52:00+00:00",
     "ovation_ok": true
   },
   "points": [
     {
       "id": "ely",
       "name": "Ely",
-      "status": "MAYBE",
-      "confidence": "low",
-      "aurora_reach": "weak",
+      "status": "NO",
+      "confidence": "high",
+      "aurora_reach": "none",
       "cloud_block": "clear",
       "urban": false,
-      "main_obstacle": "FORECAST_FAR"
+      "main_obstacle": "AURORA_NO_REACH"
     },
     {
       "id": "duluth",
       "name": "Duluth",
-      "status": "MAYBE",
-      "confidence": "low",
-      "aurora_reach": "weak",
+      "status": "NO",
+      "confidence": "high",
+      "aurora_reach": "none",
       "cloud_block": "clear",
       "urban": false,
-      "main_obstacle": "FORECAST_FAR"
+      "main_obstacle": "AURORA_NO_REACH"
     },
     {
       "id": "minneapolis",
       "name": "Minneapolis",
-      "status": "MAYBE",
-      "confidence": "low",
-      "aurora_reach": "weak",
+      "status": "NO",
+      "confidence": "high",
+      "aurora_reach": "none",
       "cloud_block": "clear",
       "urban": true,
-      "main_obstacle": "FORECAST_FAR"
+      "main_obstacle": "AURORA_NO_REACH"
     }
   ],
   "windows": [
@@ -82,12 +81,12 @@
       "start": "2026-08-22T21:15:00-05:00",
       "end": "2026-08-22T21:45:00-05:00",
       "skip": false,
-      "status": "MAYBE",
-      "aurora_reach": "weak",
+      "status": "NO",
+      "aurora_reach": "none",
       "cloud_block": "clear",
       "source": "kp_forecast",
       "codes": [
-        "FORECAST_FAR"
+        "AURORA_NO_REACH"
       ]
     },
     {
