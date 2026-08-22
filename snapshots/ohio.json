@@ -2,8 +2,8 @@
   "location_slug": "ohio",
   "headline_point_id": "cleveland",
   "headline_point_name": "Cleveland",
-  "generated_at": "2026-08-22T12:20:16.794066+00:00",
-  "valid_until": "2026-08-22T12:45:16.794066+00:00",
+  "generated_at": "2026-08-22T13:07:24.322283+00:00",
+  "valid_until": "2026-08-22T13:32:24.322283+00:00",
   "status": "NO",
   "confidence": "high",
   "best_window_start": null,
@@ -16,8 +16,8 @@
   "look_toward": "north",
   "answer_sentence": "NO (Cleveland area). Not worth a special trip tonight. Aurora activity is not expected to reach Ohio tonight.",
   "sources": {
-    "ovation_obs": "2026-08-22T12:11:00+00:00",
-    "ovation_fcst": "2026-08-22T13:12:00+00:00",
+    "ovation_obs": "2026-08-22T13:01:00+00:00",
+    "ovation_fcst": "2026-08-22T14:04:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -27,7 +27,7 @@
       "status": "NO",
       "confidence": "high",
       "aurora_reach": "none",
-      "cloud_block": "socked",
+      "cloud_block": "mixed",
       "urban": false,
       "main_obstacle": "AURORA_NO_REACH"
     },
@@ -71,7 +71,7 @@
       "skip": true,
       "status": null,
       "aurora_reach": null,
-      "cloud_block": "socked",
+      "cloud_block": "mixed",
       "source": null,
       "codes": [
         "NOT_DARK_YET"
@@ -83,7 +83,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "socked",
+      "cloud_block": "mixed",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -119,7 +119,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -155,7 +155,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -167,7 +167,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "socked",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
