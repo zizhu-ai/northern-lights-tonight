@@ -2,8 +2,8 @@
   "location_slug": "minnesota",
   "headline_point_id": "duluth",
   "headline_point_name": "Duluth",
-  "generated_at": "2026-08-21T23:53:53.263474+00:00",
-  "valid_until": "2026-08-22T00:18:53.263474+00:00",
+  "generated_at": "2026-08-22T00:42:26.008113+00:00",
+  "valid_until": "2026-08-22T01:07:26.008113+00:00",
   "status": "MAYBE",
   "confidence": "low",
   "best_window_start": "2026-08-21T21:15:00-05:00",
@@ -11,15 +11,14 @@
   "main_obstacle": "FORECAST_FAR",
   "main_obstacle_text": "Later hours rely on a coarser forecast, not the live oval.",
   "reason_codes": [
-    "CLOUD_MIXED",
     "FORECAST_FAR",
     "AURORA_NO_REACH"
   ],
   "look_toward": "north",
   "answer_sentence": "MAYBE in Minnesota (Duluth area). Best window 9:15 PM–12:45 AM CDT. Main issue: Later hours rely on a coarser forecast, not the live oval.",
   "sources": {
-    "ovation_obs": "2026-08-21T23:44:00+00:00",
-    "ovation_fcst": "2026-08-22T00:42:00+00:00",
+    "ovation_obs": "2026-08-22T00:36:00+00:00",
+    "ovation_fcst": "2026-08-22T01:32:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -39,7 +38,7 @@
       "status": "MAYBE",
       "confidence": "low",
       "aurora_reach": "weak",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "urban": false,
       "main_obstacle": "FORECAST_FAR"
     },
@@ -49,9 +48,9 @@
       "status": "MAYBE",
       "confidence": "low",
       "aurora_reach": "weak",
-      "cloud_block": "clear",
+      "cloud_block": null,
       "urban": true,
-      "main_obstacle": "FORECAST_FAR"
+      "main_obstacle": "DATA_MISSING_WEATHER"
     }
   ],
   "windows": [
@@ -61,7 +60,7 @@
       "skip": true,
       "status": null,
       "aurora_reach": null,
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": null,
       "codes": [
         "NOT_DARK_YET"
@@ -73,7 +72,7 @@
       "skip": true,
       "status": null,
       "aurora_reach": null,
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": null,
       "codes": [
         "NOT_DARK_YET"
@@ -85,10 +84,9 @@
       "skip": false,
       "status": "MAYBE",
       "aurora_reach": "weak",
-      "cloud_block": "mixed",
-      "source": "kp_forecast",
+      "cloud_block": "clear",
+      "source": "kp",
       "codes": [
-        "CLOUD_MIXED",
         "FORECAST_FAR"
       ]
     },
@@ -99,7 +97,7 @@
       "status": "MAYBE",
       "aurora_reach": "weak",
       "cloud_block": "clear",
-      "source": "kp_forecast",
+      "source": "kp",
       "codes": [
         "FORECAST_FAR"
       ]
@@ -111,7 +109,7 @@
       "status": "MAYBE",
       "aurora_reach": "weak",
       "cloud_block": "clear",
-      "source": "kp_forecast",
+      "source": "kp",
       "codes": [
         "FORECAST_FAR"
       ]
@@ -123,7 +121,7 @@
       "status": "MAYBE",
       "aurora_reach": "weak",
       "cloud_block": "clear",
-      "source": "kp_forecast",
+      "source": "kp",
       "codes": [
         "FORECAST_FAR"
       ]
@@ -135,7 +133,7 @@
       "status": "MAYBE",
       "aurora_reach": "weak",
       "cloud_block": "clear",
-      "source": "kp_forecast",
+      "source": "kp",
       "codes": [
         "FORECAST_FAR"
       ]
@@ -147,7 +145,7 @@
       "status": "MAYBE",
       "aurora_reach": "weak",
       "cloud_block": "clear",
-      "source": "kp_forecast",
+      "source": "kp",
       "codes": [
         "FORECAST_FAR"
       ]
@@ -159,7 +157,7 @@
       "status": "MAYBE",
       "aurora_reach": "weak",
       "cloud_block": "clear",
-      "source": "kp_forecast",
+      "source": "kp",
       "codes": [
         "FORECAST_FAR"
       ]
@@ -171,7 +169,7 @@
       "status": "NO",
       "aurora_reach": "none",
       "cloud_block": "clear",
-      "source": "kp_forecast",
+      "source": "kp",
       "codes": [
         "AURORA_NO_REACH"
       ]
@@ -183,7 +181,7 @@
       "status": "NO",
       "aurora_reach": "none",
       "cloud_block": "clear",
-      "source": "kp_forecast",
+      "source": "kp",
       "codes": [
         "AURORA_NO_REACH"
       ]
@@ -195,7 +193,7 @@
       "status": "NO",
       "aurora_reach": "none",
       "cloud_block": "clear",
-      "source": "kp_forecast",
+      "source": "kp",
       "codes": [
         "AURORA_NO_REACH"
       ]
@@ -207,7 +205,7 @@
       "status": "NO",
       "aurora_reach": "none",
       "cloud_block": "clear",
-      "source": "kp_forecast",
+      "source": "kp",
       "codes": [
         "AURORA_NO_REACH"
       ]
@@ -219,7 +217,7 @@
       "status": "NO",
       "aurora_reach": "none",
       "cloud_block": "clear",
-      "source": "kp_forecast",
+      "source": "kp",
       "codes": [
         "AURORA_NO_REACH"
       ]
@@ -231,7 +229,7 @@
       "status": "NO",
       "aurora_reach": "none",
       "cloud_block": "clear",
-      "source": "kp_forecast",
+      "source": "kp",
       "codes": [
         "AURORA_NO_REACH"
       ]
@@ -243,7 +241,7 @@
       "status": "NO",
       "aurora_reach": "none",
       "cloud_block": "clear",
-      "source": "kp_forecast",
+      "source": "kp",
       "codes": [
         "AURORA_NO_REACH"
       ]
@@ -255,7 +253,7 @@
       "status": "NO",
       "aurora_reach": "none",
       "cloud_block": "clear",
-      "source": "kp_forecast",
+      "source": "kp",
       "codes": [
         "AURORA_NO_REACH"
       ]
@@ -267,7 +265,7 @@
       "status": "NO",
       "aurora_reach": "none",
       "cloud_block": "clear",
-      "source": "kp_forecast",
+      "source": "kp",
       "codes": [
         "AURORA_NO_REACH"
       ]

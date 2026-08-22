@@ -2,8 +2,8 @@
   "location_slug": "wisconsin",
   "headline_point_id": "madison",
   "headline_point_name": "Madison",
-  "generated_at": "2026-08-21T23:53:53.263474+00:00",
-  "valid_until": "2026-08-22T00:18:53.263474+00:00",
+  "generated_at": "2026-08-22T00:42:26.008113+00:00",
+  "valid_until": "2026-08-22T01:07:26.008113+00:00",
   "status": "NO",
   "confidence": "high",
   "best_window_start": null,
@@ -16,8 +16,8 @@
   "look_toward": "north",
   "answer_sentence": "NO (Madison area). Not worth a special trip tonight. Aurora activity is not expected to reach Wisconsin tonight.",
   "sources": {
-    "ovation_obs": "2026-08-21T23:44:00+00:00",
-    "ovation_fcst": "2026-08-22T00:42:00+00:00",
+    "ovation_obs": "2026-08-22T00:36:00+00:00",
+    "ovation_fcst": "2026-08-22T01:32:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -27,7 +27,7 @@
       "status": "NO",
       "confidence": "high",
       "aurora_reach": "none",
-      "cloud_block": null,
+      "cloud_block": "clear",
       "urban": false,
       "main_obstacle": "AURORA_NO_REACH"
     },
@@ -84,7 +84,7 @@
       "status": "NO",
       "aurora_reach": "none",
       "cloud_block": "mixed",
-      "source": "kp_forecast",
+      "source": "ovation",
       "codes": [
         "AURORA_NO_REACH"
       ]
@@ -96,7 +96,7 @@
       "status": "NO",
       "aurora_reach": "none",
       "cloud_block": "clear",
-      "source": "kp_forecast",
+      "source": "kp",
       "codes": [
         "AURORA_NO_REACH"
       ]
@@ -108,7 +108,7 @@
       "status": "NO",
       "aurora_reach": "none",
       "cloud_block": "clear",
-      "source": "kp_forecast",
+      "source": "kp",
       "codes": [
         "AURORA_NO_REACH"
       ]
@@ -120,7 +120,7 @@
       "status": "NO",
       "aurora_reach": "none",
       "cloud_block": "clear",
-      "source": "kp_forecast",
+      "source": "kp",
       "codes": [
         "AURORA_NO_REACH"
       ]
@@ -132,7 +132,7 @@
       "status": "NO",
       "aurora_reach": "none",
       "cloud_block": "clear",
-      "source": "kp_forecast",
+      "source": "kp",
       "codes": [
         "AURORA_NO_REACH"
       ]
@@ -144,7 +144,7 @@
       "status": "NO",
       "aurora_reach": "none",
       "cloud_block": "clear",
-      "source": "kp_forecast",
+      "source": "kp",
       "codes": [
         "AURORA_NO_REACH"
       ]
@@ -156,7 +156,7 @@
       "status": "NO",
       "aurora_reach": "none",
       "cloud_block": "clear",
-      "source": "kp_forecast",
+      "source": "kp",
       "codes": [
         "AURORA_NO_REACH"
       ]
@@ -168,7 +168,7 @@
       "status": "NO",
       "aurora_reach": "none",
       "cloud_block": "clear",
-      "source": "kp_forecast",
+      "source": "kp",
       "codes": [
         "AURORA_NO_REACH"
       ]
@@ -180,7 +180,7 @@
       "status": "NO",
       "aurora_reach": "none",
       "cloud_block": "clear",
-      "source": "kp_forecast",
+      "source": "kp",
       "codes": [
         "AURORA_NO_REACH"
       ]
@@ -192,7 +192,7 @@
       "status": "NO",
       "aurora_reach": "none",
       "cloud_block": "clear",
-      "source": "kp_forecast",
+      "source": "kp",
       "codes": [
         "AURORA_NO_REACH"
       ]
@@ -204,7 +204,7 @@
       "status": "NO",
       "aurora_reach": "none",
       "cloud_block": "clear",
-      "source": "kp_forecast",
+      "source": "kp",
       "codes": [
         "AURORA_NO_REACH"
       ]
@@ -216,7 +216,7 @@
       "status": "NO",
       "aurora_reach": "none",
       "cloud_block": "clear",
-      "source": "kp_forecast",
+      "source": "kp",
       "codes": [
         "AURORA_NO_REACH"
       ]
@@ -228,7 +228,7 @@
       "status": "NO",
       "aurora_reach": "none",
       "cloud_block": "clear",
-      "source": "kp_forecast",
+      "source": "kp",
       "codes": [
         "AURORA_NO_REACH"
       ]
@@ -240,7 +240,7 @@
       "status": "NO",
       "aurora_reach": "none",
       "cloud_block": "clear",
-      "source": "kp_forecast",
+      "source": "kp",
       "codes": [
         "AURORA_NO_REACH"
       ]
@@ -252,7 +252,7 @@
       "status": "NO",
       "aurora_reach": "none",
       "cloud_block": "clear",
-      "source": "kp_forecast",
+      "source": "kp",
       "codes": [
         "AURORA_NO_REACH"
       ]
@@ -264,7 +264,7 @@
       "status": "NO",
       "aurora_reach": "none",
       "cloud_block": "clear",
-      "source": "kp_forecast",
+      "source": "kp",
       "codes": [
         "AURORA_NO_REACH"
       ]
@@ -276,7 +276,7 @@
       "status": "NO",
       "aurora_reach": "none",
       "cloud_block": "clear",
-      "source": "kp_forecast",
+      "source": "kp",
       "codes": [
         "AURORA_NO_REACH"
       ]
