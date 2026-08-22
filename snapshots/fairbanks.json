@@ -2,8 +2,8 @@
   "location_slug": "fairbanks",
   "headline_point_id": "fairbanks",
   "headline_point_name": "Fairbanks",
-  "generated_at": "2026-08-22T08:02:31.131796+00:00",
-  "valid_until": "2026-08-22T08:27:31.131796+00:00",
+  "generated_at": "2026-08-22T08:41:55.331286+00:00",
+  "valid_until": "2026-08-22T09:06:55.331286+00:00",
   "status": "MAYBE",
   "confidence": "high",
   "best_window_start": "2026-08-22T00:45:00-08:00",
@@ -19,8 +19,8 @@
   "look_toward": "north",
   "answer_sentence": "MAYBE in Fairbanks. Best window 12:45 AM–3:15 AM AKDT. Main issue: Clouds are the main uncertainty.",
   "sources": {
-    "ovation_obs": "2026-08-22T07:56:00+00:00",
-    "ovation_fcst": "2026-08-22T08:57:00+00:00",
+    "ovation_obs": "2026-08-22T08:30:00+00:00",
+    "ovation_fcst": "2026-08-22T09:32:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -36,18 +36,6 @@
     }
   ],
   "windows": [
-    {
-      "start": "2026-08-21T23:45:00-08:00",
-      "end": "2026-08-22T00:15:00-08:00",
-      "skip": true,
-      "status": null,
-      "aurora_reach": null,
-      "cloud_block": "mixed",
-      "source": null,
-      "codes": [
-        "NOT_DARK_YET"
-      ]
-    },
     {
       "start": "2026-08-22T00:15:00-08:00",
       "end": "2026-08-22T00:45:00-08:00",
@@ -77,14 +65,11 @@
       "end": "2026-08-22T01:45:00-08:00",
       "skip": false,
       "status": "MAYBE",
-      "aurora_reach": "horizon",
+      "aurora_reach": "weak",
       "cloud_block": "mixed",
-      "source": "kp",
+      "source": "ovation",
       "codes": [
-        "AURORA_HORIZON_ONLY",
-        "CLOUD_MIXED",
-        "LIGHT_POLLUTION",
-        "FORECAST_FAR"
+        "CLOUD_MIXED"
       ]
     },
     {
@@ -92,14 +77,11 @@
       "end": "2026-08-22T02:15:00-08:00",
       "skip": false,
       "status": "MAYBE",
-      "aurora_reach": "horizon",
+      "aurora_reach": "weak",
       "cloud_block": "mixed",
-      "source": "kp",
+      "source": "ovation",
       "codes": [
-        "AURORA_HORIZON_ONLY",
-        "CLOUD_MIXED",
-        "LIGHT_POLLUTION",
-        "FORECAST_FAR"
+        "CLOUD_MIXED"
       ]
     },
     {
