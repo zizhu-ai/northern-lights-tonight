@@ -2,8 +2,8 @@
   "location_slug": "minnesota",
   "headline_point_id": "duluth",
   "headline_point_name": "Duluth",
-  "generated_at": "2026-08-22T17:02:17.045313+00:00",
-  "valid_until": "2026-08-22T17:27:17.045313+00:00",
+  "generated_at": "2026-08-22T17:30:46.354029+00:00",
+  "valid_until": "2026-08-22T17:55:46.354029+00:00",
   "status": "MAYBE",
   "confidence": "low",
   "best_window_start": "2026-08-22T21:15:00-05:00",
@@ -17,8 +17,8 @@
   "look_toward": "north",
   "answer_sentence": "MAYBE in Minnesota (Duluth area). Best window 9:15 PM–9:45 PM CDT. Main issue: Later hours rely on a coarser forecast, not the live oval.",
   "sources": {
-    "ovation_obs": "2026-08-22T16:49:00+00:00",
-    "ovation_fcst": "2026-08-22T17:52:00+00:00",
+    "ovation_obs": "2026-08-22T17:19:00+00:00",
+    "ovation_fcst": "2026-08-22T18:23:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -48,9 +48,9 @@
       "status": "MAYBE",
       "confidence": "low",
       "aurora_reach": "weak",
-      "cloud_block": null,
+      "cloud_block": "clear",
       "urban": true,
-      "main_obstacle": "DATA_MISSING_WEATHER"
+      "main_obstacle": "FORECAST_FAR"
     }
   ],
   "windows": [
