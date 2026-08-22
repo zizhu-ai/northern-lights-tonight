@@ -2,8 +2,8 @@
   "location_slug": "massachusetts",
   "headline_point_id": "newburyport",
   "headline_point_name": "Newburyport",
-  "generated_at": "2026-08-22T17:30:46.354029+00:00",
-  "valid_until": "2026-08-22T17:55:46.354029+00:00",
+  "generated_at": "2026-08-22T17:53:09.268523+00:00",
+  "valid_until": "2026-08-22T18:18:09.268523+00:00",
   "status": "NO",
   "confidence": "high",
   "best_window_start": null,
@@ -16,8 +16,8 @@
   "look_toward": "north",
   "answer_sentence": "NO (Newburyport area). Not worth a special trip tonight. Aurora activity is not expected to reach Massachusetts tonight.",
   "sources": {
-    "ovation_obs": "2026-08-22T17:19:00+00:00",
-    "ovation_fcst": "2026-08-22T18:23:00+00:00",
+    "ovation_obs": "2026-08-22T17:45:00+00:00",
+    "ovation_fcst": "2026-08-22T18:48:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -27,7 +27,7 @@
       "status": "NO",
       "confidence": "high",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "urban": false,
       "main_obstacle": "AURORA_NO_REACH"
     },
@@ -37,7 +37,7 @@
       "status": "NO",
       "confidence": "high",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": null,
       "urban": true,
       "main_obstacle": "AURORA_NO_REACH"
     },
@@ -47,7 +47,7 @@
       "status": "NO",
       "confidence": "high",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "urban": false,
       "main_obstacle": "AURORA_NO_REACH"
     }
@@ -95,7 +95,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -107,7 +107,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -299,7 +299,7 @@
       "skip": true,
       "status": null,
       "aurora_reach": null,
-      "cloud_block": "mixed",
+      "cloud_block": "socked",
       "source": null,
       "codes": [
         "NOT_DARK_YET"
@@ -311,7 +311,7 @@
       "skip": true,
       "status": null,
       "aurora_reach": null,
-      "cloud_block": "mixed",
+      "cloud_block": "socked",
       "source": null,
       "codes": [
         "NOT_DARK_YET"
