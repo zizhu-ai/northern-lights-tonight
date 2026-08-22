@@ -2,11 +2,11 @@
   "location_slug": "fairbanks",
   "headline_point_id": "fairbanks",
   "headline_point_name": "Fairbanks",
-  "generated_at": "2026-08-22T10:42:05.168265+00:00",
-  "valid_until": "2026-08-22T11:07:05.168265+00:00",
+  "generated_at": "2026-08-22T11:00:35.809444+00:00",
+  "valid_until": "2026-08-22T11:25:35.809444+00:00",
   "status": "MAYBE",
   "confidence": "high",
-  "best_window_start": "2026-08-22T02:15:00-08:00",
+  "best_window_start": "2026-08-22T02:45:00-08:00",
   "best_window_end": "2026-08-22T03:15:00-08:00",
   "main_obstacle": "CLOUD_MIXED",
   "main_obstacle_text": "Clouds are the main uncertainty.",
@@ -14,10 +14,10 @@
     "CLOUD_MIXED"
   ],
   "look_toward": "north",
-  "answer_sentence": "MAYBE in Fairbanks. Best window 2:15 AM–3:15 AM AKDT. Main issue: Clouds are the main uncertainty.",
+  "answer_sentence": "MAYBE in Fairbanks. Best window 2:45 AM–3:15 AM AKDT. Main issue: Clouds are the main uncertainty.",
   "sources": {
-    "ovation_obs": "2026-08-22T10:29:00+00:00",
-    "ovation_fcst": "2026-08-22T11:32:00+00:00",
+    "ovation_obs": "2026-08-22T10:51:00+00:00",
+    "ovation_fcst": "2026-08-22T11:52:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -33,18 +33,6 @@
     }
   ],
   "windows": [
-    {
-      "start": "2026-08-22T02:15:00-08:00",
-      "end": "2026-08-22T02:45:00-08:00",
-      "skip": false,
-      "status": "MAYBE",
-      "aurora_reach": "weak",
-      "cloud_block": "mixed",
-      "source": "ovation",
-      "codes": [
-        "CLOUD_MIXED"
-      ]
-    },
     {
       "start": "2026-08-22T02:45:00-08:00",
       "end": "2026-08-22T03:15:00-08:00",
