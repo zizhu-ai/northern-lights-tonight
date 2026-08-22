@@ -2,8 +2,8 @@
   "location_slug": "alaska",
   "headline_point_id": "fairbanks",
   "headline_point_name": "Fairbanks",
-  "generated_at": "2026-08-22T11:30:56.769406+00:00",
-  "valid_until": "2026-08-22T11:55:56.769406+00:00",
+  "generated_at": "2026-08-22T11:52:58.104232+00:00",
+  "valid_until": "2026-08-22T12:17:58.104232+00:00",
   "status": "GO",
   "confidence": "low",
   "best_window_start": "2026-08-23T00:15:00-08:00",
@@ -18,8 +18,8 @@
   "look_toward": "north",
   "answer_sentence": "GO (Fairbanks area). Best window 12:15 AM–2:15 AM AKDT. Any display would likely stay low on the northern horizon.",
   "sources": {
-    "ovation_obs": "2026-08-22T11:21:00+00:00",
-    "ovation_fcst": "2026-08-22T12:21:00+00:00",
+    "ovation_obs": "2026-08-22T11:44:00+00:00",
+    "ovation_fcst": "2026-08-22T12:46:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -39,19 +39,19 @@
       "status": "MAYBE",
       "confidence": "high",
       "aurora_reach": "weak",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "urban": true,
-      "main_obstacle": "CLOUD_MIXED"
+      "main_obstacle": "AURORA_HORIZON_ONLY"
     },
     {
       "id": "juneau",
       "name": "Juneau",
-      "status": "NO",
-      "confidence": "high",
-      "aurora_reach": "none",
+      "status": "MAYBE",
+      "confidence": "low",
+      "aurora_reach": "horizon",
       "cloud_block": "mixed",
       "urban": false,
-      "main_obstacle": "AURORA_NO_REACH"
+      "main_obstacle": "AURORA_HORIZON_ONLY"
     }
   ],
   "windows": [

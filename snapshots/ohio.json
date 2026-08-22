@@ -2,8 +2,8 @@
   "location_slug": "ohio",
   "headline_point_id": "cleveland",
   "headline_point_name": "Cleveland",
-  "generated_at": "2026-08-22T11:30:56.769406+00:00",
-  "valid_until": "2026-08-22T11:55:56.769406+00:00",
+  "generated_at": "2026-08-22T11:52:58.104232+00:00",
+  "valid_until": "2026-08-22T12:17:58.104232+00:00",
   "status": "NO",
   "confidence": "high",
   "best_window_start": null,
@@ -16,8 +16,8 @@
   "look_toward": "north",
   "answer_sentence": "NO (Cleveland area). Not worth a special trip tonight. Aurora activity is not expected to reach Ohio tonight.",
   "sources": {
-    "ovation_obs": "2026-08-22T11:21:00+00:00",
-    "ovation_fcst": "2026-08-22T12:21:00+00:00",
+    "ovation_obs": "2026-08-22T11:44:00+00:00",
+    "ovation_fcst": "2026-08-22T12:46:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -27,7 +27,7 @@
       "status": "NO",
       "confidence": "high",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "socked",
       "urban": false,
       "main_obstacle": "AURORA_NO_REACH"
     },
@@ -37,7 +37,7 @@
       "status": "NO",
       "confidence": "high",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "urban": false,
       "main_obstacle": "AURORA_NO_REACH"
     },
@@ -83,7 +83,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "socked",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -95,7 +95,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "socked",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -107,7 +107,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
@@ -119,7 +119,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "source": "kp_forecast",
       "codes": [
         "AURORA_NO_REACH"
