@@ -2,8 +2,8 @@
   "location_slug": "michigan",
   "headline_point_id": "traverse-city",
   "headline_point_name": "Traverse City",
-  "generated_at": "2026-08-22T11:00:35.809444+00:00",
-  "valid_until": "2026-08-22T11:25:35.809444+00:00",
+  "generated_at": "2026-08-22T11:30:56.769406+00:00",
+  "valid_until": "2026-08-22T11:55:56.769406+00:00",
   "status": "NO",
   "confidence": "high",
   "best_window_start": null,
@@ -16,8 +16,8 @@
   "look_toward": "north",
   "answer_sentence": "NO (Traverse City area). Not worth a special trip tonight. Aurora activity is not expected to reach Michigan tonight.",
   "sources": {
-    "ovation_obs": "2026-08-22T10:51:00+00:00",
-    "ovation_fcst": "2026-08-22T11:52:00+00:00",
+    "ovation_obs": "2026-08-22T11:21:00+00:00",
+    "ovation_fcst": "2026-08-22T12:21:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -47,7 +47,7 @@
       "status": "NO",
       "confidence": "high",
       "aurora_reach": "none",
-      "cloud_block": null,
+      "cloud_block": "clear",
       "urban": true,
       "main_obstacle": "AURORA_NO_REACH"
     }

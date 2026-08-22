@@ -2,8 +2,8 @@
   "location_slug": "seattle",
   "headline_point_id": "seattle",
   "headline_point_name": "Seattle",
-  "generated_at": "2026-08-22T11:00:35.809444+00:00",
-  "valid_until": "2026-08-22T11:25:35.809444+00:00",
+  "generated_at": "2026-08-22T11:30:56.769406+00:00",
+  "valid_until": "2026-08-22T11:55:56.769406+00:00",
   "status": "NO",
   "confidence": "high",
   "best_window_start": null,
@@ -16,8 +16,8 @@
   "look_toward": "north",
   "answer_sentence": "NO. Not worth a special trip tonight. Aurora activity is not expected to reach Seattle tonight.",
   "sources": {
-    "ovation_obs": "2026-08-22T10:51:00+00:00",
-    "ovation_fcst": "2026-08-22T11:52:00+00:00",
+    "ovation_obs": "2026-08-22T11:21:00+00:00",
+    "ovation_fcst": "2026-08-22T12:21:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -33,18 +33,6 @@
     }
   ],
   "windows": [
-    {
-      "start": "2026-08-22T03:45:00-07:00",
-      "end": "2026-08-22T04:15:00-07:00",
-      "skip": false,
-      "status": "NO",
-      "aurora_reach": "none",
-      "cloud_block": "clear",
-      "source": "ovation",
-      "codes": [
-        "AURORA_NO_REACH"
-      ]
-    },
     {
       "start": "2026-08-22T04:15:00-07:00",
       "end": "2026-08-22T04:45:00-07:00",
