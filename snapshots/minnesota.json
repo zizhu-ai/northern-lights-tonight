@@ -2,24 +2,23 @@
   "location_slug": "minnesota",
   "headline_point_id": "duluth",
   "headline_point_name": "Duluth",
-  "generated_at": "2026-08-22T03:51:12.168846+00:00",
-  "valid_until": "2026-08-22T04:16:12.168846+00:00",
+  "generated_at": "2026-08-22T04:23:41.893292+00:00",
+  "valid_until": "2026-08-22T04:48:41.893292+00:00",
   "status": "MAYBE",
   "confidence": "low",
-  "best_window_start": "2026-08-21T22:45:00-05:00",
+  "best_window_start": "2026-08-21T23:15:00-05:00",
   "best_window_end": "2026-08-22T00:45:00-05:00",
   "main_obstacle": "AURORA_HORIZON_ONLY",
   "main_obstacle_text": "Any display would likely stay low on the northern horizon.",
   "reason_codes": [
     "AURORA_HORIZON_ONLY",
-    "FORECAST_FAR",
     "AURORA_NO_REACH"
   ],
   "look_toward": "north",
-  "answer_sentence": "MAYBE in Minnesota (Duluth area). Best window 10:45 PM–12:45 AM CDT. Main issue: Any display would likely stay low on the northern horizon.",
+  "answer_sentence": "MAYBE in Minnesota (Duluth area). Best window 11:15 PM–12:45 AM CDT. Main issue: Any display would likely stay low on the northern horizon.",
   "sources": {
-    "ovation_obs": "2026-08-22T03:41:00+00:00",
-    "ovation_fcst": "2026-08-22T04:37:00+00:00",
+    "ovation_obs": "2026-08-22T04:14:00+00:00",
+    "ovation_fcst": "2026-08-22T05:13:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -46,27 +45,15 @@
     {
       "id": "minneapolis",
       "name": "Minneapolis",
-      "status": "MAYBE",
-      "confidence": "low",
+      "status": "NO",
+      "confidence": "high",
       "aurora_reach": "none",
       "cloud_block": "clear",
       "urban": true,
-      "main_obstacle": "FORECAST_FAR"
+      "main_obstacle": "AURORA_NO_REACH"
     }
   ],
   "windows": [
-    {
-      "start": "2026-08-21T22:45:00-05:00",
-      "end": "2026-08-21T23:15:00-05:00",
-      "skip": false,
-      "status": "MAYBE",
-      "aurora_reach": "weak",
-      "cloud_block": "clear",
-      "source": "ovation",
-      "codes": [
-        "AURORA_HORIZON_ONLY"
-      ]
-    },
     {
       "start": "2026-08-21T23:15:00-05:00",
       "end": "2026-08-21T23:45:00-05:00",
@@ -98,9 +85,9 @@
       "status": "MAYBE",
       "aurora_reach": "weak",
       "cloud_block": "clear",
-      "source": "kp",
+      "source": "ovation",
       "codes": [
-        "FORECAST_FAR"
+        "AURORA_HORIZON_ONLY"
       ]
     },
     {
