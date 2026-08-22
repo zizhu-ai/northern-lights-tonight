@@ -1,7 +1,8 @@
+import Link from "next/link";
+
 import copy from "@/content/ui-copy.json";
 
 import { ShareButton } from "./share-button";
-import { TryAgainButton } from "./try-again-button";
 
 export type VerdictStatus = "GO" | "MAYBE" | "NO" | "UNKNOWN" | "UNAVAILABLE";
 export type VerdictConfidence = "high" | "medium" | "low";
@@ -13,9 +14,10 @@ type VerdictCardProps = {
   confidence: VerdictConfidence;
   updated: string;
   place?: string;
+  lookToward?: string;
   alaskaKicker?: boolean;
   stale?: boolean;
-  tryAgain?: boolean;
+  human?: string;
 };
 
 const humanByStatus: Record<VerdictStatus, string> = {
@@ -39,9 +41,10 @@ export function VerdictCard({
   confidence,
   updated,
   place,
+  lookToward,
   alaskaKicker = false,
   stale = false,
-  tryAgain = false,
+  human,
 }: VerdictCardProps) {
   const displayStatus = stale ? "UNKNOWN" : status;
   const displayWindow =
@@ -53,6 +56,9 @@ export function VerdictCard({
     : displayStatus === "UNAVAILABLE"
       ? copy.south.main_issue
       : (mainIssue ?? copy.view.unknown_main_issue);
+  const displayLook = lookToward
+    ? lookToward.charAt(0).toUpperCase() + lookToward.slice(1)
+    : copy.verdict.look_north;
   const shareText = place
     ? copy.share.template
         .replace("{Place}", place)
@@ -66,7 +72,7 @@ export function VerdictCard({
       {alaskaKicker ? (
         <p className="verdict-card__alaska-kicker">{copy.verdict.alaska_kicker}</p>
       ) : null}
-      <p className="verdict-card__human">{humanByStatus[displayStatus]}</p>
+      <p className="verdict-card__human">{human ?? humanByStatus[displayStatus]}</p>
 
       <dl className="verdict-card__meta">
         <div>
@@ -78,8 +84,8 @@ export function VerdictCard({
           <dd>{displayIssue}</dd>
         </div>
         <div>
-          <dt>Look north</dt>
-          <dd>{copy.verdict.look_north}</dd>
+          <dt>{copy.verdict.look_toward_label}</dt>
+          <dd>{displayLook}</dd>
         </div>
         <div>
           <dt>Confidence</dt>
@@ -90,10 +96,17 @@ export function VerdictCard({
       <div className="verdict-card__footer">
         <p>{updated}</p>
         <div className="verdict-card__actions">
-          {tryAgain && displayStatus === "UNKNOWN" ? <TryAgainButton /> : null}
-          <ShareButton text={shareText} />
+          {displayStatus === "UNKNOWN" || displayStatus === "UNAVAILABLE" ? null : (
+            <ShareButton text={shareText} />
+          )}
         </div>
       </div>
+      {displayStatus === "UNKNOWN" ? (
+        <p className="verdict-card__note">
+          {copy.verdict.auto_refresh}{" "}
+          <Link href="/methodology">{copy.chrome.footer_how}</Link>
+        </p>
+      ) : null}
     </section>
   );
 }

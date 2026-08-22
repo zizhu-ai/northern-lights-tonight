@@ -18,12 +18,7 @@ export function SiteHeader() {
     <header className="site-header">
       <div className="site-header__inner">
         <Link className="wordmark" href="/">
-          <span className="wordmark__mark" aria-hidden="true">
-            <svg viewBox="0 0 22 22" role="img">
-              <path d="M3.5 13.5c3.1-5.2 7.8-7 15-4.1" />
-              <path d="M4.5 16c4-3.6 8.3-4.2 13-1.8" />
-            </svg>
-          </span>
+          <span className="wordmark__mark" aria-hidden="true" />
           <span>{copy.chrome.wordmark}</span>
         </Link>
 

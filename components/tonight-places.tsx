@@ -18,16 +18,16 @@ type TonightPlacesProps = {
   grouped?: boolean;
 };
 
-type TonightRow = {
+export type TonightRow = {
   dossier: ForecastDossier;
   snapshot: SnapshotRow | null;
 };
 
 const STATUS_ORDER: SnapshotRow["status"][] = ["GO", "MAYBE", "NO", "UNKNOWN"];
 
-export async function TonightPlaces({ grouped = false }: TonightPlacesProps) {
+export async function loadTonightRows(): Promise<TonightRow[]> {
   const latest = await loadLatest();
-  const rows = WAVE_ONE_SLUGS.map((slug): TonightRow | null => {
+  return WAVE_ONE_SLUGS.map((slug): TonightRow | null => {
     const dossier = getForecastDossier(slug);
     if (!dossier) return null;
     return {
@@ -35,12 +35,26 @@ export async function TonightPlaces({ grouped = false }: TonightPlacesProps) {
       snapshot: latest.locations.find((row) => row.location_slug === slug) ?? null,
     };
   }).filter((row): row is TonightRow => row !== null);
+}
+
+export function displayTonightStatus(snapshot: SnapshotRow | null): SnapshotRow["status"] {
+  if (!snapshot || !isSnapshotFresh(snapshot)) return "UNKNOWN";
+  return snapshot.status;
+}
+
+export function isSiteReadingsPaused(rows: TonightRow[]): boolean {
+  if (rows.length === 0) return true;
+  return rows.every((row) => displayTonightStatus(row.snapshot) === "UNKNOWN");
+}
+
+export async function TonightPlaces({ grouped = false }: TonightPlacesProps) {
+  const rows = await loadTonightRows();
 
   if (grouped) {
     return (
       <div className={styles.groups}>
         {STATUS_ORDER.map((status) => {
-          const group = rows.filter((row) => displayStatus(row.snapshot) === status);
+          const group = rows.filter((row) => displayTonightStatus(row.snapshot) === status);
           if (group.length === 0) return null;
           return (
             <section className={styles.group} key={status}>
@@ -55,35 +69,33 @@ export async function TonightPlaces({ grouped = false }: TonightPlacesProps) {
 
   const sorted = [...rows].sort(
     (a, b) =>
-      STATUS_ORDER.indexOf(displayStatus(a.snapshot)) -
-      STATUS_ORDER.indexOf(displayStatus(b.snapshot)),
+      STATUS_ORDER.indexOf(displayTonightStatus(a.snapshot)) -
+      STATUS_ORDER.indexOf(displayTonightStatus(b.snapshot)),
   );
 
   return <div className={styles.list}>{sorted.map(renderRow)}</div>;
 }
 
-function displayStatus(snapshot: SnapshotRow | null): SnapshotRow["status"] {
-  if (!snapshot || !isSnapshotFresh(snapshot)) return "UNKNOWN";
-  return snapshot.status;
-}
-
 function renderRow({ dossier, snapshot }: TonightRow) {
   const live = snapshot ? isSnapshotFresh(snapshot) : false;
-  const status = displayStatus(snapshot);
-  const window = live && snapshot
-    ? formatWindow(snapshot.best_window_start, snapshot.best_window_end, dossier.timezone)
-    : "—";
+  const status = displayTonightStatus(snapshot);
+  const window =
+    live && snapshot
+      ? formatWindow(snapshot.best_window_start, snapshot.best_window_end, dossier.timezone)
+      : "";
+  const pointName = snapshot?.headline_point_name ?? dossier.sample_points[0]?.name;
+  const showPoint = Boolean(pointName && pointName !== dossier.name);
 
   return (
-    <article className={styles.row} key={dossier.slug}>
+    <Link className={styles.row} href={`/forecast/${dossier.slug}`} key={dossier.slug}>
       <strong className={styles.status} data-status={status.toLowerCase()}>
         {status}
       </strong>
       <div className={styles.place}>
-        <Link href={`/forecast/${dossier.slug}`}>{dossier.name}</Link>
-        <span>{snapshot?.headline_point_name ?? dossier.sample_points[0]?.name}</span>
+        <span className={styles.placeName}>{dossier.name}</span>
+        {showPoint ? <span className={styles.placeMeta}>{pointName}</span> : null}
       </div>
-      <span className={styles.window}>{window}</span>
-    </article>
+      {window ? <span className={styles.window}>{window}</span> : null}
+    </Link>
   );
 }

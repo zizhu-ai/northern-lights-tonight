@@ -12,6 +12,7 @@ import {
   type ForecastDossier,
 } from "@/lib/forecast-places";
 import {
+  formatUpdatedAt,
   formatWindow,
   formatZoneAbbreviation,
   isSnapshotFresh,
@@ -98,7 +99,7 @@ export default async function ForecastPage({ params }: PageProps) {
   const headlinePoint = getHeadlinePoint(dossier);
   const state = await getForecastState(slug, dossier.timezone);
   const timezone = formatZoneAbbreviation(new Date(), dossier.timezone);
-  const updated = formatUpdated(state.snapshot);
+  const updated = formatUpdatedAt(state.snapshot?.generated_at, dossier.timezone);
   const answer = state.live && state.snapshot
     ? state.snapshot.answer_sentence
     : unknownAnswer(dossier, headlinePoint.name, state.mainIssue);
@@ -110,13 +111,20 @@ export default async function ForecastPage({ params }: PageProps) {
 
   return (
     <main className={styles.page}>
-      <div className={styles.content}>
-        <header className={styles.hero}>
-          <p className={styles.kicker}>
-            {dossier.name} · {timezone} · Headline: {headlinePoint.name}
-          </p>
-          <h1>{h1For(dossier)}</h1>
-          <p className={styles.answer}>{answer}</p>
+      <div className={`twilight-band ${styles.twilight}`}>
+        <div className={styles.inner}>
+          <header className={styles.hero}>
+            <p className={styles.kicker}>
+              {dossier.name} · {timezone}
+            </p>
+            <h1>{h1For(dossier)}</h1>
+            <p className={styles.answer}>{answer}</p>
+          </header>
+        </div>
+      </div>
+
+      <div className={styles.shell}>
+        <div className={styles.verdictSlot}>
           <VerdictCard
             status={state.status}
             bestWindow={state.bestWindow}
@@ -124,17 +132,17 @@ export default async function ForecastPage({ params }: PageProps) {
             confidence={state.live && state.snapshot ? state.snapshot.confidence : "low"}
             updated={updated}
             place={dossier.name}
+            lookToward={state.snapshot?.look_toward ?? dossier.viewing_direction}
             alaskaKicker={slug === "alaska"}
             stale={state.stale}
-            tryAgain={!state.live}
           />
-        </header>
+        </div>
 
         <Hours
           dossier={dossier}
           snapshot={state.snapshot}
           live={state.live}
-          fallback={state.mainIssue}
+          fallback={copy.verdict.hours_need_live}
         />
 
         <WhyThisVerdict dossier={dossier} state={state} />
@@ -171,7 +179,7 @@ export default async function ForecastPage({ params }: PageProps) {
           </section>
         ) : null}
 
-        <section className={styles.section}>
+        <section className={`${styles.section} ${styles.nearby}`}>
           <h2>Nearby</h2>
           <ul className={styles.linkList}>
             {nearby.map((place) => (
@@ -269,16 +277,6 @@ function unknownAnswer(
   return `UNKNOWN in ${place}. ${copy.verdict.unknown_human} Best window ${copy.verdict.unknown_window}. Main issue: ${mainIssue}`;
 }
 
-function formatUpdated(snapshot: ForecastSnapshot | null): string {
-  if (!snapshot) return "Updated —";
-  const generatedAt = Date.parse(snapshot.generated_at);
-  if (!Number.isFinite(generatedAt)) return "Updated —";
-  const minutes = Math.max(0, Math.floor((Date.now() - generatedAt) / 60_000));
-  return minutes < 1
-    ? copy.verdict.updated_just_now
-    : copy.verdict.updated_minutes.replace("{n}", String(minutes));
-}
-
 function Hours({
   dossier,
   snapshot,
@@ -297,7 +295,7 @@ function Hours({
 
   return (
     <section className={`${styles.section} ${styles.hours}`}>
-      <h2>Tonight&apos;s hours ({timezone})</h2>
+      <h2>Tonight’s hours ({timezone})</h2>
       {windows.length === 0 ? (
         <p>{fallback}</p>
       ) : (
@@ -318,7 +316,7 @@ function Hours({
             <details className={styles.remainingHours}>
               <summary>{copy.chrome.rest_of_night}</summary>
               <table>
-                <caption className="visually-hidden">Rest of tonight&apos;s 30-minute readings</caption>
+                <caption className="visually-hidden">Rest of tonight’s 30-minute readings</caption>
                 <tbody>
                   <HourRows windows={remaining} timezone={dossier.timezone} />
                 </tbody>
@@ -346,7 +344,7 @@ function HourRows({
     return (
       <tr key={`${window.start}-${window.end}`} data-status={window.status?.toLowerCase()}>
         <th scope="row">{formatWindow(window.start, window.end, timezone)}</th>
-        <td className={styles.hourStatus}>{status}</td>
+        <td className={window.skip ? undefined : styles.hourStatus}>{status}</td>
         <td>{sky}</td>
       </tr>
     );
@@ -360,51 +358,50 @@ function WhyThisVerdict({
   dossier: ForecastDossier;
   state: ForecastState;
 }) {
-  const point = state.live && state.snapshot
+  if (!state.live) {
+    return (
+      <section className={styles.section}>
+        <h2>Why this verdict</h2>
+        <p>Data live → {state.mainIssue}</p>
+      </section>
+    );
+  }
+
+  const point = state.snapshot
     ? state.snapshot.points.find((candidate) => candidate.id === dossier.primary_verdict_point) ?? null
     : null;
-  const codes = state.live && state.snapshot ? state.snapshot.reason_codes : [];
-  const unavailable = state.live ? "—" : state.mainIssue;
+  const codes = state.snapshot ? state.snapshot.reason_codes : [];
 
   const reasons = [
     {
       label: "Aurora reach",
-      value: state.live
-        ? reasonFrom(codes, ["AURORA_NO_REACH", "AURORA_HORIZON_ONLY", "AURORA_OVERHEAD"], dossier.name) ??
-          displayEnum(point?.aurora_reach)
-        : unavailable,
+      value:
+        reasonFrom(codes, ["AURORA_NO_REACH", "AURORA_HORIZON_ONLY", "AURORA_OVERHEAD"], dossier.name) ??
+        displayEnum(point?.aurora_reach),
     },
     {
       label: "Clouds",
-      value: state.live
-        ? reasonFrom(codes, ["CLOUD_BLOCKED", "CLOUD_MIXED", "DATA_MISSING_WEATHER"], dossier.name) ??
-          displayEnum(point?.cloud_block)
-        : unavailable,
+      value:
+        reasonFrom(codes, ["CLOUD_BLOCKED", "CLOUD_MIXED", "DATA_MISSING_WEATHER"], dossier.name) ??
+        displayEnum(point?.cloud_block),
     },
     {
       label: "Darkness",
-      value: state.live
-        ? reasonFrom(codes, ["NEVER_DARK", "NOT_DARK_YET"], dossier.name) ?? "—"
-        : unavailable,
+      value: reasonFrom(codes, ["NEVER_DARK", "NOT_DARK_YET"], dossier.name) ?? "—",
     },
     {
       label: "Moon",
-      value: state.live
-        ? reasonFrom(codes, ["MOON_BRIGHT"], dossier.name) ?? "—"
-        : unavailable,
+      value: reasonFrom(codes, ["MOON_BRIGHT"], dossier.name) ?? "—",
     },
     {
       label: "City glow",
-      value: state.live
-        ? reasonFrom(codes, ["LIGHT_POLLUTION"], dossier.name) ?? dossier.light_pollution_note
-        : dossier.light_pollution_note,
+      value: reasonFrom(codes, ["LIGHT_POLLUTION"], dossier.name) ?? dossier.light_pollution_note,
     },
     {
       label: "Data live",
-      value: state.live
-        ? reasonFrom(codes, ["DATA_MISSING_AURORA", "FORECAST_FAR", "SIGNALS_CONFLICT"], dossier.name) ??
-          copy.view.live_disclaimer
-        : state.mainIssue,
+      value:
+        reasonFrom(codes, ["DATA_MISSING_AURORA", "FORECAST_FAR", "SIGNALS_CONFLICT"], dossier.name) ??
+        copy.view.live_disclaimer,
     },
   ];
 

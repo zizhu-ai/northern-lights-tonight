@@ -132,7 +132,7 @@ export function FindPlace() {
     <div className="find-place">
       <button
         ref={triggerRef}
-        className="button button--primary find-place__trigger"
+        className="button button--secondary find-place__trigger"
         type="button"
         aria-expanded={open}
         aria-controls="find-place-panel"
@@ -160,7 +160,19 @@ export function FindPlace() {
             aria-labelledby="find-place-title"
             onKeyDown={keepFocusInPanel}
           >
-            <h2 id="find-place-title">{copy.chrome.find_place_title}</h2>
+            <div className="find-place__head">
+              <h2 id="find-place-title">{copy.chrome.find_place_title}</h2>
+              <button
+                className="find-place__close"
+                type="button"
+                onClick={() => {
+                  close();
+                  triggerRef.current?.focus();
+                }}
+              >
+                {copy.chrome.close}
+              </button>
+            </div>
             <form onSubmit={handleSubmit}>
               <label className="visually-hidden" htmlFor="find-place-input">
                 {copy.chrome.input_placeholder}
