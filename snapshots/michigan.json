@@ -2,12 +2,12 @@
   "location_slug": "michigan",
   "headline_point_id": "traverse-city",
   "headline_point_name": "Traverse City",
-  "generated_at": "2026-08-23T04:58:12.588470+00:00",
-  "valid_until": "2026-08-23T05:23:12.588470+00:00",
+  "generated_at": "2026-08-23T05:38:15.099500+00:00",
+  "valid_until": "2026-08-23T06:03:15.099500+00:00",
   "status": "MAYBE",
   "confidence": "low",
-  "best_window_start": "2026-08-23T00:45:00-04:00",
-  "best_window_end": "2026-08-23T02:15:00-04:00",
+  "best_window_start": "2026-08-23T01:15:00-04:00",
+  "best_window_end": "2026-08-23T03:15:00-04:00",
   "main_obstacle": "AURORA_HORIZON_ONLY",
   "main_obstacle_text": "Any display would likely stay low on the northern horizon.",
   "reason_codes": [
@@ -15,10 +15,10 @@
     "AURORA_NO_REACH"
   ],
   "look_toward": "north",
-  "answer_sentence": "MAYBE in Michigan (Traverse City area). Best window 12:45 AM–2:15 AM EDT. Main issue: Any display would likely stay low on the northern horizon.",
+  "answer_sentence": "MAYBE in Michigan (Traverse City area). Best window 1:15 AM–3:15 AM EDT. Main issue: Any display would likely stay low on the northern horizon.",
   "sources": {
-    "ovation_obs": "2026-08-23T04:50:00+00:00",
-    "ovation_fcst": "2026-08-23T05:54:00+00:00",
+    "ovation_obs": "2026-08-23T05:31:00+00:00",
+    "ovation_fcst": "2026-08-23T06:34:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -48,24 +48,12 @@
       "status": "NO",
       "confidence": "high",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "urban": true,
       "main_obstacle": "AURORA_NO_REACH"
     }
   ],
   "windows": [
-    {
-      "start": "2026-08-23T00:45:00-04:00",
-      "end": "2026-08-23T01:15:00-04:00",
-      "skip": false,
-      "status": "MAYBE",
-      "aurora_reach": "weak",
-      "cloud_block": "clear",
-      "source": "ovation",
-      "codes": [
-        "AURORA_HORIZON_ONLY"
-      ]
-    },
     {
       "start": "2026-08-23T01:15:00-04:00",
       "end": "2026-08-23T01:45:00-04:00",
@@ -94,24 +82,24 @@
       "start": "2026-08-23T02:15:00-04:00",
       "end": "2026-08-23T02:45:00-04:00",
       "skip": false,
-      "status": "NO",
-      "aurora_reach": "none",
+      "status": "MAYBE",
+      "aurora_reach": "weak",
       "cloud_block": "clear",
-      "source": "kp",
+      "source": "ovation",
       "codes": [
-        "AURORA_NO_REACH"
+        "AURORA_HORIZON_ONLY"
       ]
     },
     {
       "start": "2026-08-23T02:45:00-04:00",
       "end": "2026-08-23T03:15:00-04:00",
       "skip": false,
-      "status": "NO",
-      "aurora_reach": "none",
+      "status": "MAYBE",
+      "aurora_reach": "weak",
       "cloud_block": "clear",
-      "source": "kp",
+      "source": "ovation",
       "codes": [
-        "AURORA_NO_REACH"
+        "AURORA_HORIZON_ONLY"
       ]
     },
     {
