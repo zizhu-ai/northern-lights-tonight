@@ -149,7 +149,6 @@ input {
   height: 22px;
   flex: 0 0 22px;
   border-radius: 6px;
-  background: var(--twilight);
 }
 
 .site-nav {
@@ -189,10 +188,6 @@ body:has(.twilight-band) .site-nav a {
 
 body:has(.twilight-band) .site-nav a:hover {
   color: #fff;
-}
-
-body:has(.twilight-band) .wordmark__mark {
-  background: #fff;
 }
 
 body:has(.twilight-band) .find-place__trigger {
