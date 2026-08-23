@@ -104,7 +104,7 @@ async function readBlobLkg(): Promise<RawSourceEnvelopes | null> {
   if (!token) return null;
   try {
     const result = await get(BLOB_PATH, {
-      access: "private",
+      access: "public",
       token,
       useCache: false,
     });
@@ -121,7 +121,7 @@ async function writeBlobLkg(envelopes: RawSourceEnvelopes): Promise<void> {
   if (!token || !isValidRawSourceEnvelopes(envelopes)) return;
   try {
     await put(BLOB_PATH, JSON.stringify(envelopes), {
-      access: "private",
+      access: "public",
       token,
       allowOverwrite: true,
       addRandomSuffix: false,
