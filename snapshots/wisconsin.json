@@ -2,8 +2,8 @@
   "location_slug": "wisconsin",
   "headline_point_id": "madison",
   "headline_point_name": "Madison",
-  "generated_at": "2026-08-23T05:38:15.099500+00:00",
-  "valid_until": "2026-08-23T06:03:15.099500+00:00",
+  "generated_at": "2026-08-23T06:02:11.594638+00:00",
+  "valid_until": "2026-08-23T06:27:11.594638+00:00",
   "status": "NO",
   "confidence": "high",
   "best_window_start": null,
@@ -11,14 +11,13 @@
   "main_obstacle": "AURORA_NO_REACH",
   "main_obstacle_text": "Aurora activity is not expected to reach Wisconsin tonight.",
   "reason_codes": [
-    "AURORA_NO_REACH",
-    "DATA_MISSING_WEATHER"
+    "AURORA_NO_REACH"
   ],
   "look_toward": "north",
   "answer_sentence": "NO (Madison area). Not worth a special trip tonight. Aurora activity is not expected to reach Wisconsin tonight.",
   "sources": {
-    "ovation_obs": "2026-08-23T05:31:00+00:00",
-    "ovation_fcst": "2026-08-23T06:34:00+00:00",
+    "ovation_obs": "2026-08-23T05:56:00+00:00",
+    "ovation_fcst": "2026-08-23T06:59:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -38,7 +37,7 @@
       "status": "NO",
       "confidence": "high",
       "aurora_reach": "none",
-      "cloud_block": null,
+      "cloud_block": "clear",
       "urban": false,
       "main_obstacle": "AURORA_NO_REACH"
     },
@@ -55,29 +54,15 @@
   ],
   "windows": [
     {
-      "start": "2026-08-23T00:15:00-05:00",
-      "end": "2026-08-23T00:45:00-05:00",
-      "skip": false,
-      "status": "NO",
-      "aurora_reach": "none",
-      "cloud_block": null,
-      "source": "ovation",
-      "codes": [
-        "AURORA_NO_REACH",
-        "DATA_MISSING_WEATHER"
-      ]
-    },
-    {
       "start": "2026-08-23T00:45:00-05:00",
       "end": "2026-08-23T01:15:00-05:00",
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": null,
+      "cloud_block": "clear",
       "source": "ovation",
       "codes": [
-        "AURORA_NO_REACH",
-        "DATA_MISSING_WEATHER"
+        "AURORA_NO_REACH"
       ]
     },
     {
@@ -86,11 +71,10 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": null,
+      "cloud_block": "clear",
       "source": "ovation",
       "codes": [
-        "AURORA_NO_REACH",
-        "DATA_MISSING_WEATHER"
+        "AURORA_NO_REACH"
       ]
     },
     {
@@ -99,11 +83,10 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": null,
+      "cloud_block": "clear",
       "source": "ovation",
       "codes": [
-        "AURORA_NO_REACH",
-        "DATA_MISSING_WEATHER"
+        "AURORA_NO_REACH"
       ]
     },
     {
@@ -112,11 +95,10 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": null,
+      "cloud_block": "clear",
       "source": "kp",
       "codes": [
-        "AURORA_NO_REACH",
-        "DATA_MISSING_WEATHER"
+        "AURORA_NO_REACH"
       ]
     },
     {
@@ -125,11 +107,10 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": null,
+      "cloud_block": "clear",
       "source": "kp",
       "codes": [
-        "AURORA_NO_REACH",
-        "DATA_MISSING_WEATHER"
+        "AURORA_NO_REACH"
       ]
     },
     {
@@ -138,11 +119,10 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": null,
+      "cloud_block": "clear",
       "source": "kp",
       "codes": [
-        "AURORA_NO_REACH",
-        "DATA_MISSING_WEATHER"
+        "AURORA_NO_REACH"
       ]
     },
     {
@@ -151,11 +131,10 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": null,
+      "cloud_block": "clear",
       "source": "kp",
       "codes": [
-        "AURORA_NO_REACH",
-        "DATA_MISSING_WEATHER"
+        "AURORA_NO_REACH"
       ]
     },
     {
@@ -164,11 +143,10 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": null,
+      "cloud_block": "clear",
       "source": "kp",
       "codes": [
-        "AURORA_NO_REACH",
-        "DATA_MISSING_WEATHER"
+        "AURORA_NO_REACH"
       ]
     },
     {
@@ -177,11 +155,10 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": null,
+      "cloud_block": "clear",
       "source": "kp",
       "codes": [
-        "AURORA_NO_REACH",
-        "DATA_MISSING_WEATHER"
+        "AURORA_NO_REACH"
       ]
     },
     {
@@ -190,7 +167,7 @@
       "skip": true,
       "status": null,
       "aurora_reach": null,
-      "cloud_block": null,
+      "cloud_block": "clear",
       "source": null,
       "codes": [
         "NOT_DARK_YET"
@@ -202,7 +179,7 @@
       "skip": true,
       "status": null,
       "aurora_reach": null,
-      "cloud_block": null,
+      "cloud_block": "clear",
       "source": null,
       "codes": [
         "NOT_DARK_YET"
