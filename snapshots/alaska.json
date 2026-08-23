@@ -2,11 +2,11 @@
   "location_slug": "alaska",
   "headline_point_id": "fairbanks",
   "headline_point_name": "Fairbanks",
-  "generated_at": "2026-08-23T09:37:22.510411+00:00",
-  "valid_until": "2026-08-23T10:02:22.510411+00:00",
+  "generated_at": "2026-08-23T10:00:33.119085+00:00",
+  "valid_until": "2026-08-23T10:25:33.119085+00:00",
   "status": "MAYBE",
   "confidence": "high",
-  "best_window_start": "2026-08-23T01:15:00-08:00",
+  "best_window_start": "2026-08-23T01:45:00-08:00",
   "best_window_end": "2026-08-23T03:15:00-08:00",
   "main_obstacle": "AURORA_HORIZON_ONLY",
   "main_obstacle_text": "Any display would likely stay low on the northern horizon.",
@@ -14,10 +14,10 @@
     "AURORA_HORIZON_ONLY"
   ],
   "look_toward": "north",
-  "answer_sentence": "MAYBE in Alaska (Fairbanks area). Best window 1:15 AM–3:15 AM AKDT. Main issue: Any display would likely stay low on the northern horizon.",
+  "answer_sentence": "MAYBE in Alaska (Fairbanks area). Best window 1:45 AM–3:15 AM AKDT. Main issue: Any display would likely stay low on the northern horizon.",
   "sources": {
-    "ovation_obs": "2026-08-23T09:30:00+00:00",
-    "ovation_fcst": "2026-08-23T10:32:00+00:00",
+    "ovation_obs": "2026-08-23T09:49:00+00:00",
+    "ovation_fcst": "2026-08-23T10:52:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -46,25 +46,13 @@
       "name": "Juneau",
       "status": "NO",
       "confidence": "high",
-      "aurora_reach": "weak",
+      "aurora_reach": "none",
       "cloud_block": "socked",
       "urban": false,
-      "main_obstacle": "CLOUD_BLOCKED"
+      "main_obstacle": "AURORA_NO_REACH"
     }
   ],
   "windows": [
-    {
-      "start": "2026-08-23T01:15:00-08:00",
-      "end": "2026-08-23T01:45:00-08:00",
-      "skip": false,
-      "status": "MAYBE",
-      "aurora_reach": "weak",
-      "cloud_block": "clear",
-      "source": "ovation",
-      "codes": [
-        "AURORA_HORIZON_ONLY"
-      ]
-    },
     {
       "start": "2026-08-23T01:45:00-08:00",
       "end": "2026-08-23T02:15:00-08:00",

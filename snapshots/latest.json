@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-23T09:37:22.510411+00:00",
+  "generated_at": "2026-08-23T10:00:33.119085+00:00",
   "ovation_ok": true,
   "seo_indexable": false,
   "locations": [
@@ -7,8 +7,8 @@
       "location_slug": "colorado",
       "headline_point_id": "fort-collins",
       "headline_point_name": "Fort Collins",
-      "generated_at": "2026-08-23T09:37:22.510411+00:00",
-      "valid_until": "2026-08-23T10:02:22.510411+00:00",
+      "generated_at": "2026-08-23T10:00:33.119085+00:00",
+      "valid_until": "2026-08-23T10:25:33.119085+00:00",
       "status": "NO",
       "confidence": "high",
       "best_window_start": null,
@@ -21,8 +21,8 @@
       "look_toward": "north",
       "answer_sentence": "NO (Fort Collins area). Not worth a special trip tonight. Aurora activity is not expected to reach Colorado tonight.",
       "sources": {
-        "ovation_obs": "2026-08-23T09:30:00+00:00",
-        "ovation_fcst": "2026-08-23T10:32:00+00:00",
+        "ovation_obs": "2026-08-23T09:49:00+00:00",
+        "ovation_fcst": "2026-08-23T10:52:00+00:00",
         "ovation_ok": true
       },
       "points": [
@@ -58,18 +58,6 @@
         }
       ],
       "windows": [
-        {
-          "start": "2026-08-23T03:15:00-06:00",
-          "end": "2026-08-23T03:45:00-06:00",
-          "skip": false,
-          "status": "NO",
-          "aurora_reach": "none",
-          "cloud_block": "clear",
-          "source": "ovation",
-          "codes": [
-            "AURORA_NO_REACH"
-          ]
-        },
         {
           "start": "2026-08-23T03:45:00-06:00",
           "end": "2026-08-23T04:15:00-06:00",
@@ -137,8 +125,8 @@
       "location_slug": "ohio",
       "headline_point_id": "cleveland",
       "headline_point_name": "Cleveland",
-      "generated_at": "2026-08-23T09:37:22.510411+00:00",
-      "valid_until": "2026-08-23T10:02:22.510411+00:00",
+      "generated_at": "2026-08-23T10:00:33.119085+00:00",
+      "valid_until": "2026-08-23T10:25:33.119085+00:00",
       "status": "NO",
       "confidence": "high",
       "best_window_start": null,
@@ -151,8 +139,8 @@
       "look_toward": "north",
       "answer_sentence": "NO (Cleveland area). Not worth a special trip tonight. Aurora activity is not expected to reach Ohio tonight.",
       "sources": {
-        "ovation_obs": "2026-08-23T09:30:00+00:00",
-        "ovation_fcst": "2026-08-23T10:32:00+00:00",
+        "ovation_obs": "2026-08-23T09:49:00+00:00",
+        "ovation_fcst": "2026-08-23T10:52:00+00:00",
         "ovation_ok": true
       },
       "points": [
@@ -182,27 +170,15 @@
           "status": "NO",
           "confidence": "high",
           "aurora_reach": "none",
-          "cloud_block": "clear",
+          "cloud_block": "mixed",
           "urban": true,
           "main_obstacle": "AURORA_NO_REACH"
         }
       ],
       "windows": [
         {
-          "start": "2026-08-23T05:15:00-04:00",
-          "end": "2026-08-23T05:45:00-04:00",
-          "skip": false,
-          "status": "NO",
-          "aurora_reach": "none",
-          "cloud_block": "clear",
-          "source": "ovation",
-          "codes": [
-            "AURORA_NO_REACH"
-          ]
-        },
-        {
-          "start": "2026-08-23T05:45:00-04:00",
-          "end": "2026-08-23T06:15:00-04:00",
+          "start": "2026-08-23T20:15:00-04:00",
+          "end": "2026-08-23T20:45:00-04:00",
           "skip": true,
           "status": null,
           "aurora_reach": null,
@@ -213,8 +189,236 @@
           ]
         },
         {
-          "start": "2026-08-23T06:15:00-04:00",
-          "end": "2026-08-23T06:45:00-04:00",
+          "start": "2026-08-23T20:45:00-04:00",
+          "end": "2026-08-23T21:15:00-04:00",
+          "skip": true,
+          "status": null,
+          "aurora_reach": null,
+          "cloud_block": "clear",
+          "source": null,
+          "codes": [
+            "NOT_DARK_YET"
+          ]
+        },
+        {
+          "start": "2026-08-23T21:15:00-04:00",
+          "end": "2026-08-23T21:45:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": "clear",
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH"
+          ]
+        },
+        {
+          "start": "2026-08-23T21:45:00-04:00",
+          "end": "2026-08-23T22:15:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": "clear",
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH"
+          ]
+        },
+        {
+          "start": "2026-08-23T22:15:00-04:00",
+          "end": "2026-08-23T22:45:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": "mixed",
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH"
+          ]
+        },
+        {
+          "start": "2026-08-23T22:45:00-04:00",
+          "end": "2026-08-23T23:15:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": "socked",
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH"
+          ]
+        },
+        {
+          "start": "2026-08-23T23:15:00-04:00",
+          "end": "2026-08-23T23:45:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": "socked",
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH"
+          ]
+        },
+        {
+          "start": "2026-08-23T23:45:00-04:00",
+          "end": "2026-08-24T00:15:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": "socked",
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH"
+          ]
+        },
+        {
+          "start": "2026-08-24T00:15:00-04:00",
+          "end": "2026-08-24T00:45:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": "mixed",
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH"
+          ]
+        },
+        {
+          "start": "2026-08-24T00:45:00-04:00",
+          "end": "2026-08-24T01:15:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": "mixed",
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH"
+          ]
+        },
+        {
+          "start": "2026-08-24T01:15:00-04:00",
+          "end": "2026-08-24T01:45:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": "mixed",
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH"
+          ]
+        },
+        {
+          "start": "2026-08-24T01:45:00-04:00",
+          "end": "2026-08-24T02:15:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": "mixed",
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH"
+          ]
+        },
+        {
+          "start": "2026-08-24T02:15:00-04:00",
+          "end": "2026-08-24T02:45:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": "clear",
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH"
+          ]
+        },
+        {
+          "start": "2026-08-24T02:45:00-04:00",
+          "end": "2026-08-24T03:15:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": "clear",
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH"
+          ]
+        },
+        {
+          "start": "2026-08-24T03:15:00-04:00",
+          "end": "2026-08-24T03:45:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": "clear",
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH"
+          ]
+        },
+        {
+          "start": "2026-08-24T03:45:00-04:00",
+          "end": "2026-08-24T04:15:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": "clear",
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH"
+          ]
+        },
+        {
+          "start": "2026-08-24T04:15:00-04:00",
+          "end": "2026-08-24T04:45:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": "clear",
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH"
+          ]
+        },
+        {
+          "start": "2026-08-24T04:45:00-04:00",
+          "end": "2026-08-24T05:15:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": "clear",
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH"
+          ]
+        },
+        {
+          "start": "2026-08-24T05:15:00-04:00",
+          "end": "2026-08-24T05:45:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": "clear",
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH"
+          ]
+        },
+        {
+          "start": "2026-08-24T05:45:00-04:00",
+          "end": "2026-08-24T06:15:00-04:00",
+          "skip": true,
+          "status": null,
+          "aurora_reach": null,
+          "cloud_block": "clear",
+          "source": null,
+          "codes": [
+            "NOT_DARK_YET"
+          ]
+        },
+        {
+          "start": "2026-08-24T06:15:00-04:00",
+          "end": "2026-08-24T06:45:00-04:00",
           "skip": true,
           "status": null,
           "aurora_reach": null,
@@ -231,8 +435,8 @@
       "location_slug": "indiana",
       "headline_point_id": "south-bend",
       "headline_point_name": "South Bend",
-      "generated_at": "2026-08-23T09:37:22.510411+00:00",
-      "valid_until": "2026-08-23T10:02:22.510411+00:00",
+      "generated_at": "2026-08-23T10:00:33.119085+00:00",
+      "valid_until": "2026-08-23T10:25:33.119085+00:00",
       "status": "NO",
       "confidence": "high",
       "best_window_start": null,
@@ -245,8 +449,8 @@
       "look_toward": "north",
       "answer_sentence": "NO (South Bend area). Not worth a special trip tonight. Aurora activity is not expected to reach Indiana tonight.",
       "sources": {
-        "ovation_obs": "2026-08-23T09:30:00+00:00",
-        "ovation_fcst": "2026-08-23T10:32:00+00:00",
+        "ovation_obs": "2026-08-23T09:49:00+00:00",
+        "ovation_fcst": "2026-08-23T10:52:00+00:00",
         "ovation_ok": true
       },
       "points": [
@@ -283,20 +487,236 @@
       ],
       "windows": [
         {
-          "start": "2026-08-23T05:15:00-04:00",
-          "end": "2026-08-23T05:45:00-04:00",
+          "start": "2026-08-23T20:15:00-04:00",
+          "end": "2026-08-23T20:45:00-04:00",
+          "skip": true,
+          "status": null,
+          "aurora_reach": null,
+          "cloud_block": "clear",
+          "source": null,
+          "codes": [
+            "NOT_DARK_YET"
+          ]
+        },
+        {
+          "start": "2026-08-23T20:45:00-04:00",
+          "end": "2026-08-23T21:15:00-04:00",
+          "skip": true,
+          "status": null,
+          "aurora_reach": null,
+          "cloud_block": "clear",
+          "source": null,
+          "codes": [
+            "NOT_DARK_YET"
+          ]
+        },
+        {
+          "start": "2026-08-23T21:15:00-04:00",
+          "end": "2026-08-23T21:45:00-04:00",
+          "skip": true,
+          "status": null,
+          "aurora_reach": null,
+          "cloud_block": "clear",
+          "source": null,
+          "codes": [
+            "NOT_DARK_YET"
+          ]
+        },
+        {
+          "start": "2026-08-23T21:45:00-04:00",
+          "end": "2026-08-23T22:15:00-04:00",
           "skip": false,
           "status": "NO",
           "aurora_reach": "none",
           "cloud_block": "clear",
-          "source": "ovation",
+          "source": "kp_forecast",
           "codes": [
             "AURORA_NO_REACH"
           ]
         },
         {
-          "start": "2026-08-23T05:45:00-04:00",
-          "end": "2026-08-23T06:15:00-04:00",
+          "start": "2026-08-23T22:15:00-04:00",
+          "end": "2026-08-23T22:45:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": "clear",
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH"
+          ]
+        },
+        {
+          "start": "2026-08-23T22:45:00-04:00",
+          "end": "2026-08-23T23:15:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": "clear",
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH"
+          ]
+        },
+        {
+          "start": "2026-08-23T23:15:00-04:00",
+          "end": "2026-08-23T23:45:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": "clear",
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH"
+          ]
+        },
+        {
+          "start": "2026-08-23T23:45:00-04:00",
+          "end": "2026-08-24T00:15:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": "clear",
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH"
+          ]
+        },
+        {
+          "start": "2026-08-24T00:15:00-04:00",
+          "end": "2026-08-24T00:45:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": "clear",
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH"
+          ]
+        },
+        {
+          "start": "2026-08-24T00:45:00-04:00",
+          "end": "2026-08-24T01:15:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": "clear",
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH"
+          ]
+        },
+        {
+          "start": "2026-08-24T01:15:00-04:00",
+          "end": "2026-08-24T01:45:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": "clear",
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH"
+          ]
+        },
+        {
+          "start": "2026-08-24T01:45:00-04:00",
+          "end": "2026-08-24T02:15:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": "clear",
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH"
+          ]
+        },
+        {
+          "start": "2026-08-24T02:15:00-04:00",
+          "end": "2026-08-24T02:45:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": "clear",
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH"
+          ]
+        },
+        {
+          "start": "2026-08-24T02:45:00-04:00",
+          "end": "2026-08-24T03:15:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": "clear",
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH"
+          ]
+        },
+        {
+          "start": "2026-08-24T03:15:00-04:00",
+          "end": "2026-08-24T03:45:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": "clear",
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH"
+          ]
+        },
+        {
+          "start": "2026-08-24T03:45:00-04:00",
+          "end": "2026-08-24T04:15:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": "mixed",
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH"
+          ]
+        },
+        {
+          "start": "2026-08-24T04:15:00-04:00",
+          "end": "2026-08-24T04:45:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": "mixed",
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH"
+          ]
+        },
+        {
+          "start": "2026-08-24T04:45:00-04:00",
+          "end": "2026-08-24T05:15:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": "mixed",
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH"
+          ]
+        },
+        {
+          "start": "2026-08-24T05:15:00-04:00",
+          "end": "2026-08-24T05:45:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": "clear",
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH"
+          ]
+        },
+        {
+          "start": "2026-08-24T05:45:00-04:00",
+          "end": "2026-08-24T06:15:00-04:00",
           "skip": true,
           "status": null,
           "aurora_reach": null,
@@ -307,8 +727,8 @@
           ]
         },
         {
-          "start": "2026-08-23T06:15:00-04:00",
-          "end": "2026-08-23T06:45:00-04:00",
+          "start": "2026-08-24T06:15:00-04:00",
+          "end": "2026-08-24T06:45:00-04:00",
           "skip": true,
           "status": null,
           "aurora_reach": null,
@@ -319,8 +739,8 @@
           ]
         },
         {
-          "start": "2026-08-23T06:45:00-04:00",
-          "end": "2026-08-23T07:15:00-04:00",
+          "start": "2026-08-24T06:45:00-04:00",
+          "end": "2026-08-24T07:15:00-04:00",
           "skip": true,
           "status": null,
           "aurora_reach": null,
@@ -337,8 +757,8 @@
       "location_slug": "michigan",
       "headline_point_id": "traverse-city",
       "headline_point_name": "Traverse City",
-      "generated_at": "2026-08-23T09:37:22.510411+00:00",
-      "valid_until": "2026-08-23T10:02:22.510411+00:00",
+      "generated_at": "2026-08-23T10:00:33.119085+00:00",
+      "valid_until": "2026-08-23T10:25:33.119085+00:00",
       "status": "NO",
       "confidence": "high",
       "best_window_start": null,
@@ -351,8 +771,8 @@
       "look_toward": "north",
       "answer_sentence": "NO (Traverse City area). Not worth a special trip tonight. Aurora activity is not expected to reach Michigan tonight.",
       "sources": {
-        "ovation_obs": "2026-08-23T09:30:00+00:00",
-        "ovation_fcst": "2026-08-23T10:32:00+00:00",
+        "ovation_obs": "2026-08-23T09:49:00+00:00",
+        "ovation_fcst": "2026-08-23T10:52:00+00:00",
         "ovation_ok": true
       },
       "points": [
@@ -382,490 +802,34 @@
           "status": "NO",
           "confidence": "high",
           "aurora_reach": "none",
-          "cloud_block": null,
+          "cloud_block": "mixed",
           "urban": true,
           "main_obstacle": "AURORA_NO_REACH"
         }
       ],
       "windows": [
-        {
-          "start": "2026-08-23T05:15:00-04:00",
-          "end": "2026-08-23T05:45:00-04:00",
-          "skip": false,
-          "status": "NO",
-          "aurora_reach": "none",
-          "cloud_block": "clear",
-          "source": "ovation",
-          "codes": [
-            "AURORA_NO_REACH"
-          ]
-        },
-        {
-          "start": "2026-08-23T05:45:00-04:00",
-          "end": "2026-08-23T06:15:00-04:00",
-          "skip": true,
-          "status": null,
-          "aurora_reach": null,
-          "cloud_block": "clear",
-          "source": null,
-          "codes": [
-            "NOT_DARK_YET"
-          ]
-        },
-        {
-          "start": "2026-08-23T06:15:00-04:00",
-          "end": "2026-08-23T06:45:00-04:00",
-          "skip": true,
-          "status": null,
-          "aurora_reach": null,
-          "cloud_block": "clear",
-          "source": null,
-          "codes": [
-            "NOT_DARK_YET"
-          ]
-        }
-      ],
-      "seo_indexable": false
-    },
-    {
-      "location_slug": "chicago",
-      "headline_point_id": "chicago",
-      "headline_point_name": "Chicago",
-      "generated_at": "2026-08-23T09:37:22.510411+00:00",
-      "valid_until": "2026-08-23T10:02:22.510411+00:00",
-      "status": "NO",
-      "confidence": "high",
-      "best_window_start": null,
-      "best_window_end": null,
-      "main_obstacle": "AURORA_NO_REACH",
-      "main_obstacle_text": "Aurora activity is not expected to reach Chicago tonight.",
-      "reason_codes": [
-        "AURORA_NO_REACH"
-      ],
-      "look_toward": "north",
-      "answer_sentence": "NO. Not worth a special trip tonight. Aurora activity is not expected to reach Chicago tonight.",
-      "sources": {
-        "ovation_obs": "2026-08-23T09:30:00+00:00",
-        "ovation_fcst": "2026-08-23T10:32:00+00:00",
-        "ovation_ok": true
-      },
-      "points": [
-        {
-          "id": "chicago",
-          "name": "Chicago",
-          "status": "NO",
-          "confidence": "high",
-          "aurora_reach": "none",
-          "cloud_block": "clear",
-          "urban": true,
-          "main_obstacle": "AURORA_NO_REACH"
-        }
-      ],
-      "windows": [
-        {
-          "start": "2026-08-23T04:15:00-05:00",
-          "end": "2026-08-23T04:45:00-05:00",
-          "skip": false,
-          "status": "NO",
-          "aurora_reach": "none",
-          "cloud_block": "clear",
-          "source": "ovation",
-          "codes": [
-            "AURORA_NO_REACH"
-          ]
-        },
-        {
-          "start": "2026-08-23T04:45:00-05:00",
-          "end": "2026-08-23T05:15:00-05:00",
-          "skip": false,
-          "status": "NO",
-          "aurora_reach": "none",
-          "cloud_block": "clear",
-          "source": "ovation",
-          "codes": [
-            "AURORA_NO_REACH"
-          ]
-        },
-        {
-          "start": "2026-08-23T05:15:00-05:00",
-          "end": "2026-08-23T05:45:00-05:00",
-          "skip": true,
-          "status": null,
-          "aurora_reach": null,
-          "cloud_block": "clear",
-          "source": null,
-          "codes": [
-            "NOT_DARK_YET"
-          ]
-        },
-        {
-          "start": "2026-08-23T05:45:00-05:00",
-          "end": "2026-08-23T06:15:00-05:00",
-          "skip": true,
-          "status": null,
-          "aurora_reach": null,
-          "cloud_block": "clear",
-          "source": null,
-          "codes": [
-            "NOT_DARK_YET"
-          ]
-        }
-      ],
-      "seo_indexable": false
-    },
-    {
-      "location_slug": "seattle",
-      "headline_point_id": "seattle",
-      "headline_point_name": "Seattle",
-      "generated_at": "2026-08-23T09:37:22.510411+00:00",
-      "valid_until": "2026-08-23T10:02:22.510411+00:00",
-      "status": "NO",
-      "confidence": "high",
-      "best_window_start": null,
-      "best_window_end": null,
-      "main_obstacle": "AURORA_NO_REACH",
-      "main_obstacle_text": "Aurora activity is not expected to reach Seattle tonight.",
-      "reason_codes": [
-        "AURORA_NO_REACH"
-      ],
-      "look_toward": "north",
-      "answer_sentence": "NO. Not worth a special trip tonight. Aurora activity is not expected to reach Seattle tonight.",
-      "sources": {
-        "ovation_obs": "2026-08-23T09:30:00+00:00",
-        "ovation_fcst": "2026-08-23T10:32:00+00:00",
-        "ovation_ok": true
-      },
-      "points": [
-        {
-          "id": "seattle",
-          "name": "Seattle",
-          "status": "NO",
-          "confidence": "high",
-          "aurora_reach": "none",
-          "cloud_block": "clear",
-          "urban": true,
-          "main_obstacle": "AURORA_NO_REACH"
-        }
-      ],
-      "windows": [
-        {
-          "start": "2026-08-23T02:15:00-07:00",
-          "end": "2026-08-23T02:45:00-07:00",
-          "skip": false,
-          "status": "NO",
-          "aurora_reach": "none",
-          "cloud_block": "clear",
-          "source": "ovation",
-          "codes": [
-            "AURORA_NO_REACH"
-          ]
-        },
-        {
-          "start": "2026-08-23T02:45:00-07:00",
-          "end": "2026-08-23T03:15:00-07:00",
-          "skip": false,
-          "status": "NO",
-          "aurora_reach": "none",
-          "cloud_block": "clear",
-          "source": "ovation",
-          "codes": [
-            "AURORA_NO_REACH"
-          ]
-        },
-        {
-          "start": "2026-08-23T03:15:00-07:00",
-          "end": "2026-08-23T03:45:00-07:00",
-          "skip": false,
-          "status": "NO",
-          "aurora_reach": "none",
-          "cloud_block": "clear",
-          "source": "ovation",
-          "codes": [
-            "AURORA_NO_REACH"
-          ]
-        },
-        {
-          "start": "2026-08-23T03:45:00-07:00",
-          "end": "2026-08-23T04:15:00-07:00",
-          "skip": false,
-          "status": "NO",
-          "aurora_reach": "none",
-          "cloud_block": "clear",
-          "source": "ovation",
-          "codes": [
-            "AURORA_NO_REACH"
-          ]
-        },
-        {
-          "start": "2026-08-23T04:15:00-07:00",
-          "end": "2026-08-23T04:45:00-07:00",
-          "skip": false,
-          "status": "NO",
-          "aurora_reach": "none",
-          "cloud_block": "clear",
-          "source": "kp",
-          "codes": [
-            "AURORA_NO_REACH"
-          ]
-        },
-        {
-          "start": "2026-08-23T04:45:00-07:00",
-          "end": "2026-08-23T05:15:00-07:00",
-          "skip": false,
-          "status": "NO",
-          "aurora_reach": "none",
-          "cloud_block": "clear",
-          "source": "kp",
-          "codes": [
-            "AURORA_NO_REACH"
-          ]
-        },
-        {
-          "start": "2026-08-23T05:15:00-07:00",
-          "end": "2026-08-23T05:45:00-07:00",
-          "skip": true,
-          "status": null,
-          "aurora_reach": null,
-          "cloud_block": "clear",
-          "source": null,
-          "codes": [
-            "NOT_DARK_YET"
-          ]
-        },
-        {
-          "start": "2026-08-23T05:45:00-07:00",
-          "end": "2026-08-23T06:15:00-07:00",
-          "skip": true,
-          "status": null,
-          "aurora_reach": null,
-          "cloud_block": "mixed",
-          "source": null,
-          "codes": [
-            "NOT_DARK_YET"
-          ]
-        }
-      ],
-      "seo_indexable": false
-    },
-    {
-      "location_slug": "wisconsin",
-      "headline_point_id": "madison",
-      "headline_point_name": "Madison",
-      "generated_at": "2026-08-23T09:37:22.510411+00:00",
-      "valid_until": "2026-08-23T10:02:22.510411+00:00",
-      "status": "NO",
-      "confidence": "high",
-      "best_window_start": null,
-      "best_window_end": null,
-      "main_obstacle": "AURORA_NO_REACH",
-      "main_obstacle_text": "Aurora activity is not expected to reach Wisconsin tonight.",
-      "reason_codes": [
-        "AURORA_NO_REACH"
-      ],
-      "look_toward": "north",
-      "answer_sentence": "NO (Madison area). Not worth a special trip tonight. Aurora activity is not expected to reach Wisconsin tonight.",
-      "sources": {
-        "ovation_obs": "2026-08-23T09:30:00+00:00",
-        "ovation_fcst": "2026-08-23T10:32:00+00:00",
-        "ovation_ok": true
-      },
-      "points": [
-        {
-          "id": "bayfield",
-          "name": "Bayfield",
-          "status": "NO",
-          "confidence": "high",
-          "aurora_reach": "none",
-          "cloud_block": "clear",
-          "urban": false,
-          "main_obstacle": "AURORA_NO_REACH"
-        },
-        {
-          "id": "madison",
-          "name": "Madison",
-          "status": "NO",
-          "confidence": "high",
-          "aurora_reach": "none",
-          "cloud_block": "clear",
-          "urban": false,
-          "main_obstacle": "AURORA_NO_REACH"
-        },
-        {
-          "id": "milwaukee",
-          "name": "Milwaukee",
-          "status": "NO",
-          "confidence": "high",
-          "aurora_reach": "none",
-          "cloud_block": "clear",
-          "urban": true,
-          "main_obstacle": "AURORA_NO_REACH"
-        }
-      ],
-      "windows": [
-        {
-          "start": "2026-08-23T04:15:00-05:00",
-          "end": "2026-08-23T04:45:00-05:00",
-          "skip": false,
-          "status": "NO",
-          "aurora_reach": "none",
-          "cloud_block": "clear",
-          "source": "ovation",
-          "codes": [
-            "AURORA_NO_REACH"
-          ]
-        },
-        {
-          "start": "2026-08-23T04:45:00-05:00",
-          "end": "2026-08-23T05:15:00-05:00",
-          "skip": false,
-          "status": "NO",
-          "aurora_reach": "none",
-          "cloud_block": "clear",
-          "source": "ovation",
-          "codes": [
-            "AURORA_NO_REACH"
-          ]
-        },
-        {
-          "start": "2026-08-23T05:15:00-05:00",
-          "end": "2026-08-23T05:45:00-05:00",
-          "skip": true,
-          "status": null,
-          "aurora_reach": null,
-          "cloud_block": "clear",
-          "source": null,
-          "codes": [
-            "NOT_DARK_YET"
-          ]
-        },
-        {
-          "start": "2026-08-23T05:45:00-05:00",
-          "end": "2026-08-23T06:15:00-05:00",
-          "skip": true,
-          "status": null,
-          "aurora_reach": null,
-          "cloud_block": "clear",
-          "source": null,
-          "codes": [
-            "NOT_DARK_YET"
-          ]
-        }
-      ],
-      "seo_indexable": false
-    },
-    {
-      "location_slug": "massachusetts",
-      "headline_point_id": "newburyport",
-      "headline_point_name": "Newburyport",
-      "generated_at": "2026-08-23T09:37:22.510411+00:00",
-      "valid_until": "2026-08-23T10:02:22.510411+00:00",
-      "status": "NO",
-      "confidence": "high",
-      "best_window_start": null,
-      "best_window_end": null,
-      "main_obstacle": "AURORA_NO_REACH",
-      "main_obstacle_text": "Aurora activity is not expected to reach Massachusetts tonight.",
-      "reason_codes": [
-        "AURORA_NO_REACH"
-      ],
-      "look_toward": "north",
-      "answer_sentence": "NO (Newburyport area). Not worth a special trip tonight. Aurora activity is not expected to reach Massachusetts tonight.",
-      "sources": {
-        "ovation_obs": "2026-08-23T09:30:00+00:00",
-        "ovation_fcst": "2026-08-23T10:32:00+00:00",
-        "ovation_ok": true
-      },
-      "points": [
-        {
-          "id": "newburyport",
-          "name": "Newburyport",
-          "status": "NO",
-          "confidence": "high",
-          "aurora_reach": "none",
-          "cloud_block": "mixed",
-          "urban": false,
-          "main_obstacle": "AURORA_NO_REACH"
-        },
-        {
-          "id": "boston",
-          "name": "Boston",
-          "status": "NO",
-          "confidence": "high",
-          "aurora_reach": "none",
-          "cloud_block": "clear",
-          "urban": true,
-          "main_obstacle": "AURORA_NO_REACH"
-        },
-        {
-          "id": "north-adams",
-          "name": "North Adams",
-          "status": "NO",
-          "confidence": "high",
-          "aurora_reach": "none",
-          "cloud_block": "mixed",
-          "urban": false,
-          "main_obstacle": "AURORA_NO_REACH"
-        }
-      ],
-      "windows": [
-        {
-          "start": "2026-08-23T19:15:00-04:00",
-          "end": "2026-08-23T19:45:00-04:00",
-          "skip": true,
-          "status": null,
-          "aurora_reach": null,
-          "cloud_block": "mixed",
-          "source": null,
-          "codes": [
-            "NOT_DARK_YET"
-          ]
-        },
-        {
-          "start": "2026-08-23T19:45:00-04:00",
-          "end": "2026-08-23T20:15:00-04:00",
-          "skip": true,
-          "status": null,
-          "aurora_reach": null,
-          "cloud_block": "mixed",
-          "source": null,
-          "codes": [
-            "NOT_DARK_YET"
-          ]
-        },
-        {
-          "start": "2026-08-23T20:15:00-04:00",
-          "end": "2026-08-23T20:45:00-04:00",
-          "skip": true,
-          "status": null,
-          "aurora_reach": null,
-          "cloud_block": "mixed",
-          "source": null,
-          "codes": [
-            "NOT_DARK_YET"
-          ]
-        },
         {
           "start": "2026-08-23T20:45:00-04:00",
           "end": "2026-08-23T21:15:00-04:00",
-          "skip": false,
-          "status": "NO",
-          "aurora_reach": "none",
-          "cloud_block": "mixed",
-          "source": "kp_forecast",
+          "skip": true,
+          "status": null,
+          "aurora_reach": null,
+          "cloud_block": "clear",
+          "source": null,
           "codes": [
-            "AURORA_NO_REACH"
+            "NOT_DARK_YET"
           ]
         },
         {
           "start": "2026-08-23T21:15:00-04:00",
           "end": "2026-08-23T21:45:00-04:00",
-          "skip": false,
-          "status": "NO",
-          "aurora_reach": "none",
-          "cloud_block": "mixed",
-          "source": "kp_forecast",
+          "skip": true,
+          "status": null,
+          "aurora_reach": null,
+          "cloud_block": "clear",
+          "source": null,
           "codes": [
-            "AURORA_NO_REACH"
+            "NOT_DARK_YET"
           ]
         },
         {
@@ -874,7 +838,7 @@
           "skip": false,
           "status": "NO",
           "aurora_reach": "none",
-          "cloud_block": "mixed",
+          "cloud_block": "clear",
           "source": "kp_forecast",
           "codes": [
             "AURORA_NO_REACH"
@@ -886,7 +850,7 @@
           "skip": false,
           "status": "NO",
           "aurora_reach": "none",
-          "cloud_block": "mixed",
+          "cloud_block": "clear",
           "source": "kp_forecast",
           "codes": [
             "AURORA_NO_REACH"
@@ -898,7 +862,7 @@
           "skip": false,
           "status": "NO",
           "aurora_reach": "none",
-          "cloud_block": "mixed",
+          "cloud_block": "clear",
           "source": "kp_forecast",
           "codes": [
             "AURORA_NO_REACH"
@@ -910,7 +874,7 @@
           "skip": false,
           "status": "NO",
           "aurora_reach": "none",
-          "cloud_block": "mixed",
+          "cloud_block": "clear",
           "source": "kp_forecast",
           "codes": [
             "AURORA_NO_REACH"
@@ -922,7 +886,7 @@
           "skip": false,
           "status": "NO",
           "aurora_reach": "none",
-          "cloud_block": "mixed",
+          "cloud_block": "clear",
           "source": "kp_forecast",
           "codes": [
             "AURORA_NO_REACH"
@@ -1039,25 +1003,25 @@
         {
           "start": "2026-08-24T04:45:00-04:00",
           "end": "2026-08-24T05:15:00-04:00",
-          "skip": true,
-          "status": null,
-          "aurora_reach": null,
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
           "cloud_block": "clear",
-          "source": null,
+          "source": "kp_forecast",
           "codes": [
-            "NOT_DARK_YET"
+            "AURORA_NO_REACH"
           ]
         },
         {
           "start": "2026-08-24T05:15:00-04:00",
           "end": "2026-08-24T05:45:00-04:00",
-          "skip": true,
-          "status": null,
-          "aurora_reach": null,
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
           "cloud_block": "clear",
-          "source": null,
+          "source": "kp_forecast",
           "codes": [
-            "NOT_DARK_YET"
+            "AURORA_NO_REACH"
           ]
         },
         {
@@ -1071,6 +1035,659 @@
           "codes": [
             "NOT_DARK_YET"
           ]
+        },
+        {
+          "start": "2026-08-24T06:15:00-04:00",
+          "end": "2026-08-24T06:45:00-04:00",
+          "skip": true,
+          "status": null,
+          "aurora_reach": null,
+          "cloud_block": "clear",
+          "source": null,
+          "codes": [
+            "NOT_DARK_YET"
+          ]
+        },
+        {
+          "start": "2026-08-24T06:45:00-04:00",
+          "end": "2026-08-24T07:15:00-04:00",
+          "skip": true,
+          "status": null,
+          "aurora_reach": null,
+          "cloud_block": "clear",
+          "source": null,
+          "codes": [
+            "NOT_DARK_YET"
+          ]
+        }
+      ],
+      "seo_indexable": false
+    },
+    {
+      "location_slug": "chicago",
+      "headline_point_id": "chicago",
+      "headline_point_name": "Chicago",
+      "generated_at": "2026-08-23T10:00:33.119085+00:00",
+      "valid_until": "2026-08-23T10:25:33.119085+00:00",
+      "status": "NO",
+      "confidence": "high",
+      "best_window_start": null,
+      "best_window_end": null,
+      "main_obstacle": "AURORA_NO_REACH",
+      "main_obstacle_text": "Aurora activity is not expected to reach Chicago tonight.",
+      "reason_codes": [
+        "AURORA_NO_REACH"
+      ],
+      "look_toward": "north",
+      "answer_sentence": "NO. Not worth a special trip tonight. Aurora activity is not expected to reach Chicago tonight.",
+      "sources": {
+        "ovation_obs": "2026-08-23T09:49:00+00:00",
+        "ovation_fcst": "2026-08-23T10:52:00+00:00",
+        "ovation_ok": true
+      },
+      "points": [
+        {
+          "id": "chicago",
+          "name": "Chicago",
+          "status": "NO",
+          "confidence": "high",
+          "aurora_reach": "none",
+          "cloud_block": "clear",
+          "urban": true,
+          "main_obstacle": "AURORA_NO_REACH"
+        }
+      ],
+      "windows": [
+        {
+          "start": "2026-08-23T04:45:00-05:00",
+          "end": "2026-08-23T05:15:00-05:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": "clear",
+          "source": "ovation",
+          "codes": [
+            "AURORA_NO_REACH"
+          ]
+        },
+        {
+          "start": "2026-08-23T05:15:00-05:00",
+          "end": "2026-08-23T05:45:00-05:00",
+          "skip": true,
+          "status": null,
+          "aurora_reach": null,
+          "cloud_block": "clear",
+          "source": null,
+          "codes": [
+            "NOT_DARK_YET"
+          ]
+        },
+        {
+          "start": "2026-08-23T05:45:00-05:00",
+          "end": "2026-08-23T06:15:00-05:00",
+          "skip": true,
+          "status": null,
+          "aurora_reach": null,
+          "cloud_block": "clear",
+          "source": null,
+          "codes": [
+            "NOT_DARK_YET"
+          ]
+        }
+      ],
+      "seo_indexable": false
+    },
+    {
+      "location_slug": "seattle",
+      "headline_point_id": "seattle",
+      "headline_point_name": "Seattle",
+      "generated_at": "2026-08-23T10:00:33.119085+00:00",
+      "valid_until": "2026-08-23T10:25:33.119085+00:00",
+      "status": "NO",
+      "confidence": "high",
+      "best_window_start": null,
+      "best_window_end": null,
+      "main_obstacle": "AURORA_NO_REACH",
+      "main_obstacle_text": "Aurora activity is not expected to reach Seattle tonight.",
+      "reason_codes": [
+        "AURORA_NO_REACH"
+      ],
+      "look_toward": "north",
+      "answer_sentence": "NO. Not worth a special trip tonight. Aurora activity is not expected to reach Seattle tonight.",
+      "sources": {
+        "ovation_obs": "2026-08-23T09:49:00+00:00",
+        "ovation_fcst": "2026-08-23T10:52:00+00:00",
+        "ovation_ok": true
+      },
+      "points": [
+        {
+          "id": "seattle",
+          "name": "Seattle",
+          "status": "NO",
+          "confidence": "high",
+          "aurora_reach": "none",
+          "cloud_block": "clear",
+          "urban": true,
+          "main_obstacle": "AURORA_NO_REACH"
+        }
+      ],
+      "windows": [
+        {
+          "start": "2026-08-23T02:45:00-07:00",
+          "end": "2026-08-23T03:15:00-07:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": "clear",
+          "source": "ovation",
+          "codes": [
+            "AURORA_NO_REACH"
+          ]
+        },
+        {
+          "start": "2026-08-23T03:15:00-07:00",
+          "end": "2026-08-23T03:45:00-07:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": "clear",
+          "source": "ovation",
+          "codes": [
+            "AURORA_NO_REACH"
+          ]
+        },
+        {
+          "start": "2026-08-23T03:45:00-07:00",
+          "end": "2026-08-23T04:15:00-07:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": "clear",
+          "source": "ovation",
+          "codes": [
+            "AURORA_NO_REACH"
+          ]
+        },
+        {
+          "start": "2026-08-23T04:15:00-07:00",
+          "end": "2026-08-23T04:45:00-07:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": "clear",
+          "source": "kp",
+          "codes": [
+            "AURORA_NO_REACH"
+          ]
+        },
+        {
+          "start": "2026-08-23T04:45:00-07:00",
+          "end": "2026-08-23T05:15:00-07:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": "clear",
+          "source": "kp",
+          "codes": [
+            "AURORA_NO_REACH"
+          ]
+        },
+        {
+          "start": "2026-08-23T05:15:00-07:00",
+          "end": "2026-08-23T05:45:00-07:00",
+          "skip": true,
+          "status": null,
+          "aurora_reach": null,
+          "cloud_block": "clear",
+          "source": null,
+          "codes": [
+            "NOT_DARK_YET"
+          ]
+        },
+        {
+          "start": "2026-08-23T05:45:00-07:00",
+          "end": "2026-08-23T06:15:00-07:00",
+          "skip": true,
+          "status": null,
+          "aurora_reach": null,
+          "cloud_block": "mixed",
+          "source": null,
+          "codes": [
+            "NOT_DARK_YET"
+          ]
+        }
+      ],
+      "seo_indexable": false
+    },
+    {
+      "location_slug": "wisconsin",
+      "headline_point_id": "madison",
+      "headline_point_name": "Madison",
+      "generated_at": "2026-08-23T10:00:33.119085+00:00",
+      "valid_until": "2026-08-23T10:25:33.119085+00:00",
+      "status": "NO",
+      "confidence": "high",
+      "best_window_start": null,
+      "best_window_end": null,
+      "main_obstacle": "AURORA_NO_REACH",
+      "main_obstacle_text": "Aurora activity is not expected to reach Wisconsin tonight.",
+      "reason_codes": [
+        "AURORA_NO_REACH"
+      ],
+      "look_toward": "north",
+      "answer_sentence": "NO (Madison area). Not worth a special trip tonight. Aurora activity is not expected to reach Wisconsin tonight.",
+      "sources": {
+        "ovation_obs": "2026-08-23T09:49:00+00:00",
+        "ovation_fcst": "2026-08-23T10:52:00+00:00",
+        "ovation_ok": true
+      },
+      "points": [
+        {
+          "id": "bayfield",
+          "name": "Bayfield",
+          "status": "NO",
+          "confidence": "high",
+          "aurora_reach": "none",
+          "cloud_block": "clear",
+          "urban": false,
+          "main_obstacle": "AURORA_NO_REACH"
+        },
+        {
+          "id": "madison",
+          "name": "Madison",
+          "status": "NO",
+          "confidence": "high",
+          "aurora_reach": "none",
+          "cloud_block": "clear",
+          "urban": false,
+          "main_obstacle": "AURORA_NO_REACH"
+        },
+        {
+          "id": "milwaukee",
+          "name": "Milwaukee",
+          "status": "NO",
+          "confidence": "high",
+          "aurora_reach": "none",
+          "cloud_block": "clear",
+          "urban": true,
+          "main_obstacle": "AURORA_NO_REACH"
+        }
+      ],
+      "windows": [
+        {
+          "start": "2026-08-23T04:45:00-05:00",
+          "end": "2026-08-23T05:15:00-05:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": "clear",
+          "source": "ovation",
+          "codes": [
+            "AURORA_NO_REACH"
+          ]
+        },
+        {
+          "start": "2026-08-23T05:15:00-05:00",
+          "end": "2026-08-23T05:45:00-05:00",
+          "skip": true,
+          "status": null,
+          "aurora_reach": null,
+          "cloud_block": "clear",
+          "source": null,
+          "codes": [
+            "NOT_DARK_YET"
+          ]
+        },
+        {
+          "start": "2026-08-23T05:45:00-05:00",
+          "end": "2026-08-23T06:15:00-05:00",
+          "skip": true,
+          "status": null,
+          "aurora_reach": null,
+          "cloud_block": "clear",
+          "source": null,
+          "codes": [
+            "NOT_DARK_YET"
+          ]
+        }
+      ],
+      "seo_indexable": false
+    },
+    {
+      "location_slug": "massachusetts",
+      "headline_point_id": "newburyport",
+      "headline_point_name": "Newburyport",
+      "generated_at": "2026-08-23T10:00:33.119085+00:00",
+      "valid_until": "2026-08-23T10:25:33.119085+00:00",
+      "status": "NO",
+      "confidence": "high",
+      "best_window_start": null,
+      "best_window_end": null,
+      "main_obstacle": "AURORA_NO_REACH",
+      "main_obstacle_text": "Aurora activity is not expected to reach Massachusetts tonight.",
+      "reason_codes": [
+        "AURORA_NO_REACH",
+        "DATA_MISSING_WEATHER"
+      ],
+      "look_toward": "north",
+      "answer_sentence": "NO (Newburyport area). Not worth a special trip tonight. Aurora activity is not expected to reach Massachusetts tonight.",
+      "sources": {
+        "ovation_obs": "2026-08-23T09:49:00+00:00",
+        "ovation_fcst": "2026-08-23T10:52:00+00:00",
+        "ovation_ok": true
+      },
+      "points": [
+        {
+          "id": "newburyport",
+          "name": "Newburyport",
+          "status": "NO",
+          "confidence": "high",
+          "aurora_reach": "none",
+          "cloud_block": null,
+          "urban": false,
+          "main_obstacle": "AURORA_NO_REACH"
+        },
+        {
+          "id": "boston",
+          "name": "Boston",
+          "status": "NO",
+          "confidence": "high",
+          "aurora_reach": "none",
+          "cloud_block": "clear",
+          "urban": true,
+          "main_obstacle": "AURORA_NO_REACH"
+        },
+        {
+          "id": "north-adams",
+          "name": "North Adams",
+          "status": "NO",
+          "confidence": "high",
+          "aurora_reach": "none",
+          "cloud_block": "mixed",
+          "urban": false,
+          "main_obstacle": "AURORA_NO_REACH"
+        }
+      ],
+      "windows": [
+        {
+          "start": "2026-08-23T19:15:00-04:00",
+          "end": "2026-08-23T19:45:00-04:00",
+          "skip": true,
+          "status": null,
+          "aurora_reach": null,
+          "cloud_block": null,
+          "source": null,
+          "codes": [
+            "NOT_DARK_YET"
+          ]
+        },
+        {
+          "start": "2026-08-23T19:45:00-04:00",
+          "end": "2026-08-23T20:15:00-04:00",
+          "skip": true,
+          "status": null,
+          "aurora_reach": null,
+          "cloud_block": null,
+          "source": null,
+          "codes": [
+            "NOT_DARK_YET"
+          ]
+        },
+        {
+          "start": "2026-08-23T20:15:00-04:00",
+          "end": "2026-08-23T20:45:00-04:00",
+          "skip": true,
+          "status": null,
+          "aurora_reach": null,
+          "cloud_block": null,
+          "source": null,
+          "codes": [
+            "NOT_DARK_YET"
+          ]
+        },
+        {
+          "start": "2026-08-23T20:45:00-04:00",
+          "end": "2026-08-23T21:15:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": null,
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH",
+            "DATA_MISSING_WEATHER"
+          ]
+        },
+        {
+          "start": "2026-08-23T21:15:00-04:00",
+          "end": "2026-08-23T21:45:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": null,
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH",
+            "DATA_MISSING_WEATHER"
+          ]
+        },
+        {
+          "start": "2026-08-23T21:45:00-04:00",
+          "end": "2026-08-23T22:15:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": null,
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH",
+            "DATA_MISSING_WEATHER"
+          ]
+        },
+        {
+          "start": "2026-08-23T22:15:00-04:00",
+          "end": "2026-08-23T22:45:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": null,
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH",
+            "DATA_MISSING_WEATHER"
+          ]
+        },
+        {
+          "start": "2026-08-23T22:45:00-04:00",
+          "end": "2026-08-23T23:15:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": null,
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH",
+            "DATA_MISSING_WEATHER"
+          ]
+        },
+        {
+          "start": "2026-08-23T23:15:00-04:00",
+          "end": "2026-08-23T23:45:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": null,
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH",
+            "DATA_MISSING_WEATHER"
+          ]
+        },
+        {
+          "start": "2026-08-23T23:45:00-04:00",
+          "end": "2026-08-24T00:15:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": null,
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH",
+            "DATA_MISSING_WEATHER"
+          ]
+        },
+        {
+          "start": "2026-08-24T00:15:00-04:00",
+          "end": "2026-08-24T00:45:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": null,
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH",
+            "DATA_MISSING_WEATHER"
+          ]
+        },
+        {
+          "start": "2026-08-24T00:45:00-04:00",
+          "end": "2026-08-24T01:15:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": null,
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH",
+            "DATA_MISSING_WEATHER"
+          ]
+        },
+        {
+          "start": "2026-08-24T01:15:00-04:00",
+          "end": "2026-08-24T01:45:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": null,
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH",
+            "DATA_MISSING_WEATHER"
+          ]
+        },
+        {
+          "start": "2026-08-24T01:45:00-04:00",
+          "end": "2026-08-24T02:15:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": null,
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH",
+            "DATA_MISSING_WEATHER"
+          ]
+        },
+        {
+          "start": "2026-08-24T02:15:00-04:00",
+          "end": "2026-08-24T02:45:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": null,
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH",
+            "DATA_MISSING_WEATHER"
+          ]
+        },
+        {
+          "start": "2026-08-24T02:45:00-04:00",
+          "end": "2026-08-24T03:15:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": null,
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH",
+            "DATA_MISSING_WEATHER"
+          ]
+        },
+        {
+          "start": "2026-08-24T03:15:00-04:00",
+          "end": "2026-08-24T03:45:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": null,
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH",
+            "DATA_MISSING_WEATHER"
+          ]
+        },
+        {
+          "start": "2026-08-24T03:45:00-04:00",
+          "end": "2026-08-24T04:15:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": null,
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH",
+            "DATA_MISSING_WEATHER"
+          ]
+        },
+        {
+          "start": "2026-08-24T04:15:00-04:00",
+          "end": "2026-08-24T04:45:00-04:00",
+          "skip": false,
+          "status": "NO",
+          "aurora_reach": "none",
+          "cloud_block": null,
+          "source": "kp_forecast",
+          "codes": [
+            "AURORA_NO_REACH",
+            "DATA_MISSING_WEATHER"
+          ]
+        },
+        {
+          "start": "2026-08-24T04:45:00-04:00",
+          "end": "2026-08-24T05:15:00-04:00",
+          "skip": true,
+          "status": null,
+          "aurora_reach": null,
+          "cloud_block": null,
+          "source": null,
+          "codes": [
+            "NOT_DARK_YET"
+          ]
+        },
+        {
+          "start": "2026-08-24T05:15:00-04:00",
+          "end": "2026-08-24T05:45:00-04:00",
+          "skip": true,
+          "status": null,
+          "aurora_reach": null,
+          "cloud_block": null,
+          "source": null,
+          "codes": [
+            "NOT_DARK_YET"
+          ]
+        },
+        {
+          "start": "2026-08-24T05:45:00-04:00",
+          "end": "2026-08-24T06:15:00-04:00",
+          "skip": true,
+          "status": null,
+          "aurora_reach": null,
+          "cloud_block": null,
+          "source": null,
+          "codes": [
+            "NOT_DARK_YET"
+          ]
         }
       ],
       "seo_indexable": false
@@ -1079,8 +1696,8 @@
       "location_slug": "maine",
       "headline_point_id": "bangor",
       "headline_point_name": "Bangor",
-      "generated_at": "2026-08-23T09:37:22.510411+00:00",
-      "valid_until": "2026-08-23T10:02:22.510411+00:00",
+      "generated_at": "2026-08-23T10:00:33.119085+00:00",
+      "valid_until": "2026-08-23T10:25:33.119085+00:00",
       "status": "NO",
       "confidence": "high",
       "best_window_start": null,
@@ -1093,8 +1710,8 @@
       "look_toward": "north",
       "answer_sentence": "NO (Bangor area). Not worth a special trip tonight. Aurora activity is not expected to reach Maine tonight.",
       "sources": {
-        "ovation_obs": "2026-08-23T09:30:00+00:00",
-        "ovation_fcst": "2026-08-23T10:32:00+00:00",
+        "ovation_obs": "2026-08-23T09:49:00+00:00",
+        "ovation_fcst": "2026-08-23T10:52:00+00:00",
         "ovation_ok": true
       },
       "points": [
@@ -1389,8 +2006,8 @@
       "location_slug": "minnesota",
       "headline_point_id": "duluth",
       "headline_point_name": "Duluth",
-      "generated_at": "2026-08-23T09:37:22.510411+00:00",
-      "valid_until": "2026-08-23T10:02:22.510411+00:00",
+      "generated_at": "2026-08-23T10:00:33.119085+00:00",
+      "valid_until": "2026-08-23T10:25:33.119085+00:00",
       "status": "NO",
       "confidence": "high",
       "best_window_start": null,
@@ -1403,8 +2020,8 @@
       "look_toward": "north",
       "answer_sentence": "NO (Duluth area). Not worth a special trip tonight. Aurora activity is not expected to reach Minnesota tonight.",
       "sources": {
-        "ovation_obs": "2026-08-23T09:30:00+00:00",
-        "ovation_fcst": "2026-08-23T10:32:00+00:00",
+        "ovation_obs": "2026-08-23T09:49:00+00:00",
+        "ovation_fcst": "2026-08-23T10:52:00+00:00",
         "ovation_ok": true
       },
       "points": [
@@ -1440,18 +2057,6 @@
         }
       ],
       "windows": [
-        {
-          "start": "2026-08-23T04:15:00-05:00",
-          "end": "2026-08-23T04:45:00-05:00",
-          "skip": false,
-          "status": "NO",
-          "aurora_reach": "none",
-          "cloud_block": "clear",
-          "source": "ovation",
-          "codes": [
-            "AURORA_NO_REACH"
-          ]
-        },
         {
           "start": "2026-08-23T04:45:00-05:00",
           "end": "2026-08-23T05:15:00-05:00",
@@ -1495,8 +2100,8 @@
       "location_slug": "illinois",
       "headline_point_id": "rockford",
       "headline_point_name": "Rockford",
-      "generated_at": "2026-08-23T09:37:22.510411+00:00",
-      "valid_until": "2026-08-23T10:02:22.510411+00:00",
+      "generated_at": "2026-08-23T10:00:33.119085+00:00",
+      "valid_until": "2026-08-23T10:25:33.119085+00:00",
       "status": "NO",
       "confidence": "high",
       "best_window_start": null,
@@ -1509,8 +2114,8 @@
       "look_toward": "north",
       "answer_sentence": "NO (Rockford area). Not worth a special trip tonight. Aurora activity is not expected to reach Illinois tonight.",
       "sources": {
-        "ovation_obs": "2026-08-23T09:30:00+00:00",
-        "ovation_fcst": "2026-08-23T10:32:00+00:00",
+        "ovation_obs": "2026-08-23T09:49:00+00:00",
+        "ovation_fcst": "2026-08-23T10:52:00+00:00",
         "ovation_ok": true
       },
       "points": [
@@ -1520,7 +2125,7 @@
           "status": "NO",
           "confidence": "high",
           "aurora_reach": "none",
-          "cloud_block": null,
+          "cloud_block": "clear",
           "urban": false,
           "main_obstacle": "AURORA_NO_REACH"
         },
@@ -1546,18 +2151,6 @@
         }
       ],
       "windows": [
-        {
-          "start": "2026-08-23T04:15:00-05:00",
-          "end": "2026-08-23T04:45:00-05:00",
-          "skip": false,
-          "status": "NO",
-          "aurora_reach": "none",
-          "cloud_block": "clear",
-          "source": "ovation",
-          "codes": [
-            "AURORA_NO_REACH"
-          ]
-        },
         {
           "start": "2026-08-23T04:45:00-05:00",
           "end": "2026-08-23T05:15:00-05:00",
@@ -1601,8 +2194,8 @@
       "location_slug": "oregon",
       "headline_point_id": "baker-city",
       "headline_point_name": "Baker City",
-      "generated_at": "2026-08-23T09:37:22.510411+00:00",
-      "valid_until": "2026-08-23T10:02:22.510411+00:00",
+      "generated_at": "2026-08-23T10:00:33.119085+00:00",
+      "valid_until": "2026-08-23T10:25:33.119085+00:00",
       "status": "NO",
       "confidence": "high",
       "best_window_start": null,
@@ -1615,8 +2208,8 @@
       "look_toward": "north",
       "answer_sentence": "NO (Baker City area). Not worth a special trip tonight. Aurora activity is not expected to reach Oregon tonight.",
       "sources": {
-        "ovation_obs": "2026-08-23T09:30:00+00:00",
-        "ovation_fcst": "2026-08-23T10:32:00+00:00",
+        "ovation_obs": "2026-08-23T09:49:00+00:00",
+        "ovation_fcst": "2026-08-23T10:52:00+00:00",
         "ovation_ok": true
       },
       "points": [
@@ -1652,18 +2245,6 @@
         }
       ],
       "windows": [
-        {
-          "start": "2026-08-23T02:15:00-07:00",
-          "end": "2026-08-23T02:45:00-07:00",
-          "skip": false,
-          "status": "NO",
-          "aurora_reach": "none",
-          "cloud_block": "clear",
-          "source": "ovation",
-          "codes": [
-            "AURORA_NO_REACH"
-          ]
-        },
         {
           "start": "2026-08-23T02:45:00-07:00",
           "end": "2026-08-23T03:15:00-07:00",
@@ -1755,8 +2336,8 @@
       "location_slug": "utah",
       "headline_point_id": "logan",
       "headline_point_name": "Logan",
-      "generated_at": "2026-08-23T09:37:22.510411+00:00",
-      "valid_until": "2026-08-23T10:02:22.510411+00:00",
+      "generated_at": "2026-08-23T10:00:33.119085+00:00",
+      "valid_until": "2026-08-23T10:25:33.119085+00:00",
       "status": "NO",
       "confidence": "high",
       "best_window_start": null,
@@ -1769,8 +2350,8 @@
       "look_toward": "north",
       "answer_sentence": "NO (Logan area). Not worth a special trip tonight. Aurora activity is not expected to reach Utah tonight.",
       "sources": {
-        "ovation_obs": "2026-08-23T09:30:00+00:00",
-        "ovation_fcst": "2026-08-23T10:32:00+00:00",
+        "ovation_obs": "2026-08-23T09:49:00+00:00",
+        "ovation_fcst": "2026-08-23T10:52:00+00:00",
         "ovation_ok": true
       },
       "points": [
@@ -1800,24 +2381,12 @@
           "status": "NO",
           "confidence": "high",
           "aurora_reach": "none",
-          "cloud_block": "clear",
+          "cloud_block": null,
           "urban": false,
           "main_obstacle": "AURORA_NO_REACH"
         }
       ],
       "windows": [
-        {
-          "start": "2026-08-23T03:15:00-06:00",
-          "end": "2026-08-23T03:45:00-06:00",
-          "skip": false,
-          "status": "NO",
-          "aurora_reach": "none",
-          "cloud_block": "clear",
-          "source": "ovation",
-          "codes": [
-            "AURORA_NO_REACH"
-          ]
-        },
         {
           "start": "2026-08-23T03:45:00-06:00",
           "end": "2026-08-23T04:15:00-06:00",
@@ -1897,11 +2466,11 @@
       "location_slug": "alaska",
       "headline_point_id": "fairbanks",
       "headline_point_name": "Fairbanks",
-      "generated_at": "2026-08-23T09:37:22.510411+00:00",
-      "valid_until": "2026-08-23T10:02:22.510411+00:00",
+      "generated_at": "2026-08-23T10:00:33.119085+00:00",
+      "valid_until": "2026-08-23T10:25:33.119085+00:00",
       "status": "MAYBE",
       "confidence": "high",
-      "best_window_start": "2026-08-23T01:15:00-08:00",
+      "best_window_start": "2026-08-23T01:45:00-08:00",
       "best_window_end": "2026-08-23T03:15:00-08:00",
       "main_obstacle": "AURORA_HORIZON_ONLY",
       "main_obstacle_text": "Any display would likely stay low on the northern horizon.",
@@ -1909,10 +2478,10 @@
         "AURORA_HORIZON_ONLY"
       ],
       "look_toward": "north",
-      "answer_sentence": "MAYBE in Alaska (Fairbanks area). Best window 1:15 AM–3:15 AM AKDT. Main issue: Any display would likely stay low on the northern horizon.",
+      "answer_sentence": "MAYBE in Alaska (Fairbanks area). Best window 1:45 AM–3:15 AM AKDT. Main issue: Any display would likely stay low on the northern horizon.",
       "sources": {
-        "ovation_obs": "2026-08-23T09:30:00+00:00",
-        "ovation_fcst": "2026-08-23T10:32:00+00:00",
+        "ovation_obs": "2026-08-23T09:49:00+00:00",
+        "ovation_fcst": "2026-08-23T10:52:00+00:00",
         "ovation_ok": true
       },
       "points": [
@@ -1941,25 +2510,13 @@
           "name": "Juneau",
           "status": "NO",
           "confidence": "high",
-          "aurora_reach": "weak",
+          "aurora_reach": "none",
           "cloud_block": "socked",
           "urban": false,
-          "main_obstacle": "CLOUD_BLOCKED"
+          "main_obstacle": "AURORA_NO_REACH"
         }
       ],
       "windows": [
-        {
-          "start": "2026-08-23T01:15:00-08:00",
-          "end": "2026-08-23T01:45:00-08:00",
-          "skip": false,
-          "status": "MAYBE",
-          "aurora_reach": "weak",
-          "cloud_block": "clear",
-          "source": "ovation",
-          "codes": [
-            "AURORA_HORIZON_ONLY"
-          ]
-        },
         {
           "start": "2026-08-23T01:45:00-08:00",
           "end": "2026-08-23T02:15:00-08:00",
@@ -2075,11 +2632,11 @@
       "location_slug": "fairbanks",
       "headline_point_id": "fairbanks",
       "headline_point_name": "Fairbanks",
-      "generated_at": "2026-08-23T09:37:22.510411+00:00",
-      "valid_until": "2026-08-23T10:02:22.510411+00:00",
+      "generated_at": "2026-08-23T10:00:33.119085+00:00",
+      "valid_until": "2026-08-23T10:25:33.119085+00:00",
       "status": "MAYBE",
       "confidence": "high",
-      "best_window_start": "2026-08-23T01:15:00-08:00",
+      "best_window_start": "2026-08-23T01:45:00-08:00",
       "best_window_end": "2026-08-23T03:15:00-08:00",
       "main_obstacle": "AURORA_HORIZON_ONLY",
       "main_obstacle_text": "Any display would likely stay low on the northern horizon.",
@@ -2087,10 +2644,10 @@
         "AURORA_HORIZON_ONLY"
       ],
       "look_toward": "north",
-      "answer_sentence": "MAYBE in Fairbanks. Best window 1:15 AM–3:15 AM AKDT. Main issue: Any display would likely stay low on the northern horizon.",
+      "answer_sentence": "MAYBE in Fairbanks. Best window 1:45 AM–3:15 AM AKDT. Main issue: Any display would likely stay low on the northern horizon.",
       "sources": {
-        "ovation_obs": "2026-08-23T09:30:00+00:00",
-        "ovation_fcst": "2026-08-23T10:32:00+00:00",
+        "ovation_obs": "2026-08-23T09:49:00+00:00",
+        "ovation_fcst": "2026-08-23T10:52:00+00:00",
         "ovation_ok": true
       },
       "points": [
@@ -2106,18 +2663,6 @@
         }
       ],
       "windows": [
-        {
-          "start": "2026-08-23T01:15:00-08:00",
-          "end": "2026-08-23T01:45:00-08:00",
-          "skip": false,
-          "status": "MAYBE",
-          "aurora_reach": "weak",
-          "cloud_block": "clear",
-          "source": "ovation",
-          "codes": [
-            "AURORA_HORIZON_ONLY"
-          ]
-        },
         {
           "start": "2026-08-23T01:45:00-08:00",
           "end": "2026-08-23T02:15:00-08:00",
