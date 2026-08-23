@@ -2,8 +2,8 @@
   "location_slug": "fairbanks",
   "headline_point_id": "fairbanks",
   "headline_point_name": "Fairbanks",
-  "generated_at": "2026-08-22T23:51:57.112160+00:00",
-  "valid_until": "2026-08-23T00:16:57.112160+00:00",
+  "generated_at": "2026-08-23T00:45:41.073759+00:00",
+  "valid_until": "2026-08-23T01:10:41.073759+00:00",
   "status": "MAYBE",
   "confidence": "low",
   "best_window_start": "2026-08-23T00:15:00-08:00",
@@ -19,8 +19,8 @@
   "look_toward": "north",
   "answer_sentence": "MAYBE in Fairbanks. Best window 12:15 AM–3:15 AM AKDT. Main issue: Any display would likely stay low on the northern horizon.",
   "sources": {
-    "ovation_obs": "2026-08-22T23:40:00+00:00",
-    "ovation_fcst": "2026-08-23T00:42:00+00:00",
+    "ovation_obs": "2026-08-23T00:35:00+00:00",
+    "ovation_fcst": "2026-08-23T01:38:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -103,7 +103,7 @@
       "status": "MAYBE",
       "aurora_reach": "horizon",
       "cloud_block": "clear",
-      "source": "kp_forecast",
+      "source": "kp",
       "codes": [
         "AURORA_HORIZON_ONLY",
         "LIGHT_POLLUTION",
@@ -117,7 +117,7 @@
       "status": "MAYBE",
       "aurora_reach": "horizon",
       "cloud_block": "clear",
-      "source": "kp_forecast",
+      "source": "kp",
       "codes": [
         "AURORA_HORIZON_ONLY",
         "LIGHT_POLLUTION",
@@ -130,10 +130,11 @@
       "skip": false,
       "status": "MAYBE",
       "aurora_reach": "horizon",
-      "cloud_block": "clear",
-      "source": "kp_forecast",
+      "cloud_block": "mixed",
+      "source": "kp",
       "codes": [
         "AURORA_HORIZON_ONLY",
+        "CLOUD_MIXED",
         "LIGHT_POLLUTION",
         "FORECAST_FAR"
       ]
@@ -144,10 +145,11 @@
       "skip": false,
       "status": "MAYBE",
       "aurora_reach": "horizon",
-      "cloud_block": "clear",
-      "source": "kp_forecast",
+      "cloud_block": "mixed",
+      "source": "kp",
       "codes": [
         "AURORA_HORIZON_ONLY",
+        "CLOUD_MIXED",
         "LIGHT_POLLUTION",
         "FORECAST_FAR"
       ]
@@ -159,7 +161,7 @@
       "status": "MAYBE",
       "aurora_reach": "horizon",
       "cloud_block": "mixed",
-      "source": "kp_forecast",
+      "source": "kp",
       "codes": [
         "AURORA_HORIZON_ONLY",
         "CLOUD_MIXED",
@@ -174,7 +176,7 @@
       "status": "MAYBE",
       "aurora_reach": "horizon",
       "cloud_block": "mixed",
-      "source": "kp_forecast",
+      "source": "kp",
       "codes": [
         "AURORA_HORIZON_ONLY",
         "CLOUD_MIXED",
@@ -224,7 +226,7 @@
       "skip": true,
       "status": null,
       "aurora_reach": null,
-      "cloud_block": "mixed",
+      "cloud_block": "socked",
       "source": null,
       "codes": [
         "NOT_DARK_YET"
@@ -236,7 +238,7 @@
       "skip": true,
       "status": null,
       "aurora_reach": null,
-      "cloud_block": "mixed",
+      "cloud_block": "socked",
       "source": null,
       "codes": [
         "NOT_DARK_YET"
@@ -248,7 +250,7 @@
       "skip": true,
       "status": null,
       "aurora_reach": null,
-      "cloud_block": "mixed",
+      "cloud_block": "socked",
       "source": null,
       "codes": [
         "NOT_DARK_YET"
