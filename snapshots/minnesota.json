@@ -2,12 +2,12 @@
   "location_slug": "minnesota",
   "headline_point_id": "duluth",
   "headline_point_name": "Duluth",
-  "generated_at": "2026-08-23T04:22:34.127289+00:00",
-  "valid_until": "2026-08-23T04:47:34.127289+00:00",
-  "status": "MAYBE",
+  "generated_at": "2026-08-23T04:58:12.588470+00:00",
+  "valid_until": "2026-08-23T05:23:12.588470+00:00",
+  "status": "GO",
   "confidence": "low",
-  "best_window_start": "2026-08-22T23:15:00-05:00",
-  "best_window_end": "2026-08-23T00:45:00-05:00",
+  "best_window_start": "2026-08-22T23:45:00-05:00",
+  "best_window_end": "2026-08-23T01:15:00-05:00",
   "main_obstacle": "AURORA_HORIZON_ONLY",
   "main_obstacle_text": "Any display would likely stay low on the northern horizon.",
   "reason_codes": [
@@ -15,19 +15,19 @@
     "AURORA_NO_REACH"
   ],
   "look_toward": "north",
-  "answer_sentence": "MAYBE in Minnesota (Duluth area). Best window 11:15 PM–12:45 AM CDT. Main issue: Any display would likely stay low on the northern horizon.",
+  "answer_sentence": "GO (Duluth area). Best window 11:45 PM–1:15 AM CDT. Any display would likely stay low on the northern horizon.",
   "sources": {
-    "ovation_obs": "2026-08-23T04:15:00+00:00",
-    "ovation_fcst": "2026-08-23T05:19:00+00:00",
+    "ovation_obs": "2026-08-23T04:50:00+00:00",
+    "ovation_fcst": "2026-08-23T05:54:00+00:00",
     "ovation_ok": true
   },
   "points": [
     {
       "id": "ely",
       "name": "Ely",
-      "status": "MAYBE",
+      "status": "GO",
       "confidence": "low",
-      "aurora_reach": "weak",
+      "aurora_reach": "horizon",
       "cloud_block": "clear",
       "urban": false,
       "main_obstacle": "AURORA_HORIZON_ONLY"
@@ -35,9 +35,9 @@
     {
       "id": "duluth",
       "name": "Duluth",
-      "status": "MAYBE",
+      "status": "GO",
       "confidence": "low",
-      "aurora_reach": "weak",
+      "aurora_reach": "horizon",
       "cloud_block": "clear",
       "urban": false,
       "main_obstacle": "AURORA_HORIZON_ONLY"
@@ -45,33 +45,21 @@
     {
       "id": "minneapolis",
       "name": "Minneapolis",
-      "status": "NO",
-      "confidence": "high",
-      "aurora_reach": "none",
+      "status": "MAYBE",
+      "confidence": "low",
+      "aurora_reach": "weak",
       "cloud_block": "clear",
       "urban": true,
-      "main_obstacle": "AURORA_NO_REACH"
+      "main_obstacle": "AURORA_HORIZON_ONLY"
     }
   ],
   "windows": [
     {
-      "start": "2026-08-22T23:15:00-05:00",
-      "end": "2026-08-22T23:45:00-05:00",
-      "skip": false,
-      "status": "MAYBE",
-      "aurora_reach": "weak",
-      "cloud_block": "clear",
-      "source": "ovation",
-      "codes": [
-        "AURORA_HORIZON_ONLY"
-      ]
-    },
-    {
       "start": "2026-08-22T23:45:00-05:00",
       "end": "2026-08-23T00:15:00-05:00",
       "skip": false,
-      "status": "MAYBE",
-      "aurora_reach": "weak",
+      "status": "GO",
+      "aurora_reach": "horizon",
       "cloud_block": "clear",
       "source": "ovation",
       "codes": [
@@ -82,8 +70,8 @@
       "start": "2026-08-23T00:15:00-05:00",
       "end": "2026-08-23T00:45:00-05:00",
       "skip": false,
-      "status": "MAYBE",
-      "aurora_reach": "weak",
+      "status": "GO",
+      "aurora_reach": "horizon",
       "cloud_block": "clear",
       "source": "ovation",
       "codes": [
@@ -94,12 +82,12 @@
       "start": "2026-08-23T00:45:00-05:00",
       "end": "2026-08-23T01:15:00-05:00",
       "skip": false,
-      "status": "NO",
-      "aurora_reach": "none",
+      "status": "GO",
+      "aurora_reach": "horizon",
       "cloud_block": "clear",
-      "source": "kp",
+      "source": "ovation",
       "codes": [
-        "AURORA_NO_REACH"
+        "AURORA_HORIZON_ONLY"
       ]
     },
     {

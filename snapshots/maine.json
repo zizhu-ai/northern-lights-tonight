@@ -2,8 +2,8 @@
   "location_slug": "maine",
   "headline_point_id": "bangor",
   "headline_point_name": "Bangor",
-  "generated_at": "2026-08-23T04:22:34.127289+00:00",
-  "valid_until": "2026-08-23T04:47:34.127289+00:00",
+  "generated_at": "2026-08-23T04:58:12.588470+00:00",
+  "valid_until": "2026-08-23T05:23:12.588470+00:00",
   "status": "NO",
   "confidence": "high",
   "best_window_start": null,
@@ -16,20 +16,20 @@
   "look_toward": "north",
   "answer_sentence": "NO (Bangor area). Not worth a special trip tonight. Aurora activity is not expected to reach Maine tonight.",
   "sources": {
-    "ovation_obs": "2026-08-23T04:15:00+00:00",
-    "ovation_fcst": "2026-08-23T05:19:00+00:00",
+    "ovation_obs": "2026-08-23T04:50:00+00:00",
+    "ovation_fcst": "2026-08-23T05:54:00+00:00",
     "ovation_ok": true
   },
   "points": [
     {
       "id": "presque-isle",
       "name": "Presque Isle",
-      "status": "NO",
-      "confidence": "high",
-      "aurora_reach": "none",
+      "status": "MAYBE",
+      "confidence": "low",
+      "aurora_reach": "weak",
       "cloud_block": "clear",
       "urban": false,
-      "main_obstacle": "AURORA_NO_REACH"
+      "main_obstacle": "AURORA_HORIZON_ONLY"
     },
     {
       "id": "bangor",
@@ -53,18 +53,6 @@
     }
   ],
   "windows": [
-    {
-      "start": "2026-08-23T00:15:00-04:00",
-      "end": "2026-08-23T00:45:00-04:00",
-      "skip": false,
-      "status": "NO",
-      "aurora_reach": "none",
-      "cloud_block": "mixed",
-      "source": "ovation",
-      "codes": [
-        "AURORA_NO_REACH"
-      ]
-    },
     {
       "start": "2026-08-23T00:45:00-04:00",
       "end": "2026-08-23T01:15:00-04:00",
@@ -96,7 +84,7 @@
       "status": "NO",
       "aurora_reach": "none",
       "cloud_block": "mixed",
-      "source": "kp",
+      "source": "ovation",
       "codes": [
         "AURORA_NO_REACH"
       ]
