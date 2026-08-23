@@ -2,8 +2,8 @@
   "location_slug": "maine",
   "headline_point_id": "bangor",
   "headline_point_name": "Bangor",
-  "generated_at": "2026-08-23T06:02:11.594638+00:00",
-  "valid_until": "2026-08-23T06:27:11.594638+00:00",
+  "generated_at": "2026-08-23T06:55:26.178253+00:00",
+  "valid_until": "2026-08-23T07:20:26.178253+00:00",
   "status": "NO",
   "confidence": "high",
   "best_window_start": null,
@@ -16,20 +16,20 @@
   "look_toward": "north",
   "answer_sentence": "NO (Bangor area). Not worth a special trip tonight. Aurora activity is not expected to reach Maine tonight.",
   "sources": {
-    "ovation_obs": "2026-08-23T05:56:00+00:00",
-    "ovation_fcst": "2026-08-23T06:59:00+00:00",
+    "ovation_obs": "2026-08-23T06:44:00+00:00",
+    "ovation_fcst": "2026-08-23T07:50:00+00:00",
     "ovation_ok": true
   },
   "points": [
     {
       "id": "presque-isle",
       "name": "Presque Isle",
-      "status": "MAYBE",
-      "confidence": "low",
-      "aurora_reach": "weak",
+      "status": "NO",
+      "confidence": "high",
+      "aurora_reach": "none",
       "cloud_block": "mixed",
       "urban": false,
-      "main_obstacle": "CLOUD_MIXED"
+      "main_obstacle": "AURORA_NO_REACH"
     },
     {
       "id": "bangor",
@@ -54,30 +54,6 @@
   ],
   "windows": [
     {
-      "start": "2026-08-23T01:45:00-04:00",
-      "end": "2026-08-23T02:15:00-04:00",
-      "skip": false,
-      "status": "NO",
-      "aurora_reach": "none",
-      "cloud_block": "mixed",
-      "source": "ovation",
-      "codes": [
-        "AURORA_NO_REACH"
-      ]
-    },
-    {
-      "start": "2026-08-23T02:15:00-04:00",
-      "end": "2026-08-23T02:45:00-04:00",
-      "skip": false,
-      "status": "NO",
-      "aurora_reach": "none",
-      "cloud_block": "mixed",
-      "source": "ovation",
-      "codes": [
-        "AURORA_NO_REACH"
-      ]
-    },
-    {
       "start": "2026-08-23T02:45:00-04:00",
       "end": "2026-08-23T03:15:00-04:00",
       "skip": false,
@@ -96,7 +72,7 @@
       "status": "NO",
       "aurora_reach": "none",
       "cloud_block": "mixed",
-      "source": "kp",
+      "source": "ovation",
       "codes": [
         "AURORA_NO_REACH"
       ]
@@ -108,7 +84,7 @@
       "status": "NO",
       "aurora_reach": "none",
       "cloud_block": "mixed",
-      "source": "kp",
+      "source": "ovation",
       "codes": [
         "AURORA_NO_REACH"
       ]
