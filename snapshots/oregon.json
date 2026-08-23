@@ -2,8 +2,8 @@
   "location_slug": "oregon",
   "headline_point_id": "baker-city",
   "headline_point_name": "Baker City",
-  "generated_at": "2026-08-23T10:33:41.694330+00:00",
-  "valid_until": "2026-08-23T10:58:41.694330+00:00",
+  "generated_at": "2026-08-23T10:54:45.965607+00:00",
+  "valid_until": "2026-08-23T11:19:45.965607+00:00",
   "status": "NO",
   "confidence": "high",
   "best_window_start": null,
@@ -16,8 +16,8 @@
   "look_toward": "north",
   "answer_sentence": "NO (Baker City area). Not worth a special trip tonight. Aurora activity is not expected to reach Oregon tonight.",
   "sources": {
-    "ovation_obs": "2026-08-23T10:25:00+00:00",
-    "ovation_fcst": "2026-08-23T11:27:00+00:00",
+    "ovation_obs": "2026-08-23T10:46:00+00:00",
+    "ovation_fcst": "2026-08-23T11:47:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -47,24 +47,12 @@
       "status": "NO",
       "confidence": "high",
       "aurora_reach": "none",
-      "cloud_block": null,
+      "cloud_block": "clear",
       "urban": false,
       "main_obstacle": "AURORA_NO_REACH"
     }
   ],
   "windows": [
-    {
-      "start": "2026-08-23T03:15:00-07:00",
-      "end": "2026-08-23T03:45:00-07:00",
-      "skip": false,
-      "status": "NO",
-      "aurora_reach": "none",
-      "cloud_block": "clear",
-      "source": "ovation",
-      "codes": [
-        "AURORA_NO_REACH"
-      ]
-    },
     {
       "start": "2026-08-23T03:45:00-07:00",
       "end": "2026-08-23T04:15:00-07:00",
