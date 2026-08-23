@@ -59,10 +59,92 @@ export type ForecastSnapshot = SnapshotRow & {
   seo_indexable: false;
 };
 
-export async function loadLatest(): Promise<SnapshotBundle> {
-  const file = path.join(process.cwd(), "snapshots", "latest.json");
+const SNAPSHOT_REMOTE_BASE =
+  process.env.SNAPSHOT_REMOTE_BASE ??
+  "https://raw.githubusercontent.com/zizhu-ai/northern-lights-tonight/main/snapshots";
+
+function hasValidGeneratedAt(value: unknown): value is { generated_at: string } {
+  if (!value || typeof value !== "object") return false;
+  const generatedAt = (value as { generated_at?: unknown }).generated_at;
+  return (
+    typeof generatedAt === "string" && Number.isFinite(Date.parse(generatedAt))
+  );
+}
+
+async function fetchSnapshot<T extends { generated_at: string }>(
+  fileName: string,
+  validate: (value: unknown) => value is T,
+): Promise<T | null> {
+  try {
+    const response = await fetch(`${SNAPSHOT_REMOTE_BASE}/${fileName}`, {
+      next: { revalidate: 120 },
+      signal: AbortSignal.timeout(5000),
+    });
+    if (!response.ok) return null;
+
+    const value: unknown = await response.json();
+    return validate(value) ? value : null;
+  } catch {
+    return null;
+  }
+}
+
+async function readBundledSnapshot<T extends { generated_at: string }>(
+  fileName: string,
+  validate: (value: unknown) => value is T,
+): Promise<T> {
+  const file = path.join(process.cwd(), "snapshots", fileName);
   const raw = await readFile(file, "utf8");
-  return JSON.parse(raw) as SnapshotBundle;
+  const value: unknown = JSON.parse(raw);
+  if (!validate(value)) throw new Error(`Invalid bundled snapshot: ${fileName}`);
+  return value;
+}
+
+async function loadSnapshot<T extends { generated_at: string }>(
+  fileName: string,
+  validate: (value: unknown) => value is T,
+): Promise<{ data: T; source: "remote" | "bundled" }> {
+  const [remote, bundled] = await Promise.allSettled([
+    fetchSnapshot(fileName, validate),
+    readBundledSnapshot(fileName, validate),
+  ]);
+  const remoteData = remote.status === "fulfilled" ? remote.value : null;
+  const bundledData = bundled.status === "fulfilled" ? bundled.value : null;
+
+  if (
+    remoteData &&
+    (!bundledData ||
+      Date.parse(remoteData.generated_at) >=
+        Date.parse(bundledData.generated_at))
+  ) {
+    return { data: remoteData, source: "remote" };
+  }
+  if (bundledData) return { data: bundledData, source: "bundled" };
+
+  if (bundled.status === "rejected") throw bundled.reason;
+  throw new Error(`Snapshot unavailable: ${fileName}`);
+}
+
+function isSnapshotBundle(value: unknown): value is SnapshotBundle {
+  return (
+    hasValidGeneratedAt(value) &&
+    Array.isArray((value as { locations?: unknown }).locations)
+  );
+}
+
+function isForecastSnapshot(value: unknown): value is ForecastSnapshot {
+  return hasValidGeneratedAt(value);
+}
+
+export async function loadLatestWithMeta(): Promise<{
+  data: SnapshotBundle;
+  source: "remote" | "bundled";
+}> {
+  return loadSnapshot("latest.json", isSnapshotBundle);
+}
+
+export async function loadLatest(): Promise<SnapshotBundle> {
+  return (await loadLatestWithMeta()).data;
 }
 
 export async function loadForecastSnapshot(
@@ -70,10 +152,8 @@ export async function loadForecastSnapshot(
 ): Promise<ForecastSnapshot | null> {
   if (!/^[a-z0-9-]+$/.test(slug)) return null;
 
-  const file = path.join(process.cwd(), "snapshots", `${slug}.json`);
   try {
-    const raw = await readFile(file, "utf8");
-    return JSON.parse(raw) as ForecastSnapshot;
+    return (await loadSnapshot(`${slug}.json`, isForecastSnapshot)).data;
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code === "ENOENT") return null;
     throw error;
