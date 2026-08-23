@@ -2,8 +2,8 @@
   "location_slug": "ohio",
   "headline_point_id": "cleveland",
   "headline_point_name": "Cleveland",
-  "generated_at": "2026-08-23T07:58:23.095151+00:00",
-  "valid_until": "2026-08-23T08:23:23.095151+00:00",
+  "generated_at": "2026-08-23T08:41:37.440628+00:00",
+  "valid_until": "2026-08-23T09:06:37.440628+00:00",
   "status": "NO",
   "confidence": "high",
   "best_window_start": null,
@@ -16,8 +16,8 @@
   "look_toward": "north",
   "answer_sentence": "NO (Cleveland area). Not worth a special trip tonight. Aurora activity is not expected to reach Ohio tonight.",
   "sources": {
-    "ovation_obs": "2026-08-23T07:49:00+00:00",
-    "ovation_fcst": "2026-08-23T08:54:00+00:00",
+    "ovation_obs": "2026-08-23T08:29:00+00:00",
+    "ovation_fcst": "2026-08-23T09:32:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -27,7 +27,7 @@
       "status": "NO",
       "confidence": "high",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "urban": false,
       "main_obstacle": "AURORA_NO_REACH"
     },
@@ -54,24 +54,12 @@
   ],
   "windows": [
     {
-      "start": "2026-08-23T03:45:00-04:00",
-      "end": "2026-08-23T04:15:00-04:00",
-      "skip": false,
-      "status": "NO",
-      "aurora_reach": "none",
-      "cloud_block": "clear",
-      "source": "ovation",
-      "codes": [
-        "AURORA_NO_REACH"
-      ]
-    },
-    {
       "start": "2026-08-23T04:15:00-04:00",
       "end": "2026-08-23T04:45:00-04:00",
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "clear",
+      "cloud_block": "mixed",
       "source": "ovation",
       "codes": [
         "AURORA_NO_REACH"
@@ -83,7 +71,7 @@
       "skip": false,
       "status": "NO",
       "aurora_reach": "none",
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": "ovation",
       "codes": [
         "AURORA_NO_REACH"
@@ -96,7 +84,7 @@
       "status": "NO",
       "aurora_reach": "none",
       "cloud_block": "clear",
-      "source": "kp",
+      "source": "ovation",
       "codes": [
         "AURORA_NO_REACH"
       ]
