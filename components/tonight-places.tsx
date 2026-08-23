@@ -7,7 +7,6 @@ import {
 } from "@/lib/forecast-places";
 import {
   formatWindow,
-  isSnapshotFresh,
   loadLatest,
   type SnapshotRow,
 } from "@/lib/snapshots";
@@ -38,8 +37,7 @@ export async function loadTonightRows(): Promise<TonightRow[]> {
 }
 
 export function displayTonightStatus(snapshot: SnapshotRow | null): SnapshotRow["status"] {
-  if (!snapshot || !isSnapshotFresh(snapshot)) return "UNKNOWN";
-  return snapshot.status;
+  return snapshot?.status ?? "UNKNOWN";
 }
 
 export function isSiteReadingsPaused(rows: TonightRow[]): boolean {
@@ -77,10 +75,9 @@ export async function TonightPlaces({ grouped = false }: TonightPlacesProps) {
 }
 
 function renderRow({ dossier, snapshot }: TonightRow) {
-  const live = snapshot ? isSnapshotFresh(snapshot) : false;
   const status = displayTonightStatus(snapshot);
   const window =
-    live && snapshot
+    snapshot
       ? formatWindow(snapshot.best_window_start, snapshot.best_window_end, dossier.timezone)
       : "";
   const pointName = snapshot?.headline_point_name ?? dossier.sample_points[0]?.name;

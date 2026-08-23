@@ -1,0 +1,246 @@
+{
+  "location_slug": "wisconsin",
+  "headline_point_id": "madison",
+  "headline_point_name": "Madison",
+  "generated_at": "2026-03-08T06:40:00+00:00",
+  "valid_until": "2026-03-08T07:05:00+00:00",
+  "status": "MAYBE",
+  "confidence": "low",
+  "best_window_start": "2026-03-08T00:15:00-06:00",
+  "best_window_end": "2026-03-08T06:15:00-05:00",
+  "main_obstacle": "AURORA_HORIZON_ONLY",
+  "main_obstacle_text": "Any display would likely stay low on the northern horizon.",
+  "reason_codes": [
+    "AURORA_HORIZON_ONLY",
+    "MOON_BRIGHT",
+    "FORECAST_FAR"
+  ],
+  "look_toward": "north",
+  "answer_sentence": "MAYBE in Wisconsin (Madison area). Best window 12:15 AM–6:15 AM CST. Main issue: Any display would likely stay low on the northern horizon.",
+  "sources": {
+    "ovation_obs": "2026-03-08T06:20:00+00:00",
+    "ovation_fcst": "2026-03-08T07:15:00+00:00",
+    "ovation_ok": true
+  },
+  "points": [
+    {
+      "id": "bayfield",
+      "name": "Bayfield",
+      "status": "MAYBE",
+      "confidence": "low",
+      "aurora_reach": "horizon",
+      "cloud_block": "clear",
+      "urban": false,
+      "main_obstacle": "AURORA_HORIZON_ONLY"
+    },
+    {
+      "id": "madison",
+      "name": "Madison",
+      "status": "MAYBE",
+      "confidence": "low",
+      "aurora_reach": "weak",
+      "cloud_block": "clear",
+      "urban": false,
+      "main_obstacle": "AURORA_HORIZON_ONLY"
+    },
+    {
+      "id": "milwaukee",
+      "name": "Milwaukee",
+      "status": "MAYBE",
+      "confidence": "low",
+      "aurora_reach": "weak",
+      "cloud_block": "clear",
+      "urban": true,
+      "main_obstacle": "AURORA_HORIZON_ONLY"
+    }
+  ],
+  "windows": [
+    {
+      "start": "2026-03-08T00:15:00-06:00",
+      "end": "2026-03-08T00:45:00-06:00",
+      "skip": false,
+      "status": "MAYBE",
+      "aurora_reach": "weak",
+      "cloud_block": "clear",
+      "source": "ovation",
+      "codes": [
+        "AURORA_HORIZON_ONLY"
+      ]
+    },
+    {
+      "start": "2026-03-08T00:45:00-06:00",
+      "end": "2026-03-08T01:15:00-06:00",
+      "skip": false,
+      "status": "MAYBE",
+      "aurora_reach": "weak",
+      "cloud_block": "clear",
+      "source": "ovation",
+      "codes": [
+        "AURORA_HORIZON_ONLY"
+      ]
+    },
+    {
+      "start": "2026-03-08T01:15:00-06:00",
+      "end": "2026-03-08T01:45:00-06:00",
+      "skip": false,
+      "status": "MAYBE",
+      "aurora_reach": "weak",
+      "cloud_block": "clear",
+      "source": "ovation",
+      "codes": [
+        "AURORA_HORIZON_ONLY"
+      ]
+    },
+    {
+      "start": "2026-03-08T01:45:00-06:00",
+      "end": "2026-03-08T02:15:00-06:00",
+      "skip": false,
+      "status": "MAYBE",
+      "aurora_reach": "horizon",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "AURORA_HORIZON_ONLY",
+        "MOON_BRIGHT",
+        "FORECAST_FAR"
+      ]
+    },
+    {
+      "start": "2026-03-08T02:15:00-06:00",
+      "end": "2026-03-08T02:45:00-06:00",
+      "skip": false,
+      "status": "MAYBE",
+      "aurora_reach": "horizon",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "AURORA_HORIZON_ONLY",
+        "MOON_BRIGHT",
+        "FORECAST_FAR"
+      ]
+    },
+    {
+      "start": "2026-03-08T02:45:00-06:00",
+      "end": "2026-03-08T03:15:00-05:00",
+      "skip": false,
+      "status": "MAYBE",
+      "aurora_reach": "horizon",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "AURORA_HORIZON_ONLY",
+        "MOON_BRIGHT",
+        "FORECAST_FAR"
+      ]
+    },
+    {
+      "start": "2026-03-08T03:15:00-05:00",
+      "end": "2026-03-08T03:45:00-05:00",
+      "skip": false,
+      "status": "MAYBE",
+      "aurora_reach": "horizon",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "AURORA_HORIZON_ONLY",
+        "MOON_BRIGHT",
+        "FORECAST_FAR"
+      ]
+    },
+    {
+      "start": "2026-03-08T03:45:00-05:00",
+      "end": "2026-03-08T04:15:00-05:00",
+      "skip": false,
+      "status": "MAYBE",
+      "aurora_reach": "horizon",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "AURORA_HORIZON_ONLY",
+        "MOON_BRIGHT",
+        "FORECAST_FAR"
+      ]
+    },
+    {
+      "start": "2026-03-08T04:15:00-05:00",
+      "end": "2026-03-08T04:45:00-05:00",
+      "skip": false,
+      "status": "MAYBE",
+      "aurora_reach": "horizon",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "AURORA_HORIZON_ONLY",
+        "MOON_BRIGHT",
+        "FORECAST_FAR"
+      ]
+    },
+    {
+      "start": "2026-03-08T04:45:00-05:00",
+      "end": "2026-03-08T05:15:00-05:00",
+      "skip": false,
+      "status": "MAYBE",
+      "aurora_reach": "horizon",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "AURORA_HORIZON_ONLY",
+        "MOON_BRIGHT",
+        "FORECAST_FAR"
+      ]
+    },
+    {
+      "start": "2026-03-08T05:15:00-05:00",
+      "end": "2026-03-08T05:45:00-05:00",
+      "skip": false,
+      "status": "MAYBE",
+      "aurora_reach": "horizon",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "AURORA_HORIZON_ONLY",
+        "MOON_BRIGHT",
+        "FORECAST_FAR"
+      ]
+    },
+    {
+      "start": "2026-03-08T05:45:00-05:00",
+      "end": "2026-03-08T06:15:00-05:00",
+      "skip": false,
+      "status": "MAYBE",
+      "aurora_reach": "horizon",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "AURORA_HORIZON_ONLY",
+        "MOON_BRIGHT",
+        "FORECAST_FAR"
+      ]
+    },
+    {
+      "start": "2026-03-08T06:15:00-05:00",
+      "end": "2026-03-08T06:45:00-05:00",
+      "skip": true,
+      "status": null,
+      "aurora_reach": null,
+      "cloud_block": "clear",
+      "source": null,
+      "codes": [
+        "NOT_DARK_YET"
+      ]
+    },
+    {
+      "start": "2026-03-08T06:45:00-05:00",
+      "end": "2026-03-08T07:15:00-05:00",
+      "skip": true,
+      "status": null,
+      "aurora_reach": null,
+      "cloud_block": "clear",
+      "source": null,
+      "codes": [
+        "NOT_DARK_YET"
+      ]
+    }
+  ],
+  "seo_indexable": false
+}

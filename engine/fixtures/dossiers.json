@@ -1,0 +1,1270 @@
+{
+  "meta": {
+    "version": "wave1-dossier-v1",
+    "date": "2026-08-21",
+    "status": "wave1-nearby-filled",
+    "notes": [
+      "magnetic_latitude is a centered-dipole estimate using IGRF-13 2020 geomagnetic pole 80.65N, 72.68W. Not AACGM. Engine should prefer OVATION grid over Kp thresholds.",
+      "typical_kp_* are integer bands for looking north from a dark site (horizon) vs near-overhead. Conservative. Replace with OVATION reach in the engine.",
+      "cluster_volume is unique-keyword sum from the 2026-07-18 Semrush export; not traffic.",
+      "Page-facing strings are English. Do not invent parking lots or driving directions.",
+      "seo_indexable stays false until the live engine returns a real snapshot for the sample points."
+    ]
+  },
+  "locations": [
+    {
+      "slug": "colorado",
+      "name": "Colorado",
+      "location_type": "state",
+      "parent_slug": null,
+      "timezone": "America/Denver",
+      "page_template": "tonight_local",
+      "latitude": 40.5853,
+      "longitude": -105.0844,
+      "primary_verdict_point": "fort-collins",
+      "sample_points": [
+        {
+          "id": "fort-collins",
+          "name": "Fort Collins",
+          "lat": 40.5853,
+          "lng": -105.0844,
+          "role": "verdict_north",
+          "magnetic_latitude": 48.3
+        },
+        {
+          "id": "denver",
+          "name": "Denver",
+          "lat": 39.7392,
+          "lng": -104.9903,
+          "role": "population",
+          "magnetic_latitude": 47.4
+        },
+        {
+          "id": "steamboat-springs",
+          "name": "Steamboat Springs",
+          "lat": 40.485,
+          "lng": -106.8317,
+          "role": "dark_sky",
+          "magnetic_latitude": 48.0
+        }
+      ],
+      "magnetic_latitude": 48.3,
+      "aurora_zone": "midlatitude_event",
+      "typical_kp_horizon": 7,
+      "typical_kp_overhead": 8,
+      "short_summer_nights": false,
+      "cluster_volume": 30810,
+      "weighted_kd": 21,
+      "primary_keyword": "northern lights colorado",
+      "variant_keywords": [
+        "aurora borealis colorado",
+        "northern lights colorado tonight",
+        "colorado northern lights",
+        "aurora borealis colorado tonight",
+        "northern lights in colorado tonight",
+        "northern lights tonight colorado",
+        "can you see the northern lights in colorado",
+        "are the northern lights visible in colorado tonight",
+        "can you see the northern lights in colorado tonight",
+        "northern lights tonight in colorado",
+        "will the northern lights be visible in colorado tonight"
+      ],
+      "cannibalization_pair": null,
+      "nearby_slugs": [
+        "utah",
+        "oregon",
+        "illinois",
+        "ohio",
+        "minnesota"
+      ],
+      "light_pollution_note": "The Front Range (Denver–Boulder–Colorado Springs) is a bright light dome. Northern plains and mountain parks north of I-70 are darker; going south into the San Luis Valley is darker but magnetically worse.",
+      "leave_city_advice": "Leave Denver if you are trying at all. You need a dark north horizon, not a city skyline. Do not drive south expecting a better oval — go north or onto the eastern plains with a clear view of the northern sky.",
+      "north_south_split": "Northern Colorado (Fort Collins, North Park, the Wyoming border) is the only part of the state that is even marginally realistic in a strong storm. Southern Colorado almost never sees aurora except in extreme events.",
+      "local_obstacles": "Front Range light dome; mountains blocking the north horizon if you sit on a south-facing slope; mid-latitude oval only during strong storms; summer thunderstorms on the plains.",
+      "best_months_note": "Longer nights from September through March help. Storms can happen in any month, but June–July twilight is less of a problem here than in Alaska. Dry air is an advantage versus the Midwest when a storm does arrive.",
+      "local_faqs": [
+        {
+          "q": "Can you see the northern lights from Denver?",
+          "a": "Almost never from the city itself. Denver’s skyglow washes out horizon aurora. Only a strong geomagnetic storm plus a dark site north of the metro gives a realistic chance."
+        },
+        {
+          "q": "Is it better in the mountains?",
+          "a": "Only if you have a dark, unobstructed north view. A high peak facing south or sitting above a town’s lights does not help. Northern parks and the plains north of the Front Range are more useful than a random 14er."
+        },
+        {
+          "q": "How strong does a storm need to be?",
+          "a": "Colorado is a mid-latitude, event-only location. Quiet or moderate nights are a no. You generally need a strong storm (roughly Kp 7 class) and clear skies."
+        },
+        {
+          "q": "Tonight in Colorado — which part of the state?",
+          "a": "This page’s headline uses northern Colorado (Fort Collins area), not Denver and not a geographic centroid. Southern counties are called out separately when they differ."
+        }
+      ],
+      "index_wave": 1,
+      "country": "US",
+      "viewing_direction": "north",
+      "seo_indexable": false,
+      "status": "dossier_filled"
+    },
+    {
+      "slug": "ohio",
+      "name": "Ohio",
+      "location_type": "state",
+      "parent_slug": null,
+      "timezone": "America/New_York",
+      "page_template": "tonight_local",
+      "latitude": 41.4993,
+      "longitude": -81.6944,
+      "primary_verdict_point": "cleveland",
+      "sample_points": [
+        {
+          "id": "cleveland",
+          "name": "Cleveland",
+          "lat": 41.4993,
+          "lng": -81.6944,
+          "role": "verdict_north",
+          "magnetic_latitude": 50.7
+        },
+        {
+          "id": "toledo",
+          "name": "Toledo",
+          "lat": 41.6528,
+          "lng": -83.5379,
+          "role": "dark_sky",
+          "magnetic_latitude": 50.8
+        },
+        {
+          "id": "columbus",
+          "name": "Columbus",
+          "lat": 39.9612,
+          "lng": -82.9988,
+          "role": "population",
+          "magnetic_latitude": 49.1
+        }
+      ],
+      "magnetic_latitude": 50.7,
+      "aurora_zone": "midlatitude_event",
+      "typical_kp_horizon": 6,
+      "typical_kp_overhead": 8,
+      "short_summer_nights": false,
+      "cluster_volume": 17470,
+      "weighted_kd": 16,
+      "primary_keyword": "northern lights ohio",
+      "variant_keywords": [
+        "aurora borealis ohio",
+        "northern lights tonight ohio",
+        "northern lights ohio tonight",
+        "northern lights in ohio tonight",
+        "northern lights tonight in ohio",
+        "can you see the northern lights in ohio tonight",
+        "northern lights tonight columbus ohio"
+      ],
+      "cannibalization_pair": null,
+      "nearby_slugs": [
+        "indiana",
+        "michigan",
+        "chicago",
+        "illinois"
+      ],
+      "light_pollution_note": "Cleveland–Akron and Columbus are bright. The Lake Erie shore can be slightly better if you look north over water, but the urban skyglow still dominates near the cities.",
+      "leave_city_advice": "Get out of Columbus. Northern Ohio near Lake Erie is the realistic part of the state. Look north over the lake from a dark stretch of shoreline, not from downtown Cleveland.",
+      "north_south_split": "Northern Ohio (Cleveland, Toledo, the lake) is meaningfully closer to the oval than Columbus and Cincinnati. Southern Ohio is an extreme-event location only.",
+      "local_obstacles": "Midwest cloud cover; lake-effect clouds in winter along Lake Erie; city light domes; humidity and haze on the horizon.",
+      "best_months_note": "September–March brings longer nights. Lake-effect overcast can ruin otherwise good winter storms along the snow belt.",
+      "local_faqs": [
+        {
+          "q": "Can you see the northern lights in Columbus tonight?",
+          "a": "Columbus sits well south of Cleveland magnetically. A night that is only maybe in northern Ohio is usually a no in Columbus. Those queries are answered on this state page, not a separate Columbus URL."
+        },
+        {
+          "q": "Is looking over Lake Erie enough?",
+          "a": "A north-facing lake horizon helps a little because there is less ground light in that direction. It does not cancel Cleveland’s skyglow. You still want distance from the city and a strong storm."
+        },
+        {
+          "q": "How often does Ohio actually get aurora?",
+          "a": "Most nights: no. Ohio is an event location. Strong geomagnetic storms are the nights that matter; routine Kp 3–4 nights are not."
+        }
+      ],
+      "index_wave": 1,
+      "country": "US",
+      "viewing_direction": "north",
+      "seo_indexable": false,
+      "status": "dossier_filled"
+    },
+    {
+      "slug": "indiana",
+      "name": "Indiana",
+      "location_type": "state",
+      "parent_slug": null,
+      "timezone": "America/Indiana/Indianapolis",
+      "page_template": "tonight_local",
+      "latitude": 41.6764,
+      "longitude": -86.252,
+      "primary_verdict_point": "south-bend",
+      "sample_points": [
+        {
+          "id": "south-bend",
+          "name": "South Bend",
+          "lat": 41.6764,
+          "lng": -86.252,
+          "role": "verdict_north",
+          "magnetic_latitude": 50.7
+        },
+        {
+          "id": "indiana-dunes",
+          "name": "Indiana Dunes",
+          "lat": 41.6581,
+          "lng": -87.0623,
+          "role": "dark_sky",
+          "magnetic_latitude": 50.7
+        },
+        {
+          "id": "indianapolis",
+          "name": "Indianapolis",
+          "lat": 39.7684,
+          "lng": -86.1581,
+          "role": "population",
+          "magnetic_latitude": 48.8
+        }
+      ],
+      "magnetic_latitude": 50.7,
+      "aurora_zone": "midlatitude_event",
+      "typical_kp_horizon": 6,
+      "typical_kp_overhead": 8,
+      "short_summer_nights": false,
+      "cluster_volume": 13060,
+      "weighted_kd": 14,
+      "primary_keyword": "northern lights indiana",
+      "variant_keywords": [
+        "northern lights in indiana",
+        "aurora borealis indiana",
+        "northern lights indiana tonight",
+        "northern lights tonight indiana",
+        "can you see the northern lights in indiana tonight",
+        "northern lights tonight in indiana",
+        "northern lights tonight indianapolis"
+      ],
+      "cannibalization_pair": "Northwest Indiana sits in Chicago’s light dome and in Central Time; Chicago remains a separate city page.",
+      "nearby_slugs": [
+        "ohio",
+        "chicago",
+        "illinois",
+        "michigan"
+      ],
+      "light_pollution_note": "Indianapolis is a large light island. Northwest Indiana (Gary, Hammond, the inner dunes) sits under Chicago’s skyglow. South Bend and darker stretches of northern Indiana are the better in-state options.",
+      "leave_city_advice": "Leave Indianapolis. Northern Indiana is the only part of the state worth a special trip in a strong storm. Do not treat the Chicago suburbs in Indiana as dark sky.",
+      "north_south_split": "Northern Indiana is an event location similar to northern Ohio. Indianapolis and southern Indiana need a stronger storm and are often a no when the north of the state is only maybe.",
+      "local_obstacles": "Chicago light dome in the northwest; Indianapolis glow; Midwest clouds; two time zones (most of the state Eastern, northwest corner Central) — times on this page use Eastern.",
+      "best_months_note": "Long nights September–March. Clouds, not darkness, are the usual Midwest limiter.",
+      "local_faqs": [
+        {
+          "q": "Can you see the northern lights in Indianapolis tonight?",
+          "a": "Only in a strong storm, and not from downtown. Indianapolis queries are mapped to this state page. The headline uses northern Indiana."
+        },
+        {
+          "q": "Should I drive to Michigan instead?",
+          "a": "If you can, yes — Michigan’s Upper Peninsula and even northern Lower Peninsula are closer to the oval. On a marginal night, driving north beats staying in Indianapolis."
+        },
+        {
+          "q": "What about Indiana Dunes?",
+          "a": "A north view over Lake Michigan can help, but you are still next to the Chicago light dome. It is a compromise, not a dark-sky destination."
+        }
+      ],
+      "index_wave": 1,
+      "country": "US",
+      "viewing_direction": "north",
+      "seo_indexable": false,
+      "status": "dossier_filled"
+    },
+    {
+      "slug": "michigan",
+      "name": "Michigan",
+      "location_type": "state",
+      "parent_slug": null,
+      "timezone": "America/Detroit",
+      "page_template": "tonight_local",
+      "latitude": 44.7631,
+      "longitude": -85.6206,
+      "primary_verdict_point": "traverse-city",
+      "sample_points": [
+        {
+          "id": "marquette",
+          "name": "Marquette",
+          "lat": 46.5436,
+          "lng": -87.3954,
+          "role": "dark_sky",
+          "magnetic_latitude": 55.5
+        },
+        {
+          "id": "traverse-city",
+          "name": "Traverse City",
+          "lat": 44.7631,
+          "lng": -85.6206,
+          "role": "verdict_north",
+          "magnetic_latitude": 53.8
+        },
+        {
+          "id": "detroit",
+          "name": "Detroit",
+          "lat": 42.3314,
+          "lng": -83.0458,
+          "role": "population",
+          "magnetic_latitude": 51.5
+        }
+      ],
+      "magnetic_latitude": 53.8,
+      "aurora_zone": "sub_oval",
+      "typical_kp_horizon": 5,
+      "typical_kp_overhead": 7,
+      "short_summer_nights": false,
+      "cluster_volume": 30430,
+      "weighted_kd": 30,
+      "primary_keyword": "northern lights michigan",
+      "variant_keywords": [
+        "aurora borealis northern michigan forecast",
+        "northern lights michigan tonight",
+        "aurora borealis michigan",
+        "northern lights in michigan",
+        "northern lights in michigan tonight",
+        "michigan northern lights tonight",
+        "northern lights tonight in michigan",
+        "northern lights tonight michigan",
+        "can you see the northern lights in michigan tonight"
+      ],
+      "cannibalization_pair": "Do not create /forecast/northern-michigan. That cluster is absorbed here until SERP clearly wants a separate region page.",
+      "nearby_slugs": [
+        "wisconsin",
+        "ohio",
+        "indiana",
+        "chicago",
+        "minnesota"
+      ],
+      "light_pollution_note": "Detroit–Ann Arbor–Toledo is a major light complex. Traverse City and the lakeshores are better. The Upper Peninsula (Marquette, Keweenaw, the Lake Superior shore) is the dark, high-latitude part of the state.",
+      "leave_city_advice": "Leave Detroit. For a serious attempt, go north: at least to the Traverse City / Mackinac latitude, and to the Upper Peninsula when the storm is only moderate.",
+      "north_south_split": "Michigan is three different aurora places: Detroit (event-only), northern Lower Peninsula (sub-oval, sometimes), Upper Peninsula (the real viewing region). A GO in the UP is often still NO in Detroit.",
+      "local_obstacles": "Lake-effect clouds off Superior and Michigan; Detroit skyglow; summer twilight in the UP; ice and winter travel in the UP.",
+      "best_months_note": "August through April is the practical season. The UP has short but not polar nights in June. Fall and late winter storms with clear, cold air are the usual wins.",
+      "local_faqs": [
+        {
+          "q": "Is this the Northern Michigan page?",
+          "a": "There is no separate Northern Michigan URL. Queries like “aurora borealis northern Michigan forecast” are answered here, with the UP and northern Lower Peninsula called out explicitly."
+        },
+        {
+          "q": "Can you see the northern lights from Detroit?",
+          "a": "Only in a strong storm, and not from the city core. Detroit is the worst place in the state to try."
+        },
+        {
+          "q": "Upper Peninsula or Traverse City?",
+          "a": "The UP is closer to the oval and darker. Traverse City is the compromise if you cannot cross the bridge. On a weak night, the UP is the difference between maybe and no."
+        },
+        {
+          "q": "Does lake-effect ruin it?",
+          "a": "Often. A good Kp with a Superior snow band is still a no. Clouds are the usual reason a Michigan night fails after the oval has reached the state."
+        }
+      ],
+      "index_wave": 1,
+      "country": "US",
+      "viewing_direction": "north",
+      "seo_indexable": false,
+      "status": "dossier_filled"
+    },
+    {
+      "slug": "chicago",
+      "name": "Chicago",
+      "location_type": "city",
+      "parent_slug": "illinois",
+      "timezone": "America/Chicago",
+      "page_template": "tonight_local",
+      "latitude": 41.8781,
+      "longitude": -87.6298,
+      "primary_verdict_point": "chicago",
+      "sample_points": [
+        {
+          "id": "chicago",
+          "name": "Chicago",
+          "lat": 41.8781,
+          "lng": -87.6298,
+          "role": "population",
+          "magnetic_latitude": 50.9
+        }
+      ],
+      "magnetic_latitude": 50.9,
+      "aurora_zone": "midlatitude_event",
+      "typical_kp_horizon": 6,
+      "typical_kp_overhead": 8,
+      "short_summer_nights": false,
+      "cluster_volume": 17470,
+      "weighted_kd": 22,
+      "primary_keyword": "northern lights chicago",
+      "variant_keywords": [
+        "aurora borealis chicago",
+        "northern lights tonight chicago",
+        "northern lights chicago tonight",
+        "northern lights in chicago tonight",
+        "chicago northern lights tonight",
+        "northern lights tonight in chicago"
+      ],
+      "cannibalization_pair": "illinois: this page is the city (light pollution, lakefront, leaving town). Illinois is the rest of the state and north–south split.",
+      "nearby_slugs": [
+        "illinois",
+        "indiana",
+        "wisconsin",
+        "michigan"
+      ],
+      "light_pollution_note": "Chicago is Bortle-class urban core. The lakefront looking north over Lake Michigan is slightly less obstructed than looking over the city, but skyglow is still severe.",
+      "leave_city_advice": "Downtown, the Loop, and the inner neighborhoods are the wrong place to stand. If you go out anyway on a strong storm, get north into southern Wisconsin or at least far enough from the skyline that the northern horizon is not orange.",
+      "north_south_split": null,
+      "local_obstacles": "Extreme light pollution; lake-effect and marine clouds; horizon haze; a mid-latitude oval that only reaches the city in strong storms.",
+      "best_months_note": "Event-driven year-round; longer nights September–March. A clear, cold night after a storm is more useful than a warm, hazy one.",
+      "local_faqs": [
+        {
+          "q": "Can I see the northern lights from downtown Chicago?",
+          "a": "You might photograph a faint glow in an extreme storm. You should not plan a night around seeing it from the Loop or Navy Pier. Leave the city."
+        },
+        {
+          "q": "Is the lake enough?",
+          "a": "A north-facing lakefront removes some ground lights in that direction. It does not remove Chicago’s dome. Treat it as slightly less bad, not good."
+        },
+        {
+          "q": "Should I go to Wisconsin or Indiana?",
+          "a": "Wisconsin north of the metro is usually the better dark-sky direction. Indiana Dunes still sits under Chicago’s glow. Michigan is farther but magnetically better."
+        },
+        {
+          "q": "How is this different from the Illinois page?",
+          "a": "This page is the city tonight: pollution, the lake, whether to leave town. Illinois covers Rockford, Galena, and the rest of the state."
+        }
+      ],
+      "index_wave": 1,
+      "country": "US",
+      "viewing_direction": "north",
+      "seo_indexable": false,
+      "status": "dossier_filled"
+    },
+    {
+      "slug": "seattle",
+      "name": "Seattle",
+      "location_type": "city",
+      "parent_slug": null,
+      "timezone": "America/Los_Angeles",
+      "page_template": "tonight_local",
+      "latitude": 47.6062,
+      "longitude": -122.3321,
+      "primary_verdict_point": "seattle",
+      "sample_points": [
+        {
+          "id": "seattle",
+          "name": "Seattle",
+          "lat": 47.6062,
+          "lng": -122.3321,
+          "role": "population",
+          "magnetic_latitude": 53.1
+        }
+      ],
+      "magnetic_latitude": 53.1,
+      "aurora_zone": "sub_oval",
+      "typical_kp_horizon": 5,
+      "typical_kp_overhead": 7,
+      "short_summer_nights": false,
+      "cluster_volume": 8520,
+      "weighted_kd": 15,
+      "primary_keyword": "northern lights seattle",
+      "variant_keywords": [
+        "seattle northern lights tonight",
+        "northern lights in seattle tonight",
+        "northern lights seattle tonight",
+        "northern lights tonight seattle",
+        "northern lights tonight in seattle"
+      ],
+      "cannibalization_pair": "Washington state is Wave 2 (eastern Washington is drier and darker). Oregon is the adjacent Wave 1 state. Do not treat Seattle as Washington.",
+      "nearby_slugs": [
+        "oregon",
+        "alaska",
+        "minnesota",
+        "utah"
+      ],
+      "light_pollution_note": "Puget Sound is a bright urban corridor (Seattle–Tacoma–Everett). City parks are not dark sky. The Olympics and the east slopes of the Cascades are darker; the east side is also often clearer.",
+      "leave_city_advice": "Leave downtown. Clouds are the usual Seattle killer — a darker but still socked-in hillside does not help. If the forecast is cloudy west of the Cascades and clearer east, the rain shadow matters more than driving ten minutes north.",
+      "north_south_split": null,
+      "local_obstacles": "Persistent marine cloud and drizzle; Puget Sound light dome; Olympics blocking some western horizons; summer twilight later than in the Midwest.",
+      "best_months_note": "The oval can reach this latitude more often than Colorado, but winter is the cloudy season. Clear nights after a frontal passage, and the drier east side of the mountains, matter as much as Kp.",
+      "local_faqs": [
+        {
+          "q": "Can I see the northern lights from Seattle tonight?",
+          "a": "From the city, only in a strong storm and usually as a horizon glow. Clouds stop more Seattle nights than the oval does."
+        },
+        {
+          "q": "Should I drive east of the Cascades?",
+          "a": "If western Washington is socked in and the east side is clear, yes — darkness and holes in the clouds beat sitting in the city under a stratus deck. Eastern Washington gets its own page later; until then this page will say when leaving the west side is the point."
+        },
+        {
+          "q": "Is Seattle better than Portland?",
+          "a": "Slightly higher latitude, similar cloud problem. Neither is Fairbanks. Both are “maybe in a storm if the sky opens.”"
+        }
+      ],
+      "index_wave": 1,
+      "country": "US",
+      "viewing_direction": "north",
+      "seo_indexable": false,
+      "status": "dossier_filled"
+    },
+    {
+      "slug": "wisconsin",
+      "name": "Wisconsin",
+      "location_type": "state",
+      "parent_slug": null,
+      "timezone": "America/Chicago",
+      "page_template": "tonight_local",
+      "latitude": 43.0731,
+      "longitude": -89.4012,
+      "primary_verdict_point": "madison",
+      "sample_points": [
+        {
+          "id": "bayfield",
+          "name": "Bayfield",
+          "lat": 46.8108,
+          "lng": -90.8182,
+          "role": "dark_sky",
+          "magnetic_latitude": 55.6
+        },
+        {
+          "id": "madison",
+          "name": "Madison",
+          "lat": 43.0731,
+          "lng": -89.4012,
+          "role": "verdict_north",
+          "magnetic_latitude": 52.0
+        },
+        {
+          "id": "milwaukee",
+          "name": "Milwaukee",
+          "lat": 43.0389,
+          "lng": -87.9065,
+          "role": "population",
+          "magnetic_latitude": 52.0
+        }
+      ],
+      "magnetic_latitude": 52.0,
+      "aurora_zone": "sub_oval",
+      "typical_kp_horizon": 5,
+      "typical_kp_overhead": 7,
+      "short_summer_nights": false,
+      "cluster_volume": 7270,
+      "weighted_kd": 22,
+      "primary_keyword": "northern lights wisconsin",
+      "variant_keywords": [
+        "northern lights wisconsin tonight",
+        "northern lights tonight wisconsin",
+        "northern lights tonight in wisconsin",
+        "wisconsin northern lights tonight"
+      ],
+      "cannibalization_pair": null,
+      "nearby_slugs": [
+        "minnesota",
+        "michigan",
+        "chicago",
+        "illinois"
+      ],
+      "light_pollution_note": "Milwaukee–Chicago glow covers the southeast. Madison is better than Milwaukee but still urban. Northern Wisconsin (Northwoods, Apostle Islands, Lake Superior shore) is the dark part of the state.",
+      "leave_city_advice": "Leave Milwaukee. If you can keep driving north of the agricultural belt into the Northwoods, do it. Door County and the Superior shore beat the southern lakeshore suburbs.",
+      "north_south_split": "Southeast Wisconsin is Chicago-adjacent and event-heavy. Northern Wisconsin is closer to Minnesota’s odds. A maybe in Bayfield is often still a no in Milwaukee.",
+      "local_obstacles": "Lake Michigan marine cloud in the east; Superior snow bands in the north; Milwaukee–Chicago skyglow; humid haze.",
+      "best_months_note": "Tonight-intent queries are a large share of this cluster. Long nights September–March; northern Wisconsin stays useful later into spring than Illinois.",
+      "local_faqs": [
+        {
+          "q": "Can you see the northern lights in Milwaukee?",
+          "a": "Only in a strong storm, and not from the inner city. Milwaukee is the wrong end of the state."
+        },
+        {
+          "q": "Where in Wisconsin is actually good?",
+          "a": "North: the Northwoods, Bayfield, the Apostle Islands region, and other Superior-facing dark areas. That is a different night than Madison."
+        },
+        {
+          "q": "Better than Illinois?",
+          "a": "Usually yes, especially once you are north of the Chicago–Milwaukee corridor."
+        }
+      ],
+      "index_wave": 1,
+      "country": "US",
+      "viewing_direction": "north",
+      "seo_indexable": false,
+      "status": "dossier_filled"
+    },
+    {
+      "slug": "massachusetts",
+      "name": "Massachusetts",
+      "location_type": "state",
+      "parent_slug": null,
+      "timezone": "America/New_York",
+      "page_template": "tonight_local",
+      "latitude": 42.8126,
+      "longitude": -70.8773,
+      "primary_verdict_point": "newburyport",
+      "sample_points": [
+        {
+          "id": "newburyport",
+          "name": "Newburyport",
+          "lat": 42.8126,
+          "lng": -70.8773,
+          "role": "verdict_north",
+          "magnetic_latitude": 52.2
+        },
+        {
+          "id": "boston",
+          "name": "Boston",
+          "lat": 42.3601,
+          "lng": -71.0589,
+          "role": "population",
+          "magnetic_latitude": 51.7
+        },
+        {
+          "id": "north-adams",
+          "name": "North Adams",
+          "lat": 42.7009,
+          "lng": -73.1087,
+          "role": "dark_sky",
+          "magnetic_latitude": 52.0
+        }
+      ],
+      "magnetic_latitude": 51.7,
+      "aurora_zone": "midlatitude_event",
+      "typical_kp_horizon": 6,
+      "typical_kp_overhead": 8,
+      "short_summer_nights": false,
+      "cluster_volume": 7460,
+      "weighted_kd": 23,
+      "primary_keyword": "northern lights massachusetts",
+      "variant_keywords": [
+        "northern lights tonight massachusetts",
+        "northern lights could be visible tonight from parts of massachusetts",
+        "northern lights in massachusetts tonight",
+        "northern lights massachusetts tonight",
+        "northern lights tonight boston",
+        "boston northern lights tonight",
+        "northern lights boston tonight"
+      ],
+      "cannibalization_pair": "Boston has tonight queries but no Wave 1 city page. All Boston variants map here. Do not ship /forecast/boston until SERP is clearly separate.",
+      "nearby_slugs": [
+        "maine",
+        "ohio",
+        "michigan",
+        "minnesota"
+      ],
+      "light_pollution_note": "Boston–Providence is a dense coastal light corridor. The North Shore (beyond the inner suburbs) and the Berkshires are darker. Cape Cod is south of Boston and magnetically worse, not better.",
+      "leave_city_advice": "Leave Boston. North toward the New Hampshire border or west into the Berkshires beats the harbor. Do not drive to the Cape for aurora.",
+      "north_south_split": "The North Shore and the northern Berkshires are the least-bad in-state options. The South Shore and Cape Cod are farther from the oval.",
+      "local_obstacles": "Coastal clouds and nor’easters; Boston skyglow; a short north horizon over the ocean that still sits under regional light; event-only oval.",
+      "best_months_note": "Almost entirely storm-driven. Longer nights September–March. Maine, not the Cape, is the in-region upgrade.",
+      "local_faqs": [
+        {
+          "q": "Is there a Boston page?",
+          "a": "Not in the first index set. “Northern lights tonight Boston” is answered here as Massachusetts, with Boston as the population point."
+        },
+        {
+          "q": "Can I see it from the city?",
+          "a": "Only in a strong storm, usually as a faint northern glow, and often not with the naked eye through skyglow."
+        },
+        {
+          "q": "Cape Cod or north?",
+          "a": "North. Cape Cod is the wrong direction."
+        }
+      ],
+      "index_wave": 1,
+      "country": "US",
+      "viewing_direction": "north",
+      "seo_indexable": false,
+      "status": "dossier_filled"
+    },
+    {
+      "slug": "maine",
+      "name": "Maine",
+      "location_type": "state",
+      "parent_slug": null,
+      "timezone": "America/New_York",
+      "page_template": "tonight_local",
+      "latitude": 44.8016,
+      "longitude": -68.7712,
+      "primary_verdict_point": "bangor",
+      "sample_points": [
+        {
+          "id": "presque-isle",
+          "name": "Presque Isle",
+          "lat": 46.6812,
+          "lng": -68.0159,
+          "role": "dark_sky",
+          "magnetic_latitude": 56.0
+        },
+        {
+          "id": "bangor",
+          "name": "Bangor",
+          "lat": 44.8016,
+          "lng": -68.7712,
+          "role": "verdict_north",
+          "magnetic_latitude": 54.1
+        },
+        {
+          "id": "portland",
+          "name": "Portland",
+          "lat": 43.6591,
+          "lng": -70.2568,
+          "role": "population",
+          "magnetic_latitude": 53.0
+        }
+      ],
+      "magnetic_latitude": 54.1,
+      "aurora_zone": "sub_oval",
+      "typical_kp_horizon": 5,
+      "typical_kp_overhead": 7,
+      "short_summer_nights": false,
+      "cluster_volume": 5680,
+      "weighted_kd": 21,
+      "primary_keyword": "northern lights maine",
+      "variant_keywords": [
+        "northern lights maine tonight",
+        "northern lights in maine tonight",
+        "northern lights tonight maine",
+        "maine northern lights tonight",
+        "northern lights tonight in maine"
+      ],
+      "cannibalization_pair": null,
+      "nearby_slugs": [
+        "massachusetts",
+        "minnesota",
+        "michigan",
+        "alaska"
+      ],
+      "light_pollution_note": "Portland and the southern coast are the bright part of a generally dark state. Baxter, the North Woods, and Aroostook are among the darkest Wave 1 locations in the Lower 48.",
+      "leave_city_advice": "Leave Portland if you can. Interior and northern Maine beat the tourist coast. Acadia is darker than Boston but still coastal and south of the woods.",
+      "north_south_split": "Southern Maine is New England event-tier. Aroostook and the North Woods are closer to a sub-oval site. A maybe in Presque Isle can still be no in Portland.",
+      "local_obstacles": "Coastal fog and marine cloud; summer twilight in the far north; long winter drives; trees blocking horizon in the woods (you still need a north opening).",
+      "best_months_note": "One of the better Lower 48 states on a moderate storm. August–April; September and March are popular because nights are long enough without the worst winter weather.",
+      "local_faqs": [
+        {
+          "q": "Is Acadia a good place?",
+          "a": "Better than a city, and a north-facing coast helps, but it is not northern Maine. For a marginal night, the North Woods and Aroostook are the upgrade."
+        },
+        {
+          "q": "Portland tonight?",
+          "a": "Portland is the worst in-state default. This page’s headline uses Bangor-latitude Maine, and calls Portland out when it differs."
+        },
+        {
+          "q": "Better than Massachusetts?",
+          "a": "Yes. Darker, farther north, and less of a coastal megacity dome."
+        }
+      ],
+      "index_wave": 1,
+      "country": "US",
+      "viewing_direction": "north",
+      "seo_indexable": false,
+      "status": "dossier_filled"
+    },
+    {
+      "slug": "minnesota",
+      "name": "Minnesota",
+      "location_type": "state",
+      "parent_slug": null,
+      "timezone": "America/Chicago",
+      "page_template": "tonight_local",
+      "latitude": 46.7867,
+      "longitude": -92.1005,
+      "primary_verdict_point": "duluth",
+      "sample_points": [
+        {
+          "id": "ely",
+          "name": "Ely",
+          "lat": 47.9032,
+          "lng": -91.8671,
+          "role": "dark_sky",
+          "magnetic_latitude": 56.6
+        },
+        {
+          "id": "duluth",
+          "name": "Duluth",
+          "lat": 46.7867,
+          "lng": -92.1005,
+          "role": "verdict_north",
+          "magnetic_latitude": 55.5
+        },
+        {
+          "id": "minneapolis",
+          "name": "Minneapolis",
+          "lat": 44.9778,
+          "lng": -93.265,
+          "role": "population",
+          "magnetic_latitude": 53.6
+        }
+      ],
+      "magnetic_latitude": 55.5,
+      "aurora_zone": "sub_oval",
+      "typical_kp_horizon": 4,
+      "typical_kp_overhead": 6,
+      "short_summer_nights": false,
+      "cluster_volume": 4060,
+      "weighted_kd": 16,
+      "primary_keyword": "northern lights minnesota",
+      "variant_keywords": [
+        "northern lights tonight minneapolis",
+        "northern lights in minnesota tonight",
+        "northern lights tonight minnesota",
+        "northern lights tonight in minnesota",
+        "northern lights tonight duluth mn"
+      ],
+      "cannibalization_pair": "Minneapolis and Duluth do not get Wave 1 city pages. Those tonight queries map here.",
+      "nearby_slugs": [
+        "wisconsin",
+        "michigan",
+        "alaska",
+        "maine"
+      ],
+      "light_pollution_note": "The Twin Cities are a large dome. Duluth is better but still a city. The Iron Range, Ely, and the Boundary Waters are the dark, high-latitude part of the state — among the best Lower 48 odds in this set.",
+      "leave_city_advice": "Leave Minneapolis. North toward Duluth and beyond is the correct direction. The Boundary Waters / Ely latitude is the in-state destination on a moderate night.",
+      "north_south_split": "Twin Cities: event-to-sub-oval. Duluth and the Arrowhead: sub-oval. A GO near Ely is often only maybe in Minneapolis.",
+      "local_obstacles": "Twin Cities glow; Superior lake cloud and winter snow bands; summer twilight in the far north; mosquitoes and trees if you pick a closed-in site.",
+      "best_months_note": "One of the best product matches in Wave 1. August–April; northern Minnesota can work on weaker storms than Ohio or Colorado.",
+      "local_faqs": [
+        {
+          "q": "Minneapolis tonight?",
+          "a": "Answered here, not on a Twin Cities URL. The city is the wrong place to stand; the headline uses Duluth-latitude Minnesota."
+        },
+        {
+          "q": "Duluth or farther?",
+          "a": "Duluth is already a big step north of Minneapolis. Ely and the Boundary Waters are darker and slightly better magnetically."
+        },
+        {
+          "q": "How does Minnesota compare to Michigan?",
+          "a": "Northern Minnesota and Michigan’s UP are in the same league. Both beat Chicago, Ohio, and Colorado on ordinary active nights."
+        }
+      ],
+      "index_wave": 1,
+      "country": "US",
+      "viewing_direction": "north",
+      "seo_indexable": false,
+      "status": "dossier_filled"
+    },
+    {
+      "slug": "illinois",
+      "name": "Illinois",
+      "location_type": "state",
+      "parent_slug": null,
+      "timezone": "America/Chicago",
+      "page_template": "tonight_local",
+      "latitude": 42.2711,
+      "longitude": -89.094,
+      "primary_verdict_point": "rockford",
+      "sample_points": [
+        {
+          "id": "galena",
+          "name": "Galena",
+          "lat": 42.4167,
+          "lng": -90.429,
+          "role": "dark_sky",
+          "magnetic_latitude": 51.2
+        },
+        {
+          "id": "rockford",
+          "name": "Rockford",
+          "lat": 42.2711,
+          "lng": -89.094,
+          "role": "verdict_north",
+          "magnetic_latitude": 51.2
+        },
+        {
+          "id": "springfield",
+          "name": "Springfield",
+          "lat": 39.7817,
+          "lng": -89.6501,
+          "role": "population",
+          "magnetic_latitude": 48.7
+        }
+      ],
+      "magnetic_latitude": 51.2,
+      "aurora_zone": "midlatitude_event",
+      "typical_kp_horizon": 6,
+      "typical_kp_overhead": 8,
+      "short_summer_nights": false,
+      "cluster_volume": 7380,
+      "weighted_kd": 21,
+      "primary_keyword": "northern lights illinois",
+      "variant_keywords": [
+        "illinois northern lights",
+        "northern lights illinois tonight",
+        "northern lights in illinois tonight",
+        "northern lights tonight illinois",
+        "northern lights tonight in illinois",
+        "can you see the northern lights in illinois tonight",
+        "are the northern lights visible in illinois tonight"
+      ],
+      "cannibalization_pair": "chicago: city light pollution and lakefront. This page is Illinois minus the city story — northern vs central/southern Illinois.",
+      "nearby_slugs": [
+        "chicago",
+        "indiana",
+        "wisconsin",
+        "ohio"
+      ],
+      "light_pollution_note": "Chicago’s dome covers a wide radius of northeastern Illinois. Rockford is better than the suburbs but still a city. Galena and the Mississippi palisades are the realistic in-state dark direction. Springfield and southern Illinois are much worse magnetically.",
+      "leave_city_advice": "If you are in Chicago, use the Chicago page and leave the metro. If you are elsewhere in Illinois, go north and away from the Chicago glow — not south.",
+      "north_south_split": "Northern Illinois can participate in strong storms. Central and southern Illinois are extreme-event only. Never use Springfield as the state headline.",
+      "local_obstacles": "Chicago skyglow across the northeast; flat-horizon haze; Midwest clouds; a long north–south magnetic gradient inside one state.",
+      "best_months_note": "Event-driven. The value of this page is telling northern Illinois apart from Chicago and apart from Springfield.",
+      "local_faqs": [
+        {
+          "q": "Why isn’t this just the Chicago page?",
+          "a": "Chicago searches are city intent. Illinois searches include the rest of the state. Tonight’s headline here uses northern Illinois (Rockford/Galena), not the Loop."
+        },
+        {
+          "q": "Southern Illinois tonight?",
+          "a": "Treat it as a no unless the storm is extreme. The oval reaches northern Illinois first."
+        },
+        {
+          "q": "Better to go to Wisconsin?",
+          "a": "Usually yes, if you can cross the border and get north of the Chicago–Milwaukee glow."
+        }
+      ],
+      "index_wave": 1,
+      "country": "US",
+      "viewing_direction": "north",
+      "seo_indexable": false,
+      "status": "dossier_filled"
+    },
+    {
+      "slug": "oregon",
+      "name": "Oregon",
+      "location_type": "state",
+      "parent_slug": null,
+      "timezone": "America/Los_Angeles",
+      "page_template": "tonight_local",
+      "latitude": 44.7749,
+      "longitude": -117.8344,
+      "primary_verdict_point": "baker-city",
+      "sample_points": [
+        {
+          "id": "baker-city",
+          "name": "Baker City",
+          "lat": 44.7749,
+          "lng": -117.8344,
+          "role": "verdict_north",
+          "magnetic_latitude": 50.9
+        },
+        {
+          "id": "portland",
+          "name": "Portland",
+          "lat": 45.5152,
+          "lng": -122.6784,
+          "role": "population",
+          "magnetic_latitude": 51.0
+        },
+        {
+          "id": "bend",
+          "name": "Bend",
+          "lat": 44.0582,
+          "lng": -121.3153,
+          "role": "dark_sky",
+          "magnetic_latitude": 49.8
+        }
+      ],
+      "magnetic_latitude": 50.9,
+      "aurora_zone": "midlatitude_event",
+      "typical_kp_horizon": 6,
+      "typical_kp_overhead": 8,
+      "short_summer_nights": false,
+      "cluster_volume": 6780,
+      "weighted_kd": 18,
+      "primary_keyword": "northern lights oregon",
+      "variant_keywords": [
+        "aurora borealis oregon",
+        "northern lights oregon tonight"
+      ],
+      "cannibalization_pair": "Seattle is the adjacent city page (higher latitude, same marine-cloud problem). Eastern Oregon is clearer, not magnetically better.",
+      "nearby_slugs": [
+        "seattle",
+        "utah",
+        "colorado",
+        "alaska"
+      ],
+      "light_pollution_note": "Portland is a sizable dome. The high desert (Bend, the east side) is much darker. Northeast Oregon (Baker City) is the better magnetic+darkness compromise; Bend is darker but slightly farther from the oval.",
+      "leave_city_advice": "Leave Portland, and treat the Cascades as a cloud wall, not a viewing destination. If the west side is socked in, the dry east is the reason to drive.",
+      "north_south_split": "The useful split is west (wet, cloudy, populated) vs east (dry, dark), not a large north–south oval difference. Portland is not meaningfully closer to the oval than Baker City.",
+      "local_obstacles": "Pacific marine cloud on the west side; Portland glow; Bend is dark but not higher latitude; mountains blocking horizons.",
+      "best_months_note": "East-side clear nights in fall and winter are the realistic window. The coast is the wrong default.",
+      "local_faqs": [
+        {
+          "q": "Why is the headline Baker City, not Portland?",
+          "a": "This page’s tonight card uses northeast Oregon, not downtown Portland. Portland is listed separately and is usually worse because of clouds and skyglow."
+        },
+        {
+          "q": "Portland or Bend tonight?",
+          "a": "Bend wins on darkness and often on clouds. It does not win on magnetic latitude. Go east for sky, not because the oval is overhead there."
+        },
+        {
+          "q": "Is Oregon better than Washington?",
+          "a": "Seattle is a bit farther north. Oregon’s advantage is the dark, dry east, not a better oval."
+        },
+        {
+          "q": "The coast?",
+          "a": "No. Brighter marine layer, worse weather, no magnetic gain."
+        }
+      ],
+      "index_wave": 1,
+      "country": "US",
+      "viewing_direction": "north",
+      "seo_indexable": false,
+      "status": "dossier_filled"
+    },
+    {
+      "slug": "utah",
+      "name": "Utah",
+      "location_type": "state",
+      "parent_slug": null,
+      "timezone": "America/Denver",
+      "page_template": "tonight_local",
+      "latitude": 41.737,
+      "longitude": -111.8338,
+      "primary_verdict_point": "logan",
+      "sample_points": [
+        {
+          "id": "logan",
+          "name": "Logan",
+          "lat": 41.737,
+          "lng": -111.8338,
+          "role": "verdict_north",
+          "magnetic_latitude": 48.7
+        },
+        {
+          "id": "salt-lake-city",
+          "name": "Salt Lake City",
+          "lat": 40.7608,
+          "lng": -111.891,
+          "role": "population",
+          "magnetic_latitude": 47.7
+        },
+        {
+          "id": "antelope-island",
+          "name": "Antelope Island",
+          "lat": 40.958,
+          "lng": -112.206,
+          "role": "dark_sky",
+          "magnetic_latitude": 47.9
+        }
+      ],
+      "magnetic_latitude": 48.7,
+      "aurora_zone": "midlatitude_event",
+      "typical_kp_horizon": 7,
+      "typical_kp_overhead": 8,
+      "short_summer_nights": false,
+      "cluster_volume": 7290,
+      "weighted_kd": 22,
+      "primary_keyword": "northern lights utah",
+      "variant_keywords": [
+        "aurora borealis utah",
+        "northern lights in utah tonight",
+        "northern lights utah tonight",
+        "northern lights tonight utah",
+        "northern lights tonight salt lake city"
+      ],
+      "cannibalization_pair": "Salt Lake City tonight maps here. No Wave 1 SLC city page.",
+      "nearby_slugs": [
+        "colorado",
+        "oregon",
+        "illinois",
+        "alaska"
+      ],
+      "light_pollution_note": "The Wasatch Front (Ogden–Salt Lake–Provo) is a bright valley dome. Looking north over the Great Salt Lake (Antelope Island) reduces ground lights in that direction. Northern Utah (Logan, the Idaho border) is the in-state magnetic upgrade. The west desert is darker but not farther north.",
+      "leave_city_advice": "Leave downtown Salt Lake. A north-facing lake horizon is the local trick; driving north toward Logan / the Idaho line is the magnetic trick. Do not drive south to Zion for aurora.",
+      "north_south_split": "Northern Utah is the only realistic band. Southern Utah parks are dark and famous, and they are the wrong direction for the oval.",
+      "local_obstacles": "Wasatch Front glow; valley inversions and winter haze; mountains blocking north if you sit in the wrong canyon; mid-latitude oval (similar to Colorado).",
+      "best_months_note": "Dry air and high elevation help when a strong storm arrives. September–March. Southern parks are not the aurora play.",
+      "local_faqs": [
+        {
+          "q": "Salt Lake City tonight?",
+          "a": "Mapped to this state page. The city itself is a poor site; the headline uses northern Utah."
+        },
+        {
+          "q": "Antelope Island?",
+          "a": "A known public north-facing lake horizon near the metro. It is not wilderness dark sky, but it is a better local option than downtown."
+        },
+        {
+          "q": "What about Moab or Zion?",
+          "a": "Dark and the wrong way. Aurora in Utah is a northern-horizon, strong-storm problem."
+        }
+      ],
+      "index_wave": 1,
+      "country": "US",
+      "viewing_direction": "north",
+      "seo_indexable": false,
+      "status": "dossier_filled"
+    },
+    {
+      "slug": "alaska",
+      "name": "Alaska",
+      "location_type": "state",
+      "parent_slug": null,
+      "timezone": "America/Anchorage",
+      "page_template": "travel_plus_tonight",
+      "latitude": 64.8378,
+      "longitude": -147.7164,
+      "primary_verdict_point": "fairbanks",
+      "sample_points": [
+        {
+          "id": "fairbanks",
+          "name": "Fairbanks",
+          "lat": 64.8378,
+          "lng": -147.7164,
+          "role": "verdict_north",
+          "magnetic_latitude": 65.6
+        },
+        {
+          "id": "anchorage",
+          "name": "Anchorage",
+          "lat": 61.2181,
+          "lng": -149.9003,
+          "role": "population",
+          "magnetic_latitude": 61.9
+        },
+        {
+          "id": "juneau",
+          "name": "Juneau",
+          "lat": 58.3019,
+          "lng": -134.4197,
+          "role": "contrast_weather",
+          "magnetic_latitude": 61.6
+        }
+      ],
+      "magnetic_latitude": 65.6,
+      "aurora_zone": "oval",
+      "typical_kp_horizon": 1,
+      "typical_kp_overhead": 3,
+      "short_summer_nights": true,
+      "cluster_volume": 87800,
+      "weighted_kd": 36,
+      "primary_keyword": "northern lights alaska",
+      "variant_keywords": [
+        "best places to see aurora in alaska",
+        "alaska northern lights",
+        "aurora borealis alaska",
+        "northern lights aurora borealis alaska",
+        "alaska aurora forecast",
+        "aurora forecast alaska",
+        "alaska aurora",
+        "best time to see northern lights in alaska",
+        "aurora forecast for alaska",
+        "best time to visit alaska to see northern lights",
+        "northern lights forecast alaska",
+        "northern lights in alaska",
+        "aurora alaska",
+        "can you see the northern lights in alaska",
+        "when can you see the northern lights in alaska",
+        "alaska northern lights forecast",
+        "when are the northern lights in alaska",
+        "where to see aurora in alaska",
+        "northern lights tonight alaska"
+      ],
+      "cannibalization_pair": "fairbanks: city tonight + local viewing. This page is statewide — Interior vs Southcentral vs Southeast, season, and where to go. Fairbanks-named queries go to the city page. “Best places in Alaska” stays here.",
+      "nearby_slugs": [
+        "fairbanks",
+        "minnesota",
+        "maine",
+        "seattle"
+      ],
+      "light_pollution_note": "Fairbanks and Anchorage are small compared with Lower 48 metros but still worth leaving. Interior dark sites beat both cities. Southeast Alaska is not a light problem — it is a rain problem.",
+      "leave_city_advice": "In Interior Alaska, get out of Fairbanks glow (the city page covers that). Statewide, picking the Interior over Juneau matters more than picking a hill inside Anchorage.",
+      "north_south_split": "Interior (Fairbanks belt) sits under the oval. Anchorage still sees aurora often but weaker and lower on the horizon. Juneau and the Inside Passage are wet; clouds, not Kp, are the usual failure. The North Slope has polar night in winter and midnight sun in summer — not the default tourist play.",
+      "local_obstacles": "Midnight sun from roughly May through late July; Southeast rain and cloud; Anchorage weather vs Interior cold/clear; ice fog and inversions around Fairbanks in deep winter.",
+      "best_months_note": "Practical viewing is late August through mid-April. September and March are the usual travel compromise (dark enough, less brutal than December). Tonight in June is almost always a darkness no, even if the oval is active.",
+      "local_faqs": [
+        {
+          "q": "Fairbanks or Anchorage?",
+          "a": "Fairbanks. It sits closer to the oval, with colder, clearer winter skies more often. Anchorage is easier to reach and still works on active nights, but it is the compromise."
+        },
+        {
+          "q": "Can I see the northern lights in Alaska in summer?",
+          "a": "Not in the way visitors mean. Interior nights do not get dark around the solstice. Come from late August onward."
+        },
+        {
+          "q": "Where are the best places in Alaska?",
+          "a": "The Interior around Fairbanks is the default. Southcentral can work. Southeast is for scenery, not reliable aurora, because of rain."
+        },
+        {
+          "q": "Is tonight the main question in Alaska?",
+          "a": "For visitors it is often “which week / which part of the state.” This page keeps a tonight card, then answers season and region. Fairbanks has the local tonight tool."
+        }
+      ],
+      "index_wave": 1,
+      "country": "US",
+      "viewing_direction": "north",
+      "seo_indexable": false,
+      "status": "dossier_filled"
+    },
+    {
+      "slug": "fairbanks",
+      "name": "Fairbanks",
+      "location_type": "city",
+      "parent_slug": "alaska",
+      "timezone": "America/Anchorage",
+      "page_template": "travel_plus_tonight",
+      "latitude": 64.8378,
+      "longitude": -147.7164,
+      "primary_verdict_point": "fairbanks",
+      "sample_points": [
+        {
+          "id": "fairbanks",
+          "name": "Fairbanks",
+          "lat": 64.8378,
+          "lng": -147.7164,
+          "role": "population",
+          "magnetic_latitude": 65.6
+        }
+      ],
+      "magnetic_latitude": 65.6,
+      "aurora_zone": "oval",
+      "typical_kp_horizon": 1,
+      "typical_kp_overhead": 3,
+      "short_summer_nights": true,
+      "cluster_volume": 19790,
+      "weighted_kd": 32,
+      "primary_keyword": "fairbanks northern lights",
+      "variant_keywords": [
+        "fairbanks alaska northern lights",
+        "aurora forecast fairbanks",
+        "fairbanks alaska aurora borealis tours",
+        "fairbanks alaska northern lights tour",
+        "fairbanks aurora",
+        "fairbanks aurora prediction",
+        "aurora borealis fairbanks",
+        "what time of year to see northern lights in fairbanks"
+      ],
+      "cannibalization_pair": "alaska: statewide season and regions. This page is Fairbanks tonight, darkness, and local glow. Tour keywords are mapped here but v1 does not sell tours.",
+      "nearby_slugs": [
+        "alaska",
+        "minnesota",
+        "maine"
+      ],
+      "light_pollution_note": "Fairbanks is a small city with a noticeable winter dome, especially in cold inversions. Local high points and dark roads outside town (Murphy Dome, Pedro Dome, Chena country) are the usual advice — named as regions, not as parking instructions.",
+      "leave_city_advice": "Even here, downtown Fairbanks is good enough on a strong overhead display and poor for a faint one. Get away from town lights and look north to east, which is the usual oval direction.",
+      "north_south_split": null,
+      "local_obstacles": "Not dark from late May through late July; ice fog and low cloud in deep winter; temperature inversions trapping moisture and glow; tour-bus traffic at well-known pullouts on peak nights.",
+      "best_months_note": "Late August to mid-April. September and March are the common trip months. December–January are darkest and coldest. Solstice weeks are a darkness no.",
+      "local_faqs": [
+        {
+          "q": "Can I see the northern lights from downtown Fairbanks?",
+          "a": "On a strong, overhead night, sometimes. On a typical active night you still want to leave the glow. This is not Chicago, but it is not a wilderness site either."
+        },
+        {
+          "q": "What time of year?",
+          "a": "When it is actually dark: late August through mid-April. Summer trips for aurora are the wrong product."
+        },
+        {
+          "q": "Do I need a tour?",
+          "a": "This site does not book tours. Clouds, darkness, and leaving town lights are the decision. Tours are optional logistics, not a visibility requirement."
+        },
+        {
+          "q": "How is this different from the Alaska page?",
+          "a": "Alaska is Interior vs Anchorage vs Juneau and when to visit the state. Fairbanks is tonight at this city."
+        }
+      ],
+      "index_wave": 1,
+      "country": "US",
+      "viewing_direction": "north",
+      "seo_indexable": false,
+      "status": "dossier_filled"
+    }
+  ]
+}

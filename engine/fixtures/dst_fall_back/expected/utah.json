@@ -1,0 +1,251 @@
+{
+  "location_slug": "utah",
+  "headline_point_id": "logan",
+  "headline_point_name": "Logan",
+  "generated_at": "2026-11-01T05:40:00+00:00",
+  "valid_until": "2026-11-01T06:05:00+00:00",
+  "status": "MAYBE",
+  "confidence": "low",
+  "best_window_start": "2026-11-01T00:45:00-06:00",
+  "best_window_end": "2026-11-01T05:45:00-07:00",
+  "main_obstacle": "FORECAST_FAR",
+  "main_obstacle_text": "Later hours rely on a coarser forecast, not the live oval.",
+  "reason_codes": [
+    "AURORA_NO_REACH",
+    "FORECAST_FAR"
+  ],
+  "look_toward": "north",
+  "answer_sentence": "MAYBE in Utah (Logan area). Best window 12:45 AM–5:45 AM MDT. Main issue: Later hours rely on a coarser forecast, not the live oval.",
+  "sources": {
+    "ovation_obs": "2026-11-01T05:20:00+00:00",
+    "ovation_fcst": "2026-11-01T06:15:00+00:00",
+    "ovation_ok": true
+  },
+  "points": [
+    {
+      "id": "logan",
+      "name": "Logan",
+      "status": "MAYBE",
+      "confidence": "low",
+      "aurora_reach": "none",
+      "cloud_block": "clear",
+      "urban": false,
+      "main_obstacle": "FORECAST_FAR"
+    },
+    {
+      "id": "salt-lake-city",
+      "name": "Salt Lake City",
+      "status": "MAYBE",
+      "confidence": "low",
+      "aurora_reach": "none",
+      "cloud_block": "clear",
+      "urban": true,
+      "main_obstacle": "FORECAST_FAR"
+    },
+    {
+      "id": "antelope-island",
+      "name": "Antelope Island",
+      "status": "MAYBE",
+      "confidence": "low",
+      "aurora_reach": "none",
+      "cloud_block": "clear",
+      "urban": false,
+      "main_obstacle": "FORECAST_FAR"
+    }
+  ],
+  "windows": [
+    {
+      "start": "2026-10-31T23:15:00-06:00",
+      "end": "2026-10-31T23:45:00-06:00",
+      "skip": false,
+      "status": "NO",
+      "aurora_reach": "none",
+      "cloud_block": "clear",
+      "source": "ovation",
+      "codes": [
+        "AURORA_NO_REACH"
+      ]
+    },
+    {
+      "start": "2026-10-31T23:45:00-06:00",
+      "end": "2026-11-01T00:15:00-06:00",
+      "skip": false,
+      "status": "NO",
+      "aurora_reach": "none",
+      "cloud_block": "clear",
+      "source": "ovation",
+      "codes": [
+        "AURORA_NO_REACH"
+      ]
+    },
+    {
+      "start": "2026-11-01T00:15:00-06:00",
+      "end": "2026-11-01T00:45:00-06:00",
+      "skip": false,
+      "status": "NO",
+      "aurora_reach": "none",
+      "cloud_block": "clear",
+      "source": "ovation",
+      "codes": [
+        "AURORA_NO_REACH"
+      ]
+    },
+    {
+      "start": "2026-11-01T00:45:00-06:00",
+      "end": "2026-11-01T01:15:00-06:00",
+      "skip": false,
+      "status": "MAYBE",
+      "aurora_reach": "weak",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "FORECAST_FAR"
+      ]
+    },
+    {
+      "start": "2026-11-01T01:15:00-06:00",
+      "end": "2026-11-01T01:45:00-06:00",
+      "skip": false,
+      "status": "MAYBE",
+      "aurora_reach": "weak",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "FORECAST_FAR"
+      ]
+    },
+    {
+      "start": "2026-11-01T01:45:00-06:00",
+      "end": "2026-11-01T02:15:00-07:00",
+      "skip": false,
+      "status": "MAYBE",
+      "aurora_reach": "weak",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "FORECAST_FAR"
+      ]
+    },
+    {
+      "start": "2026-11-01T02:15:00-07:00",
+      "end": "2026-11-01T02:45:00-07:00",
+      "skip": false,
+      "status": "MAYBE",
+      "aurora_reach": "weak",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "FORECAST_FAR"
+      ]
+    },
+    {
+      "start": "2026-11-01T02:45:00-07:00",
+      "end": "2026-11-01T03:15:00-07:00",
+      "skip": false,
+      "status": "MAYBE",
+      "aurora_reach": "weak",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "FORECAST_FAR"
+      ]
+    },
+    {
+      "start": "2026-11-01T03:15:00-07:00",
+      "end": "2026-11-01T03:45:00-07:00",
+      "skip": false,
+      "status": "MAYBE",
+      "aurora_reach": "weak",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "FORECAST_FAR"
+      ]
+    },
+    {
+      "start": "2026-11-01T03:45:00-07:00",
+      "end": "2026-11-01T04:15:00-07:00",
+      "skip": false,
+      "status": "MAYBE",
+      "aurora_reach": "weak",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "FORECAST_FAR"
+      ]
+    },
+    {
+      "start": "2026-11-01T04:15:00-07:00",
+      "end": "2026-11-01T04:45:00-07:00",
+      "skip": false,
+      "status": "MAYBE",
+      "aurora_reach": "weak",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "FORECAST_FAR"
+      ]
+    },
+    {
+      "start": "2026-11-01T04:45:00-07:00",
+      "end": "2026-11-01T05:15:00-07:00",
+      "skip": false,
+      "status": "MAYBE",
+      "aurora_reach": "weak",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "FORECAST_FAR"
+      ]
+    },
+    {
+      "start": "2026-11-01T05:15:00-07:00",
+      "end": "2026-11-01T05:45:00-07:00",
+      "skip": false,
+      "status": "MAYBE",
+      "aurora_reach": "weak",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "FORECAST_FAR"
+      ]
+    },
+    {
+      "start": "2026-11-01T05:45:00-07:00",
+      "end": "2026-11-01T06:15:00-07:00",
+      "skip": true,
+      "status": null,
+      "aurora_reach": null,
+      "cloud_block": "clear",
+      "source": null,
+      "codes": [
+        "NOT_DARK_YET"
+      ]
+    },
+    {
+      "start": "2026-11-01T06:15:00-07:00",
+      "end": "2026-11-01T06:45:00-07:00",
+      "skip": true,
+      "status": null,
+      "aurora_reach": null,
+      "cloud_block": "clear",
+      "source": null,
+      "codes": [
+        "NOT_DARK_YET"
+      ]
+    },
+    {
+      "start": "2026-11-01T06:45:00-07:00",
+      "end": "2026-11-01T07:15:00-07:00",
+      "skip": true,
+      "status": null,
+      "aurora_reach": null,
+      "cloud_block": "clear",
+      "source": null,
+      "codes": [
+        "NOT_DARK_YET"
+      ]
+    }
+  ],
+  "seo_indexable": false
+}

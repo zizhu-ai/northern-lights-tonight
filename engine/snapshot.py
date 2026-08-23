@@ -89,6 +89,59 @@ def args_offline_or_fresh(offline: bool, age: float, max_age: float) -> bool:
     return offline or age < max_age
 
 
+def _point_key(loc: dict, point: dict) -> str:
+    return f"{loc['slug']}/{point['id']}"
+
+
+def fetch_sources(locations: list[dict], offline: bool) -> tuple[dict | None, list, dict, list[str]]:
+    """Fetch raw inputs independently and report every failed source."""
+    errors: list[str] = []
+
+    ovation_raw = None
+    try:
+        ovation_raw = (
+            json.loads((CACHE / "ovation.json").read_text())
+            if offline
+            else _get(OVATION_URL, "ovation.json", 8)
+        )
+        parsed = parse_ovation(ovation_raw)
+        if parsed.get("obs") is None:
+            raise ValueError("missing Observation Time")
+    except Exception as exc:
+        errors.append(f"ovation fetch failed: {exc}")
+        ovation_raw = None
+
+    kp_raw: list = []
+    try:
+        candidate = (
+            json.loads((CACHE / "kp.json").read_text())
+            if offline
+            else _get(KP_URL, "kp.json", 15)
+        )
+        if not isinstance(candidate, list):
+            raise ValueError("Kp payload is not a list")
+        kp_raw = candidate
+    except Exception as exc:
+        errors.append(f"kp fetch failed: {exc}")
+
+    cloud_by_point: dict[str, dict | None] = {}
+    cloud_by_coord: dict[str, dict | None] = {}
+    for loc in locations:
+        for point in loc["sample_points"]:
+            coord_key = f"{point['lat']:.3f},{point['lng']:.3f}"
+            if coord_key not in cloud_by_coord:
+                try:
+                    cloud_by_coord[coord_key] = fetch_clouds(
+                        point["lat"], point["lng"], loc["timezone"], offline
+                    )
+                except Exception as exc:
+                    errors.append(f"cloud fetch failed {coord_key}: {exc}")
+                    cloud_by_coord[coord_key] = None
+            cloud_by_point[_point_key(loc, point)] = cloud_by_coord[coord_key]
+
+    return ovation_raw, kp_raw, cloud_by_point, errors
+
+
 # --- astro -----------------------------------------------------------------
 
 def _julian(dt: datetime) -> float:
@@ -725,6 +778,79 @@ def _answer(loc: dict, head: dict, now_local: datetime) -> str:
     return f"UNKNOWN{extra}. We are not guessing. {issue}"
 
 
+def compute_bundle(
+    now: datetime,
+    ovation_envelope: dict | None,
+    kp_envelope: list | None,
+    cloud_envelopes: dict,
+    dossiers: dict | list,
+) -> dict:
+    """Pure Wave 1 computation: no network, cache, or filesystem access."""
+    if now.tzinfo is None:
+        raise ValueError("now must be timezone-aware")
+    now_utc = now.astimezone(timezone.utc)
+    locations = dossiers["locations"] if isinstance(dossiers, dict) else dossiers
+
+    ovation = None
+    if ovation_envelope is not None:
+        try:
+            candidate = parse_ovation(ovation_envelope)
+            if candidate.get("obs") is not None:
+                ovation = candidate
+        except (KeyError, TypeError, ValueError):
+            ovation = None
+
+    kp_series = kp_envelope if isinstance(kp_envelope, list) else []
+    ovation_ok = False
+    stale_45 = stale_90 = True
+    if ovation and ovation.get("obs"):
+        age = now_utc - ovation["obs"]
+        stale_45 = age > timedelta(minutes=45)
+        stale_90 = age > timedelta(minutes=90)
+        ovation_ok = not stale_90
+
+    snapshots = []
+    for loc in locations:
+        clouds_for_location = {}
+        for point in loc["sample_points"]:
+            coord_key = f"{point['lat']:.3f},{point['lng']:.3f}"
+            clouds_for_location[coord_key] = cloud_envelopes.get(
+                _point_key(loc, point), cloud_envelopes.get(coord_key)
+            )
+        snapshots.append(
+            snapshot_location(
+                loc,
+                now_utc,
+                ovation,
+                kp_series,
+                clouds_for_location,
+                ovation_ok,
+                stale_45,
+                stale_90,
+            )
+        )
+
+    return {
+        "generated_at": now_utc.isoformat(),
+        "ovation_ok": ovation_ok,
+        "seo_indexable": False,
+        "locations": snapshots,
+    }
+
+
+def write_bundle(bundle: dict, output_dir: Path | None = None) -> None:
+    """Serialize a computed bundle using the producer's existing JSON format."""
+    output_dir = output_dir or OUT
+    output_dir.mkdir(parents=True, exist_ok=True)
+    for snapshot in bundle["locations"]:
+        (output_dir / f"{snapshot['location_slug']}.json").write_text(
+            json.dumps(snapshot, ensure_ascii=False, indent=2) + "\n"
+        )
+    (output_dir / "latest.json").write_text(
+        json.dumps(bundle, ensure_ascii=False, indent=2) + "\n"
+    )
+
+
 def fmt_table(snaps: list[dict]) -> str:
     lines = [f"{'slug':16} {'pt':16} {'st':8} {'conf':7} {'obstacle':22} window"]
     for s in snaps:
@@ -739,7 +865,7 @@ def fmt_table(snaps: list[dict]) -> str:
     return "\n".join(lines)
 
 
-def main():
+def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--slug", help="only this location")
     ap.add_argument("--offline", action="store_true")
@@ -753,52 +879,16 @@ def main():
         if not locs:
             sys.exit(f"unknown slug {args.slug}")
 
-    ovation_raw = None
-    kp_series = []
-    try:
-        ovation_raw = _get(OVATION_URL, "ovation.json", 8) if not args.offline else json.loads((CACHE / "ovation.json").read_text())
-        kp_series = _get(KP_URL, "kp.json", 15) if not args.offline else json.loads((CACHE / "kp.json").read_text())
-    except Exception as e:
-        print(f"aurora fetch failed: {e}", file=sys.stderr)
+    ovation_raw, kp_raw, cloud_by_point, errors = fetch_sources(locs, args.offline)
+    for error in errors:
+        print(error, file=sys.stderr)
 
-    ovation = parse_ovation(ovation_raw) if ovation_raw else None
-    ovation_ok = False
-    s45 = s90 = True
-    if ovation and ovation.get("obs"):
-        age = now - ovation["obs"]
-        s45 = age > timedelta(minutes=45)
-        s90 = age > timedelta(minutes=90)
-        ovation_ok = not s90
-
-    cloud_by_key = {}
-    for loc in locs:
-        for p in loc["sample_points"]:
-            key = f"{p['lat']:.3f},{p['lng']:.3f}"
-            if key in cloud_by_key:
-                continue
-            try:
-                cloud_by_key[key] = fetch_clouds(p["lat"], p["lng"], loc["timezone"], args.offline)
-            except Exception as e:
-                print(f"cloud fail {key}: {e}", file=sys.stderr)
-                cloud_by_key[key] = None
-
-    OUT.mkdir(parents=True, exist_ok=True)
-    snaps = []
-    for loc in locs:
-        snap = snapshot_location(loc, now, ovation, kp_series, cloud_by_key, ovation_ok, s45, s90)
-        snaps.append(snap)
-        (OUT / f"{loc['slug']}.json").write_text(json.dumps(snap, ensure_ascii=False, indent=2) + "\n")
-
-    bundle = {
-        "generated_at": now.isoformat(),
-        "ovation_ok": ovation_ok,
-        "seo_indexable": False,
-        "locations": snaps,
-    }
-    (OUT / "latest.json").write_text(json.dumps(bundle, ensure_ascii=False, indent=2) + "\n")
-    print(fmt_table(snaps))
-    print(f"\nwrote {len(snaps)} snapshots → {OUT}")
+    bundle = compute_bundle(now, ovation_raw, kp_raw, cloud_by_point, locs)
+    write_bundle(bundle)
+    print(fmt_table(bundle["locations"]))
+    print(f"\nwrote {len(bundle['locations'])} snapshots → {OUT}")
+    return 1 if errors else 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

@@ -8,6 +8,7 @@
     "snapshot": "python3 engine/snapshot.py"
   },
   "dependencies": {
+    "@vercel/blob": "2.8.0",
     "next": "^15.4.6",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
