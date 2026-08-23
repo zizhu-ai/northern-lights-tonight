@@ -2,8 +2,8 @@
   "location_slug": "chicago",
   "headline_point_id": "chicago",
   "headline_point_name": "Chicago",
-  "generated_at": "2026-08-23T04:19:09.258110+00:00",
-  "valid_until": "2026-08-23T04:44:09.258110+00:00",
+  "generated_at": "2026-08-23T04:22:34.127289+00:00",
+  "valid_until": "2026-08-23T04:47:34.127289+00:00",
   "status": "NO",
   "confidence": "high",
   "best_window_start": null,
@@ -16,8 +16,8 @@
   "look_toward": "north",
   "answer_sentence": "NO. Not worth a special trip tonight. Aurora activity is not expected to reach Chicago tonight.",
   "sources": {
-    "ovation_obs": "2026-08-23T04:10:00+00:00",
-    "ovation_fcst": "2026-08-23T05:14:00+00:00",
+    "ovation_obs": "2026-08-23T04:15:00+00:00",
+    "ovation_fcst": "2026-08-23T05:19:00+00:00",
     "ovation_ok": true
   },
   "points": [
