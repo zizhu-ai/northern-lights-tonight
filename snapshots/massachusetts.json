@@ -2,8 +2,8 @@
   "location_slug": "massachusetts",
   "headline_point_id": "newburyport",
   "headline_point_name": "Newburyport",
-  "generated_at": "2026-08-23T10:54:45.965607+00:00",
-  "valid_until": "2026-08-23T11:19:45.965607+00:00",
+  "generated_at": "2026-08-23T11:15:46.353091+00:00",
+  "valid_until": "2026-08-23T11:40:46.353091+00:00",
   "status": "NO",
   "confidence": "high",
   "best_window_start": null,
@@ -16,8 +16,8 @@
   "look_toward": "north",
   "answer_sentence": "NO (Newburyport area). Not worth a special trip tonight. Aurora activity is not expected to reach Massachusetts tonight.",
   "sources": {
-    "ovation_obs": "2026-08-23T10:46:00+00:00",
-    "ovation_fcst": "2026-08-23T11:47:00+00:00",
+    "ovation_obs": "2026-08-23T11:05:00+00:00",
+    "ovation_fcst": "2026-08-23T12:07:00+00:00",
     "ovation_ok": true
   },
   "points": [

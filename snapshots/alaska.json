@@ -2,31 +2,32 @@
   "location_slug": "alaska",
   "headline_point_id": "fairbanks",
   "headline_point_name": "Fairbanks",
-  "generated_at": "2026-08-23T10:54:45.965607+00:00",
-  "valid_until": "2026-08-23T11:19:45.965607+00:00",
-  "status": "MAYBE",
-  "confidence": "high",
-  "best_window_start": "2026-08-23T02:45:00-08:00",
-  "best_window_end": "2026-08-23T03:15:00-08:00",
+  "generated_at": "2026-08-23T11:15:46.353091+00:00",
+  "valid_until": "2026-08-23T11:40:46.353091+00:00",
+  "status": "GO",
+  "confidence": "low",
+  "best_window_start": "2026-08-24T00:15:00-08:00",
+  "best_window_end": "2026-08-24T03:45:00-08:00",
   "main_obstacle": "AURORA_HORIZON_ONLY",
   "main_obstacle_text": "Any display would likely stay low on the northern horizon.",
   "reason_codes": [
-    "AURORA_HORIZON_ONLY"
+    "AURORA_HORIZON_ONLY",
+    "FORECAST_FAR"
   ],
   "look_toward": "north",
-  "answer_sentence": "MAYBE in Alaska (Fairbanks area). Best window 2:45 AM–3:15 AM AKDT. Main issue: Any display would likely stay low on the northern horizon.",
+  "answer_sentence": "GO (Fairbanks area). Best window 12:15 AM–3:45 AM AKDT. Any display would likely stay low on the northern horizon.",
   "sources": {
-    "ovation_obs": "2026-08-23T10:46:00+00:00",
-    "ovation_fcst": "2026-08-23T11:47:00+00:00",
+    "ovation_obs": "2026-08-23T11:05:00+00:00",
+    "ovation_fcst": "2026-08-23T12:07:00+00:00",
     "ovation_ok": true
   },
   "points": [
     {
       "id": "fairbanks",
       "name": "Fairbanks",
-      "status": "MAYBE",
-      "confidence": "high",
-      "aurora_reach": "weak",
+      "status": "GO",
+      "confidence": "low",
+      "aurora_reach": "horizon",
       "cloud_block": "clear",
       "urban": false,
       "main_obstacle": "AURORA_HORIZON_ONLY"
@@ -37,7 +38,7 @@
       "status": "NO",
       "confidence": "high",
       "aurora_reach": "none",
-      "cloud_block": null,
+      "cloud_block": "mixed",
       "urban": true,
       "main_obstacle": "AURORA_NO_REACH"
     },
@@ -54,84 +55,211 @@
   ],
   "windows": [
     {
-      "start": "2026-08-23T02:45:00-08:00",
-      "end": "2026-08-23T03:15:00-08:00",
-      "skip": false,
-      "status": "MAYBE",
-      "aurora_reach": "weak",
+      "start": "2026-08-23T21:45:00-08:00",
+      "end": "2026-08-23T22:15:00-08:00",
+      "skip": true,
+      "status": null,
+      "aurora_reach": null,
       "cloud_block": "clear",
-      "source": "ovation",
-      "codes": [
-        "AURORA_HORIZON_ONLY"
-      ]
-    },
-    {
-      "start": "2026-08-23T03:15:00-08:00",
-      "end": "2026-08-23T03:45:00-08:00",
-      "skip": true,
-      "status": null,
-      "aurora_reach": null,
-      "cloud_block": "mixed",
       "source": null,
       "codes": [
         "NOT_DARK_YET"
       ]
     },
     {
-      "start": "2026-08-23T03:45:00-08:00",
-      "end": "2026-08-23T04:15:00-08:00",
+      "start": "2026-08-23T22:15:00-08:00",
+      "end": "2026-08-23T22:45:00-08:00",
       "skip": true,
       "status": null,
       "aurora_reach": null,
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": null,
       "codes": [
         "NOT_DARK_YET"
       ]
     },
     {
-      "start": "2026-08-23T04:15:00-08:00",
-      "end": "2026-08-23T04:45:00-08:00",
+      "start": "2026-08-23T22:45:00-08:00",
+      "end": "2026-08-23T23:15:00-08:00",
       "skip": true,
       "status": null,
       "aurora_reach": null,
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": null,
       "codes": [
         "NOT_DARK_YET"
       ]
     },
     {
-      "start": "2026-08-23T04:45:00-08:00",
-      "end": "2026-08-23T05:15:00-08:00",
+      "start": "2026-08-23T23:15:00-08:00",
+      "end": "2026-08-23T23:45:00-08:00",
       "skip": true,
       "status": null,
       "aurora_reach": null,
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": null,
       "codes": [
         "NOT_DARK_YET"
       ]
     },
     {
-      "start": "2026-08-23T05:15:00-08:00",
-      "end": "2026-08-23T05:45:00-08:00",
+      "start": "2026-08-23T23:45:00-08:00",
+      "end": "2026-08-24T00:15:00-08:00",
       "skip": true,
       "status": null,
       "aurora_reach": null,
-      "cloud_block": "mixed",
+      "cloud_block": "clear",
       "source": null,
       "codes": [
         "NOT_DARK_YET"
       ]
     },
     {
-      "start": "2026-08-23T05:45:00-08:00",
-      "end": "2026-08-23T06:15:00-08:00",
+      "start": "2026-08-24T00:15:00-08:00",
+      "end": "2026-08-24T00:45:00-08:00",
+      "skip": false,
+      "status": "GO",
+      "aurora_reach": "horizon",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "AURORA_HORIZON_ONLY",
+        "FORECAST_FAR"
+      ]
+    },
+    {
+      "start": "2026-08-24T00:45:00-08:00",
+      "end": "2026-08-24T01:15:00-08:00",
+      "skip": false,
+      "status": "GO",
+      "aurora_reach": "horizon",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "AURORA_HORIZON_ONLY",
+        "FORECAST_FAR"
+      ]
+    },
+    {
+      "start": "2026-08-24T01:15:00-08:00",
+      "end": "2026-08-24T01:45:00-08:00",
+      "skip": false,
+      "status": "GO",
+      "aurora_reach": "horizon",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "AURORA_HORIZON_ONLY",
+        "FORECAST_FAR"
+      ]
+    },
+    {
+      "start": "2026-08-24T01:45:00-08:00",
+      "end": "2026-08-24T02:15:00-08:00",
+      "skip": false,
+      "status": "GO",
+      "aurora_reach": "horizon",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "AURORA_HORIZON_ONLY",
+        "FORECAST_FAR"
+      ]
+    },
+    {
+      "start": "2026-08-24T02:15:00-08:00",
+      "end": "2026-08-24T02:45:00-08:00",
+      "skip": false,
+      "status": "GO",
+      "aurora_reach": "horizon",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "AURORA_HORIZON_ONLY",
+        "FORECAST_FAR"
+      ]
+    },
+    {
+      "start": "2026-08-24T02:45:00-08:00",
+      "end": "2026-08-24T03:15:00-08:00",
+      "skip": false,
+      "status": "GO",
+      "aurora_reach": "horizon",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "AURORA_HORIZON_ONLY",
+        "FORECAST_FAR"
+      ]
+    },
+    {
+      "start": "2026-08-24T03:15:00-08:00",
+      "end": "2026-08-24T03:45:00-08:00",
+      "skip": false,
+      "status": "GO",
+      "aurora_reach": "horizon",
+      "cloud_block": "clear",
+      "source": "kp_forecast",
+      "codes": [
+        "AURORA_HORIZON_ONLY",
+        "FORECAST_FAR"
+      ]
+    },
+    {
+      "start": "2026-08-24T03:45:00-08:00",
+      "end": "2026-08-24T04:15:00-08:00",
       "skip": true,
       "status": null,
       "aurora_reach": null,
-      "cloud_block": "socked",
+      "cloud_block": "clear",
+      "source": null,
+      "codes": [
+        "NOT_DARK_YET"
+      ]
+    },
+    {
+      "start": "2026-08-24T04:15:00-08:00",
+      "end": "2026-08-24T04:45:00-08:00",
+      "skip": true,
+      "status": null,
+      "aurora_reach": null,
+      "cloud_block": "clear",
+      "source": null,
+      "codes": [
+        "NOT_DARK_YET"
+      ]
+    },
+    {
+      "start": "2026-08-24T04:45:00-08:00",
+      "end": "2026-08-24T05:15:00-08:00",
+      "skip": true,
+      "status": null,
+      "aurora_reach": null,
+      "cloud_block": "clear",
+      "source": null,
+      "codes": [
+        "NOT_DARK_YET"
+      ]
+    },
+    {
+      "start": "2026-08-24T05:15:00-08:00",
+      "end": "2026-08-24T05:45:00-08:00",
+      "skip": true,
+      "status": null,
+      "aurora_reach": null,
+      "cloud_block": "clear",
+      "source": null,
+      "codes": [
+        "NOT_DARK_YET"
+      ]
+    },
+    {
+      "start": "2026-08-24T05:45:00-08:00",
+      "end": "2026-08-24T06:15:00-08:00",
+      "skip": true,
+      "status": null,
+      "aurora_reach": null,
+      "cloud_block": "clear",
       "source": null,
       "codes": [
         "NOT_DARK_YET"
