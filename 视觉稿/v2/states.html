@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Visual mock v2 · Four slips</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="tokens.css" />
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="home.html">
+      <span class="mark" aria-hidden="true"></span>
+      Northern Lights Tonight
+    </a>
+    <p class="nav-desk" style="color: var(--muted); font-weight: 400;">Four verdicts, one slip</p>
+  </header>
+
+  <main class="page page-forecast">
+    <p class="place-line">Same skeleton. Word, color, and a few fields change.</p>
+    <h1 class="h1">GO, MAYBE, NO, UNKNOWN</h1>
+    <p class="lead">NO is gray, not alarm red. UNKNOWN is calm, not an error screen. The slip is a visor card, not a night-sky window.</p>
+
+    <div class="gallery" style="margin-top: 28px;">
+      <section class="slip slip-go" aria-label="GO">
+        <p class="slip-word">Go</p>
+        <p class="slip-human">Conditions line up well enough to try.</p>
+        <dl class="slip-facts">
+          <div><dt>Best window</dt><dd>11:00 PM – 1:20 AM</dd></div>
+          <div><dt>Main issue</dt><dd>None</dd></div>
+          <div><dt>Look</dt><dd>North</dd></div>
+          <div><dt>Confidence</dt><dd>High</dd></div>
+        </dl>
+        <div class="slip-foot">
+          <span class="updated">Updated 4 minutes ago</span>
+          <button class="btn btn-ghost" type="button">Share</button>
+        </div>
+      </section>
+
+      <section class="slip slip-maybe" aria-label="MAYBE">
+        <p class="slip-word">Maybe</p>
+        <p class="slip-human">Not a definite show. Worth a look if you can get a dark north sky.</p>
+        <dl class="slip-facts">
+          <div><dt>Best window</dt><dd>10:40 PM – 12:10 AM</dd></div>
+          <div><dt>Main issue</dt><dd>Clouds are the main uncertainty</dd></div>
+          <div><dt>Look</dt><dd>North</dd></div>
+          <div><dt>Confidence</dt><dd>Medium</dd></div>
+        </dl>
+        <div class="slip-foot">
+          <span class="updated">Updated 6 minutes ago</span>
+          <button class="btn btn-ghost" type="button">Share</button>
+        </div>
+      </section>
+
+      <section class="slip slip-no" aria-label="NO">
+        <p class="slip-word">No</p>
+        <p class="slip-human">Not worth a special trip tonight.</p>
+        <dl class="slip-facts">
+          <div><dt>Best window</dt><dd>—</dd></div>
+          <div><dt>Main issue</dt><dd>Aurora is not expected to reach Ohio</dd></div>
+          <div><dt>Look</dt><dd>North</dd></div>
+          <div><dt>Confidence</dt><dd>High</dd></div>
+        </dl>
+        <div class="slip-foot">
+          <span class="updated">Updated 4 minutes ago</span>
+          <button class="btn btn-ghost" type="button">Share</button>
+        </div>
+      </section>
+
+      <section class="slip slip-unknown" aria-label="UNKNOWN">
+        <p class="slip-word">Unknown</p>
+        <p class="slip-human">We are not guessing.</p>
+        <dl class="slip-facts">
+          <div><dt>Best window</dt><dd>—</dd></div>
+          <div><dt>Main issue</dt><dd>Aurora data is unavailable right now</dd></div>
+          <div><dt>Look</dt><dd>—</dd></div>
+          <div><dt>Confidence</dt><dd>—</dd></div>
+        </dl>
+        <div class="slip-foot">
+          <span class="updated">Try again when a snapshot exists</span>
+          <button class="btn btn-ghost" type="button">Try again</button>
+        </div>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

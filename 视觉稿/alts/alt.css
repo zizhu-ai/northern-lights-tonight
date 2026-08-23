@@ -1,0 +1,121 @@
+/* Two daytime alternatives. Chrome + type stay on v2.
+   A = compact light slip. B = no slip, stamp on the page. */
+
+.alt-banner {
+  margin: 0;
+  padding: 8px 16px;
+  background: oklch(0.97 0.01 140);
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+  border-bottom: 1px solid var(--line);
+}
+
+/* A — light, smaller slip */
+.theme-light .slip {
+  margin-top: 16px;
+  padding: 14px 16px 12px;
+  background: var(--bg);
+  color: var(--ink);
+  border: 1px solid var(--line-strong);
+  border-radius: 4px;
+  box-shadow: 0 6px 20px oklch(0.22 0.03 140 / 0.08);
+}
+
+.theme-light .slip-word {
+  font-size: clamp(1.85rem, 5.5vw, 2.6rem);
+  line-height: 0.95;
+}
+
+.theme-light .slip-maybe .slip-word { color: var(--maybe-ink); }
+.theme-light .slip-go .slip-word { color: var(--go-ink); }
+.theme-light .slip-no .slip-word { color: var(--no-ink); }
+.theme-light .slip-unknown .slip-word { color: var(--unknown-ink); }
+
+.theme-light .slip-human {
+  margin-top: 6px;
+  color: var(--ink);
+  font-size: 15px;
+}
+
+.theme-light .slip-facts {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+  gap: 10px 16px;
+}
+
+.theme-light .slip-facts dt { color: var(--muted); }
+.theme-light .slip-facts dd { color: var(--ink); }
+
+.theme-light .updated { color: var(--muted); }
+
+.theme-light .btn-ghost {
+  min-height: 44px;
+  border-color: var(--line-strong);
+  background: var(--bg);
+  color: var(--ink);
+}
+
+.theme-light .btn-ghost:hover { background: var(--surface); }
+
+@media (min-width: 768px) {
+  .theme-light .slip-facts {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* B — stamp on paper, no card */
+.theme-stamp .verdict-plain {
+  margin-top: 18px;
+  padding: 0;
+  background: none;
+  border: 0;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+.theme-stamp .slip-word {
+  font-size: clamp(2.2rem, 7vw, 3.4rem);
+  line-height: 0.92;
+}
+
+.theme-stamp .slip-maybe .slip-word { color: var(--maybe-ink); }
+.theme-stamp .slip-go .slip-word { color: var(--go-ink); }
+.theme-stamp .slip-no .slip-word { color: var(--no-ink); }
+.theme-stamp .slip-unknown .slip-word { color: var(--unknown-ink); }
+
+.theme-stamp .slip-human {
+  margin-top: 8px;
+  max-width: 34em;
+  color: var(--ink);
+}
+
+.theme-stamp .slip-facts {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.theme-stamp .slip-facts dt { color: var(--muted); }
+.theme-stamp .slip-facts dd { color: var(--ink); }
+
+.theme-stamp .updated { color: var(--muted); }
+
+.theme-stamp .btn-ghost {
+  min-height: 44px;
+  border-color: var(--line-strong);
+  background: var(--bg);
+  color: var(--ink);
+}
+
+.theme-stamp .slip-foot {
+  margin-top: 12px;
+  padding-top: 0;
+}
+
+@media (min-width: 768px) {
+  .theme-stamp .slip-facts {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}

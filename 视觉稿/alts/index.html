@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>重新构图 · 两版</title>
+  <style>
+    body { margin: 0; font: 16px/1.45 ui-sans-serif, system-ui, sans-serif; background: #f3f3f3; color: #1a1a1a; }
+    header { padding: 20px 24px; background: #fff; border-bottom: 1px solid #ddd; }
+    h1 { margin: 0 0 8px; font-size: 22px; }
+    header p { margin: 0 0 10px; max-width: 40em; color: #333; }
+    nav a { margin-right: 18px; }
+    section { padding: 24px; }
+    h2 { margin: 0 0 6px; font-size: 18px; }
+    .note { margin: 0 0 14px; color: #444; max-width: 42em; }
+    .pair { display: grid; gap: 14px; }
+    @media (min-width: 900px) { .pair { grid-template-columns: 1.35fr 0.65fr; align-items: start; } }
+    figure { margin: 0; background: #fff; border: 1px solid #ddd; padding: 8px; }
+    img { width: 100%; height: auto; display: block; }
+    figcaption { padding: 8px 4px 2px; font-size: 13px; color: #555; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>不是换卡片，是换第一屏说什么</h1>
+    <p>上一轮 A/B 看起来一样，因为问句还是最大的，MAYBE 只是换了有没有框。下面两版连主次都改了。</p>
+    <nav>
+      <a href="r2-answer.html">打开 1 · 答案先行</a>
+      <a href="r2-bulletin.html">打开 2 · 本地预报单</a>
+    </nav>
+  </header>
+
+  <section>
+    <h2>1 · 答案先行</h2>
+    <p class="note">场景：下午在厨房/工位，要截图发群「去不去」。第一眼是 MAYBE 和钟点。问句缩小，只留给 Google。</p>
+    <div class="pair">
+      <figure>
+        <img src="shots/r2-ans-desk.png" alt="答案先行 桌面：巨大 MAYBE 和窗口时间" />
+        <figcaption>桌面 · 截图里只剩词 + 时间</figcaption>
+      </figure>
+      <figure>
+        <img src="shots/r2-ans-phone.png" alt="答案先行 手机" />
+        <figcaption>手机 · 不用滚就能看见值不值得出门、几点</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section>
+    <h2>2 · 本地预报单</h2>
+    <p class="note">场景：办公室打开一篇像天气预报的说明。不要海报大字。先读一句人话，再读窗口和障碍。小时轴是预报本身。</p>
+    <div class="pair">
+      <figure>
+        <img src="shots/r2-bul-desk.png" alt="预报单 桌面：小 MAYBE 标签 + 一段说明" />
+        <figcaption>桌面 · 像本地天气说明，不像海报</figcaption>
+      </figure>
+      <figure>
+        <img src="shots/r2-bul-phone.png" alt="预报单 手机" />
+        <figcaption>手机 · 句子是主角，颜色在小时轴上</figcaption>
+      </figure>
+    </div>
+  </section>
+</body>
+</html>

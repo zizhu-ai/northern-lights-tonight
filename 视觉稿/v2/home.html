@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Visual mock v2 · Home</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="tokens.css" />
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="brand" href="home.html">
+      <span class="mark" aria-hidden="true"></span>
+      Northern Lights Tonight
+    </a>
+    <nav class="nav-desk" aria-label="Primary">
+      <a href="home.html">Tonight</a>
+      <a href="#">Near me</a>
+      <a href="#">Guides</a>
+    </nav>
+    <a class="btn btn-sm find-place" href="#">Find place</a>
+  </header>
+
+  <main id="main" class="page">
+    <h1 class="h1">Can You See the Northern Lights Tonight?</h1>
+    <p class="lead">It depends on your location. Check a US city, or read tonight’s local pages below.</p>
+
+    <form class="search" action="forecast-colorado.html">
+      <div class="search-row">
+        <input class="input" type="search" placeholder="City, state, or US ZIP" aria-label="City, state, or US ZIP" />
+        <button class="btn btn-primary" type="submit">Check</button>
+      </div>
+      <button class="gps" type="button">Use my location</button>
+    </form>
+
+    <div class="tonight-head">
+      <h2>Tonight in the US</h2>
+      <span class="when">Updated 6 minutes ago</span>
+    </div>
+
+    <table class="tonight">
+      <thead>
+        <tr>
+          <th>Place</th>
+          <th>Status</th>
+          <th>Best window</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr onclick="location.href='forecast-colorado.html'">
+          <td><a href="forecast-colorado.html">Fairbanks</a></td>
+          <td><span class="stamp stamp-go">Go</span></td>
+          <td>11:00 PM – 2:00 AM</td>
+        </tr>
+        <tr onclick="location.href='forecast-colorado.html'">
+          <td><a href="forecast-colorado.html">Minnesota</a></td>
+          <td><span class="stamp stamp-maybe">Maybe</span></td>
+          <td>11:30 PM – 1:00 AM</td>
+        </tr>
+        <tr onclick="location.href='forecast-colorado.html'">
+          <td><a href="forecast-colorado.html">Colorado</a></td>
+          <td><span class="stamp stamp-maybe">Maybe</span></td>
+          <td>10:40 PM – 12:10 AM</td>
+        </tr>
+        <tr>
+          <td><a href="#">Michigan</a></td>
+          <td><span class="stamp stamp-maybe">Maybe</span></td>
+          <td>11:10 PM – 12:40 AM</td>
+        </tr>
+        <tr>
+          <td><a href="#">Chicago</a></td>
+          <td><span class="stamp stamp-no">No</span></td>
+          <td>not worth a trip</td>
+        </tr>
+        <tr>
+          <td><a href="#">Ohio</a></td>
+          <td><span class="stamp stamp-no">No</span></td>
+          <td>oval out of reach</td>
+        </tr>
+        <tr>
+          <td><a href="#">Seattle</a></td>
+          <td><span class="stamp stamp-no">No</span></td>
+          <td>clouds all night</td>
+        </tr>
+        <tr>
+          <td><a href="#">Boston</a></td>
+          <td><span class="stamp stamp-no">No</span></td>
+          <td>not worth a trip</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <ul class="place-list">
+      <li>
+        <a href="forecast-colorado.html">
+          <b>Fairbanks</b>
+          <span class="stamp stamp-go">Go</span>
+          <span class="window">11:00 PM – 2:00 AM</span>
+        </a>
+      </li>
+      <li>
+        <a href="forecast-colorado.html">
+          <b>Minnesota</b>
+          <span class="stamp stamp-maybe">Maybe</span>
+          <span class="window">11:30 PM – 1:00 AM</span>
+        </a>
+      </li>
+      <li>
+        <a href="forecast-colorado.html">
+          <b>Colorado</b>
+          <span class="stamp stamp-maybe">Maybe</span>
+          <span class="window">10:40 PM – 12:10 AM</span>
+        </a>
+      </li>
+      <li>
+        <a href="#">
+          <b>Chicago</b>
+          <span class="stamp stamp-no">No</span>
+          <span class="window">not worth a trip</span>
+        </a>
+      </li>
+    </ul>
+
+    <p class="more"><a href="#">Full ranked list → Where to see the northern lights tonight</a></p>
+
+    <div class="read-split">
+      <section>
+        <h2>What time tonight?</h2>
+        <p>There is no single US clock time. After dark, often late. Use the window on your local page.</p>
+      </section>
+      <section>
+        <h2>How to read results</h2>
+        <p>GO = worth trying. MAYBE = possible, with obstacles. NO = not worth a trip. UNKNOWN = we are not guessing.</p>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="foot-inner">
+      <a href="home.html">Tonight</a>
+      <a href="#">Near me</a>
+      <a href="#">Guides</a>
+      <a href="#">How we decide</a>
+      <p class="affil">Not affiliated with NOAA.</p>
+    </div>
+  </footer>
+</body>
+</html>
