@@ -13,7 +13,6 @@ import { HOME_REPRESENTATIVE_SLUG } from "@/lib/forecast-places";
 import {
   formatUpdatedAt,
   formatWindow,
-  isSnapshotFresh,
   loadLatest,
 } from "@/lib/snapshots";
 
@@ -125,29 +124,25 @@ async function HomeVerdict() {
   const representative =
     rows.find((row) => row.dossier.slug === HOME_REPRESENTATIVE_SLUG) ?? rows[0];
   const snapshot = representative.snapshot;
-  const live = snapshot ? isSnapshotFresh(snapshot) : false;
   const timezone = representative.dossier.timezone;
 
   return (
     <VerdictCard
-      status={live && snapshot ? snapshot.status : "UNKNOWN"}
+      status={snapshot?.status ?? "UNKNOWN"}
       bestWindow={
-        live && snapshot
+        snapshot
           ? formatWindow(snapshot.best_window_start, snapshot.best_window_end, timezone)
           : copy.verdict.unknown_window
       }
       mainIssue={
-        live && snapshot
+        snapshot
           ? (snapshot.main_obstacle_text ?? snapshot.main_obstacle)
-          : snapshot
-            ? copy.verdict.stale_main_issue
-            : copy.view.unknown_main_issue
+          : copy.view.unknown_main_issue
       }
-      confidence={live && snapshot ? snapshot.confidence : "low"}
-      updated={formatUpdatedAt(snapshot?.generated_at ?? latest.generated_at, timezone)}
+      confidence={snapshot?.confidence ?? "low"}
+      updated={formatUpdatedAt(snapshot?.updated_at ?? snapshot?.generated_at ?? latest.generated_at, timezone)}
       place={representative.dossier.name}
       lookToward={snapshot?.look_toward ?? representative.dossier.viewing_direction}
-      stale={!live && snapshot !== null}
     />
   );
 }

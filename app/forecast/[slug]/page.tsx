@@ -15,7 +15,6 @@ import {
   formatUpdatedAt,
   formatWindow,
   formatZoneAbbreviation,
-  isSnapshotFresh,
   loadForecastSnapshot,
   type ForecastPoint,
   type ForecastSnapshot,
@@ -49,8 +48,6 @@ type PageProps = {
 
 type ForecastState = {
   snapshot: ForecastSnapshot | null;
-  live: boolean;
-  stale: boolean;
   status: VerdictStatus;
   mainIssue: string;
   bestWindow: string;
@@ -72,7 +69,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const headlinePoint = getHeadlinePoint(dossier);
   const state = await getForecastState(slug, dossier.timezone);
   const title = titleFor(dossier);
-  const description = state.live && state.snapshot
+  const description = state.snapshot
     ? `${state.snapshot.status} for ${dossier.name}, using ${headlinePoint.name}. Best window ${state.bestWindow}. ${state.snapshot.main_obstacle_text}`
     : `UNKNOWN for ${dossier.name}, using ${headlinePoint.name}. ${state.mainIssue}`;
   const url = `${SITE_URL}/forecast/${slug}`;
@@ -99,8 +96,11 @@ export default async function ForecastPage({ params }: PageProps) {
   const headlinePoint = getHeadlinePoint(dossier);
   const state = await getForecastState(slug, dossier.timezone);
   const timezone = formatZoneAbbreviation(new Date(), dossier.timezone);
-  const updated = formatUpdatedAt(state.snapshot?.generated_at, dossier.timezone);
-  const answer = state.live && state.snapshot
+  const updated = formatUpdatedAt(
+    state.snapshot?.updated_at ?? state.snapshot?.generated_at,
+    dossier.timezone,
+  );
+  const answer = state.snapshot
     ? state.snapshot.answer_sentence
     : unknownAnswer(dossier, headlinePoint.name, state.mainIssue);
   const nearby = dossier.nearby_slugs
@@ -129,19 +129,17 @@ export default async function ForecastPage({ params }: PageProps) {
             status={state.status}
             bestWindow={state.bestWindow}
             mainIssue={state.mainIssue}
-            confidence={state.live && state.snapshot ? state.snapshot.confidence : "low"}
+            confidence={state.snapshot?.confidence ?? "low"}
             updated={updated}
             place={dossier.name}
             lookToward={state.snapshot?.look_toward ?? dossier.viewing_direction}
             alaskaKicker={slug === "alaska"}
-            stale={state.stale}
           />
         </div>
 
         <Hours
           dossier={dossier}
           snapshot={state.snapshot}
-          live={state.live}
           fallback={copy.verdict.hours_need_live}
         />
 
@@ -229,21 +227,13 @@ async function getForecastState(
   timezone: string,
 ): Promise<ForecastState> {
   const snapshot = await loadForecastSnapshot(slug);
-  const live = snapshot !== null && isSnapshotFresh(snapshot);
-  const stale = snapshot !== null && !live;
-  const mainIssue = live && snapshot
-    ? snapshot.main_obstacle_text
-    : stale
-      ? copy.verdict.stale_main_issue
-      : copy.view.unknown_main_issue;
+  const mainIssue = snapshot?.main_obstacle_text ?? copy.view.unknown_main_issue;
 
   return {
     snapshot,
-    live,
-    stale,
-    status: live && snapshot ? snapshot.status : "UNKNOWN",
+    status: snapshot?.status ?? "UNKNOWN",
     mainIssue,
-    bestWindow: live && snapshot
+    bestWindow: snapshot
       ? formatWindow(
           snapshot.best_window_start,
           snapshot.best_window_end,
@@ -280,15 +270,13 @@ function unknownAnswer(
 function Hours({
   dossier,
   snapshot,
-  live,
   fallback,
 }: {
   dossier: ForecastDossier;
   snapshot: ForecastSnapshot | null;
-  live: boolean;
   fallback: string;
 }) {
-  const windows = live && snapshot ? snapshot.windows : [];
+  const windows = snapshot?.windows ?? [];
   const visible = windows.slice(0, 5);
   const remaining = windows.slice(5);
   const timezone = formatZoneAbbreviation(new Date(), dossier.timezone);
@@ -358,7 +346,7 @@ function WhyThisVerdict({
   dossier: ForecastDossier;
   state: ForecastState;
 }) {
-  if (!state.live) {
+  if (!state.snapshot) {
     return (
       <section className={styles.section}>
         <h2>Why this verdict</h2>
@@ -428,7 +416,7 @@ function OtherPoints({
   state: ForecastState;
 }) {
   const snapshotById = new Map(
-    (state.live && state.snapshot ? state.snapshot.points : []).map((point) => [point.id, point]),
+    (state.snapshot?.points ?? []).map((point) => [point.id, point]),
   );
   const points = dossier.sample_points.filter(
     (point) => point.id !== dossier.primary_verdict_point,
@@ -475,7 +463,7 @@ function buildSchemas(
 ) {
   const url = `${SITE_URL}/forecast/${dossier.slug}`;
   const headline = getHeadlinePoint(dossier).name;
-  const description = state.live && state.snapshot
+  const description = state.snapshot
     ? `${state.snapshot.status} for ${dossier.name}, using ${headline}. ${state.snapshot.main_obstacle_text}`
     : `UNKNOWN for ${dossier.name}, using ${headline}. ${state.mainIssue}`;
   const breadcrumbId = `${url}#breadcrumb`;

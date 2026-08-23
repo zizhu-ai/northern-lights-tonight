@@ -1,15 +1,32 @@
 import { NextResponse } from "next/server";
 import { loadLatestWithMeta } from "@/lib/snapshots";
 
-export const revalidate = 120;
+export const revalidate = 600;
+
+function fetchedAtHeader(observation: {
+  fetched_at: string | null;
+  health: string;
+}): string {
+  // Spec §7.4: health=invalid 时 Fetched-At 必须为空。
+  if (observation.health === "invalid") return "";
+  return observation.fetched_at ?? "";
+}
 
 export async function GET() {
   const { data, source } = await loadLatestWithMeta();
+  const observations = data.source_observations;
   return NextResponse.json(data, {
     headers: {
       "X-Robots-Tag": "noindex, nofollow",
       "X-Snapshot-Source": source,
       "X-Snapshot-Generated-At": data.generated_at,
+      "X-Aurora-Fallback-Used": String(data.fallback_used),
+      "X-Ovation-Fetched-At": fetchedAtHeader(observations.ovation),
+      "X-Kp-Fetched-At": fetchedAtHeader(observations.kp),
+      "X-Cloud-Fetched-At": fetchedAtHeader(observations.cloud),
+      "X-Ovation-Health": observations.ovation.health,
+      "X-Kp-Health": observations.kp.health,
+      "X-Cloud-Health": observations.cloud.health,
     },
   });
 }

@@ -1,7 +1,9 @@
-import { readFile } from "node:fs/promises";
-import path from "node:path";
-
 import copy from "@/content/ui-copy.json";
+import {
+  getAuroraBundle,
+  type SnapshotSource,
+  type SourceObservation,
+} from "@/lib/live-snapshots";
 
 export type SnapshotRow = {
   location_slug: string;
@@ -16,6 +18,7 @@ export type SnapshotRow = {
   look_toward?: string;
   generated_at?: string;
   valid_until?: string;
+  updated_at?: string;
 };
 
 export type SnapshotBundle = {
@@ -23,6 +26,13 @@ export type SnapshotBundle = {
   ovation_ok: boolean;
   seo_indexable: boolean;
   locations: SnapshotRow[];
+  snapshot_source: SnapshotSource;
+  fallback_used: boolean;
+  source_observations: {
+    ovation: SourceObservation;
+    kp: SourceObservation;
+    cloud: SourceObservation;
+  };
 };
 
 export type ForecastWindow = {
@@ -31,7 +41,7 @@ export type ForecastWindow = {
   skip: boolean;
   status: SnapshotRow["status"] | null;
   aurora_reach: "none" | "horizon" | "overhead" | null;
-  cloud_block: "clear" | "mixed" | "blocked" | "unknown" | null;
+  cloud_block: "clear" | "mixed" | "socked" | null;
   source: string | null;
   codes: string[];
 };
@@ -42,7 +52,7 @@ export type ForecastPoint = {
   status: SnapshotRow["status"];
   confidence: SnapshotRow["confidence"];
   aurora_reach: "none" | "horizon" | "overhead" | null;
-  cloud_block: "clear" | "mixed" | "blocked" | "unknown" | null;
+  cloud_block: "clear" | "mixed" | "socked" | null;
   urban: boolean;
   main_obstacle: string;
 };
@@ -59,88 +69,12 @@ export type ForecastSnapshot = SnapshotRow & {
   seo_indexable: false;
 };
 
-const SNAPSHOT_REMOTE_BASE =
-  process.env.SNAPSHOT_REMOTE_BASE ??
-  "https://raw.githubusercontent.com/zizhu-ai/northern-lights-tonight/main/snapshots";
-
-function hasValidGeneratedAt(value: unknown): value is { generated_at: string } {
-  if (!value || typeof value !== "object") return false;
-  const generatedAt = (value as { generated_at?: unknown }).generated_at;
-  return (
-    typeof generatedAt === "string" && Number.isFinite(Date.parse(generatedAt))
-  );
-}
-
-async function fetchSnapshot<T extends { generated_at: string }>(
-  fileName: string,
-  validate: (value: unknown) => value is T,
-): Promise<T | null> {
-  try {
-    const response = await fetch(`${SNAPSHOT_REMOTE_BASE}/${fileName}`, {
-      next: { revalidate: 120 },
-      signal: AbortSignal.timeout(5000),
-    });
-    if (!response.ok) return null;
-
-    const value: unknown = await response.json();
-    return validate(value) ? value : null;
-  } catch {
-    return null;
-  }
-}
-
-async function readBundledSnapshot<T extends { generated_at: string }>(
-  fileName: string,
-  validate: (value: unknown) => value is T,
-): Promise<T> {
-  const file = path.join(process.cwd(), "snapshots", fileName);
-  const raw = await readFile(file, "utf8");
-  const value: unknown = JSON.parse(raw);
-  if (!validate(value)) throw new Error(`Invalid bundled snapshot: ${fileName}`);
-  return value;
-}
-
-async function loadSnapshot<T extends { generated_at: string }>(
-  fileName: string,
-  validate: (value: unknown) => value is T,
-): Promise<{ data: T; source: "remote" | "bundled" }> {
-  const [remote, bundled] = await Promise.allSettled([
-    fetchSnapshot(fileName, validate),
-    readBundledSnapshot(fileName, validate),
-  ]);
-  const remoteData = remote.status === "fulfilled" ? remote.value : null;
-  const bundledData = bundled.status === "fulfilled" ? bundled.value : null;
-
-  if (
-    remoteData &&
-    (!bundledData ||
-      Date.parse(remoteData.generated_at) >=
-        Date.parse(bundledData.generated_at))
-  ) {
-    return { data: remoteData, source: "remote" };
-  }
-  if (bundledData) return { data: bundledData, source: "bundled" };
-
-  if (bundled.status === "rejected") throw bundled.reason;
-  throw new Error(`Snapshot unavailable: ${fileName}`);
-}
-
-function isSnapshotBundle(value: unknown): value is SnapshotBundle {
-  return (
-    hasValidGeneratedAt(value) &&
-    Array.isArray((value as { locations?: unknown }).locations)
-  );
-}
-
-function isForecastSnapshot(value: unknown): value is ForecastSnapshot {
-  return hasValidGeneratedAt(value);
-}
-
 export async function loadLatestWithMeta(): Promise<{
   data: SnapshotBundle;
-  source: "remote" | "bundled";
+  source: "live" | "lkg" | "bundled";
 }> {
-  return loadSnapshot("latest.json", isSnapshotBundle);
+  const data = (await getAuroraBundle()) as unknown as SnapshotBundle;
+  return { data, source: data.snapshot_source };
 }
 
 export async function loadLatest(): Promise<SnapshotBundle> {
@@ -151,22 +85,12 @@ export async function loadForecastSnapshot(
   slug: string,
 ): Promise<ForecastSnapshot | null> {
   if (!/^[a-z0-9-]+$/.test(slug)) return null;
-
-  try {
-    return (await loadSnapshot(`${slug}.json`, isForecastSnapshot)).data;
-  } catch (error) {
-    if ((error as NodeJS.ErrnoException).code === "ENOENT") return null;
-    throw error;
-  }
-}
-
-export function isSnapshotFresh(
-  snapshot: { valid_until?: string },
-  now: Date = new Date(),
-): boolean {
-  if (!snapshot.valid_until) return false;
-  const validUntil = Date.parse(snapshot.valid_until);
-  return Number.isFinite(validUntil) && now.getTime() <= validUntil;
+  const bundle = await loadLatest();
+  return (
+    (bundle.locations.find((row) => row.location_slug === slug) as
+      | ForecastSnapshot
+      | undefined) ?? null
+  );
 }
 
 export function formatWindow(

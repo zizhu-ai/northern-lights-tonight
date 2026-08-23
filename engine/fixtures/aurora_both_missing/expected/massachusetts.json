@@ -1,0 +1,238 @@
+{
+  "location_slug": "massachusetts",
+  "headline_point_id": "newburyport",
+  "headline_point_name": "Newburyport",
+  "generated_at": "2026-08-21T03:10:00+00:00",
+  "valid_until": "2026-08-21T03:35:00+00:00",
+  "status": "UNKNOWN",
+  "confidence": "low",
+  "best_window_start": null,
+  "best_window_end": null,
+  "main_obstacle": "DATA_MISSING_AURORA",
+  "main_obstacle_text": "Aurora data is unavailable, so we are not guessing.",
+  "reason_codes": [
+    "DATA_MISSING_AURORA"
+  ],
+  "look_toward": "north",
+  "answer_sentence": "UNKNOWN (Newburyport area). We are not guessing. Aurora data is unavailable, so we are not guessing.",
+  "sources": {
+    "ovation_obs": null,
+    "ovation_fcst": null,
+    "ovation_ok": false
+  },
+  "points": [
+    {
+      "id": "newburyport",
+      "name": "Newburyport",
+      "status": "UNKNOWN",
+      "confidence": "low",
+      "aurora_reach": null,
+      "cloud_block": "socked",
+      "urban": false,
+      "main_obstacle": "DATA_MISSING_AURORA"
+    },
+    {
+      "id": "boston",
+      "name": "Boston",
+      "status": "UNKNOWN",
+      "confidence": "low",
+      "aurora_reach": null,
+      "cloud_block": "socked",
+      "urban": true,
+      "main_obstacle": "DATA_MISSING_AURORA"
+    },
+    {
+      "id": "north-adams",
+      "name": "North Adams",
+      "status": "UNKNOWN",
+      "confidence": "low",
+      "aurora_reach": null,
+      "cloud_block": "mixed",
+      "urban": false,
+      "main_obstacle": "DATA_MISSING_AURORA"
+    }
+  ],
+  "windows": [
+    {
+      "start": "2026-08-20T22:45:00-04:00",
+      "end": "2026-08-20T23:15:00-04:00",
+      "skip": false,
+      "status": "UNKNOWN",
+      "aurora_reach": null,
+      "cloud_block": null,
+      "source": null,
+      "codes": [
+        "DATA_MISSING_AURORA"
+      ]
+    },
+    {
+      "start": "2026-08-20T23:15:00-04:00",
+      "end": "2026-08-20T23:45:00-04:00",
+      "skip": false,
+      "status": "UNKNOWN",
+      "aurora_reach": null,
+      "cloud_block": null,
+      "source": null,
+      "codes": [
+        "DATA_MISSING_AURORA"
+      ]
+    },
+    {
+      "start": "2026-08-20T23:45:00-04:00",
+      "end": "2026-08-21T00:15:00-04:00",
+      "skip": false,
+      "status": "UNKNOWN",
+      "aurora_reach": null,
+      "cloud_block": "socked",
+      "source": null,
+      "codes": [
+        "DATA_MISSING_AURORA"
+      ]
+    },
+    {
+      "start": "2026-08-21T00:15:00-04:00",
+      "end": "2026-08-21T00:45:00-04:00",
+      "skip": false,
+      "status": "UNKNOWN",
+      "aurora_reach": null,
+      "cloud_block": "socked",
+      "source": null,
+      "codes": [
+        "DATA_MISSING_AURORA"
+      ]
+    },
+    {
+      "start": "2026-08-21T00:45:00-04:00",
+      "end": "2026-08-21T01:15:00-04:00",
+      "skip": false,
+      "status": "UNKNOWN",
+      "aurora_reach": null,
+      "cloud_block": "mixed",
+      "source": null,
+      "codes": [
+        "DATA_MISSING_AURORA"
+      ]
+    },
+    {
+      "start": "2026-08-21T01:15:00-04:00",
+      "end": "2026-08-21T01:45:00-04:00",
+      "skip": false,
+      "status": "UNKNOWN",
+      "aurora_reach": null,
+      "cloud_block": "mixed",
+      "source": null,
+      "codes": [
+        "DATA_MISSING_AURORA"
+      ]
+    },
+    {
+      "start": "2026-08-21T01:45:00-04:00",
+      "end": "2026-08-21T02:15:00-04:00",
+      "skip": false,
+      "status": "UNKNOWN",
+      "aurora_reach": null,
+      "cloud_block": "mixed",
+      "source": null,
+      "codes": [
+        "DATA_MISSING_AURORA"
+      ]
+    },
+    {
+      "start": "2026-08-21T02:15:00-04:00",
+      "end": "2026-08-21T02:45:00-04:00",
+      "skip": false,
+      "status": "UNKNOWN",
+      "aurora_reach": null,
+      "cloud_block": "mixed",
+      "source": null,
+      "codes": [
+        "DATA_MISSING_AURORA"
+      ]
+    },
+    {
+      "start": "2026-08-21T02:45:00-04:00",
+      "end": "2026-08-21T03:15:00-04:00",
+      "skip": false,
+      "status": "UNKNOWN",
+      "aurora_reach": null,
+      "cloud_block": "mixed",
+      "source": null,
+      "codes": [
+        "DATA_MISSING_AURORA"
+      ]
+    },
+    {
+      "start": "2026-08-21T03:15:00-04:00",
+      "end": "2026-08-21T03:45:00-04:00",
+      "skip": false,
+      "status": "UNKNOWN",
+      "aurora_reach": null,
+      "cloud_block": "mixed",
+      "source": null,
+      "codes": [
+        "DATA_MISSING_AURORA"
+      ]
+    },
+    {
+      "start": "2026-08-21T03:45:00-04:00",
+      "end": "2026-08-21T04:15:00-04:00",
+      "skip": false,
+      "status": "UNKNOWN",
+      "aurora_reach": null,
+      "cloud_block": "mixed",
+      "source": null,
+      "codes": [
+        "DATA_MISSING_AURORA"
+      ]
+    },
+    {
+      "start": "2026-08-21T04:15:00-04:00",
+      "end": "2026-08-21T04:45:00-04:00",
+      "skip": false,
+      "status": "UNKNOWN",
+      "aurora_reach": null,
+      "cloud_block": "mixed",
+      "source": null,
+      "codes": [
+        "DATA_MISSING_AURORA"
+      ]
+    },
+    {
+      "start": "2026-08-21T04:45:00-04:00",
+      "end": "2026-08-21T05:15:00-04:00",
+      "skip": true,
+      "status": null,
+      "aurora_reach": null,
+      "cloud_block": "mixed",
+      "source": null,
+      "codes": [
+        "NOT_DARK_YET"
+      ]
+    },
+    {
+      "start": "2026-08-21T05:15:00-04:00",
+      "end": "2026-08-21T05:45:00-04:00",
+      "skip": true,
+      "status": null,
+      "aurora_reach": null,
+      "cloud_block": "mixed",
+      "source": null,
+      "codes": [
+        "NOT_DARK_YET"
+      ]
+    },
+    {
+      "start": "2026-08-21T05:45:00-04:00",
+      "end": "2026-08-21T06:15:00-04:00",
+      "skip": true,
+      "status": null,
+      "aurora_reach": null,
+      "cloud_block": "mixed",
+      "source": null,
+      "codes": [
+        "NOT_DARK_YET"
+      ]
+    }
+  ],
+  "seo_indexable": false
+}
