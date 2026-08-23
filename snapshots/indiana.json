@@ -2,8 +2,8 @@
   "location_slug": "indiana",
   "headline_point_id": "south-bend",
   "headline_point_name": "South Bend",
-  "generated_at": "2026-08-23T02:14:23.411437+00:00",
-  "valid_until": "2026-08-23T02:39:23.411437+00:00",
+  "generated_at": "2026-08-23T03:16:44.265838+00:00",
+  "valid_until": "2026-08-23T03:41:44.265838+00:00",
   "status": "NO",
   "confidence": "high",
   "best_window_start": null,
@@ -16,8 +16,8 @@
   "look_toward": "north",
   "answer_sentence": "NO (South Bend area). Not worth a special trip tonight. Aurora activity is not expected to reach Indiana tonight.",
   "sources": {
-    "ovation_obs": "2026-08-23T02:05:00+00:00",
-    "ovation_fcst": "2026-08-23T03:09:00+00:00",
+    "ovation_obs": "2026-08-23T03:06:00+00:00",
+    "ovation_fcst": "2026-08-23T04:09:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -54,42 +54,6 @@
   ],
   "windows": [
     {
-      "start": "2026-08-22T21:45:00-04:00",
-      "end": "2026-08-22T22:15:00-04:00",
-      "skip": false,
-      "status": "NO",
-      "aurora_reach": "none",
-      "cloud_block": "clear",
-      "source": "ovation",
-      "codes": [
-        "AURORA_NO_REACH"
-      ]
-    },
-    {
-      "start": "2026-08-22T22:15:00-04:00",
-      "end": "2026-08-22T22:45:00-04:00",
-      "skip": false,
-      "status": "NO",
-      "aurora_reach": "none",
-      "cloud_block": "clear",
-      "source": "ovation",
-      "codes": [
-        "AURORA_NO_REACH"
-      ]
-    },
-    {
-      "start": "2026-08-22T22:45:00-04:00",
-      "end": "2026-08-22T23:15:00-04:00",
-      "skip": false,
-      "status": "NO",
-      "aurora_reach": "none",
-      "cloud_block": "clear",
-      "source": "ovation",
-      "codes": [
-        "AURORA_NO_REACH"
-      ]
-    },
-    {
       "start": "2026-08-22T23:15:00-04:00",
       "end": "2026-08-22T23:45:00-04:00",
       "skip": false,
@@ -108,7 +72,7 @@
       "status": "NO",
       "aurora_reach": "none",
       "cloud_block": "clear",
-      "source": "kp",
+      "source": "ovation",
       "codes": [
         "AURORA_NO_REACH"
       ]
@@ -120,7 +84,7 @@
       "status": "NO",
       "aurora_reach": "none",
       "cloud_block": "clear",
-      "source": "kp",
+      "source": "ovation",
       "codes": [
         "AURORA_NO_REACH"
       ]

@@ -2,10 +2,10 @@
   "location_slug": "alaska",
   "headline_point_id": "fairbanks",
   "headline_point_name": "Fairbanks",
-  "generated_at": "2026-08-23T02:14:23.411437+00:00",
-  "valid_until": "2026-08-23T02:39:23.411437+00:00",
+  "generated_at": "2026-08-23T03:16:44.265838+00:00",
+  "valid_until": "2026-08-23T03:41:44.265838+00:00",
   "status": "GO",
-  "confidence": "low",
+  "confidence": "high",
   "best_window_start": "2026-08-23T00:15:00-08:00",
   "best_window_end": "2026-08-23T01:15:00-08:00",
   "main_obstacle": "AURORA_HORIZON_ONLY",
@@ -18,8 +18,8 @@
   "look_toward": "north",
   "answer_sentence": "GO (Fairbanks area). Best window 12:15 AM–1:15 AM AKDT. Any display would likely stay low on the northern horizon.",
   "sources": {
-    "ovation_obs": "2026-08-23T02:05:00+00:00",
-    "ovation_fcst": "2026-08-23T03:09:00+00:00",
+    "ovation_obs": "2026-08-23T03:06:00+00:00",
+    "ovation_fcst": "2026-08-23T04:09:00+00:00",
     "ovation_ok": true
   },
   "points": [
@@ -27,7 +27,7 @@
       "id": "fairbanks",
       "name": "Fairbanks",
       "status": "GO",
-      "confidence": "low",
+      "confidence": "high",
       "aurora_reach": "horizon",
       "cloud_block": "clear",
       "urban": false,
