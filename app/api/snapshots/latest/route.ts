@@ -1,11 +1,15 @@
 import { NextResponse } from "next/server";
-import { loadLatest } from "@/lib/snapshots";
+import { loadLatestWithMeta } from "@/lib/snapshots";
 
-export const dynamic = "force-static";
+export const revalidate = 120;
 
 export async function GET() {
-  const data = await loadLatest();
+  const { data, source } = await loadLatestWithMeta();
   return NextResponse.json(data, {
-    headers: { "X-Robots-Tag": "noindex, nofollow" },
+    headers: {
+      "X-Robots-Tag": "noindex, nofollow",
+      "X-Snapshot-Source": source,
+      "X-Snapshot-Generated-At": data.generated_at,
+    },
   });
 }

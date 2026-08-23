@@ -2,8 +2,12 @@ name: Refresh aurora snapshots
 
 on:
   schedule:
-    - cron: "*/10 * * * *"
+    - cron: "7-57/10 * * * *"
   workflow_dispatch:
+
+concurrency:
+  group: refresh-aurora-snapshots
+  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -11,6 +15,7 @@ permissions:
 jobs:
   refresh:
     runs-on: ubuntu-latest
+    timeout-minutes: 8
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
