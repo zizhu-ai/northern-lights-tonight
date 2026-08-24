@@ -78,7 +78,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title,
     description,
     alternates: { canonical: url },
-    robots: { index: false, follow: true },
+    robots: { index: true, follow: true },
     openGraph: {
       type: "website",
       url,

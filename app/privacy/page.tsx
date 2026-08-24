@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   title: "Privacy Policy",
   description: copy.seo.privacy,
   alternates: { canonical: PAGE_URL },
-  robots: { index: false, follow: false },
+  robots: { index: true, follow: true },
 };
 
 export default function PrivacyPage() {

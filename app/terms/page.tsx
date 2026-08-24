@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   title: "Terms of Use",
   description: copy.seo.terms,
   alternates: { canonical: PAGE_URL },
-  robots: { index: false, follow: false },
+  robots: { index: true, follow: true },
 };
 
 export default function TermsPage() {

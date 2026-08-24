@@ -21,7 +21,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title,
     description: copy.seo.how_to,
     alternates: { canonical: PAGE_URL },
-    robots: { index: false, follow: false },
+    robots: { index: true, follow: true },
   };
 }
 

@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   title: TITLE,
   description: copy.seo.where,
   alternates: { canonical: `${SITE_URL}/guides/where-to-see-northern-lights` },
-  robots: { index: false, follow: false },
+  robots: { index: true, follow: true },
 };
 
 export default async function WhereGuidePage() {

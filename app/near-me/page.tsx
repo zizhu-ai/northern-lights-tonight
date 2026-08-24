@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   title: "Northern Lights Near Me: Forecast by City or ZIP",
   description: copy.near_me.lead,
   alternates: { canonical: `${SITE_URL}/near-me` },
-  robots: { index: false, follow: false },
+  robots: { index: true, follow: true },
 };
 
 export default function NearMePage() {
