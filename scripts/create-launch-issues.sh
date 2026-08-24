@@ -305,11 +305,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 # ---------------------------------------------------------------- P2
 
 create_issue \
-  "P2 正式退役快照 workflow 的 cron" \
+  "P2 合并 PR #10 以正式退役快照 workflow 的 cron" \
   "P2,ops" \
-"cron 看起来已停（最后一次快照提交停在 2026-08-23 11:17），但 \`.github/workflows/refresh-aurora-snapshots.yml\` 还带着 \`contents: write\`（\`:12-13\`）和 cron 表达式（\`:5\`）躺在仓库里。一旦被误启用，就是每 10 分钟一次 push 加一次 Vercel 重新部署。
+"**这件事已经有人做了，只是 PR 还挂着没合。**
 
-**改法：** 删掉 \`schedule:\` 块，只保留 \`workflow_dispatch\`。既防误启用，又保留手动刷新兜底文件的能力。
+cron 实际已停（最后一次快照提交停在 2026-08-23 11:17），但 \`.github/workflows/refresh-aurora-snapshots.yml\` 在 \`main\` 上仍带着 cron 表达式（\`:5\`）和 \`contents: write\`（\`:12-13\`）。一旦被误启用，就是每 10 分钟一次 push 加一次 Vercel 重新部署。
+
+PR #10 \`chore: retire snapshot refresh scheduler\` 已经完整覆盖：删掉 \`schedule:\` 块、只保留 \`workflow_dispatch\`、\`contents: write\` 降为 \`read\`、移除 push 步骤。
+
+**行动：** 复核并合并 PR #10，不需要另写代码。
 
 135 个提交里 106 个是快照提交、\`.git\` 已 29MB 这件事**不建议处理**——历史重写的风险远大于收益。"
 
