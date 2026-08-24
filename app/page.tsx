@@ -38,7 +38,7 @@ export default function HomePage() {
       <div className={`twilight-band ${styles.twilight}`}>
         <div className={styles.inner}>
           <header className={styles.hero}>
-            <h1>Can You See the Northern Lights Tonight?</h1>
+            <h1>{copy.home.title}</h1>
             <p className={styles.lead}>{copy.home.lead}</p>
           </header>
 
@@ -65,7 +65,7 @@ export default function HomePage() {
           </section>
 
           <section className={styles.panel}>
-            <h2>How to read GO / MAYBE / NO</h2>
+            <h2>{copy.how_to_read.title}</h2>
             <ul className={styles.readList}>
               <li>{copy.how_to_read.go}</li>
               <li>{copy.how_to_read.maybe}</li>

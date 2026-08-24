@@ -72,7 +72,7 @@ export default async function ViewPage({ searchParams }: ViewPageProps) {
             <p className={styles.kicker}>
               {lat.toFixed(3)}, {lng.toFixed(3)}
             </p>
-            <h1>Tonight near {name}</h1>
+            <h1>{copy.view.title_template.replace("{Place}", name)}</h1>
           </header>
         </div>
       </div>
@@ -83,7 +83,7 @@ export default async function ViewPage({ searchParams }: ViewPageProps) {
             status={unavailable ? "UNAVAILABLE" : "UNKNOWN"}
             mainIssue={unavailable ? copy.south.main_issue : copy.view.unknown_main_issue}
             confidence="low"
-            updated="Updated —"
+            updated={copy.verdict.updated_unknown}
             place={name}
           />
         </div>

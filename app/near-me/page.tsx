@@ -24,7 +24,7 @@ export default function NearMePage() {
   return (
     <main className={`tool-page ${styles.page} ${styles.narrow}`}>
       <header className={styles.hero}>
-        <h1>Northern Lights Near Me</h1>
+        <h1>{copy.near_me.title}</h1>
         <p className={styles.lead}>{copy.near_me.lead}</p>
       </header>
 
