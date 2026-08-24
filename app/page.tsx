@@ -15,6 +15,7 @@ import {
   formatWindow,
   loadLatest,
 } from "@/lib/snapshots";
+import { SITE_URL } from "@/lib/site";
 
 import styles from "./part4.module.css";
 
@@ -26,6 +27,7 @@ export const revalidate = 600;
 export const metadata: Metadata = {
   title: TITLE,
   description: copy.home.lead,
+  alternates: { canonical: SITE_URL },
   robots: { index: false, follow: false },
   openGraph: {
     type: "website",

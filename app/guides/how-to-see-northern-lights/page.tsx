@@ -5,7 +5,7 @@ import {
   loadGuideContent,
   renderMarkdownBlocks,
 } from "@/components/guide-markdown";
-
+import copy from "@/content/ui-copy.json";
 import { SITE_URL } from "@/lib/site";
 
 import styles from "../../part4.module.css";
@@ -17,7 +17,12 @@ export const dynamic = "force-static";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { title } = await loadGuideContent(FILE_NAME);
-  return { title, robots: { index: false, follow: false } };
+  return {
+    title,
+    description: copy.seo.how_to,
+    alternates: { canonical: PAGE_URL },
+    robots: { index: false, follow: false },
+  };
 }
 
 export default async function HowToGuidePage() {

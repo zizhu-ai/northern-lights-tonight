@@ -18,6 +18,9 @@
     "use_my_location": "Use my location",
     "gps_privacy": "We use your location once. We do not store it.",
     "footer_how": "How we decide",
+    "footer_privacy": "Privacy",
+    "footer_terms": "Terms",
+    "footer_sources": "Aurora data from NOAA SWPC. Clouds from Open-Meteo.",
     "footer_noaa": "Not affiliated with NOAA.",
     "open": "Open",
     "share": "Share",
@@ -97,5 +100,14 @@
     "locale": "en-US",
     "hour12": true,
     "example": "10:40 PM MT"
+  },
+  "seo": {
+    "fallback_description": "Local aurora go / maybe / no for the US.",
+    "best_time": "When and where the northern lights are most likely, by season, time of night, and latitude.",
+    "how_to": "How to actually see the northern lights: darkness, looking north, waiting, and reading GO / MAYBE / NO.",
+    "where": "Where to see the northern lights in the US tonight, plus standing regions versus event-only states.",
+    "methodology": "How Northern Lights Tonight decides GO, MAYBE, NO, or UNKNOWN from NOAA and cloud data.",
+    "privacy": "How Northern Lights Tonight handles location, analytics, and third-party data sources.",
+    "terms": "Terms of use for Northern Lights Tonight, including forecast limits and NOAA disclaimer."
   }
 }

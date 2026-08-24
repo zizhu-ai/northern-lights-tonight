@@ -47,7 +47,7 @@ type RequestResult = {
 };
 
 const USER_AGENT =
-  "NorthernLightsTonight/0.2 (+https://northernlightstonight.com; aurora forecast)";
+  "NorthernLightsTonight/1.0 (+https://aurora-tonight.com; aurora forecast)";
 const DEFAULT_OVATION_URL =
   "https://services.swpc.noaa.gov/json/ovation_aurora_latest.json";
 const DEFAULT_KP_URL =

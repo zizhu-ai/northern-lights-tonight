@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { PlaceSearchForm } from "@/components/place-search-form";
 import copy from "@/content/ui-copy.json";
+import { SITE_URL } from "@/lib/site";
 
 import styles from "../part4.module.css";
 
@@ -10,6 +11,7 @@ export const dynamic = "force-static";
 export const metadata: Metadata = {
   title: "Northern Lights Near Me: Forecast by City or ZIP",
   description: copy.near_me.lead,
+  alternates: { canonical: `${SITE_URL}/near-me` },
   robots: { index: false, follow: false },
 };
 

@@ -36,6 +36,8 @@ export function SiteHeader() {
   );
 }
 
+const CONTACT_EMAIL = "hello@aurora-tonight.com";
+
 export function SiteFooter() {
   return (
     <footer className="site-footer">
@@ -50,8 +52,18 @@ export function SiteFooter() {
             <li>
               <Link href="/methodology">{copy.chrome.footer_how}</Link>
             </li>
+            <li>
+              <Link href="/privacy">{copy.chrome.footer_privacy}</Link>
+            </li>
+            <li>
+              <Link href="/terms">{copy.chrome.footer_terms}</Link>
+            </li>
           </ul>
         </nav>
+        <p>
+          <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+        </p>
+        <p>{copy.chrome.footer_sources}</p>
         <p>{copy.chrome.footer_noaa}</p>
       </div>
     </footer>

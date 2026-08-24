@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import Script from "next/script";
 
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
+import copy from "@/content/ui-copy.json";
 import { SITE_URL } from "@/lib/site";
 
 import "./globals.css";
@@ -16,10 +18,25 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: "Northern Lights Tonight",
-  // TODO(launch): remove robots noindex and the "Pipeline stub" description.
-  description: "Local aurora go / maybe / no for the US. Pipeline stub — not indexed yet.",
-  robots: { index: false, follow: false },
+  description: copy.seo.fallback_description,
 };
+
+function GoogleAnalytics() {
+  const gaId = process.env.GA_MEASUREMENT_ID?.trim();
+  if (!gaId) return null;
+
+  return (
+    <>
+      <Script
+        src={`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(gaId)}`}
+        strategy="afterInteractive"
+      />
+      <Script id="ga4" strategy="afterInteractive">
+        {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config',${JSON.stringify(gaId)});`}
+      </Script>
+    </>
+  );
+}
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -28,6 +45,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <SiteHeader />
         <div className="site-content">{children}</div>
         <SiteFooter />
+        <GoogleAnalytics />
       </body>
     </html>
   );

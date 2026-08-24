@@ -6,6 +6,7 @@ import type { ReactNode } from "react";
 
 import { TonightPlaces } from "@/components/tonight-places";
 import copy from "@/content/ui-copy.json";
+import { SITE_URL } from "@/lib/site";
 
 import styles from "../../part4.module.css";
 
@@ -16,6 +17,8 @@ export const revalidate = 600;
 
 export const metadata: Metadata = {
   title: TITLE,
+  description: copy.seo.where,
+  alternates: { canonical: `${SITE_URL}/guides/where-to-see-northern-lights` },
   robots: { index: false, follow: false },
 };
 
