@@ -19,6 +19,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: "Northern Lights Tonight",
   description: copy.seo.fallback_description,
+  twitter: { card: "summary_large_image" },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

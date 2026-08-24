@@ -15,7 +15,7 @@ import {
   formatWindow,
   loadLatest,
 } from "@/lib/snapshots";
-import { SITE_URL } from "@/lib/site";
+import { ogFor, SITE_URL } from "@/lib/site";
 
 import styles from "./part4.module.css";
 
@@ -29,11 +29,7 @@ export const metadata: Metadata = {
   description: copy.home.lead,
   alternates: { canonical: SITE_URL },
   robots: { index: true, follow: true },
-  openGraph: {
-    type: "website",
-    title: TITLE,
-    description: copy.home.lead,
-  },
+  openGraph: ogFor("", TITLE, copy.home.lead),
 };
 
 export default function HomePage() {

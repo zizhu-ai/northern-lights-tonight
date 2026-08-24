@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import copy from "@/content/ui-copy.json";
-import { SITE_URL } from "@/lib/site";
+import { ogFor, SITE_URL } from "@/lib/site";
 
 import styles from "../part4.module.css";
 
@@ -15,6 +15,7 @@ export const metadata: Metadata = {
   description: copy.seo.privacy,
   alternates: { canonical: PAGE_URL },
   robots: { index: true, follow: true },
+  openGraph: ogFor("/privacy", "Privacy Policy", copy.seo.privacy),
 };
 
 export default function PrivacyPage() {

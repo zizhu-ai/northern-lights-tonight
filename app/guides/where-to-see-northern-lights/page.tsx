@@ -6,7 +6,7 @@ import type { ReactNode } from "react";
 
 import { TonightPlaces } from "@/components/tonight-places";
 import copy from "@/content/ui-copy.json";
-import { SITE_URL } from "@/lib/site";
+import { ogFor, SITE_URL } from "@/lib/site";
 
 import styles from "../../part4.module.css";
 
@@ -20,6 +20,11 @@ export const metadata: Metadata = {
   description: copy.seo.where,
   alternates: { canonical: `${SITE_URL}/guides/where-to-see-northern-lights` },
   robots: { index: true, follow: true },
+  openGraph: ogFor(
+    "/guides/where-to-see-northern-lights",
+    TITLE,
+    copy.seo.where,
+  ),
 };
 
 export default async function WhereGuidePage() {
