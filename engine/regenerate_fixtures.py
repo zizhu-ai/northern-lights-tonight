@@ -33,6 +33,7 @@ CASES = {
     "ovation_age_91m": "2026-08-21T04:30:00+00:00",
     "kp_slots_missing": "2026-08-21T03:10:00+00:00",
     "malformed_ovation": "2026-08-21T03:10:00+00:00",
+    "signals_conflict": "2026-11-01T05:40:00+00:00",
 }
 
 

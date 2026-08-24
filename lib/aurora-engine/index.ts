@@ -381,7 +381,14 @@ export function rollup(windows: JsonObject[], nowLocal: WallTime): JsonObject {
   const hasUnknown = statuses.includes("UNKNOWN");
   const hasGo = statuses.includes("GO");
   const hasMaybe = statuses.includes("MAYBE");
-  const status = !hasGo && hasUnknown && !allNone ? "UNKNOWN" : hasGo ? "GO" : hasMaybe ? "MAYBE" : "NO";
+  const nearNoReach = scored.some(
+    (window) => window.source === "ovation" && window.codes.includes("AURORA_NO_REACH"),
+  );
+  const farReaches = scored.some(
+    (window) => ["kp", "kp_forecast"].includes(window.source) && window.status === "GO",
+  );
+  const signalsConflict = nearNoReach && farReaches;
+  const status = signalsConflict ? "MAYBE" : !hasGo && hasUnknown && !allNone ? "UNKNOWN" : hasGo ? "GO" : hasMaybe ? "MAYBE" : "NO";
   const target = hasGo ? "GO" : hasMaybe ? "MAYBE" : null;
   let best: JsonObject | null = null;
   if (target) {
@@ -424,8 +431,10 @@ export function rollup(windows: JsonObject[], nowLocal: WallTime): JsonObject {
     if (scored.some((window) => window.codes.some((code: string) => code.includes("DATA_MISSING")))) confidence = "low";
     if (best && wallCompare(best.start, nowLocal) > 6 * HOUR) confidence = "low";
   } else if (scored.some((window) => window.status === "UNKNOWN")) confidence = "low";
+  if (signalsConflict) confidence = "low";
   const reasons: string[] = [];
   for (const window of scored) for (const code of window.codes) if (!reasons.includes(code)) reasons.push(code);
+  if (signalsConflict) reasons.unshift("SIGNALS_CONFLICT");
   if (!reasons.includes(main)) reasons.unshift(main);
   return { status, confidence, best_window: best, main_obstacle: main, reason_codes: reasons.slice(0, 8) };
 }
