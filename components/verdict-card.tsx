@@ -76,11 +76,11 @@ export function VerdictCard({
 
       <dl className="verdict-card__meta">
         <div>
-          <dt>Best window</dt>
+          <dt>{copy.verdict.best_window_label}</dt>
           <dd>{displayWindow}</dd>
         </div>
         <div>
-          <dt>Main issue</dt>
+          <dt>{copy.verdict.main_issue_label}</dt>
           <dd>{displayIssue}</dd>
         </div>
         <div>
@@ -88,7 +88,7 @@ export function VerdictCard({
           <dd>{displayLook}</dd>
         </div>
         <div>
-          <dt>Confidence</dt>
+          <dt>{copy.verdict.confidence_label}</dt>
           <dd>{confidenceCopy[confidence]}</dd>
         </div>
       </dl>
