@@ -46,10 +46,9 @@ export default function PrivacyPage() {
 
         <h2>Analytics</h2>
         <p>
-          If Google Analytics 4 is enabled, Google may use cookies or IP
-          address to measure visits. We use that measurement for traffic
-          statistics. With no ads configured, we do not use Analytics as an ad
-          platform.
+          We use Vercel Web Analytics to understand aggregate site traffic.
+          This analytics service does not use cookies or collect personal
+          information, and we do not use it for advertising or remarketing.
         </p>
 
         <h2>Data sources</h2>
