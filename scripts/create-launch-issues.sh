@@ -67,7 +67,7 @@ create_issue \
   "P0,ops,launch-blocker" \
 "零代码改动，但很可能是上线前性价比最高的一条。
 
-Vercel Blob 里的 last-known-good 才是真正的安全网；仓库里那份 \`snapshots/latest.json\` 只在 Blob 也拿不到时才会被读到。如果 token 没配在生产环境，LKG 直接失效，每次缓存未命中都会打上游，上游一抖就掉进最脆弱的兜底路径（见 #2）。
+Vercel Blob 里的 last-known-good 才是真正的安全网；仓库里那份 \`snapshots/latest.json\` 只在 Blob 也拿不到时才会被读到。如果 token 没配在生产环境，LKG 直接失效，每次缓存未命中都会打上游，上游一抖就掉进最脆弱的兜底路径（见『兜底路径会透传陈旧的 NO 结论』）。
 
 代码位置：\`lib/live-snapshots.ts:103\`、\`lib/live-snapshots.ts:120\`。读写异常都被吞掉（\`:114-116\`、\`:131-133\`），所以配错了也不会有任何报错。
 
