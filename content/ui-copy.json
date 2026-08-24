@@ -74,6 +74,11 @@
     "live_disclaimer": "Live reading, not a full local guide.",
     "unknown_main_issue": "Aurora data is unavailable right now."
   },
+  "error": {
+    "title": "Something went wrong",
+    "body": "This page failed to load. Try again, or go back to tonight’s readings.",
+    "home_cta": "Back to tonight"
+  },
   "not_found": {
     "title": "Page not found",
     "generic": "We do not have a dedicated page at this URL.",
@@ -94,7 +99,8 @@
   },
   "share": {
     "template": "{Place} tonight: {STATUS} · {window}",
-    "copied": "Copied"
+    "copied": "Copied",
+    "failed": "Copy failed"
   },
   "time": {
     "locale": "en-US",
