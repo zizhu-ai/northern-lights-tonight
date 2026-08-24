@@ -3,6 +3,7 @@ node_modules/
 out/
 tsconfig.tsbuildinfo
 engine/.cache/
+__pycache__/
 .vercel/
 .DS_Store
 *.log
