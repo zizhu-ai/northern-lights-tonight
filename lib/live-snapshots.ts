@@ -2,6 +2,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 
 import { get, put } from "@vercel/blob";
+import * as Sentry from "@sentry/nextjs";
 import { unstable_cache } from "next/cache";
 import { cache } from "react";
 
@@ -111,7 +112,10 @@ async function readBlobLkg(): Promise<RawSourceEnvelopes | null> {
     if (!result || result.statusCode !== 200) return null;
     const value: unknown = JSON.parse(await new Response(result.stream).text());
     return isValidRawSourceEnvelopes(value) ? value : null;
-  } catch {
+  } catch (error) {
+    Sentry.captureException(error, {
+      tags: { component: "aurora-lkg", operation: "blob-read" },
+    });
     return null;
   }
 }
@@ -128,7 +132,10 @@ async function writeBlobLkg(envelopes: RawSourceEnvelopes): Promise<void> {
       contentType: "application/json",
       cacheControlMaxAge: 60,
     });
-  } catch {
+  } catch (error) {
+    Sentry.captureException(error, {
+      tags: { component: "aurora-lkg", operation: "blob-write" },
+    });
     // Persistence is a degradation aid. A Blob outage must not fail the page.
   }
 }
