@@ -95,6 +95,22 @@ input {
   outline-offset: 3px;
 }
 
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  padding: 0.75rem 1rem;
+  background: var(--twilight);
+  color: #fff;
+  border-radius: 0 0 0.5rem 0;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  left: 0;
+}
+
 .site-content {
   flex: 1;
   min-width: 0;

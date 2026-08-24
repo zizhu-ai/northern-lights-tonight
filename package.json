@@ -5,7 +5,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "snapshot": "python3 engine/snapshot.py"
+    "snapshot": "python3 engine/snapshot.py",
+    "test:engine": "python3 -m unittest engine.test_compute",
+    "test:parity": "node --experimental-strip-types --test lib/aurora-engine/parity.test.ts",
+    "test": "npm run test:engine && npm run test:parity"
   },
   "dependencies": {
     "@vercel/blob": "2.8.0",
