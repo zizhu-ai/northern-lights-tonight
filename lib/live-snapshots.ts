@@ -253,7 +253,7 @@ const sourceTimeFromBundled = (bundle: JsonObject & { locations: JsonObject[] })
     : null;
 };
 
-function sanitizeBundledBundle(
+export function sanitizeBundledBundle(
   raw: JsonObject & {
     generated_at: string;
     ovation_ok: boolean;
@@ -263,6 +263,9 @@ function sanitizeBundledBundle(
   now: Date,
 ): AuroraBundle {
   const sourceTime = sourceTimeFromBundled(raw);
+  const bundledAgeMs = now.getTime() - Date.parse(raw.generated_at);
+  const bundledTooOldToAssert =
+    !Number.isFinite(bundledAgeMs) || bundledAgeMs > 12 * 60 * 60 * 1000;
   const ovationHardInvalid =
     sourceTime === null || (isoAgeSeconds(sourceTime, now) ?? Number.POSITIVE_INFINITY) > 90 * 60;
   const observations: Record<SourceName, SourceObservation> = {
@@ -303,7 +306,10 @@ function sanitizeBundledBundle(
     if (!expiredGo && !auroraUnavailable) {
       return { ...row, updated_at: sourceTime ?? raw.generated_at };
     }
-    const explicitNo = row.status === "NO" && row.main_obstacle === "AURORA_NO_REACH";
+    const explicitNo =
+      !bundledTooOldToAssert &&
+      row.status === "NO" &&
+      row.main_obstacle === "AURORA_NO_REACH";
     return explicitNo
       ? { ...row, updated_at: sourceTime ?? raw.generated_at }
       : {
