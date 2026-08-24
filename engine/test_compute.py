@@ -29,6 +29,7 @@ CASES = (
     "ovation_age_91m",
     "kp_slots_missing",
     "malformed_ovation",
+    "signals_conflict",
 )
 
 
@@ -133,6 +134,18 @@ class GoldenComputeTests(unittest.TestCase):
         age_91 = load_json(FIXTURES / "ovation_age_91m" / "expected" / "latest.json")
         self.assertTrue(age_46["ovation_ok"])
         self.assertFalse(age_91["ovation_ok"])
+
+    def test_signals_conflict_gate(self) -> None:
+        fixture = load_json(FIXTURES / "signals_conflict" / "expected" / "latest.json")
+        conflicts = [
+            location
+            for location in fixture["locations"]
+            if "SIGNALS_CONFLICT" in location["reason_codes"]
+        ]
+        self.assertTrue(conflicts, "fixture must exercise near-NO versus far-GO conflict")
+        for location in conflicts:
+            self.assertEqual("MAYBE", location["status"])
+            self.assertEqual("low", location["confidence"])
 
     def test_fetch_keeps_ovation_and_kp_independent(self) -> None:
         def fake_get(url: str, _cache_name: str, _max_age_min: int):

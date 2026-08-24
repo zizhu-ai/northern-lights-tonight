@@ -25,6 +25,7 @@ const cases = [
   "ovation_age_91m",
   "kp_slots_missing",
   "malformed_ovation",
+  "signals_conflict",
 ] as const;
 
 const readJson = (path: string): any => JSON.parse(readFileSync(path, "utf8"));
@@ -73,6 +74,14 @@ for (const caseId of cases) {
     assert.equal(actual.ovation_ok, expectedLatest.ovation_ok, `${caseId}/ovation expiration path`);
     if (caseId === "best_window_elapsed") assert.equal(actual.ovation_ok, false, "39h-old OVATION must use stale_90 path");
     assert.equal(actual.locations.length, 15);
+    if (caseId === "signals_conflict") {
+      const conflicts = actual.locations.filter((snapshot: any) => snapshot.reason_codes.includes("SIGNALS_CONFLICT"));
+      assert.ok(conflicts.length > 0, "fixture must exercise near-NO versus far-GO conflict");
+      for (const snapshot of conflicts) {
+        assert.equal(snapshot.status, "MAYBE");
+        assert.equal(snapshot.confidence, "low");
+      }
+    }
     assert.deepEqual(actual.locations.map((snapshot: any) => snapshot.location_slug), slugs);
     for (const snapshot of actual.locations) {
       const expected = readJson(join(root, `expected/${snapshot.location_slug}.json`));
@@ -81,8 +90,8 @@ for (const caseId of cases) {
   });
 }
 
-test("fixture matrix is exactly 14 cases x 15 locations", () => {
-  assert.equal(cases.length, 14);
+test("fixture matrix is exactly 15 cases x 15 locations", () => {
+  assert.equal(cases.length, 15);
   assert.equal(slugs.length, 15);
   for (const caseId of cases) {
     const expectedFiles = readdirSync(join(fixtures, caseId, "expected")).filter((name) => name !== "latest.json" && name.endsWith(".json"));

@@ -481,8 +481,19 @@ def rollup(windows: list[dict], now_local: datetime) -> dict:
     has_unknown = "UNKNOWN" in statuses
     has_go = "GO" in statuses
     has_maybe = "MAYBE" in statuses
+    near_no_reach = any(
+        w.get("source") == "ovation" and "AURORA_NO_REACH" in w.get("codes", [])
+        for w in scored
+    )
+    far_reaches = any(
+        w.get("source") in ("kp", "kp_forecast") and w.get("status") == "GO"
+        for w in scored
+    )
+    signals_conflict = near_no_reach and far_reaches
 
-    if (not has_go) and has_unknown and (not all_none):
+    if signals_conflict:
+        status = "MAYBE"
+    elif (not has_go) and has_unknown and (not all_none):
         status = "UNKNOWN"
     elif has_go:
         status = "GO"
@@ -536,12 +547,16 @@ def rollup(windows: list[dict], now_local: datetime) -> dict:
             conf = "low"
     elif any(w["status"] == "UNKNOWN" for w in scored):
         conf = "low"
+    if signals_conflict:
+        conf = "low"
 
     reasons = []
     for w in scored:
         for c in w.get("codes", []):
             if c not in reasons:
                 reasons.append(c)
+    if signals_conflict:
+        reasons.insert(0, "SIGNALS_CONFLICT")
     if main not in reasons:
         reasons.insert(0, main)
 
