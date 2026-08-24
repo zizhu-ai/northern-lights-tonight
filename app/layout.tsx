@@ -42,8 +42,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en-US">
       <body className={`${inter.variable} ${inter.className}`}>
+        <a className="skip-link" href="#main-content">
+          Skip to content
+        </a>
         <SiteHeader />
-        <div className="site-content">{children}</div>
+        <div className="site-content" id="main-content">
+          {children}
+        </div>
         <SiteFooter />
         <GoogleAnalytics />
       </body>
