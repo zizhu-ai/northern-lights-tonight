@@ -18,6 +18,7 @@ import {
   type SourceFetchResult,
   type SourceName,
 } from "@/lib/aurora-sources";
+import { sanitizeBundledLocationRow } from "@/lib/bundled-sanitize";
 
 export type SnapshotSource = "live" | "lkg" | "bundled";
 export type SourceHealth = "ok" | "degraded" | "invalid";
@@ -296,25 +297,15 @@ function sanitizeBundledBundle(
       coverage: null,
     },
   };
-  const locations = raw.locations.map((row) => {
-    const bestEnd = typeof row.best_window_end === "string" ? Date.parse(row.best_window_end) : null;
-    const expiredGo = row.status === "GO" && (bestEnd === null || bestEnd <= now.getTime());
-    const auroraUnavailable = ovationHardInvalid && observations.kp.health === "invalid";
-    if (!expiredGo && !auroraUnavailable) {
-      return { ...row, updated_at: sourceTime ?? raw.generated_at };
-    }
-    const explicitNo = row.status === "NO" && row.main_obstacle === "AURORA_NO_REACH";
-    return explicitNo
-      ? { ...row, updated_at: sourceTime ?? raw.generated_at }
-      : {
-          ...row,
-          status: "UNKNOWN",
-          confidence: "low",
-          best_window_start: null,
-          best_window_end: null,
-          updated_at: sourceTime ?? raw.generated_at,
-        };
-  });
+  const auroraUnavailable = ovationHardInvalid && observations.kp.health === "invalid";
+  const locations = raw.locations.map((row) =>
+    sanitizeBundledLocationRow(row, {
+      now,
+      generatedAt: raw.generated_at,
+      sourceTime,
+      auroraUnavailable,
+    }),
+  );
   return {
     ...raw,
     seo_indexable: false,
