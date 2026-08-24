@@ -74,13 +74,19 @@ export function PlaceSearchForm() {
   }
 
   return (
-    <form className="place-search-form" onSubmit={handleSubmit}>
+    <form
+      className="place-search-form"
+      method="get"
+      action="/api/search"
+      onSubmit={handleSubmit}
+    >
       <label className="visually-hidden" htmlFor="page-place-search">
         {copy.chrome.input_placeholder}
       </label>
       <div className="place-search-form__row">
         <input
           id="page-place-search"
+          name="q"
           type="search"
           value={query}
           placeholder={copy.chrome.input_placeholder}

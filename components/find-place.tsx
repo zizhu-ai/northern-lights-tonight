@@ -173,13 +173,14 @@ export function FindPlace() {
                 {copy.chrome.close}
               </button>
             </div>
-            <form onSubmit={handleSubmit}>
+            <form method="get" action="/api/search" onSubmit={handleSubmit}>
               <label className="visually-hidden" htmlFor="find-place-input">
                 {copy.chrome.input_placeholder}
               </label>
               <input
                 ref={inputRef}
                 id="find-place-input"
+                name="q"
                 type="search"
                 value={query}
                 placeholder={copy.chrome.input_placeholder}
