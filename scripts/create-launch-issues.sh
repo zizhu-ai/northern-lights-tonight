@@ -16,7 +16,7 @@ ensure_label() {
   local name="$1" color="$2" description="$3"
   if [[ "$DRY_RUN" == "1" ]]; then
     printf 'label  %s\n' "$name"
-    return
+    return 0
   fi
   gh label create "$name" --color "$color" --description "$description" 2>/dev/null \
     || gh label edit "$name" --color "$color" --description "$description" >/dev/null
@@ -25,20 +25,23 @@ ensure_label() {
 create_issue() {
   local title="$1" labels="$2" body="$3"
 
-  # gh 的 --search 是模糊匹配，所以再用 jq 做一次精确标题比对
-  local existing
+  # gh 的 --search 是模糊匹配，所以再用 jq 做一次精确标题比对。
+  # 查询失败（限流/网络）不能中断整轮建单，所以吞掉错误当作「没查到」。
+  local existing=""
   existing="$(gh issue list --state all --search "$title" --json number,title \
-    --jq ".[] | select(.title == \"$title\") | .number" 2>/dev/null | head -1)"
+    --jq ".[] | select(.title == \"$title\") | .number" 2>/dev/null | head -1 || true)"
 
   if [[ -n "$existing" ]]; then
     printf 'skip   #%s  %s\n' "$existing" "$title"
-    return
+    return 0
   fi
 
   if [[ "$DRY_RUN" == "1" ]]; then
     printf 'create [%s]  %s\n' "$labels" "$title"
-    [[ "${SHOW_BODY:-0}" == "1" ]] && printf -- '---\n%s\n---\n\n' "$body"
-    return
+    if [[ "${SHOW_BODY:-0}" == "1" ]]; then
+      printf -- '---\n%s\n---\n\n' "$body"
+    fi
+    return 0
   fi
 
   gh issue create --title "$title" --label "$labels" --body "$body" \
