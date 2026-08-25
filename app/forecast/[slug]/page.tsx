@@ -7,7 +7,6 @@ import copy from "@/content/ui-copy.json";
 import {
   getForecastDossier,
   getHeadlinePoint,
-  WAVE_ONE_SLUGS,
   WAVE_ONE_SLUG_SET,
   type ForecastDossier,
 } from "@/lib/forecast-places";
@@ -15,6 +14,7 @@ import {
   formatUpdatedAt,
   formatWindow,
   formatZoneAbbreviation,
+  loadLatest,
   loadForecastSnapshot,
   type ForecastPoint,
   type ForecastSnapshot,
@@ -53,13 +53,9 @@ type ForecastState = {
   bestWindow: string;
 };
 
-export const dynamic = "force-static";
-export const dynamicParams = false;
-export const revalidate = 600;
-
-export function generateStaticParams() {
-  return WAVE_ONE_SLUGS.map((slug) => ({ slug }));
-}
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+export const maxDuration = 60;
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
@@ -95,7 +91,10 @@ export default async function ForecastPage({ params }: PageProps) {
   if (!dossier) notFound();
 
   const headlinePoint = getHeadlinePoint(dossier);
-  const state = await getForecastState(slug, dossier.timezone);
+  const [state, latest] = await Promise.all([
+    getForecastState(slug, dossier.timezone),
+    loadLatest(),
+  ]);
   const timezone = formatZoneAbbreviation(new Date(), dossier.timezone);
   const updated = formatUpdatedAt(
     state.snapshot?.updated_at ?? state.snapshot?.generated_at,
@@ -111,7 +110,11 @@ export default async function ForecastPage({ params }: PageProps) {
   const schemas = buildSchemas(dossier, titleFor(dossier), state);
 
   return (
-    <main className={styles.page}>
+    <main
+      className={styles.page}
+      data-snapshot-revision={latest.freshness?.revision ?? "unavailable"}
+      data-snapshot-checked-at={latest.freshness?.checked_at ?? "unavailable"}
+    >
       <div className={`twilight-band ${styles.twilight}`}>
         <div className={styles.inner}>
           <header className={styles.hero}>

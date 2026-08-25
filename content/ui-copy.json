@@ -47,7 +47,7 @@
     "alaska_kicker": "Statewide · headline: Fairbanks Interior",
     "stale_main_issue": "Source data is too old to treat as live.",
     "hours_need_live": "Hours depend on live data. We don't guess.",
-    "auto_refresh": "We check sources every 10 minutes. This page updates itself.",
+    "auto_refresh": "Sources are checked when requested and checks are reused for up to 10 minutes.",
     "site_stale_human": "Readings paused: source data is stale. We don’t guess.",
     "updated_minutes": "Updated {n} minutes ago",
     "updated_hour": "Updated 1 hour ago",

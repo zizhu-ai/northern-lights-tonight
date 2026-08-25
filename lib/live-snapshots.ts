@@ -1,8 +1,7 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
+import { randomUUID } from "node:crypto";
 
-import { get, put } from "@vercel/blob";
-import { unstable_cache } from "next/cache";
 import { cache } from "react";
 
 import dossierJson from "@/地点档案/wave1.json";
@@ -10,15 +9,18 @@ import { compute_bundle } from "@/lib/aurora-engine";
 import {
   fetchAuroraSources,
   fingerprintPayload,
-  isValidRawSourceEnvelopes,
-  SOURCE_SCHEMA_VERSION,
   type JsonObject,
-  type RawSourceEnvelopes,
   type SourceEnvelope,
-  type SourceFetchResult,
   type SourceName,
 } from "@/lib/aurora-sources";
 import { sanitizeBundledLocationRow } from "@/lib/bundled-sanitize";
+import {
+  createSourceResolver,
+  type SnapshotFreshness,
+  type SourceResolution,
+} from "@/lib/hard-refresh-resolver";
+import { createVercelSnapshotStore } from "@/lib/snapshot-store";
+import type { SnapshotRow } from "@/lib/snapshots";
 
 export type SnapshotSource = "live" | "lkg" | "bundled";
 export type SourceHealth = "ok" | "degraded" | "invalid";
@@ -37,17 +39,11 @@ export type AuroraBundle = JsonObject & {
   generated_at: string;
   ovation_ok: boolean;
   seo_indexable: false;
-  locations: JsonObject[];
+  locations: SnapshotRow[];
   snapshot_source: SnapshotSource;
   fallback_used: boolean;
   source_observations: Record<SourceName, SourceObservation>;
-};
-
-type RawResolution = {
-  kind: "raw";
-  source: "live" | "lkg";
-  envelopes: RawSourceEnvelopes;
-  observations: Record<SourceName, SourceObservation>;
+  freshness: SnapshotFreshness | null;
 };
 
 type BundledResolution = {
@@ -55,9 +51,6 @@ type BundledResolution = {
   bundle: AuroraBundle;
 };
 
-export type SourceResolution = RawResolution | BundledResolution;
-
-const BLOB_PATH = "aurora/lkg/source-envelopes-v1.json";
 const dossiers = dossierJson.locations;
 
 const isObject = (value: unknown): value is JsonObject =>
@@ -99,40 +92,6 @@ const observationFor = (
     coverage: envelope.coverage,
   };
 };
-
-async function readBlobLkg(): Promise<RawSourceEnvelopes | null> {
-  const token = process.env.BLOB_READ_WRITE_TOKEN;
-  if (!token) return null;
-  try {
-    const result = await get(BLOB_PATH, {
-      access: "public",
-      token,
-      useCache: false,
-    });
-    if (!result || result.statusCode !== 200) return null;
-    const value: unknown = JSON.parse(await new Response(result.stream).text());
-    return isValidRawSourceEnvelopes(value) ? value : null;
-  } catch {
-    return null;
-  }
-}
-
-async function writeBlobLkg(envelopes: RawSourceEnvelopes): Promise<void> {
-  const token = process.env.BLOB_READ_WRITE_TOKEN;
-  if (!token || !isValidRawSourceEnvelopes(envelopes)) return;
-  try {
-    await put(BLOB_PATH, JSON.stringify(envelopes), {
-      access: "public",
-      token,
-      allowOverwrite: true,
-      addRandomSuffix: false,
-      contentType: "application/json",
-      cacheControlMaxAge: 60,
-    });
-  } catch {
-    // Persistence is a degradation aid. A Blob outage must not fail the page.
-  }
-}
 
 function isKpCovered(envelope: SourceEnvelope<unknown[]>, now: Date): boolean {
   const start = envelope.coverage.start;
@@ -197,15 +156,6 @@ function cloudCoverageComplete(
   });
 }
 
-function chooseEnvelope<T>(
-  live: SourceFetchResult<T>,
-  previous: SourceEnvelope<T> | null,
-): { envelope: SourceEnvelope<T> | null; fallback: boolean; live: boolean } {
-  if (live.ok) return { envelope: live.envelope, fallback: false, live: true };
-  if (previous) return { envelope: previous, fallback: true, live: false };
-  return { envelope: null, fallback: false, live: false };
-}
-
 function isBundledBundle(value: unknown): value is JsonObject & {
   generated_at: string;
   ovation_ok: boolean;
@@ -264,14 +214,13 @@ function sanitizeBundledBundle(
   now: Date,
 ): AuroraBundle {
   const sourceTime = sourceTimeFromBundled(raw);
-  const ovationHardInvalid =
-    sourceTime === null || (isoAgeSeconds(sourceTime, now) ?? Number.POSITIVE_INFINITY) > 90 * 60;
   const observations: Record<SourceName, SourceObservation> = {
     ovation: {
       source_time: sourceTime,
-      fetched_at: ovationHardInvalid ? null : raw.generated_at,
+      fetched_at: null,
       age_seconds: isoAgeSeconds(sourceTime, now),
-      health: ovationHardInvalid ? "invalid" : "degraded",
+      // A derived bundle cannot prove raw aurora validity for this request.
+      health: "invalid",
       fallback_used: true,
       fingerprint: fingerprintPayload({ source_time: sourceTime }),
       coverage: null,
@@ -297,22 +246,22 @@ function sanitizeBundledBundle(
       coverage: null,
     },
   };
-  const auroraUnavailable = ovationHardInvalid && observations.kp.health === "invalid";
   const locations = raw.locations.map((row) =>
     sanitizeBundledLocationRow(row, {
       now,
       generatedAt: raw.generated_at,
       sourceTime,
-      auroraUnavailable,
+      auroraUnavailable: true,
     }),
   );
   return {
     ...raw,
     seo_indexable: false,
-    locations,
+    locations: locations as SnapshotRow[],
     snapshot_source: "bundled",
     fallback_used: true,
     source_observations: observations,
+    freshness: null,
   };
 }
 
@@ -322,104 +271,49 @@ async function bundledResolution(now: Date): Promise<BundledResolution> {
   return { kind: "bundled", bundle: sanitizeBundledBundle(raw, now) };
 }
 
-async function refreshSourceEnvelopes(): Promise<SourceResolution> {
-  const now = new Date();
-  const previous = await readBlobLkg();
-  const fetched = await fetchAuroraSources(dossiers, previous);
-  const ovation = chooseEnvelope(fetched.ovation, previous?.ovation ?? null);
-  const kp = chooseEnvelope(fetched.kp, previous?.kp ?? null);
-  const cloud = chooseEnvelope(fetched.cloud, previous?.cloud ?? null);
+const sourceResolver = createSourceResolver({
+  now: () => new Date(),
+  ownerId: () => randomUUID(),
+  sleep: (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds)),
+  store: createVercelSnapshotStore(),
+  fetchSources: (_unused, previous) => fetchAuroraSources(dossiers, previous),
+});
 
-  const ovationUsable = ovation.envelope ? isOvationUsable(ovation.envelope, now) : false;
-  const kpCovered = kp.envelope ? isKpCovered(kp.envelope, now) : false;
-  const cloudComplete = cloud.envelope ? cloudCoverageComplete(cloud.envelope, now) : false;
-
-  if (!ovationUsable && !kpCovered) return bundledResolution(now);
-
-  const envelopes: RawSourceEnvelopes = {
-    schema_version: SOURCE_SCHEMA_VERSION,
-    ovation: ovation.envelope,
-    kp: kp.envelope,
-    cloud: cloud.envelope,
-  };
-  if (ovation.live || kp.live || cloud.live) await writeBlobLkg(envelopes);
-
-  const observations: Record<SourceName, SourceObservation> = {
-    ovation: observationFor(
-      ovation.envelope,
-      now,
-      ovationUsable ? (ovation.fallback ? "degraded" : "ok") : "invalid",
-      ovation.fallback,
-    ),
-    kp: observationFor(
-      kp.envelope,
-      now,
-      kpCovered ? (kp.fallback ? "degraded" : "ok") : "invalid",
-      kp.fallback,
-    ),
-    cloud: observationFor(
-      cloud.envelope,
-      now,
-      cloud.envelope
-        ? cloudComplete && !cloud.fallback
-          ? "ok"
-          : "degraded"
-        : "invalid",
-      cloud.fallback,
-    ),
-  };
-  const usedFallback = Object.values(observations).some((item) => item.fallback_used);
-  // A mixed live/LKG set is reported as lkg at bundle level: the most
-  // conservative of the three closed-set source labels wins.
-  return {
-    kind: "raw",
-    source: usedFallback ? "lkg" : "live",
-    envelopes,
-    observations,
-  };
-}
-
-const cachedSourceEnvelopes = unstable_cache(
-  refreshSourceEnvelopes,
-  ["aurora-source-envelopes-v1"],
-  { revalidate: 600 },
-);
-
-let inflight: Promise<SourceResolution> | null = null;
-
-export async function getSourceEnvelopes(): Promise<SourceResolution> {
-  if (inflight) return inflight;
-  inflight = cachedSourceEnvelopes();
-  try {
-    return await inflight;
-  } finally {
-    inflight = null;
-  }
-}
+export const getSourceEnvelopes = sourceResolver;
 
 const downgradedConfidence = (confidence: unknown): unknown =>
   confidence === "high" ? "medium" : confidence;
 
 function observationsAt(
-  resolution: RawResolution,
+  resolution: Extract<SourceResolution, { kind: "usable" }>,
   now: Date,
 ): Record<SourceName, SourceObservation> {
   const { envelopes } = resolution;
-  const ovationFallback = resolution.observations.ovation.fallback_used;
-  const kpFallback = resolution.observations.kp.fallback_used;
-  const cloudFallback = resolution.observations.cloud.fallback_used;
+  const ovationFallback = resolution.outcomes.ovation.status === "error";
+  const kpFallback = resolution.outcomes.kp.status === "error";
+  const cloudFallback = resolution.outcomes.cloud.status === "error";
   const ovationUsable = envelopes.ovation
     ? isOvationUsable(envelopes.ovation, now)
     : false;
+  const ovationAge = envelopes.ovation
+    ? isoAgeSeconds(envelopes.ovation.source_time, now)
+    : null;
   const kpCovered = envelopes.kp ? isKpCovered(envelopes.kp, now) : false;
   const cloudComplete = envelopes.cloud
     ? cloudCoverageComplete(envelopes.cloud, now)
     : false;
+  const cloudAge = envelopes.cloud
+    ? isoAgeSeconds(envelopes.cloud.fetched_at, now)
+    : null;
   return {
     ovation: observationFor(
       envelopes.ovation,
       now,
-      ovationUsable ? (ovationFallback ? "degraded" : "ok") : "invalid",
+      ovationUsable
+        ? ovationFallback || (ovationAge ?? Number.POSITIVE_INFINITY) > 45 * 60
+          ? "degraded"
+          : "ok"
+        : "invalid",
       ovationFallback,
     ),
     kp: observationFor(
@@ -432,7 +326,7 @@ function observationsAt(
       envelopes.cloud,
       now,
       envelopes.cloud
-        ? cloudComplete && !cloudFallback
+        ? cloudComplete && !cloudFallback && (cloudAge ?? Number.POSITIVE_INFINITY) <= 30 * 60
           ? "ok"
           : "degraded"
         : "invalid",
@@ -464,13 +358,12 @@ function updatedAtForLocation(
 
 export const getAuroraBundle = cache(async (): Promise<AuroraBundle> => {
   let resolution = await getSourceEnvelopes();
-  if (resolution.kind === "bundled") return resolution.bundle;
+  if (resolution.kind === "failed_closed") return (await bundledResolution(new Date())).bundle;
 
   const now = new Date();
   const observations = observationsAt(resolution, now);
   if (observations.ovation.health === "invalid" && observations.kp.health === "invalid") {
-    resolution = await bundledResolution(now);
-    return resolution.bundle;
+    return (await bundledResolution(now)).bundle;
   }
   const { envelopes } = resolution;
   const computed = compute_bundle(
@@ -499,9 +392,10 @@ export const getAuroraBundle = cache(async (): Promise<AuroraBundle> => {
     generated_at: computed.generated_at,
     ovation_ok: computed.ovation_ok === true,
     seo_indexable: false,
-    locations: locations as JsonObject[],
+    locations: locations as SnapshotRow[],
     snapshot_source: resolution.source,
     fallback_used: Object.values(observations).some((item) => item.fallback_used),
     source_observations: observations,
+    freshness: resolution.freshness,
   };
 });

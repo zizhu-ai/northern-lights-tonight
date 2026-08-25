@@ -21,8 +21,9 @@ import styles from "./part4.module.css";
 
 const TITLE = "Northern Lights Tonight: US City and State Aurora Forecast";
 
-export const dynamic = "force-static";
-export const revalidate = 600;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+export const maxDuration = 60;
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -32,9 +33,16 @@ export const metadata: Metadata = {
   openGraph: ogFor("", TITLE, copy.home.lead),
 };
 
-export default function HomePage() {
+export default async function HomePage() {
+  const latest = await loadLatest();
+  const revision = latest.freshness?.revision ?? "unavailable";
+  const checkedAt = latest.freshness?.checked_at ?? "unavailable";
   return (
-    <main className={styles.home}>
+    <main
+      className={styles.home}
+      data-snapshot-revision={revision}
+      data-snapshot-checked-at={checkedAt}
+    >
       <div className={`twilight-band ${styles.twilight}`}>
         <div className={styles.inner}>
           <header className={styles.hero}>
