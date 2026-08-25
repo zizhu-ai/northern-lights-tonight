@@ -345,6 +345,7 @@ async function fetchCloud(dossiers: Dossier[]): Promise<SourceFetchResult<Record
   try {
     const config = resolveOpenMeteoConfig({
       VERCEL_ENV: process.env.VERCEL_ENV,
+      OPEN_METEO_USAGE_MODE: process.env.OPEN_METEO_USAGE_MODE,
       OPEN_METEO_API_BASE: process.env.OPEN_METEO_API_BASE,
       OPEN_METEO_API_KEY: process.env.OPEN_METEO_API_KEY,
       AURORA_CLOUD_URL: process.env.AURORA_CLOUD_URL,

@@ -25,6 +25,65 @@ test("production rejects the free endpoint", () => {
   );
 });
 
+test("production noncommercial mode uses only the canonical free endpoint without a key", () => {
+  const config = resolveOpenMeteoConfig({
+    VERCEL_ENV: "production",
+    OPEN_METEO_USAGE_MODE: "noncommercial",
+  });
+  const requestUrl = new URL(config.baseUrl);
+  requestUrl.searchParams.set("latitude", "64.8400");
+
+  const result = appendOpenMeteoCredential(requestUrl, config);
+
+  assert.deepEqual(config, { baseUrl: FREE_URL, apiKey: null });
+  assert.equal(result.searchParams.get("apikey"), null);
+});
+
+test("production noncommercial mode rejects any configured API key", () => {
+  assert.throws(
+    () =>
+      resolveOpenMeteoConfig({
+        VERCEL_ENV: "production",
+        OPEN_METEO_USAGE_MODE: "noncommercial",
+        OPEN_METEO_API_KEY: SENTINEL_KEY,
+      }),
+    /API key.*noncommercial|noncommercial.*API key/i,
+  );
+});
+
+test("production noncommercial mode rejects a noncanonical configured endpoint", () => {
+  for (const baseUrl of [
+    CUSTOMER_URL,
+    "https://api.open-meteo.com/v1/not-forecast",
+    `${FREE_URL}?apikey=embedded`,
+  ]) {
+    assert.throws(
+      () =>
+        resolveOpenMeteoConfig({
+          VERCEL_ENV: "production",
+          OPEN_METEO_USAGE_MODE: "noncommercial",
+          OPEN_METEO_API_BASE: baseUrl,
+        }),
+      /canonical.*free|free.*endpoint/i,
+    );
+  }
+});
+
+test("production rejects invalid Open-Meteo usage modes", () => {
+  for (const usageMode of ["commercial", "NonCommercial", "invalid", " "]) {
+    assert.throws(
+      () =>
+        resolveOpenMeteoConfig({
+          VERCEL_ENV: "production",
+          OPEN_METEO_USAGE_MODE: usageMode,
+          OPEN_METEO_API_BASE: CUSTOMER_URL,
+          OPEN_METEO_API_KEY: SENTINEL_KEY,
+        }),
+      /usage mode/i,
+    );
+  }
+});
+
 test("production rejects a noncanonical customer endpoint", () => {
   for (const baseUrl of [
     "https://customer-api.open-meteo.com/v1/not-forecast",
@@ -80,6 +139,16 @@ test("preview may use the free evaluation endpoint", () => {
     baseUrl: FREE_URL,
     apiKey: null,
   });
+});
+
+test("usage mode does not change preview behavior", () => {
+  assert.deepEqual(
+    resolveOpenMeteoConfig({
+      VERCEL_ENV: "preview",
+      OPEN_METEO_USAGE_MODE: "invalid-outside-production",
+    }),
+    { baseUrl: FREE_URL, apiKey: null },
+  );
 });
 
 test("fault-injection override works outside production", () => {

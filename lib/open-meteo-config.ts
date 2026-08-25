@@ -1,5 +1,6 @@
 export type OpenMeteoEnvironment = {
   VERCEL_ENV?: string;
+  OPEN_METEO_USAGE_MODE?: string;
   OPEN_METEO_API_BASE?: string;
   OPEN_METEO_API_KEY?: string;
   AURORA_CLOUD_URL?: string;
@@ -28,6 +29,26 @@ export function resolveOpenMeteoConfig(env: OpenMeteoEnvironment): OpenMeteoConf
       baseUrl: env.AURORA_CLOUD_URL ?? env.OPEN_METEO_API_BASE ?? FREE_EVALUATION_URL,
       apiKey: env.OPEN_METEO_API_KEY?.trim() || null,
     };
+  }
+
+  if (
+    env.OPEN_METEO_USAGE_MODE !== undefined &&
+    env.OPEN_METEO_USAGE_MODE !== "noncommercial"
+  ) {
+    throw new Error("Invalid Open-Meteo usage mode in production");
+  }
+
+  if (env.OPEN_METEO_USAGE_MODE === "noncommercial") {
+    if (env.OPEN_METEO_API_KEY?.trim()) {
+      throw new Error("An Open-Meteo API key is forbidden in noncommercial production");
+    }
+    if (
+      env.OPEN_METEO_API_BASE !== undefined &&
+      env.OPEN_METEO_API_BASE !== FREE_EVALUATION_URL
+    ) {
+      throw new Error("The canonical free Open-Meteo endpoint is required in noncommercial production");
+    }
+    return { baseUrl: FREE_EVALUATION_URL, apiKey: null };
   }
 
   const apiKey = env.OPEN_METEO_API_KEY?.trim();

@@ -10,13 +10,16 @@ Live-data pages perform the freshness check at request time. Raw-source state is
 
 The request-time live routes are `/`, all 15 `/forecast/{slug}` pages, and `/guides/where-to-see-northern-lights`. `/api/snapshots/latest` and `/api/health` are dynamic and `no-store`.
 
-## Required production environment
+## Non-commercial validation production environment
 
-Set these server-side variables in Vercel as Sensitive. Do not put their values in source control or client-visible variables:
+The current Vercel Hobby deployment and Open-Meteo free endpoint are for non-commercial validation only. Set:
 
-- `OPEN_METEO_API_BASE`
-- `OPEN_METEO_API_KEY`
+- `OPEN_METEO_USAGE_MODE=noncommercial`
 - `AURORA_STATE_BLOB_READ_WRITE_TOKEN`
+
+Do not set `OPEN_METEO_API_BASE` or `OPEN_METEO_API_KEY` in this mode. The application uses only `https://api.open-meteo.com/v1/forecast` and fails closed if a key or a different base URL is configured. Keep all server-side variables out of source control and client-visible variables; mark the Blob token Sensitive in Vercel.
+
+Before adding advertising, subscriptions, affiliate revenue, sponsorship, paid lead generation, or any other commercial use, upgrade Vercel to an appropriate commercial plan, remove `OPEN_METEO_USAGE_MODE=noncommercial`, and configure `OPEN_METEO_API_BASE=https://customer-api.open-meteo.com/v1/forecast` plus a non-empty `OPEN_METEO_API_KEY`. Reassess the providers' current terms before monetization.
 
 ## Develop
 
