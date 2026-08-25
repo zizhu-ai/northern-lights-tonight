@@ -1,7 +1,12 @@
 import { BlobPreconditionFailedError, get, put } from "@vercel/blob";
-import { createHash } from "node:crypto";
 
-import type { RawSourceEnvelopes, SourceName } from "./aurora-sources.ts";
+import {
+  isValidRawSourceEnvelopes,
+  type RawSourceEnvelopes,
+  type SourceName,
+// Node's strip-types runner requires a runtime TypeScript import extension.
+// @ts-ignore TS5097: Next's bundler resolves this source import without emitting it.
+} from "./aurora-sources.ts";
 
 export const SNAPSHOT_STATE_SCHEMA_VERSION = 2 as const;
 export const CHECK_TTL_MS = 600_000;
@@ -46,89 +51,6 @@ const isIsoDate = (value: unknown): value is string =>
 
 const isNullableIsoDate = (value: unknown): value is string | null =>
   value === null || isIsoDate(value);
-
-const stableJson = (value: unknown): string => {
-  if (Array.isArray(value)) return `[${value.map(stableJson).join(",")}]`;
-  if (isObject(value)) {
-    return `{${Object.keys(value)
-      .sort()
-      .map((key) => `${JSON.stringify(key)}:${stableJson(value[key])}`)
-      .join(",")}}`;
-  }
-  return JSON.stringify(value);
-};
-
-const hasValidFingerprint = (value: Record<string, unknown>): boolean =>
-  typeof value.fingerprint === "string" &&
-  /^[a-f0-9]{64}$/.test(value.fingerprint) &&
-  createHash("sha256").update(stableJson(value.payload)).digest("hex") === value.fingerprint;
-
-function isValidEnvelope(value: unknown, source: SourceName): boolean {
-  if (
-    !isObject(value) ||
-    value.schema_version !== 1 ||
-    value.source !== source ||
-    !isIsoDate(value.fetched_at) ||
-    (value.source_time !== null && !isIsoDate(value.source_time)) ||
-    !isObject(value.coverage) ||
-    !hasValidFingerprint(value)
-  ) {
-    return false;
-  }
-  if (source === "ovation") {
-    if (!isObject(value.payload)) return false;
-    const sourceTime = value.payload["Observation Time"] ?? value.payload.Observation_Time;
-    return (
-      isIsoDate(sourceTime) &&
-      Array.isArray(value.payload.coordinates) &&
-      value.payload.coordinates.length > 0 &&
-      value.payload.coordinates.every(
-        (row) =>
-          Array.isArray(row) &&
-          row.length >= 3 &&
-          row.slice(0, 3).every((item) => Number.isFinite(Number(item))),
-      )
-    );
-  }
-  if (source === "kp") {
-    return (
-      Array.isArray(value.payload) &&
-      value.payload.length > 0 &&
-      value.payload.some(
-        (row) =>
-          Array.isArray(row) ||
-          (isObject(row) &&
-            isIsoDate(String(row.time_tag ?? "")) &&
-            Number.isFinite(Number(row.kp))),
-      )
-    );
-  }
-  if (!isObject(value.payload) || Object.keys(value.payload).length === 0) return false;
-  return Object.values(value.payload).every((item) => {
-    if (item === null) return true;
-    if (!isObject(item) || !isObject(item.hourly)) return false;
-    const hourly = item.hourly;
-    const times = hourly.time;
-    return (
-      Array.isArray(times) &&
-      times.length > 0 &&
-      times.every((time) => typeof time === "string") &&
-      ["cloud_cover", "cloud_cover_low", "cloud_cover_mid", "cloud_cover_high"].every(
-        (key) => Array.isArray(hourly[key]) && hourly[key].length === times.length,
-      )
-    );
-  });
-}
-
-function isValidRawSourceEnvelopes(value: unknown): value is RawSourceEnvelopes {
-  return (
-    isObject(value) &&
-    value.schema_version === 1 &&
-    (value.ovation === null || isValidEnvelope(value.ovation, "ovation")) &&
-    (value.kp === null || isValidEnvelope(value.kp, "kp")) &&
-    (value.cloud === null || isValidEnvelope(value.cloud, "cloud"))
-  );
-}
 
 function isValidSourceOutcome(value: unknown): value is SourceOutcome {
   return (
@@ -195,7 +117,11 @@ export function stateContainsAnySecret(
   secrets: readonly string[],
 ): boolean {
   const serialized = JSON.stringify(state);
-  return secrets.some((secret) => secret.length > 0 && serialized.includes(secret));
+  return secrets.some((secret) => {
+    if (secret.length === 0) return false;
+    const escapedSecret = JSON.stringify(secret).slice(1, -1);
+    return serialized.includes(secret) || serialized.includes(escapedSecret);
+  });
 }
 
 type PersistenceContext = { token: string; secrets: readonly string[] };

@@ -4,7 +4,9 @@ import {
   appendOpenMeteoCredential,
   redactOpenMeteoError,
   resolveOpenMeteoConfig,
-} from "./open-meteo-config";
+// Node's strip-types runner requires a runtime TypeScript import extension.
+// @ts-ignore TS5097: Next's bundler resolves this source import without emitting it.
+} from "./open-meteo-config.ts";
 import type { OpenMeteoConfig } from "./open-meteo-config";
 
 export const SOURCE_SCHEMA_VERSION = 1 as const;

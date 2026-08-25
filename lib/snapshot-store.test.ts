@@ -130,6 +130,12 @@ function storedBlob(state: SnapshotStateV2, etag = "etag-origin") {
   return { stream, etag };
 }
 
+function assertErrorDoesNotExpose(error: unknown, forbidden: RegExp): void {
+  assert.ok(error instanceof Error);
+  const observableError = [error.name, error.message, error.stack ?? "", String(error)].join("\n");
+  assert.doesNotMatch(observableError, forbidden);
+}
+
 test("hard TTL is fresh at 599 seconds and stale at 600 and 601 seconds", () => {
   const state = stateAt(BASE_TIME - CHECK_TTL_MS);
   assert.equal(isCheckFresh(state, new Date(BASE_TIME - 1_000)), true);
@@ -186,6 +192,19 @@ test("secret scan checks every supplied non-empty secret", () => {
   assert.equal(stateContainsAnySecret(stateAt(BASE_TIME), [TOKEN, WEATHER_KEY]), false);
 });
 
+test("secret scan detects quote, backslash, and control-character secrets after JSON escaping", () => {
+  const secrets = [
+    'QUOTE_"_SENTINEL',
+    "BACKSLASH_\\_SENTINEL",
+    "CONTROL_\n\t_SENTINEL",
+  ];
+  for (const secret of secrets) {
+    const state = stateAt(BASE_TIME);
+    state.outcomes.cloud.error_code = `prefix-${secret}-suffix`;
+    assert.equal(stateContainsAnySecret(state, [secret]), true, JSON.stringify(secret));
+  }
+});
+
 test("fake store enforces initial create-only and existing ETag CAS semantics", async () => {
   const store = new FakeSnapshotStore();
   const first = stateAt(BASE_TIME, { revision: "first" });
@@ -240,7 +259,7 @@ test("read uses the private fixed path, bypasses cache, and rejects invalid runt
     () => store.read(),
     (error: unknown) => {
       assert.equal(error instanceof Error && error.message, "Snapshot store read failed");
-      assert.doesNotMatch(JSON.stringify(error), /BLOB_TOKEN_SENTINEL/);
+      assertErrorDoesNotExpose(error, /BLOB_TOKEN_SENTINEL/);
       return true;
     },
   );
@@ -357,7 +376,7 @@ test("ambiguous initial-create errors are sanitized when the origin has no valid
     () => store.compareAndSwap(null, stateAt(BASE_TIME)),
     (error: unknown) => {
       assert.equal(error instanceof Error && error.message, "Snapshot store write failed");
-      assert.doesNotMatch(JSON.stringify(error), /BLOB_TOKEN_SENTINEL/);
+      assertErrorDoesNotExpose(error, /BLOB_TOKEN_SENTINEL/);
       return true;
     },
   );
@@ -413,7 +432,7 @@ test("each write rebuilds its guard from the current Blob token and optional wea
     () => store.compareAndSwap(null, tokenLeak),
     (error: unknown) => {
       assert.equal(error instanceof Error && error.message, "Snapshot state contains a secret");
-      assert.doesNotMatch(JSON.stringify(error), /ROTATED_TOKEN_SENTINEL|WEATHER_KEY_SENTINEL/);
+      assertErrorDoesNotExpose(error, /ROTATED_TOKEN_SENTINEL|WEATHER_KEY_SENTINEL/);
       return true;
     },
   );
