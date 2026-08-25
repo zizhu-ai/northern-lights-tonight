@@ -60,8 +60,10 @@ export default function PrivacyPage() {
         <h2>Data sources</h2>
         <p>
           Aurora activity comes from public NOAA Space Weather Prediction
-          Center products (OVATION and Kp). Cloud cover comes from Open-Meteo.
-          Your browser does not call NOAA directly.
+          Center products (OVATION and Kp). Cloud-cover data is adapted from{" "}
+          <a href="https://open-meteo.com/">Open-Meteo</a> under{" "}
+          <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.
+          Your browser does not call NOAA or Open-Meteo directly.
         </p>
 
         <h2>Contact</h2>

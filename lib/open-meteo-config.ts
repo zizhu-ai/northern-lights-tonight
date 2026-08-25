@@ -1,0 +1,57 @@
+export type OpenMeteoEnvironment = {
+  VERCEL_ENV?: string;
+  OPEN_METEO_API_BASE?: string;
+  OPEN_METEO_API_KEY?: string;
+  AURORA_CLOUD_URL?: string;
+};
+
+export type OpenMeteoConfig = {
+  baseUrl: string;
+  apiKey: string | null;
+};
+
+const FREE_EVALUATION_URL = "https://api.open-meteo.com/v1/forecast";
+const CUSTOMER_HOSTNAME = "customer-api.open-meteo.com";
+
+export function resolveOpenMeteoConfig(env: OpenMeteoEnvironment): OpenMeteoConfig {
+  if (env.VERCEL_ENV !== "production") {
+    return {
+      baseUrl: env.AURORA_CLOUD_URL ?? env.OPEN_METEO_API_BASE ?? FREE_EVALUATION_URL,
+      apiKey: env.OPEN_METEO_API_KEY?.trim() || null,
+    };
+  }
+
+  const apiKey = env.OPEN_METEO_API_KEY?.trim();
+  if (!apiKey) throw new Error("Open-Meteo API key is required in production");
+
+  let baseUrl: URL;
+  try {
+    baseUrl = new URL(env.OPEN_METEO_API_BASE ?? "");
+  } catch {
+    throw new Error("A commercial Open-Meteo endpoint is required in production");
+  }
+  if (
+    baseUrl.protocol !== "https:" ||
+    baseUrl.hostname !== CUSTOMER_HOSTNAME ||
+    baseUrl.port !== "" ||
+    baseUrl.username !== "" ||
+    baseUrl.password !== "" ||
+    baseUrl.pathname !== "/v1/forecast" ||
+    baseUrl.search !== "" ||
+    baseUrl.hash !== ""
+  ) {
+    throw new Error("A commercial Open-Meteo endpoint is required in production");
+  }
+
+  return { baseUrl: baseUrl.toString(), apiKey };
+}
+
+export function appendOpenMeteoCredential(url: URL, config: OpenMeteoConfig): URL {
+  url.searchParams.delete("apikey");
+  if (config.apiKey) url.searchParams.append("apikey", config.apiKey);
+  return url;
+}
+
+export function redactOpenMeteoError(_error: unknown, _secret?: string): string {
+  return "Open-Meteo request failed";
+}

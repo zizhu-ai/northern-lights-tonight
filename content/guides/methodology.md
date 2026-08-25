@@ -30,7 +30,7 @@ A state is not the max of its cities. Colorado’s headline is the Fort Collins 
 ## Sources
 
 - NOAA Space Weather Prediction Center public products (OVATION and Kp).
-- Open-Meteo cloud cover (low / mid / high).
+- Cloud-cover data adapted from [Open-Meteo](https://open-meteo.com/) under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) (low / mid / high).
 - Local sun and moon from the coordinates in the place dossier.
 
 The browser never calls NOAA. Pages read snapshot files. Stale snapshots display **UNKNOWN**, not last hour’s GO.
