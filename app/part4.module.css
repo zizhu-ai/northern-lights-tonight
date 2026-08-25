@@ -87,11 +87,15 @@
 }
 
 .verdictSlot {
-  width: 100%;
+  width: min(100%, 680px);
   margin-top: -56px;
   margin-bottom: 36px;
   position: relative;
   z-index: 1;
+}
+
+.verdictSlotWide {
+  width: 100%;
 }
 
 .section {
