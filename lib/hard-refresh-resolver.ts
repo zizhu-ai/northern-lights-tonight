@@ -21,6 +21,11 @@ const CHECK_TTL_MS = 600_000;
 const NEGATIVE_RETRY_MS = 60_000;
 const LEASE_TTL_MS = 40_000;
 const POLL_MS = 1_000;
+// Leave one second of the route's 60s maxDuration for bundle computation/render.
+const REQUEST_BUDGET_MS = 59_000;
+// Three parallel 8s x 3 source attempts plus bounded retry jitter complete
+// inside 26s; do not start them after the request has less time remaining.
+const UPSTREAM_WORK_BUDGET_MS = 26_000;
 const SOURCE_NAMES: readonly SourceName[] = ["ovation", "kp", "cloud"];
 
 export type SnapshotFreshness = {
@@ -155,6 +160,43 @@ function cloudValid(
   const end = envelope.coverage.end;
   const expectedPoints = envelope.coverage.expected_points;
   const coveredPoints = envelope.coverage.covered_points;
+  const pointMetadata = envelope.coverage.points;
+  const payloadEntries = Object.entries(envelope.payload);
+  const localHour = (date: Date, timeZone: string): string | null => {
+    try {
+      const values: Record<string, string> = {};
+      for (const part of new Intl.DateTimeFormat("en-CA", {
+        timeZone,
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        hourCycle: "h23",
+      }).formatToParts(date)) {
+        if (part.type !== "literal") values[part.type] = part.value;
+      }
+      return `${values.year}-${values.month}-${values.day}T${values.hour}:00`;
+    } catch {
+      return null;
+    }
+  };
+  const everyPointCovered =
+    isObject(pointMetadata) &&
+    payloadEntries.every(([coordinate, point]) => {
+      if (point === null || !isObject(point.hourly)) return false;
+      const metadata = pointMetadata[coordinate];
+      if (!isObject(metadata) || typeof metadata.timezone !== "string") return false;
+      const times = point.hourly.time;
+      if (!Array.isArray(times)) return false;
+      const requiredStart = localHour(now, metadata.timezone);
+      const requiredEnd = localHour(new Date(now.getTime() + 18 * 60 * 60_000), metadata.timezone);
+      return (
+        requiredStart !== null &&
+        requiredEnd !== null &&
+        String(times[0] ?? "") <= requiredStart &&
+        String(times.at(-1) ?? "") >= requiredEnd
+      );
+    });
   return (
     now.getTime() - fetchedAt >= 0 &&
     now.getTime() - fetchedAt <= 6 * 60 * 60_000 &&
@@ -162,6 +204,8 @@ function cloudValid(
     typeof expectedPoints === "number" &&
     expectedPoints > 0 &&
     coveredPoints === expectedPoints &&
+    payloadEntries.length === expectedPoints &&
+    everyPointCovered &&
     validDate(end) &&
     Date.parse(end) >= now.getTime() + 18 * 60 * 60_000
   );
@@ -281,6 +325,9 @@ function resultEnvelope(
   source: SourceName,
 ): SourceEnvelope<unknown> | null {
   const result = fetched[source];
+  // This is only a scientific prefilter. SnapshotStore.compareAndSwap is the
+  // canonical schema + payload-fingerprint publication boundary, and store
+  // reads apply that same canonical validator before returning any state.
   if (!result.ok || !basicEnvelopeValid(result.envelope, source)) return null;
   return result.envelope as SourceEnvelope<unknown>;
 }
@@ -347,6 +394,9 @@ export function createSourceResolver(runtime: HardRefreshRuntime): () => Promise
   };
 
   const run = async (): Promise<SourceResolution> => {
+    const requestStartedAt = runtime.now().getTime();
+    const latestRefreshStart =
+      requestStartedAt + REQUEST_BUDGET_MS - UPSTREAM_WORK_BUDGET_MS;
     let stored = await read();
     if (stored === undefined) {
       const now = runtime.now();
@@ -364,18 +414,27 @@ export function createSourceResolver(runtime: HardRefreshRuntime): () => Promise
 
       if (!leaseAcquirable(stored?.state ?? null, now)) {
         const expiresAt = Date.parse(stored!.state.lease!.expires_at);
+        if (expiresAt > latestRefreshStart) {
+          return failed("refresh_unresolved", "degraded");
+        }
         await runtime.sleep(Math.max(1, Math.min(POLL_MS, expiresAt - now.getTime())));
         stored = await read();
         if (stored === undefined) return failed("state_unavailable", "unavailable");
         continue;
       }
 
+      if (now.getTime() > latestRefreshStart) {
+        return failed("refresh_unresolved", "degraded");
+      }
+
       const base = stored?.state ?? emptyLeaseState(now);
+      const owner = runtime.ownerId();
+      const expiresAt = new Date(now.getTime() + LEASE_TTL_MS).toISOString();
       const leased: SnapshotStateV2 = {
         ...base,
         lease: {
-          owner: runtime.ownerId(),
-          expires_at: new Date(now.getTime() + LEASE_TTL_MS).toISOString(),
+          owner,
+          expires_at: expiresAt,
         },
       };
       let leaseWrite: "written" | "conflict";
@@ -393,6 +452,17 @@ export function createSourceResolver(runtime: HardRefreshRuntime): () => Promise
       const leasedStored = await read();
       if (leasedStored === undefined || leasedStored === null) {
         return failed("refresh_unresolved", "unavailable");
+      }
+      if (
+        leasedStored.state.lease?.owner !== owner ||
+        leasedStored.state.lease.expires_at !== expiresAt ||
+        runtime.now().getTime() >= Date.parse(expiresAt)
+      ) {
+        stored = leasedStored;
+        continue;
+      }
+      if (runtime.now().getTime() > latestRefreshStart) {
+        return failed("refresh_unresolved", "degraded");
       }
       let fetched: SourceFetchResults;
       try {

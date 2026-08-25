@@ -63,6 +63,10 @@ const DEFAULT_KP_URL =
   "https://services.swpc.noaa.gov/products/noaa-planetary-k-index-forecast.json";
 const REQUEST_TIMEOUT_MS = 8_000;
 const MAX_ATTEMPTS = 3;
+export const AURORA_SOURCE_FETCH_WORST_CASE_MS =
+  REQUEST_TIMEOUT_MS * MAX_ATTEMPTS +
+  // Retries wait 150/300ms plus at most 249ms jitter each.
+  150 + 249 + 300 + 249;
 const CLOUD_BATCH_SIZE = 20;
 const conditionalResponses = new Map<string, RequestResult>();
 
@@ -378,6 +382,9 @@ async function fetchCloud(dossiers: Dossier[]): Promise<SourceFetchResult<Record
       const times = (item.hourly as JsonObject).time as unknown[];
       return String(times[times.length - 1] ?? "");
     });
+    const pointCoverage = Object.fromEntries(
+      points.map((point) => [point.coordinateKey, { timezone: point.timezone }]),
+    );
     return {
       ok: true,
       envelope: {
@@ -392,6 +399,7 @@ async function fetchCloud(dossiers: Dossier[]): Promise<SourceFetchResult<Record
           complete: successfulPoints === points.length,
           start: starts.sort()[0] ?? null,
           end: ends.sort().at(-1) ?? null,
+          points: pointCoverage,
           batches: batches.length,
         },
         payload,

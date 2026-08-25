@@ -8,6 +8,12 @@ import {
 // Node's zero-dependency strip-types runner requires the explicit extension.
 // @ts-ignore TS5097: the production build type-checks this test but does not emit it.
 } from "./hard-refresh-resolver.ts";
+import {
+  AURORA_SOURCE_FETCH_WORST_CASE_MS,
+  fingerprintPayload,
+  isValidRawSourceEnvelopes,
+// @ts-ignore TS5097: the canonical validator is Node-strip-types compatible.
+} from "./aurora-sources.ts";
 import type {
   JsonObject,
   RawSourceEnvelopes,
@@ -28,63 +34,73 @@ const BASE = Date.parse("2026-08-25T03:00:00.000Z");
 const SENTINEL_TOKEN = "BLOB_TOKEN_SENTINEL_DO_NOT_PERSIST";
 const SENTINEL_KEY = "WEATHER_KEY_SENTINEL_DO_NOT_PERSIST";
 
-const fingerprint = (character: string) => character.repeat(64);
-
 function ovation(at: number): SourceEnvelope<JsonObject> {
+  const payload = { "Observation Time": new Date(at).toISOString(), coordinates: [[0, 0, 1]] };
   return {
     schema_version: 1,
     source: "ovation",
     fetched_at: new Date(at).toISOString(),
     source_time: new Date(at).toISOString(),
-    fingerprint: fingerprint("a"),
+    fingerprint: fingerprintPayload(payload),
     coverage: {},
-    payload: { "Observation Time": new Date(at).toISOString(), coordinates: [[0, 0, 1]] },
+    payload,
   };
 }
 
 function kp(at: number): SourceEnvelope<unknown[]> {
+  const payload = [{ time_tag: new Date(at).toISOString(), kp: 4 }];
   return {
     schema_version: 1,
     source: "kp",
     fetched_at: new Date(at).toISOString(),
     source_time: new Date(at).toISOString(),
-    fingerprint: fingerprint("b"),
+    fingerprint: fingerprintPayload(payload),
     coverage: {
       start: new Date(at - HOUR).toISOString(),
       end: new Date(at + 24 * HOUR).toISOString(),
     },
-    payload: [{ time_tag: new Date(at).toISOString(), kp: 4 }],
+    payload,
   };
 }
 
 function cloud(
   at: number,
-  options: { complete?: boolean; end?: number } = {},
+  options: {
+    complete?: boolean;
+    end?: number;
+    nullPoint?: boolean;
+    coveredPoints?: number;
+    pointEnd?: string;
+  } = {},
 ): SourceEnvelope<Record<string, JsonObject | null>> {
+  const payload = {
+    "1.000,2.000": options.nullPoint
+      ? null
+      : {
+          hourly: {
+            time: ["2026-08-25T00:00", options.pointEnd ?? "2026-08-26T23:00"],
+            cloud_cover: [10, 20],
+            cloud_cover_low: [5, 10],
+            cloud_cover_mid: [5, 10],
+            cloud_cover_high: [5, 10],
+          },
+        },
+  };
   return {
     schema_version: 1,
     source: "cloud",
     fetched_at: new Date(at).toISOString(),
     source_time: new Date(at).toISOString(),
-    fingerprint: fingerprint("c"),
+    fingerprint: fingerprintPayload(payload),
     coverage: {
       complete: options.complete ?? true,
       expected_points: 1,
-      covered_points: options.complete === false ? 0 : 1,
+      covered_points: options.coveredPoints ?? (options.complete === false ? 0 : 1),
       start: new Date(at - HOUR).toISOString(),
       end: new Date(options.end ?? at + 24 * HOUR).toISOString(),
+      points: { "1.000,2.000": { timezone: "UTC" } },
     },
-    payload: {
-      "1.000,2.000": {
-        hourly: {
-          time: ["2026-08-25T00:00", "2026-08-26T23:00"],
-          cloud_cover: [10, 20],
-          cloud_cover_low: [5, 10],
-          cloud_cover_mid: [5, 10],
-          cloud_cover_high: [5, 10],
-        },
-      },
-    },
+    payload,
   };
 }
 
@@ -144,6 +160,7 @@ class MemoryStore implements SnapshotStore {
 
   async compareAndSwap(expectedEtag: string | null, next: SnapshotStateV2) {
     if ((this.current?.etag ?? null) !== expectedEtag) return "conflict" as const;
+    if (!isValidRawSourceEnvelopes(next.envelopes)) throw new Error("canonical validation failed");
     this.writes.push(structuredClone(next));
     this.sequence += 1;
     this.current = { state: structuredClone(next), etag: `etag-${this.sequence}` };
@@ -197,6 +214,11 @@ function usable(result: SourceResolution) {
   assert.equal(result.kind, "usable");
   return result;
 }
+
+test("the canonical parallel source retry policy fits the resolver's 26-second work budget", () => {
+  assert.equal(AURORA_SOURCE_FETCH_WORST_CASE_MS, 24_948);
+  assert.ok(AURORA_SOURCE_FETCH_WORST_CASE_MS <= 26_000);
+});
 
 test("a state checked 599 seconds ago is reused without an upstream call", async () => {
   const h = harness({ now: BASE, store: new MemoryStore(stateAt(BASE - 599_000)) });
@@ -264,11 +286,64 @@ test("a crashed winner can be taken over exactly when its 40-second lease expire
   const store = new MemoryStore(stateAt(BASE - 600_000, {
     lease: { owner: "crashed", expires_at: new Date(BASE + 40_000).toISOString() },
   }));
-  const h = harness({ now: BASE, store, owner: "rescuer" });
+  const exhausted = harness({ now: BASE, store, owner: "too-early" });
+  const exhaustedResult = await exhausted.resolve();
+  assert.equal(exhaustedResult.kind, "failed_closed");
+  assert.equal(exhausted.calls(), 0);
+  assert.equal(exhausted.now(), BASE);
+
+  const h = harness({ now: BASE + 40_000, store, owner: "rescuer" });
   const result = usable(await h.resolve());
   assert.equal(result.mode, "refreshed");
   assert.equal(h.now(), BASE + 40_000);
   assert.equal(store.writes[0]?.lease?.owner, "rescuer");
+});
+
+test("a delayed post-acquisition reread never borrows a takeover lease ETag", async () => {
+  const store = new MemoryStore(stateAt(BASE - 600_000));
+  const originalRead = store.read.bind(store);
+  store.read = async () => {
+    const value = await originalRead();
+    if (store.reads === 2) {
+      store.current = {
+        state: stateAt(BASE - 600_000, {
+          lease: { owner: "takeover", expires_at: new Date(BASE + 2_000).toISOString() },
+        }),
+        etag: "etag-takeover-lease",
+      };
+      return structuredClone(store.current);
+    }
+    if (store.reads === 3) {
+      store.current = {
+        state: stateAt(BASE + 1_000, { revision: "takeover-winner" }),
+        etag: "etag-takeover-winner",
+      };
+      return structuredClone(store.current);
+    }
+    return value;
+  };
+  const h = harness({ now: BASE, store, owner: "original" });
+  const result = usable(await h.resolve());
+  assert.equal(h.calls(), 0);
+  assert.equal(result.freshness.revision, "takeover-winner");
+  assert.equal(store.current?.state.revision, "takeover-winner");
+  assert.equal(store.writes.length, 1);
+});
+
+test("post-acquisition persistence delay cannot start upstream work outside the request budget", async () => {
+  const store = new MemoryStore(stateAt(BASE - 600_000));
+  const originalRead = store.read.bind(store);
+  let advanceClock!: (value: number) => void;
+  store.read = async () => {
+    const value = await originalRead();
+    if (store.reads === 2) advanceClock(BASE + 33_001);
+    return value;
+  };
+  const h = harness({ now: BASE, store });
+  advanceClock = h.setNow;
+  const result = await h.resolve();
+  assert.equal(result.kind, "failed_closed");
+  assert.equal(h.calls(), 0);
 });
 
 test("a 50-second original winner cannot overwrite a revision published by a 40-second takeover", async () => {
@@ -347,12 +422,40 @@ test("OVATION older than 90 minutes cannot provide usable aurora evidence", asyn
   );
 });
 
+test("a fetched envelope with a mismatched canonical fingerprint is never published", async () => {
+  const store = new MemoryStore(stateAt(BASE - 600_000));
+  const bad = ovation(BASE);
+  bad.fingerprint = "f".repeat(64);
+  const h = harness({
+    now: BASE,
+    store,
+    fetched: {
+      ovation: { ok: true, envelope: bad },
+      kp: { ok: false, error: "unavailable" },
+      cloud: { ok: false, error: "unavailable" },
+    },
+  });
+  const result = await h.resolve();
+  assert.equal(result.kind, "failed_closed");
+  assert.equal(store.current?.state.revision, "revision-existing");
+  assert.equal(store.current?.state.lease?.owner, "test-owner");
+});
+
 test("cloud older than 30 minutes is retained as degraded but invalid after 6 hours or missing coverage", async () => {
   const cases = [
     { cloud: cloud(BASE - 30 * MINUTE - 1), retained: true },
     { cloud: cloud(BASE - 6 * HOUR - 1), retained: false },
     { cloud: cloud(BASE, { complete: false }), retained: false },
     { cloud: cloud(BASE, { end: BASE + 17 * HOUR }), retained: false },
+    { cloud: cloud(BASE, { nullPoint: true }), retained: false },
+    { cloud: cloud(BASE, { coveredPoints: 0 }), retained: false },
+    {
+      cloud: cloud(BASE, {
+        end: BASE + 24 * HOUR,
+        pointEnd: "2026-08-25T20:00",
+      }),
+      retained: false,
+    },
   ];
   for (const item of cases) {
     const state = stateAt(BASE - 100_000, {
