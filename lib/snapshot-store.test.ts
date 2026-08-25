@@ -314,6 +314,83 @@ test("existing writes use fixed-path ifMatch and map the SDK precondition error 
   assert.equal(writes[0]?.options.access, "private");
 });
 
+test("an ambiguous existing-write error is a conflict only when origin has a different ETag", async () => {
+  class BlobError extends Error {}
+  let reads = 0;
+  const winner = stateAt(BASE_TIME, { revision: "winner" });
+  const store = createStoreWithFake(
+    { ...TEST_ENV },
+    {
+      async read() {
+        reads += 1;
+        return storedBlob(winner, "etag-winner");
+      },
+      async write() {
+        throw new BlobError("opaque Blob failure");
+      },
+    },
+  );
+
+  assert.equal(
+    await store.compareAndSwap("etag-expected", stateAt(BASE_TIME, { revision: "loser" })),
+    "conflict",
+  );
+  assert.equal(reads, 1);
+});
+
+test("ambiguous existing-write errors stay sanitized unless reread proves a changed ETag", async () => {
+  const invalid = { ...stateAt(BASE_TIME), schema_version: 1 } as unknown as SnapshotStateV2;
+  const cases: Array<{
+    label: string;
+    read: () => Promise<{ stream: ReadableStream; etag: string } | null>;
+  }> = [
+    {
+      label: "missing origin",
+      read: async () => null,
+    },
+    {
+      label: "unchanged ETag",
+      read: async () => storedBlob(stateAt(BASE_TIME), "etag-expected"),
+    },
+    {
+      label: "invalid origin",
+      read: async () => storedBlob(invalid, "etag-winner"),
+    },
+    {
+      label: "failed reread",
+      read: async () => {
+        throw new Error(`origin failure ${TOKEN}`);
+      },
+    },
+  ];
+
+  for (const { label, read } of cases) {
+    let reads = 0;
+    const store = createStoreWithFake(
+      { ...TEST_ENV },
+      {
+        async read() {
+          reads += 1;
+          return read();
+        },
+        async write() {
+          throw new Error(`ambiguous write failure ${TOKEN}`);
+        },
+      },
+    );
+
+    await assert.rejects(
+      () => store.compareAndSwap("etag-expected", stateAt(BASE_TIME)),
+      (error: unknown) => {
+        assert.equal(error instanceof Error && error.message, "Snapshot store write failed", label);
+        assertErrorDoesNotExpose(error, /BLOB_TOKEN_SENTINEL/);
+        return true;
+      },
+    );
+    assert.equal(reads, 1, label);
+  }
+});
+
 test("initial create uses non-overwriting fixed-path semantics", async () => {
   const writes: Array<{ pathname: string; options: Record<string, unknown> }> = [];
   const store = createStoreWithFake(

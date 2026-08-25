@@ -223,6 +223,12 @@ export function createVercelSnapshotStore(
       } catch (error) {
         if (expectedEtag !== null) {
           if (error instanceof BlobPreconditionFailedError) return "conflict";
+          try {
+            const observed = await read();
+            if (observed !== null && observed.etag !== expectedEtag) return "conflict";
+          } catch {
+            // An ambiguous write is a conflict only when a valid reread proves a new winner.
+          }
           throw sanitizedWriteError();
         }
         try {
