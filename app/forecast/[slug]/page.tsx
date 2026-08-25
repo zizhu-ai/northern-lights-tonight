@@ -21,7 +21,8 @@ import {
   type ForecastWindow,
 } from "@/lib/snapshots";
 
-import { SITE_URL } from "@/lib/site";
+import { ForecastLocalGuide } from "@/components/forecast-local-guide";
+import { clampSeoText, SITE_URL, titleCasePhrase } from "@/lib/site";
 
 import styles from "./page.module.css";
 const REASON_COPY: Record<string, string> = {
@@ -65,9 +66,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const headlinePoint = getHeadlinePoint(dossier);
   const state = await getForecastState(slug, dossier.timezone);
   const title = titleFor(dossier);
-  const description = state.snapshot
-    ? `${state.snapshot.status} for ${dossier.name}, using ${headlinePoint.name}. Best window ${state.bestWindow}. ${state.snapshot.main_obstacle_text}`
-    : `UNKNOWN for ${dossier.name}, using ${headlinePoint.name}. ${state.mainIssue}`;
+  const description = seoDescription(dossier, headlinePoint.name, state);
   const url = `${SITE_URL}/forecast/${slug}`;
 
   return {
@@ -148,6 +147,8 @@ export default async function ForecastPage({ params }: PageProps) {
         />
 
         <WhyThisVerdict dossier={dossier} state={state} />
+
+        <ForecastLocalGuide dossier={dossier} />
 
         <section className={styles.section}>
           <h2>What to do</h2>
@@ -251,7 +252,26 @@ function titleFor(dossier: ForecastDossier): string {
   if (dossier.slug === "alaska") {
     return "Northern Lights in Alaska: Best Places, Season & Tonight";
   }
-  return `Northern Lights in ${dossier.name} Tonight: Visibility & Best Time`;
+  const full = `Northern Lights in ${dossier.name} Tonight: Visibility & Best Time`;
+  if (full.length <= 60) return full;
+  const shorter = `Northern Lights in ${dossier.name} Tonight`;
+  if (shorter.length <= 60) return shorter;
+  return clampSeoText(`Northern Lights ${dossier.name} Tonight`, 15, 60);
+}
+
+function seoDescription(
+  dossier: ForecastDossier,
+  headlinePointName: string,
+  state: ForecastState,
+): string {
+  const phrase = titleCasePhrase(dossier.primary_keyword);
+  const status = state.snapshot?.status ?? "UNKNOWN";
+  const obstacle = state.snapshot?.main_obstacle_text ?? state.mainIssue;
+  return clampSeoText(
+    `${phrase} tonight: ${status} from ${headlinePointName}. Best window ${state.bestWindow}. ${obstacle}`,
+    70,
+    160,
+  );
 }
 
 function h1For(dossier: ForecastDossier): string {
@@ -333,11 +353,22 @@ function HourRows({
       ? copy.chrome.skip_not_dark
       : (window.status ?? "UNKNOWN");
     const sky = window.skip ? "—" : displayEnum(window.cloud_block);
+    const timeLabel = formatWindow(window.start, window.end, timezone);
     return (
-      <tr key={`${window.start}-${window.end}`} data-status={window.status?.toLowerCase()}>
-        <th scope="row">{formatWindow(window.start, window.end, timezone)}</th>
-        <td className={window.skip ? undefined : styles.hourStatus}>{status}</td>
-        <td>{sky}</td>
+      <tr
+        key={`${window.start}-${window.end}`}
+        data-status={window.status?.toLowerCase()}
+        aria-label={`${timeLabel}, ${status}, ${sky}`}
+      >
+        <th scope="row">
+          <span className="attr-text" data-text={timeLabel} />
+        </th>
+        <td className={window.skip ? undefined : styles.hourStatus}>
+          <span className="attr-text" data-text={status} />
+        </td>
+        <td>
+          <span className="attr-text" data-text={sky} />
+        </td>
       </tr>
     );
   });

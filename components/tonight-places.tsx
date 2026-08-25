@@ -92,7 +92,13 @@ function renderRow({ dossier, snapshot }: TonightRow) {
         <span className={styles.placeName}>{dossier.name}</span>
         {showPoint ? <span className={styles.placeMeta}>{pointName}</span> : null}
       </div>
-      {window ? <span className={styles.window}>{window}</span> : null}
+      {window ? (
+        <span
+          className={styles.window}
+          data-text={window}
+          aria-label={window}
+        />
+      ) : null}
     </Link>
   );
 }
