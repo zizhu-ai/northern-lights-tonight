@@ -7,6 +7,7 @@ import {
   ANALYTICS_OPT_OUT_KEY,
   analyticsSessionGate,
   browserAnalyticsDisabled,
+  reconcileAnalyticsStorageEvent,
   sanitizeAnalyticsEvent,
 } from "@/lib/analytics-privacy";
 
@@ -19,11 +20,9 @@ export function PrivacyAnalytics() {
     function syncFromOtherTab(event: StorageEvent) {
       if (event.key !== ANALYTICS_OPT_OUT_KEY) return;
 
-      if (event.newValue === "1") {
-        analyticsSessionGate.disable();
-      } else {
-        analyticsSessionGate.enable();
-      }
+      reconcileAnalyticsStorageEvent(analyticsSessionGate, () =>
+        window.localStorage.getItem(ANALYTICS_OPT_OUT_KEY),
+      );
     }
 
     window.addEventListener("storage", syncFromOtherTab);

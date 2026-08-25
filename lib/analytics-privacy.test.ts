@@ -3,7 +3,7 @@ import test from "node:test";
 
 // Node's zero-dependency strip-types runner requires the explicit extension.
 // @ts-ignore TS5097: the production build type-checks this test but does not emit it.
-import { browserAnalyticsDisabled, createAnalyticsSessionGate, sanitizeAnalyticsEvent } from "./analytics-privacy.ts";
+import { browserAnalyticsDisabled, createAnalyticsSessionGate, reconcileAnalyticsStorageEvent, sanitizeAnalyticsEvent } from "./analytics-privacy.ts";
 
 test("session gate defaults enabled and can be disabled", () => {
   const gate = createAnalyticsSessionGate();
@@ -19,6 +19,27 @@ test("session gate can be re-enabled after explicit opt-in", () => {
   gate.disable();
   gate.enable();
   assert.equal(gate.isDisabled(), false);
+});
+
+test("storage events reconcile from the current readable value", () => {
+  const gate = createAnalyticsSessionGate();
+
+  assert.equal(reconcileAnalyticsStorageEvent(gate, () => "1"), "disabled");
+  assert.equal(gate.isDisabled(), true);
+  assert.equal(reconcileAnalyticsStorageEvent(gate, () => null), "enabled");
+  assert.equal(gate.isDisabled(), false);
+});
+
+test("storage event read failures stay unavailable and fail closed", () => {
+  const gate = createAnalyticsSessionGate();
+
+  assert.equal(
+    reconcileAnalyticsStorageEvent(gate, () => {
+      throw new Error("storage denied");
+    }),
+    "unavailable",
+  );
+  assert.equal(gate.isDisabled(), true);
 });
 
 test("drops events when local opt-out is enabled", () => {

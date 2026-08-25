@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import {
   ANALYTICS_OPT_OUT_KEY,
   analyticsSessionGate,
+  reconcileAnalyticsStorageEvent,
 } from "@/lib/analytics-privacy";
 
 type PreferenceState = "loading" | "enabled" | "disabled" | "unavailable";
@@ -32,13 +33,11 @@ export function AnalyticsPreference() {
 
     function syncFromOtherTab(event: StorageEvent) {
       if (event.key === ANALYTICS_OPT_OUT_KEY) {
-        if (event.newValue === "1") {
-          analyticsSessionGate.disable();
-          setPreference("disabled");
-        } else {
-          analyticsSessionGate.enable();
-          setPreference("enabled");
-        }
+        setPreference(
+          reconcileAnalyticsStorageEvent(analyticsSessionGate, () =>
+            window.localStorage.getItem(ANALYTICS_OPT_OUT_KEY),
+          ),
+        );
       }
     }
 

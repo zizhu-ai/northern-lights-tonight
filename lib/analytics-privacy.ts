@@ -24,6 +24,26 @@ export function createAnalyticsSessionGate(): AnalyticsSessionGate {
 
 export const analyticsSessionGate = createAnalyticsSessionGate();
 
+export type AnalyticsStorageState = "enabled" | "disabled" | "unavailable";
+
+export function reconcileAnalyticsStorageEvent(
+  gate: AnalyticsSessionGate,
+  readStorageValue: () => string | null,
+): AnalyticsStorageState {
+  try {
+    if (readStorageValue() === "1") {
+      gate.disable();
+      return "disabled";
+    }
+
+    gate.enable();
+    return "enabled";
+  } catch {
+    gate.disable();
+    return "unavailable";
+  }
+}
+
 export function sanitizeAnalyticsEvent<T extends AnalyticsPageEvent>(
   event: T,
   disabled: boolean,
