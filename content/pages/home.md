@@ -1,6 +1,6 @@
 ## Northern lights tonight in the US
 
-Northern lights tonight is a local question. A planetary Kp index is not a yes for your county. This homepage is the US table of Wave 1 places: each row is a GO, MAYBE, or NO from the same NOAA oval and cloud snapshot. Search a city or ZIP if your place is missing, or open a state page if you already know the name.
+Northern lights tonight is a local question. A planetary Kp index is not a yes for your county. This homepage is the US table of Wave 1 places: each row is a GO, MAYBE, or NO from the same NOAA oval and cloud snapshot. Search a city or ZIP if your place is missing, or open a state page if you already know the name. Tonight’s table is the switchboard for northern lights tonight across those places.
 
 Use the table as a trip filter, not as a firework schedule. Quiet nights will show many NOs. That is the product working. Mid-latitude states need a strong storm. Oval-under places still lose to clouds and twilight. We do not invent a nationwide showtime, and we do not print a fake 73% chance.
 

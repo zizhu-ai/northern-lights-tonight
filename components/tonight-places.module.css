@@ -61,6 +61,10 @@
   text-transform: uppercase;
 }
 
+.status::before {
+  content: attr(data-text);
+}
+
 .status[data-status="go"] {
   background: var(--go-fill);
   color: var(--go-ink);
