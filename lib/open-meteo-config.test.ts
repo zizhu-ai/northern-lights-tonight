@@ -110,6 +110,47 @@ test("fault-injection override never receives a configured API key", () => {
   assert.doesNotMatch(serialized, new RegExp(SENTINEL_KEY));
 });
 
+for (const { label, url } of [
+  {
+    label: "HTTP",
+    url: "http://customer-api.open-meteo.com/v1/forecast",
+  },
+  {
+    label: "non-default port",
+    url: "https://customer-api.open-meteo.com:444/v1/forecast",
+  },
+  {
+    label: "userinfo",
+    url: "https://user:password@customer-api.open-meteo.com/v1/forecast",
+  },
+  {
+    label: "wrong path",
+    url: "https://customer-api.open-meteo.com/v1/not-forecast",
+  },
+  {
+    label: "hash",
+    url: "https://customer-api.open-meteo.com/v1/forecast#fragment",
+  },
+]) {
+  test(`noncanonical ${label} customer URL never receives a configured API key`, () => {
+    const config = resolveOpenMeteoConfig({
+      VERCEL_ENV: "preview",
+      OPEN_METEO_API_BASE: CUSTOMER_URL,
+      OPEN_METEO_API_KEY: SENTINEL_KEY,
+    });
+    const requestUrl = new URL(url);
+    requestUrl.searchParams.set("apikey", "PREMATURE_CREDENTIAL_MUST_BE_REMOVED");
+    requestUrl.searchParams.set("latitude", "64.8400");
+
+    const result = appendOpenMeteoCredential(requestUrl, config);
+    const serialized = JSON.stringify({ url: result.toString() });
+
+    assert.equal(result.searchParams.get("latitude"), "64.8400");
+    assert.equal(result.searchParams.get("apikey"), null);
+    assert.doesNotMatch(serialized, new RegExp(SENTINEL_KEY));
+  });
+}
+
 test("production ignores AURORA_CLOUD_URL even when it names the free endpoint", () => {
   assert.deepEqual(
     resolveOpenMeteoConfig({

@@ -13,6 +13,15 @@ export type OpenMeteoConfig = {
 const FREE_EVALUATION_URL = "https://api.open-meteo.com/v1/forecast";
 const CUSTOMER_HOSTNAME = "customer-api.open-meteo.com";
 
+const isCanonicalCustomerDestination = (url: URL): boolean =>
+  url.protocol === "https:" &&
+  url.hostname === CUSTOMER_HOSTNAME &&
+  url.port === "" &&
+  url.username === "" &&
+  url.password === "" &&
+  url.pathname === "/v1/forecast" &&
+  url.hash === "";
+
 export function resolveOpenMeteoConfig(env: OpenMeteoEnvironment): OpenMeteoConfig {
   if (env.VERCEL_ENV !== "production") {
     return {
@@ -31,14 +40,8 @@ export function resolveOpenMeteoConfig(env: OpenMeteoEnvironment): OpenMeteoConf
     throw new Error("A commercial Open-Meteo endpoint is required in production");
   }
   if (
-    baseUrl.protocol !== "https:" ||
-    baseUrl.hostname !== CUSTOMER_HOSTNAME ||
-    baseUrl.port !== "" ||
-    baseUrl.username !== "" ||
-    baseUrl.password !== "" ||
-    baseUrl.pathname !== "/v1/forecast" ||
-    baseUrl.search !== "" ||
-    baseUrl.hash !== ""
+    !isCanonicalCustomerDestination(baseUrl) ||
+    baseUrl.search !== ""
   ) {
     throw new Error("A commercial Open-Meteo endpoint is required in production");
   }
@@ -48,7 +51,7 @@ export function resolveOpenMeteoConfig(env: OpenMeteoEnvironment): OpenMeteoConf
 
 export function appendOpenMeteoCredential(url: URL, config: OpenMeteoConfig): URL {
   url.searchParams.delete("apikey");
-  if (config.apiKey && url.hostname === CUSTOMER_HOSTNAME) {
+  if (config.apiKey && isCanonicalCustomerDestination(url)) {
     url.searchParams.append("apikey", config.apiKey);
   }
   return url;
