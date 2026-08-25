@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 
 import {
   ANALYTICS_OPT_OUT_KEY,
+  analyticsSessionGate,
   browserAnalyticsDisabled,
   sanitizeAnalyticsEvent,
 } from "@/lib/analytics-privacy";
@@ -14,6 +15,19 @@ export function PrivacyAnalytics() {
 
   useEffect(() => {
     setHydrated(true);
+
+    function syncFromOtherTab(event: StorageEvent) {
+      if (event.key !== ANALYTICS_OPT_OUT_KEY) return;
+
+      if (event.newValue === "1") {
+        analyticsSessionGate.disable();
+      } else {
+        analyticsSessionGate.enable();
+      }
+    }
+
+    window.addEventListener("storage", syncFromOtherTab);
+    return () => window.removeEventListener("storage", syncFromOtherTab);
   }, []);
 
   if (!hydrated) return null;
@@ -26,12 +40,17 @@ export function PrivacyAnalytics() {
         try {
           storageValue = window.localStorage.getItem(ANALYTICS_OPT_OUT_KEY);
         } catch {
-          // Storage can be unavailable in privacy-restricted browser contexts.
+          analyticsSessionGate.disable();
+        }
+
+        if (storageValue === "1") {
+          analyticsSessionGate.disable();
         }
 
         return sanitizeAnalyticsEvent(
           { ...event },
-          browserAnalyticsDisabled(storageValue, navigator.doNotTrack),
+          analyticsSessionGate.isDisabled() ||
+            browserAnalyticsDisabled(storageValue, navigator.doNotTrack),
         );
       }}
     />

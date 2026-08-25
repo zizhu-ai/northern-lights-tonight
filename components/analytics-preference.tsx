@@ -2,46 +2,43 @@
 
 import { useEffect, useState } from "react";
 
-import { ANALYTICS_OPT_OUT_KEY } from "@/lib/analytics-privacy";
+import {
+  ANALYTICS_OPT_OUT_KEY,
+  analyticsSessionGate,
+} from "@/lib/analytics-privacy";
 
 type PreferenceState = "loading" | "enabled" | "disabled" | "unavailable";
-
-function disableAnalyticsForSession() {
-  const beforeSend = () => null;
-
-  if (window.va) {
-    window.va("beforeSend", beforeSend);
-    return;
-  }
-
-  window.va = (event, properties) => {
-    window.vaq ??= [];
-    window.vaq.push([
-      event,
-      event === "beforeSend" ? beforeSend : properties,
-    ]);
-  };
-  window.va("beforeSend", beforeSend);
-}
 
 export function AnalyticsPreference() {
   const [preference, setPreference] = useState<PreferenceState>("loading");
 
   useEffect(() => {
     try {
-      setPreference(
-        window.localStorage.getItem(ANALYTICS_OPT_OUT_KEY) === "1"
-          ? "disabled"
-          : "enabled",
-      );
+      const optedOut =
+        window.localStorage.getItem(ANALYTICS_OPT_OUT_KEY) === "1";
+
+      if (optedOut) {
+        analyticsSessionGate.disable();
+        setPreference("disabled");
+      } else {
+        setPreference(
+          analyticsSessionGate.isDisabled() ? "unavailable" : "enabled",
+        );
+      }
     } catch {
-      disableAnalyticsForSession();
+      analyticsSessionGate.disable();
       setPreference("unavailable");
     }
 
     function syncFromOtherTab(event: StorageEvent) {
       if (event.key === ANALYTICS_OPT_OUT_KEY) {
-        setPreference(event.newValue === "1" ? "disabled" : "enabled");
+        if (event.newValue === "1") {
+          analyticsSessionGate.disable();
+          setPreference("disabled");
+        } else {
+          analyticsSessionGate.enable();
+          setPreference("enabled");
+        }
       }
     }
 
@@ -59,11 +56,16 @@ export function AnalyticsPreference() {
         window.localStorage.removeItem(ANALYTICS_OPT_OUT_KEY);
       }
     } catch {
-      disableAnalyticsForSession();
+      analyticsSessionGate.disable();
       setPreference("unavailable");
       return;
     }
 
+    if (nextValue) {
+      analyticsSessionGate.disable();
+    } else {
+      analyticsSessionGate.enable();
+    }
     setPreference(nextValue ? "disabled" : "enabled");
   }
 

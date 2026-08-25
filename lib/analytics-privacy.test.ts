@@ -3,7 +3,23 @@ import test from "node:test";
 
 // Node's zero-dependency strip-types runner requires the explicit extension.
 // @ts-ignore TS5097: the production build type-checks this test but does not emit it.
-import { browserAnalyticsDisabled, sanitizeAnalyticsEvent } from "./analytics-privacy.ts";
+import { browserAnalyticsDisabled, createAnalyticsSessionGate, sanitizeAnalyticsEvent } from "./analytics-privacy.ts";
+
+test("session gate defaults enabled and can be disabled", () => {
+  const gate = createAnalyticsSessionGate();
+
+  assert.equal(gate.isDisabled(), false);
+  gate.disable();
+  assert.equal(gate.isDisabled(), true);
+});
+
+test("session gate can be re-enabled after explicit opt-in", () => {
+  const gate = createAnalyticsSessionGate();
+
+  gate.disable();
+  gate.enable();
+  assert.equal(gate.isDisabled(), false);
+});
 
 test("drops events when local opt-out is enabled", () => {
   assert.equal(sanitizeAnalyticsEvent({ url: "/" }, true), null);
