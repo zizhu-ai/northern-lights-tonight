@@ -83,7 +83,6 @@
 }
 
 .search {
-  max-width: 720px;
   margin-top: 22px;
 }
 
@@ -93,6 +92,10 @@
   margin-bottom: 36px;
   position: relative;
   z-index: 1;
+}
+
+.verdictSlotWide {
+  width: 100%;
 }
 
 .section {

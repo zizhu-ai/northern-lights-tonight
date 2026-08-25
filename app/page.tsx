@@ -57,7 +57,7 @@ export default async function HomePage() {
       </div>
 
       <div className={styles.inner}>
-        <div className={styles.verdictSlot}>
+        <div className={`${styles.verdictSlot} ${styles.verdictSlotWide}`}>
           <HomeVerdict />
         </div>
 
