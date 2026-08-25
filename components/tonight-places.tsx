@@ -85,9 +85,12 @@ function renderRow({ dossier, snapshot }: TonightRow) {
 
   return (
     <Link className={styles.row} href={`/forecast/${dossier.slug}`} key={dossier.slug}>
-      <strong className={styles.status} data-status={status.toLowerCase()}>
-        {status}
-      </strong>
+      <strong
+        className={styles.status}
+        data-status={status.toLowerCase()}
+        data-text={status}
+        aria-label={status}
+      />
       <div className={styles.place}>
         <span className={styles.placeName}>{dossier.name}</span>
         {showPoint ? <span className={styles.placeMeta}>{pointName}</span> : null}
