@@ -290,6 +290,60 @@ test("runtime validation accepts the declared nullable error_code contract", asy
   assert.deepEqual((await store.read())?.state, valid);
 });
 
+test("read normalizes a weak Blob ETag before exposing it to compare-and-swap", async () => {
+  const writes: Array<{ options: Record<string, unknown> }> = [];
+  const current = stateAt(BASE_TIME, { revision: "current" });
+  const store = createStoreWithFake(
+    { ...TEST_ENV },
+    {
+      async read() {
+        return storedBlob(current, 'W/"etag-origin"');
+      },
+      async write(_pathname, _body, options) {
+        writes.push({ options });
+      },
+    },
+  );
+
+  const observed = await store.read();
+  assert.ok(observed);
+  assert.equal(observed.etag, '"etag-origin"');
+  assert.equal(await store.compareAndSwap(observed.etag, current), "written");
+  assert.equal(writes[0]?.options.ifMatch, '"etag-origin"');
+});
+
+test("read preserves an already-strong Blob ETag", async () => {
+  const store = createStoreWithFake(
+    { ...TEST_ENV },
+    {
+      async read() {
+        return storedBlob(stateAt(BASE_TIME), '"etag-origin"');
+      },
+      async write() {
+        throw new Error("not used");
+      },
+    },
+  );
+
+  assert.equal((await store.read())?.etag, '"etag-origin"');
+});
+
+test("read rejects a weak marker with no remaining ETag", async () => {
+  const store = createStoreWithFake(
+    { ...TEST_ENV },
+    {
+      async read() {
+        return storedBlob(stateAt(BASE_TIME), "W/");
+      },
+      async write() {
+        throw new Error("not used");
+      },
+    },
+  );
+
+  await assert.rejects(() => store.read(), { message: "Snapshot store read failed" });
+});
+
 test("existing writes use fixed-path ifMatch and map the SDK precondition error to conflict", async () => {
   const writes: Array<{ pathname: string; body: string; options: Record<string, unknown> }> = [];
   const store = createStoreWithFake(

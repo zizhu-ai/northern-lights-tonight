@@ -194,11 +194,13 @@ export function createVercelSnapshotStore(
       });
       if (result === null) return null;
       const parsed: unknown = await new Response(result.stream).json();
-      if (!isValidSnapshotState(parsed) || result.etag.length === 0) {
+      // Large private Blob reads may return weak validators, but Blob ifMatch requires the strong form.
+      const etag = result.etag.startsWith("W/") ? result.etag.slice(2) : result.etag;
+      if (!isValidSnapshotState(parsed) || etag.length === 0) {
         throw sanitizedReadError();
       }
       assertSafeState(parsed, secrets);
-      return { state: parsed, etag: result.etag };
+      return { state: parsed, etag };
     } catch {
       throw sanitizedReadError();
     }
