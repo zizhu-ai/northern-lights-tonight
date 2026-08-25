@@ -3,9 +3,10 @@
 Approved by the project owner on 2026-08-25. This addendum changes only the
 commercial-launch assumptions in the 2026-08-24 launch-hardening specification.
 The original specification and its prior local audit evidence remain immutable.
-Where they conflict, this addendum supersedes specification section 3 items 1–3
-and implementation-plan Task 7 approval items 1, 2, and the Open-Meteo portion
-of item 4 for this validation release only. All other release gates remain.
+Where they conflict, this addendum supersedes specification section 3 items 1–3,
+implementation-plan Task 7 approval items 1, 2, and the Open-Meteo portion of
+item 4, plus the paid-plan monitoring cadence for this validation release only.
+All other release gates remain.
 
 ```yaml
 goal: >-
@@ -29,6 +30,8 @@ acceptance_criteria:
   - production without the explicit non-commercial mode retains the existing fail-closed commercial endpoint and key contract
   - preview, development, attribution, refresh bounds, and conservative missing-cloud behavior remain unchanged
   - documentation says commercial activity requires removing non-commercial mode and configuring the customer endpoint and API key before launch
+  - validation monitoring does not by itself exhaust Hobby Blob limits: static availability is checked every 5 minutes without entering the live resolver, health every 2 hours, and a rendered forecast every 6 hours
+  - monitoring documents the Hobby Blob budget and a 70% upgrade-or-redesign trigger
   - targeted tests, the relevant full suite, type-check, build, and Kimi K3 audit pass with no open Critical or Important finding
 assumptions:
   - the public validation site remains free of advertising and all other commercial activity during this mode
@@ -74,3 +77,6 @@ approval_boundaries:
 - Private Blob setup, its server-only token, analytics cleanup, Preview proof,
   release approval, Production proof, monitoring, and GSC evidence remain
   required under the original plan.
+- During Hobby validation, use the reduced live-data monitoring cadence in
+  `docs/operations/monitoring.md`; the request-time 600-second freshness
+  contract remains unchanged.
