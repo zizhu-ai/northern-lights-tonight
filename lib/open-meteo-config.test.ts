@@ -94,6 +94,22 @@ test("fault-injection override works outside production", () => {
   );
 });
 
+test("fault-injection override never receives a configured API key", () => {
+  const config = resolveOpenMeteoConfig({
+    VERCEL_ENV: "preview",
+    OPEN_METEO_API_KEY: SENTINEL_KEY,
+    AURORA_CLOUD_URL: "https://fault.invalid/open-meteo",
+  });
+  const requestUrl = new URL(config.baseUrl);
+  requestUrl.searchParams.set("latitude", "64.8400");
+
+  const result = appendOpenMeteoCredential(requestUrl, config);
+  const serialized = JSON.stringify({ url: result.toString() });
+
+  assert.equal(result.searchParams.get("apikey"), null);
+  assert.doesNotMatch(serialized, new RegExp(SENTINEL_KEY));
+});
+
 test("production ignores AURORA_CLOUD_URL even when it names the free endpoint", () => {
   assert.deepEqual(
     resolveOpenMeteoConfig({

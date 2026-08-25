@@ -48,7 +48,9 @@ export function resolveOpenMeteoConfig(env: OpenMeteoEnvironment): OpenMeteoConf
 
 export function appendOpenMeteoCredential(url: URL, config: OpenMeteoConfig): URL {
   url.searchParams.delete("apikey");
-  if (config.apiKey) url.searchParams.append("apikey", config.apiKey);
+  if (config.apiKey && url.hostname === CUSTOMER_HOSTNAME) {
+    url.searchParams.append("apikey", config.apiKey);
+  }
   return url;
 }
 
