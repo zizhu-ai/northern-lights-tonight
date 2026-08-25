@@ -1,79 +1,66 @@
-# Forecast monitoring
+# Production health monitoring
 
-Configure the checks below in any independent monitoring provider. Do not
-make the monitor part of application refresh logic.
+The validation release uses GitHub Actions and the owner's existing Feishu
+custom bot. Do not create an UptimeRobot monitor or another third-party monitor.
+Monitoring is independent of application refresh logic: every live request
+continues to enforce the 600-second freshness contract even if the workflow is
+delayed or disabled.
 
-## Static availability check
+## Repository configuration
+
+1. Store the existing bot webhook only in the GitHub Actions repository secret
+   `FEISHU_MONITOR_WEBHOOK`. Never put it in source, workflow literals,
+   artifacts, logs, errors, or application/Vercel environment variables.
+2. Leave the repository variable `HEALTH_MONITOR_ENABLED` absent or unequal to
+   `true` until the existing release approval gate is complete. Set it to the
+   exact string `true` to enable scheduled runs.
+3. `workflow_dispatch` remains available regardless of the enable variable,
+   but it still requires the repository secret. Do not manually dispatch it to
+   send a test alert without approval of the exact destination and message.
+
+GitHub scheduled workflows run from the default branch and may be delayed. The
+workflow runs at minute 17 every two hours, has read-only repository permission,
+a single bounded concurrency group, and a five-minute job timeout.
+
+## Health and failure contract
+
+The checker always requests exactly:
 
 ```text
-URL: https://aurora-tonight.com/privacy
-Interval: 5 minutes
-Timeout: 60 seconds
-Success: HTTP 200
-Incident: 3 consecutive failures
-Recovery: 2 consecutive successes
-Receiver: project owner email selected during Task 7
+https://aurora-tonight.com/api/health
 ```
 
-This static route checks basic site availability without entering the live-data
-resolver or touching its Blob state.
+It tries at most three times, with a 60-second timeout on each attempt. A check
+succeeds only for HTTP 200 and a JSON object where:
 
-## Health check
+- `status` is exactly `ok` or `degraded`; and
+- `checked_age_seconds` is a finite number greater than or equal to 0 and less
+  than 600.
 
-```text
-URL: https://aurora-tonight.com/api/health
-Interval: 2 hours
-Timeout: 60 seconds
-Success: HTTP 200 and JSON status in ["ok", "degraded"] and checked_age_seconds < 600
-Incident: 3 consecutive failures
-Recovery: 2 consecutive successes
-Receiver: project owner email selected during Task 7
-```
-
-The health request is ordinary request traffic and legitimately keeps shared
-state warm by passing through the same hard-refresh resolver as live pages.
-It is not the refresh correctness mechanism: if monitoring stops, the next
-live request still enforces the 600-second contract. Prove the idle first-hit
-path in Preview and during the controlled pre-monitor Production window; do
-not wait for organically stale state after enabling the live-data checks.
-
-## Rendered-page check
-
-Every 6 hours, choose the next slug from a rotating set of forecast slugs and
-request its rendered forecast page. When possible, schedule it 5 minutes after
-the latest health check so it can reuse the freshly checked shared state.
-Success requires both:
-
-- an HTTP 200 response; and
-- a `data-snapshot-checked-at` marker whose age is below 600 seconds at
-  response completion.
-
-Use the response-completion time, not monitor start time, to calculate marker
-age. Treat a missing, invalid, or future marker as failure.
+A successful attempt exits zero immediately and sends no Feishu message. Only
+after all three attempts fail does the checker send one text alert. The alert
+contains only a bounded sanitized reason, UTC time, the fixed health URL, and
+the GitHub run URL; raw response content and the webhook are never included.
+After a successful alert, the process still exits nonzero so GitHub's own
+failure notification remains a fallback. A missing webhook fails configuration
+before any health request. Feishu HTTP failures, malformed responses, and
+nonzero application error codes also fail generically without exposing the
+secret or response body.
 
 ## Hobby Blob budget
 
-Vercel Hobby includes 10,000 simple Blob operations and 2,000 advanced Blob
-operations per rolling 30 days. At the validation cadence, the health check
-runs about 360 times and the rendered-page check about 120 times per 30 days.
-Even if every one of those 480 live probes independently triggers a refresh,
-with no concurrency or lease contention, the current resolver's minimum two
-gets and two puts per refresh produce about 960 simple and 960 advanced
-operations. The monitor-only no-contention bound is therefore below both Hobby
-allowances.
+At one health run every two hours, the monitor runs about 360 times per rolling
+30 days. Even if every run triggers a stale refresh, the current resolver's
+minimum two gets and two puts produce about 720 simple and 720 advanced Blob
+operations without contention. This monitor-only bound remains below the Hobby
+allowances of 10,000 simple and 2,000 advanced operations per rolling 30 days.
 
 Real traffic, retries, failures, lease competition, and takeovers are additional
-and are not included in that bound. Monitor both rolling-30-day counters. If
-either simple or advanced operations reach 70% of its allowance, or current
-traffic predicts that either will exceed its allowance, stop expanding traffic
-and upgrade the plan or redesign the refresh and persistence strategy before
-continuing.
+and are not included in that bound. If either rolling-30-day counter reaches 70%
+of its allowance, or traffic predicts either will exceed its allowance, stop
+expanding traffic and upgrade or redesign before continuing.
 
-After moving to an appropriate commercial/Pro plan and confirming its current
-limits, the denser 5-minute health and 15-minute rendered-page cadence may be
-restored.
-
-## Outage and abuse bound
+## Open-Meteo outage and abuse bound
 
 With a 60-second negative retry and the current two Open-Meteo batches, steady
 unauthenticated traffic can cause about 86,400 Open-Meteo HTTP requests per 30
@@ -82,6 +69,5 @@ conservatively double that to 172,800 per 30 days (about 5,760 per day). Both
 bounds remain below the free non-commercial allowance of 10,000 calls per day
 and 300,000 calls per month.
 
-Monitor Vercel Blob operations separately. Re-check the vendor's definition
-of a counted call, including how multi-coordinate requests are counted, before
-relying on this allowance.
+Re-check the vendor's definition of a counted call, including how
+multi-coordinate requests are counted, before relying on this allowance.
