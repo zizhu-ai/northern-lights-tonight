@@ -1,24 +1,27 @@
-# Codex handoff — Northern Lights Tonight v1
+# Codex handoff — Northern Lights Tonight
 
-Read **`需求｜v1-Codex实现.md` first.** That file is the implementation contract. Conflict order is in its header.
+> **Superseded launch contract:** For current launch-hardening work, read [`docs/superpowers/specs/2026-08-24-launch-hardening.md`](docs/superpowers/specs/2026-08-24-launch-hardening.md). The older v1 documents remain historical context only.
 
-Then implement it in this repo (already on GitHub + Vercel). Do not start a new project.
+The product is live and indexable at `https://aurora-tonight.com`. Do not start a new project or reintroduce the old site-wide noindex posture.
 
-## Non-negotiables
+## Current runtime facts
 
-- US English site. No login, no map route, no ads, no percentage chances.
-- Keep `engine/snapshot.py`; add a GitHub Action every **10 minutes** that always commits if `generated_at` changed. `valid_until` is `generated_at + 25 minutes` (our refresh TTL). Do not cap it by OVATION forecast time. NOAA staleness is `ovation_ok` / near-window UNKNOWN, not a whole-file `DATA_STALE`.
-- Replace the homepage stub with the real pages. Layout from `设计｜页面架构线框与后端.md`; **skin from `设计｜视觉与UI规范.md`** (light page + dark verdict card). Do not ship the `视觉稿/` HTML as the app.
-- Copy: `content/ui-copy.json` and `content/guides/*.md`. Do not LLM-rewrite.
-- Places lookup: `data/us-places.json` only. No request-path geocoder.
-- **Stay noindex.** Do not allow `robots.txt` to index. Do not set `seo_indexable: true`.
-- Homepage SSR must be the same for everyone (no IP city verdict, no IP prefills).
-- State page headline = `primary_verdict_point` (Oregon = Baker City). Never max() sample points.
-- All verdicts and the 15-row US table must be in server HTML.
-- `/view` with no snapshot file → UNKNOWN only. `lat < 0` → UNAVAILABLE copy, not 404, not GO. Never compute aurora on the request path.
-- Unknown `/forecast/[slug]` → 404. `/forecast/boston` is a dedicated not-found page with the Massachusetts CTA in the first HTML. Alias Boston→massachusetts etc. only on Find place / near-me submit.
-- Titles: section 5 of the Chinese contract (Alaska vs Fairbanks titles must differ; no “Live” / “Near You” on home). Alaska card must render `verdict.alaska_kicker`; Fairbanks must not.
+- Request-time freshness, not Git commits, keeps the site live. `/`, the 15 forecast routes, and the where-to-see guide synchronously refresh expired raw-source state.
+- The hard check TTL is 10 minutes. All-source failure retries after 60 seconds; only scientifically valid last-known-good evidence may be reused, labelled degraded.
+- Private state uses `AURORA_STATE_BLOB_READ_WRITE_TOKEN`; production weather uses `OPEN_METEO_API_BASE` and `OPEN_METEO_API_KEY`.
+- Git snapshots are only a bundled cold-start fallback. Do not add a commit/deploy scheduler as the liveness mechanism.
+- Exactly 23 approved routes are indexable and in the sitemap. `/view` stays `noindex,follow`; unknown forecast routes and `/forecast/boston` stay 404.
+- US English, no login, no ads, no percentage chances, and no request-path geocoder remain product constraints.
 
-## Done when
+## Current local gate
 
-The checklist in section 8 of `需求｜v1-Codex实现.md` is all ticked, production on `main` is updated, and Actions can refresh snapshots.
+```bash
+npm ci
+npm test
+npx tsc --noEmit
+npm run build
+npm run start -- -p 3107
+BASE_URL=http://127.0.0.1:3107 npm run test:seo
+```
+
+The npm audit acceptance and its exact five-advisory baseline are documented in `README.md`. A changed advisory set, Critical severity, or changed reachability is a blocker.
