@@ -1,4 +1,38 @@
 const CANONICAL_ORIGIN = "https://aurora-tonight.com";
+const APPROVED_STATIC_PATHS = [
+  "/",
+  "/near-me",
+  "/guides/best-time-to-see-northern-lights",
+  "/guides/how-to-see-northern-lights",
+  "/guides/where-to-see-northern-lights",
+  "/methodology",
+  "/privacy",
+  "/terms",
+];
+const APPROVED_WAVE_ONE_PATHS = [
+  "/forecast/colorado",
+  "/forecast/ohio",
+  "/forecast/indiana",
+  "/forecast/michigan",
+  "/forecast/chicago",
+  "/forecast/seattle",
+  "/forecast/wisconsin",
+  "/forecast/massachusetts",
+  "/forecast/maine",
+  "/forecast/minnesota",
+  "/forecast/illinois",
+  "/forecast/oregon",
+  "/forecast/utah",
+  "/forecast/alaska",
+  "/forecast/fairbanks",
+];
+const APPROVED_INDEXABLE_PATHS = [...APPROVED_STATIC_PATHS, ...APPROVED_WAVE_ONE_PATHS];
+const SCHEMA_REQUIRED_PATHS = new Set([
+  "/guides/best-time-to-see-northern-lights",
+  "/guides/how-to-see-northern-lights",
+  "/methodology",
+  ...APPROVED_WAVE_ONE_PATHS,
+]);
 const EXPECTED_SITEMAP_PATHS = 23;
 const VIEW_PROBES = [
   "/view",
@@ -8,15 +42,19 @@ const NOT_FOUND_PROBES = ["/forecast/boston", "/route-that-must-not-exist"];
 
 const summary = {
   ok: false,
-  sitemap: { status: null, urls: 0, uniquePaths: 0, lastmod: 0 },
-  indexable: { expected: EXPECTED_SITEMAP_PATHS, checked: 0, valid: 0 },
+  sitemap: { status: null, urls: 0, uniquePaths: 0, lastmod: 0, missingPaths: [], unexpectedPaths: [] },
+  indexable: { expected: EXPECTED_SITEMAP_PATHS, checked: 0, valid: 0, schemaRequired: 18 },
   internalLinks: { discovered: 0, checked: 0, broken: 0 },
   view: { checked: 0, valid: 0 },
   notFound: { checked: 0, valid: 0 },
   errors: [],
 };
+const violationKeys = new Set();
 
 function violation(scope, message) {
+  const key = `${scope}\u0000${message}`;
+  if (violationKeys.has(key)) return;
+  violationKeys.add(key);
   summary.errors.push({ scope, message });
 }
 
@@ -156,7 +194,8 @@ function parseHtml(html) {
       const close = closePattern.exec(html);
       if (!close) throw new Error(`unterminated <${tag.name}> block`);
       const body = html.slice(cursor, close.index);
-      if (tag.name === "script" && (tag.attrs.get("type") ?? "").toLowerCase() === "application/ld+json") {
+      const scriptType = (tag.attrs.get("type") ?? "").split(";", 1)[0].trim().toLowerCase();
+      if (tag.name === "script" && scriptType === "application/ld+json") {
         document.jsonLd.push(body);
       }
       cursor = close.index + close[0].length;
@@ -198,8 +237,33 @@ function requireRobots(document, expected, scope) {
 }
 
 async function fetchRoute(baseUrl, pathAndQuery) {
-  const response = await fetch(new URL(pathAndQuery, baseUrl), { redirect: "follow", signal: AbortSignal.timeout(30_000) });
+  const response = await fetch(new URL(pathAndQuery, baseUrl), { redirect: "manual", signal: AbortSignal.timeout(30_000) });
   return { response, text: await response.text() };
+}
+
+async function fetchAnchorRoute(baseUrl, initialPath) {
+  let path = initialPath;
+  const visited = new Set();
+  for (let redirects = 0; redirects <= 10; redirects += 1) {
+    if (visited.has(path)) throw new Error(`internal redirect loop at ${path}`);
+    visited.add(path);
+    const result = await fetchRoute(baseUrl, path);
+    if (result.response.status < 300 || result.response.status >= 400) return result;
+    const location = result.response.headers.get("location");
+    if (!location) throw new Error(`internal redirect ${result.response.status} has no Location at ${path}`);
+    let target;
+    try {
+      target = new URL(location, `${CANONICAL_ORIGIN}${path}`);
+    } catch {
+      throw new Error(`internal redirect has malformed Location ${JSON.stringify(location)} at ${path}`);
+    }
+    if (target.origin !== CANONICAL_ORIGIN && target.origin !== baseUrl.origin) {
+      throw new Error(`internal redirect escapes to external origin ${target.origin} at ${path}`);
+    }
+    target.hash = "";
+    path = `${target.pathname}${target.search}`;
+  }
+  throw new Error(`internal redirect exceeded 10 hops from ${initialPath}`);
 }
 
 function validateIndexable(path, html, status, titles, h1Values) {
@@ -220,17 +284,25 @@ function validateIndexable(path, html, status, titles, h1Values) {
   if (document.titles.length !== 1 || !document.titles[0]) {
     violation(scope, `expected one non-empty title, found ${document.titles.length}`);
     valid = false;
-  } else if (titles.has(document.titles[0])) {
-    violation(scope, `duplicate title shared with ${titles.get(document.titles[0])}: ${document.titles[0]}`);
-    valid = false;
-  } else titles.set(document.titles[0], path);
+  } else {
+    const key = document.titles[0].toLowerCase();
+    if (titles.has(key)) {
+      const duplicate = titles.get(key);
+      violation(scope, `duplicate title (case-insensitive) shared with ${duplicate.path}: ${JSON.stringify(document.titles[0])} vs ${JSON.stringify(duplicate.text)}`);
+      valid = false;
+    } else titles.set(key, { path, text: document.titles[0] });
+  }
   if (document.h1.length !== 1 || !document.h1[0]) {
     violation(scope, `expected one non-empty H1, found ${document.h1.length}`);
     valid = false;
-  } else if (h1Values.has(document.h1[0])) {
-    violation(scope, `duplicate H1 shared with ${h1Values.get(document.h1[0])}: ${document.h1[0]}`);
-    valid = false;
-  } else h1Values.set(document.h1[0], path);
+  } else {
+    const key = document.h1[0].toLowerCase();
+    if (h1Values.has(key)) {
+      const duplicate = h1Values.get(key);
+      violation(scope, `duplicate H1 (case-insensitive) shared with ${duplicate.path}: ${JSON.stringify(document.h1[0])} vs ${JSON.stringify(duplicate.text)}`);
+      valid = false;
+    } else h1Values.set(key, { path, text: document.h1[0] });
+  }
   const expectedCanonical = new URL(path, CANONICAL_ORIGIN);
   let canonicalValid = document.canonical.length === 1;
   if (canonicalValid) {
@@ -271,29 +343,44 @@ function validateIndexable(path, html, status, titles, h1Values) {
   for (const [index, block] of document.jsonLd.entries()) {
     try {
       if (!block.trim()) throw new Error("empty JSON-LD block");
-      JSON.parse(block);
+      const value = JSON.parse(block);
+      const object = value !== null && typeof value === "object" && !Array.isArray(value);
+      const objectArray = Array.isArray(value)
+        && value.every((item) => item !== null && typeof item === "object" && !Array.isArray(item));
+      if (!object && !objectArray) throw new Error("top level must be a non-null object or an array of non-null objects");
     } catch (error) {
       violation(scope, `JSON-LD block ${index + 1} is invalid: ${error.message}`);
       valid = false;
     }
   }
+  if (SCHEMA_REQUIRED_PATHS.has(path) && document.jsonLd.length === 0) {
+    violation(scope, "expected at least one JSON-LD block on this schema-bearing route");
+    valid = false;
+  }
   return { anchors: document.anchors, valid };
 }
 
-function internalTarget(href, pagePath) {
+function internalTarget(href, pagePath, baseUrl, scope) {
   if (!href || href.startsWith("#")) return null;
+  const scheme = /^([a-z][a-z0-9+.-]*):/i.exec(href)?.[1]?.toLowerCase();
+  if (scheme && scheme !== "http" && scheme !== "https") return null;
   let target;
   try {
     target = new URL(href, `${CANONICAL_ORIGIN}${pagePath}`);
   } catch {
+    violation(scope, `malformed potentially internal anchor href ${JSON.stringify(href)}`);
     return null;
   }
-  if (target.origin !== CANONICAL_ORIGIN) return null;
+  if (target.origin !== CANONICAL_ORIGIN && target.origin !== baseUrl.origin) return null;
   target.hash = "";
   return `${target.pathname}${target.search}`;
 }
 
 async function main() {
+  if (APPROVED_STATIC_PATHS.length !== 8 || APPROVED_WAVE_ONE_PATHS.length !== 15 || SCHEMA_REQUIRED_PATHS.size !== 18) {
+    violation("configuration", "frozen route contract must contain 8 static, 15 Wave One, and 18 schema-bearing paths");
+    return;
+  }
   let baseUrl;
   try {
     baseUrl = new URL(process.env.BASE_URL ?? "http://127.0.0.1:3107");
@@ -336,6 +423,16 @@ async function main() {
   summary.sitemap.uniquePaths = uniquePaths.length;
   if (sitemap.urls.length !== EXPECTED_SITEMAP_PATHS) violation("sitemap", `expected ${EXPECTED_SITEMAP_PATHS} URLs, found ${sitemap.urls.length}`);
   if (uniquePaths.length !== EXPECTED_SITEMAP_PATHS) violation("sitemap", `expected ${EXPECTED_SITEMAP_PATHS} unique canonical-origin paths, found ${uniquePaths.length}`);
+  const actualPathSet = new Set(uniquePaths);
+  const approvedPathSet = new Set(APPROVED_INDEXABLE_PATHS);
+  summary.sitemap.missingPaths = APPROVED_INDEXABLE_PATHS.filter((path) => !actualPathSet.has(path));
+  summary.sitemap.unexpectedPaths = uniquePaths.filter((path) => !approvedPathSet.has(path)).sort();
+  if (summary.sitemap.missingPaths.length) {
+    violation("sitemap", `missing approved paths: ${summary.sitemap.missingPaths.join(", ")}`);
+  }
+  if (summary.sitemap.unexpectedPaths.length) {
+    violation("sitemap", `unexpected paths: ${summary.sitemap.unexpectedPaths.join(", ")}`);
+  }
 
   const titles = new Map();
   const h1Values = new Map();
@@ -347,7 +444,7 @@ async function main() {
       const validation = validateIndexable(path, result.text, result.response.status, titles, h1Values);
       if (validation.valid) summary.indexable.valid += 1;
       for (const href of validation.anchors) {
-        const target = internalTarget(href, path);
+        const target = internalTarget(href, path, baseUrl, `anchor-source:${path}`);
         if (target) discovered.add(target);
       }
     } catch (error) {
@@ -363,7 +460,7 @@ async function main() {
       let valid = true;
       if (result.response.status !== 200) {
         violation(scope, `expected 200, received ${result.response.status}`);
-        valid = false;
+        continue;
       }
       let document;
       try {
@@ -379,7 +476,7 @@ async function main() {
           valid = false;
         }
         for (const href of document.anchors) {
-          const target = internalTarget(href, new URL(path, CANONICAL_ORIGIN).pathname);
+          const target = internalTarget(href, new URL(path, CANONICAL_ORIGIN).pathname, baseUrl, `anchor-source:${path}`);
           if (target) discovered.add(target);
         }
       }
@@ -395,9 +492,9 @@ async function main() {
     const path = crawlQueue.shift();
     if (crawled.has(path)) continue;
     crawled.add(path);
+    summary.internalLinks.checked += 1;
     try {
-      const result = await fetchRoute(baseUrl, path);
-      summary.internalLinks.checked += 1;
+      const result = await fetchAnchorRoute(baseUrl, path);
       if (result.response.status >= 400) {
         summary.internalLinks.broken += 1;
         violation(`anchor:${path}`, `internal anchor returned ${result.response.status}`);
@@ -407,7 +504,7 @@ async function main() {
       if (contentType.toLowerCase().includes("text/html")) {
         const document = parseHtml(result.text);
         for (const href of document.anchors) {
-          const target = internalTarget(href, new URL(path, CANONICAL_ORIGIN).pathname);
+          const target = internalTarget(href, new URL(path, CANONICAL_ORIGIN).pathname, baseUrl, `anchor-source:${path}`);
           if (target && !crawled.has(target) && !discovered.has(target)) {
             discovered.add(target);
             crawlQueue.push(target);
