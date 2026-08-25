@@ -127,6 +127,10 @@ input {
   border: 0;
 }
 
+.attr-text::before {
+  content: attr(data-text);
+}
+
 /* Header */
 
 .site-header {

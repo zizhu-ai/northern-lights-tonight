@@ -30,6 +30,12 @@ export type ForecastDossier = {
   north_south_split: string | null;
   best_months_note: string;
   local_faqs: LocalFaq[];
+  primary_keyword: string;
+  magnetic_latitude: number;
+  aurora_zone: string;
+  typical_kp_horizon: number;
+  typical_kp_overhead: number;
+  short_summer_nights: boolean;
 };
 
 const dossiers = dossierJson.locations as ForecastDossier[];

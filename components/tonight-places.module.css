@@ -89,6 +89,10 @@
   font-variant-numeric: tabular-nums;
 }
 
+.window::before {
+  content: attr(data-text);
+}
+
 @media (min-width: 768px) {
   .group h2 {
     font-size: 24px;

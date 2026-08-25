@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import {
+  loadMarkdownBody,
+  renderMarkdownBlocks,
+} from "@/components/guide-markdown";
 import { PlaceSearchForm } from "@/components/place-search-form";
 import {
   isSiteReadingsPaused,
@@ -27,14 +31,17 @@ export const maxDuration = 60;
 
 export const metadata: Metadata = {
   title: TITLE,
-  description: copy.home.lead,
+  description: copy.seo.home,
   alternates: { canonical: SITE_URL },
   robots: { index: true, follow: true },
-  openGraph: ogFor("", TITLE, copy.home.lead),
+  openGraph: ogFor("", TITLE, copy.seo.home),
 };
 
 export default async function HomePage() {
-  const latest = await loadLatest();
+  const [latest, extra] = await Promise.all([
+    loadLatest(),
+    loadMarkdownBody("pages/home.md"),
+  ]);
   const revision = latest.freshness?.revision ?? "unavailable";
   const checkedAt = latest.freshness?.checked_at ?? "unavailable";
   return (
@@ -106,6 +113,8 @@ export default async function HomePage() {
             </li>
           </ul>
         </section>
+
+        <article className={styles.reader}>{renderMarkdownBlocks(extra)}</article>
       </div>
     </main>
   );

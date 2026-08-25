@@ -28,6 +28,11 @@ export async function loadGuideContent(fileName: string): Promise<GuideContent> 
   return { title, h1, body: match[2].trim() };
 }
 
+export async function loadMarkdownBody(relativePath: string): Promise<string> {
+  const file = path.join(process.cwd(), "content", relativePath);
+  return (await readFile(file, "utf8")).trim();
+}
+
 export function renderMarkdownBlocks(markdown: string): ReactNode[] {
   return markdown.split(/\r?\n\r?\n+/).map((block, index) => {
     const lines = block.split(/\r?\n/).map((line) => line.trim());

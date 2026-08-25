@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
+import { JsonLd } from "@/components/guide-markdown";
 import { PrivacyAnalytics } from "@/components/privacy-analytics";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import copy from "@/content/ui-copy.json";
@@ -34,6 +35,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {children}
         </div>
         <SiteFooter />
+        <JsonLd
+          value={{
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            name: copy.chrome.wordmark,
+            url: SITE_URL,
+          }}
+        />
         <PrivacyAnalytics />
       </body>
     </html>
