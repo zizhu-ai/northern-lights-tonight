@@ -6,7 +6,7 @@ import {
   renderMarkdownBlocks,
 } from "@/components/guide-markdown";
 import copy from "@/content/ui-copy.json";
-import { SITE_URL } from "@/lib/site";
+import { ogFor, SITE_URL } from "@/lib/site";
 
 import styles from "../../part4.module.css";
 
@@ -22,6 +22,11 @@ export async function generateMetadata(): Promise<Metadata> {
     description: copy.seo.best_time,
     alternates: { canonical: PAGE_URL },
     robots: { index: true, follow: true },
+    openGraph: ogFor(
+      "/guides/best-time-to-see-northern-lights",
+      title,
+      copy.seo.best_time,
+    ),
   };
 }
 

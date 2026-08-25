@@ -150,7 +150,14 @@ export function FindPlace() {
 
       {open ? (
         <>
-          <div className="find-place__backdrop" aria-hidden="true" onClick={close} />
+          <div
+            className="find-place__backdrop"
+            aria-hidden="true"
+            onClick={() => {
+              close();
+              triggerRef.current?.focus();
+            }}
+          />
           <section
             ref={panelRef}
             id="find-place-panel"

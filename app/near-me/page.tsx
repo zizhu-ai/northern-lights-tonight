@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import { PlaceSearchForm } from "@/components/place-search-form";
 import copy from "@/content/ui-copy.json";
-import { SITE_URL } from "@/lib/site";
+import { ogFor, SITE_URL } from "@/lib/site";
 
 import styles from "../part4.module.css";
 
@@ -13,13 +13,18 @@ export const metadata: Metadata = {
   description: copy.near_me.lead,
   alternates: { canonical: `${SITE_URL}/near-me` },
   robots: { index: true, follow: true },
+  openGraph: ogFor(
+    "/near-me",
+    "Northern Lights Near Me: Forecast by City or ZIP",
+    copy.near_me.lead,
+  ),
 };
 
 export default function NearMePage() {
   return (
     <main className={`tool-page ${styles.page} ${styles.narrow}`}>
       <header className={styles.hero}>
-        <h1>Northern Lights Near Me</h1>
+        <h1>{copy.near_me.title}</h1>
         <p className={styles.lead}>{copy.near_me.lead}</p>
       </header>
 

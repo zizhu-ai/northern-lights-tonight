@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 import { loadLatestWithMeta } from "@/lib/snapshots";
 
-export const revalidate = 600;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+export const maxDuration = 60;
 
 function fetchedAtHeader(observation: {
   fetched_at: string | null;
@@ -20,6 +22,10 @@ export async function GET() {
       "X-Robots-Tag": "noindex, nofollow",
       "X-Snapshot-Source": source,
       "X-Snapshot-Generated-At": data.generated_at,
+      "X-Snapshot-Revision": data.freshness?.revision ?? "unavailable",
+      "X-Snapshot-Checked-At": data.freshness?.checked_at ?? "unavailable",
+      "X-Snapshot-Last-Success-At": data.freshness?.last_success_at ?? "unavailable",
+      "Cache-Control": "private, no-store, max-age=0",
       "X-Aurora-Fallback-Used": String(data.fallback_used),
       "X-Ovation-Fetched-At": fetchedAtHeader(observations.ovation),
       "X-Kp-Fetched-At": fetchedAtHeader(observations.kp),

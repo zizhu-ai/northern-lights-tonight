@@ -1,5 +1,14 @@
 import { createHash } from "node:crypto";
 
+import {
+  appendOpenMeteoCredential,
+  redactOpenMeteoError,
+  resolveOpenMeteoConfig,
+// Node's strip-types runner requires a runtime TypeScript import extension.
+// @ts-ignore TS5097: Next's bundler resolves this source import without emitting it.
+} from "./open-meteo-config.ts";
+import type { OpenMeteoConfig } from "./open-meteo-config";
+
 export const SOURCE_SCHEMA_VERSION = 1 as const;
 
 export type JsonObject = Record<string, unknown>;
@@ -52,9 +61,12 @@ const DEFAULT_OVATION_URL =
   "https://services.swpc.noaa.gov/json/ovation_aurora_latest.json";
 const DEFAULT_KP_URL =
   "https://services.swpc.noaa.gov/products/noaa-planetary-k-index-forecast.json";
-const DEFAULT_CLOUD_URL = "https://api.open-meteo.com/v1/forecast";
 const REQUEST_TIMEOUT_MS = 8_000;
 const MAX_ATTEMPTS = 3;
+export const AURORA_SOURCE_FETCH_WORST_CASE_MS =
+  REQUEST_TIMEOUT_MS * MAX_ATTEMPTS +
+  // Retries wait 150/300ms plus at most 249ms jitter each.
+  150 + 249 + 300 + 249;
 const CLOUD_BATCH_SIZE = 20;
 const conditionalResponses = new Map<string, RequestResult>();
 
@@ -211,10 +223,9 @@ async function fetchJson(
   throw lastError instanceof Error ? lastError : new Error(String(lastError));
 }
 
-const sourceUrl = (name: SourceName): string => {
+const sourceUrl = (name: Exclude<SourceName, "cloud">): string => {
   if (name === "ovation") return process.env.AURORA_OVATION_URL ?? DEFAULT_OVATION_URL;
-  if (name === "kp") return process.env.AURORA_KP_URL ?? DEFAULT_KP_URL;
-  return process.env.AURORA_CLOUD_URL ?? DEFAULT_CLOUD_URL;
+  return process.env.AURORA_KP_URL ?? DEFAULT_KP_URL;
 };
 
 const sourceTimeFromOvation = (payload: JsonObject): string =>
@@ -317,8 +328,8 @@ const cloudPoints = (dossiers: Dossier[]): CloudPoint[] => {
   return [...unique.values()];
 };
 
-const cloudUrl = (points: CloudPoint[]): string => {
-  const url = new URL(sourceUrl("cloud"));
+const cloudUrl = (points: CloudPoint[], config: OpenMeteoConfig): string => {
+  const url = new URL(config.baseUrl);
   url.searchParams.set("latitude", points.map((point) => point.lat.toFixed(4)).join(","));
   url.searchParams.set("longitude", points.map((point) => point.lng.toFixed(4)).join(","));
   url.searchParams.set(
@@ -327,11 +338,18 @@ const cloudUrl = (points: CloudPoint[]): string => {
   );
   url.searchParams.set("forecast_days", "2");
   url.searchParams.set("timezone", points.map((point) => point.timezone).join(","));
-  return url.toString();
+  return appendOpenMeteoCredential(url, config).toString();
 };
 
 async function fetchCloud(dossiers: Dossier[]): Promise<SourceFetchResult<Record<string, JsonObject | null>>> {
   try {
+    const config = resolveOpenMeteoConfig({
+      VERCEL_ENV: process.env.VERCEL_ENV,
+      OPEN_METEO_USAGE_MODE: process.env.OPEN_METEO_USAGE_MODE,
+      OPEN_METEO_API_BASE: process.env.OPEN_METEO_API_BASE,
+      OPEN_METEO_API_KEY: process.env.OPEN_METEO_API_KEY,
+      AURORA_CLOUD_URL: process.env.AURORA_CLOUD_URL,
+    });
     const points = cloudPoints(dossiers);
     const batches: CloudPoint[][] = [];
     for (let index = 0; index < points.length; index += CLOUD_BATCH_SIZE) {
@@ -339,7 +357,7 @@ async function fetchCloud(dossiers: Dossier[]): Promise<SourceFetchResult<Record
     }
     // Two bounded multi-coordinate requests replace 39 serial requests.
     const settled = await Promise.allSettled(
-      batches.map(async (batch) => ({ batch, response: await fetchJson(cloudUrl(batch)) })),
+      batches.map(async (batch) => ({ batch, response: await fetchJson(cloudUrl(batch, config)) })),
     );
     const payload: Record<string, JsonObject | null> = {};
     let successfulPoints = 0;
@@ -365,6 +383,9 @@ async function fetchCloud(dossiers: Dossier[]): Promise<SourceFetchResult<Record
       const times = (item.hourly as JsonObject).time as unknown[];
       return String(times[times.length - 1] ?? "");
     });
+    const pointCoverage = Object.fromEntries(
+      points.map((point) => [point.coordinateKey, { timezone: point.timezone }]),
+    );
     return {
       ok: true,
       envelope: {
@@ -379,13 +400,17 @@ async function fetchCloud(dossiers: Dossier[]): Promise<SourceFetchResult<Record
           complete: successfulPoints === points.length,
           start: starts.sort()[0] ?? null,
           end: ends.sort().at(-1) ?? null,
+          points: pointCoverage,
           batches: batches.length,
         },
         payload,
       },
     };
   } catch (error) {
-    return { ok: false, error: error instanceof Error ? error.message : String(error) };
+    return {
+      ok: false,
+      error: redactOpenMeteoError(error, process.env.OPEN_METEO_API_KEY),
+    };
   }
 }
 

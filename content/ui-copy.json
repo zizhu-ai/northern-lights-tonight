@@ -20,9 +20,10 @@
     "footer_how": "How we decide",
     "footer_privacy": "Privacy",
     "footer_terms": "Terms",
-    "footer_sources": "Aurora data from NOAA SWPC. Clouds from Open-Meteo.",
+    "footer_aurora_data": "Aurora data: NOAA SWPC.",
+    "footer_cloud_before_source": "Cloud-cover data adapted from",
+    "footer_cloud_before_license": "under",
     "footer_noaa": "Not affiliated with NOAA.",
-    "open": "Open",
     "share": "Share",
     "try_again": "Try again",
     "rest_of_night": "Rest of the night",
@@ -36,21 +37,26 @@
     "confidence_high": "High",
     "confidence_medium": "Medium",
     "confidence_low": "Low",
+    "best_window_label": "Best window",
+    "main_issue_label": "Main issue",
     "look_toward_label": "Look toward",
+    "confidence_label": "Confidence",
     "look_north": "North",
     "window_none": "—",
     "unknown_window": "—",
     "alaska_kicker": "Statewide · headline: Fairbanks Interior",
     "stale_main_issue": "Source data is too old to treat as live.",
     "hours_need_live": "Hours depend on live data. We don't guess.",
-    "auto_refresh": "We check sources every 10 minutes. This page updates itself.",
+    "auto_refresh": "Sources are checked when requested and checks are reused for up to 10 minutes.",
     "site_stale_human": "Readings paused: source data is stale. We don’t guess.",
     "updated_minutes": "Updated {n} minutes ago",
     "updated_hour": "Updated 1 hour ago",
     "updated_hours": "Updated {n} hours ago",
-    "updated_just_now": "Updated just now"
+    "updated_just_now": "Updated just now",
+    "updated_unknown": "Updated —"
   },
   "how_to_read": {
+    "title": "How to read GO / MAYBE / NO",
     "go": "GO = worth trying",
     "maybe": "MAYBE = possible, with obstacles",
     "no": "NO = not worth a trip",
@@ -59,7 +65,6 @@
   "errors": {
     "search_empty": "Enter a US city, state, or ZIP.",
     "search_no_match": "No match for that place. Try a city, state, or 5-digit ZIP.",
-    "search_not_us": "v1 only looks up US places. Try a US city or ZIP.",
     "gps_denied": "Location permission is off. Search a city or ZIP instead.",
     "gps_unavailable": "Could not read your location. Search a city or ZIP instead.",
     "zip_not_found": "That ZIP is not in our list yet. Try the city name."
@@ -71,6 +76,7 @@
     "hint": "Northern Lights Tonight covers the US and other northern-hemisphere sites."
   },
   "view": {
+    "title_template": "Tonight near {Place}",
     "live_disclaimer": "Live reading, not a full local guide.",
     "unknown_main_issue": "Aurora data is unavailable right now."
   },
@@ -87,11 +93,13 @@
     "find_cta": "Or find another place."
   },
   "near_me": {
+    "title": "Northern Lights Near Me",
     "lead": "Aurora is local. A ZIP or city tells us whether the oval can reach you, and whether clouds will block it.",
     "why_title": "Why a place is required",
     "why_body": "A national Kp number is not a local yes/no. Clouds, darkness, and magnetic latitude change by city."
   },
   "home": {
+    "title": "Can You See the Northern Lights Tonight?",
     "lead": "It depends on your location. Check a US city, or read tonight’s local pages below.",
     "what_time_title": "What time tonight?",
     "what_time_body": "There is no single US clock time. After dark, often late. Use the window on your local page.",

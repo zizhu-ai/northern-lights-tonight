@@ -8,11 +8,11 @@ import path from "node:path";
 // embedding instead.
 const csp = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com",
+  "script-src 'self' 'unsafe-inline'",
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: https://www.googletagmanager.com https://www.google-analytics.com",
+  "img-src 'self' data:",
   "font-src 'self' data:",
-  "connect-src 'self' https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com",
+  "connect-src 'self'",
   "manifest-src 'self'",
   "base-uri 'self'",
   "form-action 'self'",

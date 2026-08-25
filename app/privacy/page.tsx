@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 
+import { AnalyticsPreference } from "@/components/analytics-preference";
 import copy from "@/content/ui-copy.json";
-import { SITE_URL } from "@/lib/site";
+import { ogFor, SITE_URL } from "@/lib/site";
 
 import styles from "../part4.module.css";
 
@@ -15,6 +16,7 @@ export const metadata: Metadata = {
   description: copy.seo.privacy,
   alternates: { canonical: PAGE_URL },
   robots: { index: true, follow: true },
+  openGraph: ogFor("/privacy", "Privacy Policy", copy.seo.privacy),
 };
 
 export default function PrivacyPage() {
@@ -46,17 +48,22 @@ export default function PrivacyPage() {
 
         <h2>Analytics</h2>
         <p>
-          If Google Analytics 4 is enabled, Google may use cookies or IP
-          address to measure visits. We use that measurement for traffic
-          statistics. With no ads configured, we do not use Analytics as an ad
-          platform.
+          We use Vercel Web Analytics to understand aggregate site traffic. It
+          reports anonymous page-view data: the page path without its query or
+          hash, referrer, and coarse location and device categories. It uses no
+          third-party cookies and does not store your IP address. We do not use
+          it for advertising or remarketing. Browser Do Not Track is respected,
+          and you can also save an analytics opt-out in this browser.
         </p>
+        <AnalyticsPreference />
 
         <h2>Data sources</h2>
         <p>
           Aurora activity comes from public NOAA Space Weather Prediction
-          Center products (OVATION and Kp). Cloud cover comes from Open-Meteo.
-          Your browser does not call NOAA directly.
+          Center products (OVATION and Kp). Cloud-cover data is adapted from{" "}
+          <a href="https://open-meteo.com/">Open-Meteo</a> under{" "}
+          <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.
+          Your browser does not call NOAA or Open-Meteo directly.
         </p>
 
         <h2>Contact</h2>

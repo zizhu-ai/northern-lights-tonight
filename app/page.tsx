@@ -15,34 +15,38 @@ import {
   formatWindow,
   loadLatest,
 } from "@/lib/snapshots";
-import { SITE_URL } from "@/lib/site";
+import { ogFor, SITE_URL } from "@/lib/site";
 
 import styles from "./part4.module.css";
 
 const TITLE = "Northern Lights Tonight: US City and State Aurora Forecast";
 
-export const dynamic = "force-static";
-export const revalidate = 600;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+export const maxDuration = 60;
 
 export const metadata: Metadata = {
   title: TITLE,
   description: copy.home.lead,
   alternates: { canonical: SITE_URL },
   robots: { index: true, follow: true },
-  openGraph: {
-    type: "website",
-    title: TITLE,
-    description: copy.home.lead,
-  },
+  openGraph: ogFor("", TITLE, copy.home.lead),
 };
 
-export default function HomePage() {
+export default async function HomePage() {
+  const latest = await loadLatest();
+  const revision = latest.freshness?.revision ?? "unavailable";
+  const checkedAt = latest.freshness?.checked_at ?? "unavailable";
   return (
-    <main className={styles.home}>
+    <main
+      className={styles.home}
+      data-snapshot-revision={revision}
+      data-snapshot-checked-at={checkedAt}
+    >
       <div className={`twilight-band ${styles.twilight}`}>
         <div className={styles.inner}>
           <header className={styles.hero}>
-            <h1>Can You See the Northern Lights Tonight?</h1>
+            <h1>{copy.home.title}</h1>
             <p className={styles.lead}>{copy.home.lead}</p>
           </header>
 
@@ -69,7 +73,7 @@ export default function HomePage() {
           </section>
 
           <section className={styles.panel}>
-            <h2>How to read GO / MAYBE / NO</h2>
+            <h2>{copy.how_to_read.title}</h2>
             <ul className={styles.readList}>
               <li>{copy.how_to_read.go}</li>
               <li>{copy.how_to_read.maybe}</li>

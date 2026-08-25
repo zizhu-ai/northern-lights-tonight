@@ -4,6 +4,7 @@ import {
   type SnapshotSource,
   type SourceObservation,
 } from "@/lib/live-snapshots";
+import type { SnapshotFreshness } from "@/lib/hard-refresh-resolver";
 
 export type SnapshotRow = {
   location_slug: string;
@@ -28,6 +29,7 @@ export type SnapshotBundle = {
   locations: SnapshotRow[];
   snapshot_source: SnapshotSource;
   fallback_used: boolean;
+  freshness: SnapshotFreshness | null;
   source_observations: {
     ovation: SourceObservation;
     kp: SourceObservation;
@@ -73,7 +75,7 @@ export async function loadLatestWithMeta(): Promise<{
   data: SnapshotBundle;
   source: "live" | "lkg" | "bundled";
 }> {
-  const data = (await getAuroraBundle()) as unknown as SnapshotBundle;
+  const data: SnapshotBundle = await getAuroraBundle();
   return { data, source: data.snapshot_source };
 }
 

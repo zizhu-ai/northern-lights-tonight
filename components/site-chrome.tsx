@@ -63,7 +63,12 @@ export function SiteFooter() {
         <p>
           <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
         </p>
-        <p>{copy.chrome.footer_sources}</p>
+        <p>
+          {copy.chrome.footer_aurora_data} {copy.chrome.footer_cloud_before_source}{" "}
+          <a href="https://open-meteo.com/">Open-Meteo</a>{" "}
+          {copy.chrome.footer_cloud_before_license}{" "}
+          <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.
+        </p>
         <p>{copy.chrome.footer_noaa}</p>
       </div>
     </footer>

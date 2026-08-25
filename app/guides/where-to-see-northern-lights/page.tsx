@@ -6,27 +6,38 @@ import type { ReactNode } from "react";
 
 import { TonightPlaces } from "@/components/tonight-places";
 import copy from "@/content/ui-copy.json";
-import { SITE_URL } from "@/lib/site";
+import { loadLatest } from "@/lib/snapshots";
+import { ogFor, SITE_URL } from "@/lib/site";
 
 import styles from "../../part4.module.css";
 
 const TITLE = "Where to See the Northern Lights in the US Tonight";
 
-export const dynamic = "force-static";
-export const revalidate = 600;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+export const maxDuration = 60;
 
 export const metadata: Metadata = {
   title: TITLE,
   description: copy.seo.where,
   alternates: { canonical: `${SITE_URL}/guides/where-to-see-northern-lights` },
   robots: { index: true, follow: true },
+  openGraph: ogFor(
+    "/guides/where-to-see-northern-lights",
+    TITLE,
+    copy.seo.where,
+  ),
 };
 
 export default async function WhereGuidePage() {
-  const body = await loadReaderBody();
+  const [body, latest] = await Promise.all([loadReaderBody(), loadLatest()]);
 
   return (
-    <main className={styles.page}>
+    <main
+      className={styles.page}
+      data-snapshot-revision={latest.freshness?.revision ?? "unavailable"}
+      data-snapshot-checked-at={latest.freshness?.checked_at ?? "unavailable"}
+    >
       <header className={styles.hero}>
         <h1>{TITLE}</h1>
       </header>
