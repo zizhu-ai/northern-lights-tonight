@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { AnalyticsPreference } from "@/components/analytics-preference";
 import copy from "@/content/ui-copy.json";
 import { ogFor, SITE_URL } from "@/lib/site";
 
@@ -47,10 +48,14 @@ export default function PrivacyPage() {
 
         <h2>Analytics</h2>
         <p>
-          We use Vercel Web Analytics to understand aggregate site traffic.
-          This analytics service does not use cookies or collect personal
-          information, and we do not use it for advertising or remarketing.
+          We use Vercel Web Analytics to understand aggregate site traffic. It
+          reports anonymous page-view data: the page path without its query or
+          hash, referrer, and coarse location and device categories. It uses no
+          third-party cookies and does not store your IP address. We do not use
+          it for advertising or remarketing. Browser Do Not Track is respected,
+          and you can also save an analytics opt-out in this browser.
         </p>
+        <AnalyticsPreference />
 
         <h2>Data sources</h2>
         <p>

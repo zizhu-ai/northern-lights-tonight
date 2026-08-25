@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { Analytics } from "@vercel/analytics/next";
 
+import { PrivacyAnalytics } from "@/components/privacy-analytics";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import copy from "@/content/ui-copy.json";
 import { SITE_URL } from "@/lib/site";
@@ -34,7 +34,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {children}
         </div>
         <SiteFooter />
-        <Analytics />
+        <PrivacyAnalytics />
       </body>
     </html>
   );
