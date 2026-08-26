@@ -3,7 +3,10 @@ import test from "node:test";
 
 // Node's zero-dependency strip-types runner requires the explicit extension.
 // @ts-ignore TS5097: the production build type-checks this test but does not emit it.
-import { ACQUISITION_ROUTES } from "./acquisition-routes.ts";
+import {
+  ACQUISITION_ROUTES,
+  isAcquisitionRoute,
+} from "./acquisition-routes.ts";
 
 const EXPECTED_INDEXABLE_PATHS = [
   "/",
@@ -37,4 +40,12 @@ test("the acquisition registry exposes exactly the 24 indexable routes", () => {
     ACQUISITION_ROUTES.map(({ path }) => path),
     EXPECTED_INDEXABLE_PATHS,
   );
+});
+
+test("the acquisition route guard excludes utility and error pages", () => {
+  assert.equal(isAcquisitionRoute("/"), true);
+  assert.equal(isAcquisitionRoute("/forecast/alaska"), true);
+  assert.equal(isAcquisitionRoute("/view"), false);
+  assert.equal(isAcquisitionRoute("/__adsense-precheck-404__"), false);
+  assert.equal(isAcquisitionRoute("/missing"), false);
 });

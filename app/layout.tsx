@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
+import { AdSenseLoader } from "@/components/adsense-loader";
 import { JsonLd } from "@/components/guide-markdown";
 import { PrivacyAnalytics } from "@/components/privacy-analytics";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import copy from "@/content/ui-copy.json";
+import { ADSENSE_CLIENT } from "@/lib/adsense";
 import { SITE_URL } from "@/lib/site";
 
 import "./globals.css";
@@ -22,21 +24,15 @@ export const metadata: Metadata = {
   description: copy.seo.fallback_description,
   twitter: { card: "summary_large_image" },
   other: {
-    "google-adsense-account": "ca-pub-6852803882900024",
+    "google-adsense-account": ADSENSE_CLIENT,
   },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en-US">
-      <head>
-        <script
-          async
-          crossOrigin="anonymous"
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6852803882900024"
-        />
-      </head>
       <body className={`${inter.variable} ${inter.className}`}>
+        <AdSenseLoader />
         <a className="skip-link" href="#main-content">
           Skip to content
         </a>
