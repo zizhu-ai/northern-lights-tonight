@@ -21,11 +21,21 @@ export const metadata: Metadata = {
   title: "Northern Lights Tonight",
   description: copy.seo.fallback_description,
   twitter: { card: "summary_large_image" },
+  other: {
+    "google-adsense-account": "ca-pub-6852803882900024",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en-US">
+      <head>
+        <script
+          async
+          crossOrigin="anonymous"
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6852803882900024"
+        />
+      </head>
       <body className={`${inter.variable} ${inter.className}`}>
         <a className="skip-link" href="#main-content">
           Skip to content

@@ -61,8 +61,9 @@ export default function PrivacyPage() {
         <p>
           Indexed pages, the near me form, GPS (only after a click), live
           pins under <code>/view</code>, and aggregate analytics if you have
-          not opted out. NOAA or Open-Meteo sites you open yourself have
-          their own rules. v1 does not place a third-party ad cookie.
+          not opted out. The site also loads Google AdSense for account
+          verification and possible ad delivery. NOAA, Open-Meteo, and Google
+          services have their own rules.
         </p>
 
         <h2>Analytics</h2>
@@ -87,11 +88,18 @@ export default function PrivacyPage() {
 
         <h2>Cookies, logs, and what we do not do</h2>
         <p>
-          We do not run advertising pixels. We do not build a user profile.
-          We do not sell, rent, or trade personal information. The privacy
-          policy does not claim that Vercel platform logs are empty; hosting
-          logs may include IP addresses and URLs as any HTTPS host does.
-          Query strings on <code>/view</code> can appear in those logs.
+          Google AdSense is a third-party advertising service. Its script may
+          use advertising cookies, web beacons, or similar technologies and
+          may receive request data such as your IP address, browser details,
+          page URL, and ad interactions. Google may use that information to
+          deliver, limit, personalize, and measure advertising, subject to
+          your consent choices and applicable law. We do not sell, rent, or
+          trade personal information ourselves.
+        </p>
+        <p>
+          This policy does not claim that Vercel platform logs are empty;
+          hosting logs may include IP addresses and URLs as any HTTPS host
+          does. Query strings on <code>/view</code> can appear in those logs.
         </p>
         <p>
           If you opt out of analytics, we honor that flag in this browser.
@@ -106,9 +114,10 @@ export default function PrivacyPage() {
 
         <h2>Changes</h2>
         <p>
-          If we add accounts, ads, or new processors, the text on this URL
-          will change. Material changes are not buried in a changelog you
-          cannot find. The date is the page’s last deploy.
+          If we add accounts or new processors, or materially change how ads
+          work, the text on this URL will change. Material changes are not
+          buried in a changelog you cannot find. The date is the page’s last
+          deploy.
         </p>
         <p>
           International visitors: the product is US English and US places.
@@ -122,10 +131,10 @@ export default function PrivacyPage() {
         <p>
           The site is hosted on Vercel. Vercel may process request metadata
           (IP, user agent, URL) as any HTTPS host does. Analytics, when
-          enabled, is Vercel Web Analytics with the path sanitized. There is
-          no advertising SDK. There is no remarketing pixel. There is no
-          customer database of names or emails except the messages you send
-          to {CONTACT_EMAIL}.
+          enabled, is Vercel Web Analytics with the path sanitized. Google
+          AdSense supplies the advertising script and may process data as
+          described above. There is no customer database of names or emails
+          except the messages you send to {CONTACT_EMAIL}.
         </p>
         <p>
           Snapshot files used for forecasts are geophysical data, not user
@@ -181,9 +190,10 @@ export default function PrivacyPage() {
         </p>
         <p>
           The privacy policy is short because the product is short: no
-          accounts, no ads, no remarketing, no child-directed game. If the
-          product grows, the privacy policy grows on this same path so
-          crawlers and humans find one document.
+          accounts, no customer database, and no child-directed game. The
+          advertising processor is named above. If the product grows, the
+          privacy policy grows on this same path so crawlers and humans find
+          one document.
         </p>
         <p>
           Retention: geophysical snapshots are not user records. Mail in
