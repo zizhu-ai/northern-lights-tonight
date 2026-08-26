@@ -24,3 +24,11 @@ export const ACQUISITION_ROUTES = [
   { path: "/forecast/alaska" },
   { path: "/forecast/fairbanks" },
 ] as const;
+
+const ACQUISITION_PATHS: ReadonlySet<string> = new Set(
+  ACQUISITION_ROUTES.map(({ path }) => path),
+);
+
+export function isAcquisitionRoute(pathname: string): boolean {
+  return ACQUISITION_PATHS.has(pathname);
+}
