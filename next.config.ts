@@ -5,14 +5,16 @@ import path from "node:path";
 // request, which would opt every page out of prerendering. Scripts therefore keep
 // 'unsafe-inline' (Next streams the RSC payload via inline script tags) and the
 // policy earns its keep by pinning origins and killing eval, framing, and object
-// embedding instead.
+// embedding instead. AdSense is intentionally limited to the endpoints needed
+// by its account-verification loader; do not broaden this to arbitrary HTTPS.
 const csp = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline'",
+  "script-src 'self' 'unsafe-inline' https://pagead2.googlesyndication.com",
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data:",
+  "img-src 'self' data: https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net",
   "font-src 'self' data:",
-  "connect-src 'self'",
+  "connect-src 'self' https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net",
+  "frame-src 'self' https://googleads.g.doubleclick.net https://tpc.googlesyndication.com",
   "manifest-src 'self'",
   "base-uri 'self'",
   "form-action 'self'",
