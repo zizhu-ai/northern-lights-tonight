@@ -155,8 +155,6 @@ export default async function ForecastPage({ params }: PageProps) {
           <ul className={styles.actionList}>
             <li>{dossier.leave_city_advice}</li>
             <li>Face {state.snapshot?.look_toward ?? dossier.viewing_direction}.</li>
-            <li>Give your eyes 30–60 minutes in the dark.</li>
-            <li>A phone camera may pick up a faint display before your eyes do.</li>
           </ul>
         </section>
 

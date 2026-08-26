@@ -72,7 +72,7 @@ export default function AboutPage() {
           tool rather than take a verdict on faith.
         </p>
 
-        <h2>Contact</h2>
+        <h2 id="contact">Contact</h2>
         <p>
           Questions, corrections, and source concerns are welcome at{" "}
           <a href="mailto:hello@aurora-tonight.com">

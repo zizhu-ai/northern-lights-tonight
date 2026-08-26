@@ -5,6 +5,8 @@ h1: How We Decide
 
 Northern Lights Tonight is a local **go / maybe / no** for tonight. It is not a percentage, not a map tracker, and not affiliated with NOAA. This page is how we decide whether a night is worth a look at one place.
 
+A local tonight reading is not a national Kp graphic. Magnetic latitude, live oval reach, darkness, clouds, and skyglow are evaluated for the headline point on the place page; Kp is context, not a nationwide yes or no.
+
 ## How we decide, in gate order
 
 For each 30-minute slot that is dark enough (sun at or below **−12°**):
@@ -16,6 +18,14 @@ For each 30-minute slot that is dark enough (sun at or below **−12°**):
 5. Only a clear-enough sky with real reach can be **GO**. Otherwise **MAYBE**.
 
 Slots that are still twilight are skipped (`not dark yet`) and do not vote. If the whole night never gets dark enough, the night is **NO** (summer high latitude). We do **not** average a weighted score. We do **not** print 73%.
+
+## How to use a forecast card
+
+Read the status, viewing window, and named obstacle together. **GO** still needs a dark northern view. **MAYBE** names an obstacle rather than a coin flip. **NO** means skip a special trip. **UNKNOWN** means current data is missing or stale, so we will not reuse an older color.
+
+Quiet and mid-latitude places will show many NOs. That is the product working: a useful trip filter should reject nights when the oval, darkness, clouds, or skyglow do not line up.
+
+If a window is open, give your eyes 30–60 minutes rather than testing the sky for five minutes from a porch. A phone camera may show a faint green smear before your eyes do, but that is a reason to keep looking, not a second forecast.
 
 ## Near window vs the rest of the night
 

@@ -62,6 +62,9 @@ export function SiteFooter() {
               <Link href="/about">{copy.chrome.footer_about}</Link>
             </li>
             <li>
+              <Link href="/about#contact">{copy.chrome.footer_contact}</Link>
+            </li>
+            <li>
               <Link href="/privacy">{copy.chrome.footer_privacy}</Link>
             </li>
             <li>
