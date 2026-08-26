@@ -59,6 +59,9 @@ export function SiteFooter() {
               <Link href="/methodology">{copy.chrome.footer_how}</Link>
             </li>
             <li>
+              <Link href="/about">{copy.chrome.footer_about}</Link>
+            </li>
+            <li>
               <Link href="/privacy">{copy.chrome.footer_privacy}</Link>
             </li>
             <li>

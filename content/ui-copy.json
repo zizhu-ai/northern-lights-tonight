@@ -18,6 +18,7 @@
     "use_my_location": "Use my location",
     "gps_privacy": "We use your location once. We do not store it.",
     "footer_how": "How we decide",
+    "footer_about": "About",
     "footer_privacy": "Privacy",
     "footer_terms": "Terms",
     "footer_aurora_data": "Aurora data: NOAA SWPC.",
@@ -117,6 +118,7 @@
   },
   "seo": {
     "fallback_description": "Local aurora go / maybe / no for the US.",
+    "about": "About Northern Lights Tonight, our GO, MAYBE, and NO forecast method, current US coverage, public data sources, and how to contact us.",
     "home": "Check northern lights tonight for US cities and states. Local GO, MAYBE, or NO from NOAA and clouds, not one national Kp number.",
     "near_me": "Get northern lights near me by US city or ZIP. Local oval reach and clouds, not a nationwide Kp yes or no.",
     "best_time": "Best time to see northern lights in the US, by season, time of night, latitude, and darkness — not one national clock.",

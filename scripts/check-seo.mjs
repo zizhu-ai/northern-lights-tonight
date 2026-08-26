@@ -1,6 +1,7 @@
 const CANONICAL_ORIGIN = "https://aurora-tonight.com";
 const APPROVED_STATIC_PATHS = [
   "/",
+  "/about",
   "/near-me",
   "/guides/best-time-to-see-northern-lights",
   "/guides/how-to-see-northern-lights",
@@ -33,7 +34,7 @@ const SCHEMA_REQUIRED_PATHS = new Set([
   "/methodology",
   ...APPROVED_WAVE_ONE_PATHS,
 ]);
-const EXPECTED_SITEMAP_PATHS = 23;
+const EXPECTED_SITEMAP_PATHS = 24;
 const VIEW_PROBES = [
   "/view",
   "/view?lat=64.840&lng=-147.720&name=Fairbanks%2C+Alaska",
@@ -377,8 +378,8 @@ function internalTarget(href, pagePath, baseUrl, scope) {
 }
 
 async function main() {
-  if (APPROVED_STATIC_PATHS.length !== 8 || APPROVED_WAVE_ONE_PATHS.length !== 15 || SCHEMA_REQUIRED_PATHS.size !== 18) {
-    violation("configuration", "frozen route contract must contain 8 static, 15 Wave One, and 18 schema-bearing paths");
+  if (APPROVED_STATIC_PATHS.length !== 9 || APPROVED_WAVE_ONE_PATHS.length !== 15 || SCHEMA_REQUIRED_PATHS.size !== 18) {
+    violation("configuration", "frozen route contract must contain 9 static, 15 Wave One, and 18 schema-bearing paths");
     return;
   }
   let baseUrl;
