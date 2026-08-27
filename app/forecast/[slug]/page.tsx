@@ -230,7 +230,7 @@ async function getForecastState(
   timezone: string,
 ): Promise<ForecastState> {
   const snapshot = await loadForecastSnapshot(slug);
-  const mainIssue = snapshot?.main_obstacle_text ?? copy.view.unknown_main_issue;
+  const mainIssue = snapshot?.main_obstacle_text ?? copy.view.data_unavailable_main_issue;
 
   return {
     snapshot,
@@ -422,7 +422,7 @@ function WhyThisVerdict({
       label: "Data live",
       value:
         reasonFrom(codes, ["DATA_MISSING_AURORA", "FORECAST_FAR", "SIGNALS_CONFLICT"], dossier.name) ??
-        copy.view.live_disclaimer,
+        copy.view.forecast_live_disclaimer,
     },
   ];
 

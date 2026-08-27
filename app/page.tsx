@@ -152,7 +152,7 @@ async function HomeVerdict() {
       mainIssue={
         snapshot
           ? (snapshot.main_obstacle_text ?? snapshot.main_obstacle)
-          : copy.view.unknown_main_issue
+          : copy.view.data_unavailable_main_issue
       }
       confidence={snapshot?.confidence ?? "low"}
       updated={formatUpdatedAt(snapshot?.updated_at ?? snapshot?.generated_at ?? latest.generated_at, timezone)}

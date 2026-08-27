@@ -79,8 +79,10 @@
   },
   "view": {
     "title_template": "Tonight near {Place}",
-    "live_disclaimer": "Live reading, not a full local guide.",
-    "unknown_main_issue": "Aurora data is unavailable right now."
+    "live_disclaimer": "No standalone forecast for this exact spot yet — here are the nearest covered places.",
+    "forecast_live_disclaimer": "Live reading, not a full local guide.",
+    "unknown_main_issue": "No standalone forecast for this location yet.",
+    "data_unavailable_main_issue": "Aurora data is unavailable right now."
   },
   "error": {
     "title": "Something went wrong",
@@ -96,7 +98,7 @@
   },
   "near_me": {
     "title": "Northern Lights Near Me",
-    "lead": "Aurora is local. A ZIP or city tells us whether the oval can reach you, and whether clouds will block it.",
+    "lead": "Find the nearest place with its own GO / MAYBE / NO forecast — US cities and regions we cover tonight.",
     "why_title": "Why a place is required",
     "why_body": "A national Kp number is not a local yes/no. Clouds, darkness, and magnetic latitude change by city."
   },
@@ -121,7 +123,7 @@
     "fallback_description": "Local aurora go / maybe / no for the US.",
     "about": "About Northern Lights Tonight, our GO, MAYBE, and NO forecast method, current US coverage, public data sources, and how to contact us.",
     "home": "Check northern lights tonight for US cities and states. Local GO, MAYBE, or NO from NOAA and clouds, not one national Kp number.",
-    "near_me": "Get northern lights near me by US city or ZIP. Local oval reach and clouds, not a nationwide Kp yes or no.",
+    "near_me": "Find the nearest supported northern lights forecast by US city or ZIP, with local GO / MAYBE / NO guidance for places we cover tonight.",
     "best_time": "Best time to see northern lights in the US, by season, time of night, latitude, and darkness — not one national clock.",
     "how_to": "How to see northern lights tonight: face north, wait in real darkness, and read GO / MAYBE / NO on a local page.",
     "where": "Where to see northern lights in the US tonight, ranked from live local readings, plus standing regions versus event-only states.",
