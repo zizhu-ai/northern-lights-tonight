@@ -13,8 +13,7 @@ import styles from "../../part4.module.css";
 
 const TITLE = "Where to See the Northern Lights in the US Tonight";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export const revalidate = 600;
 export const maxDuration = 60;
 
 export const metadata: Metadata = {
