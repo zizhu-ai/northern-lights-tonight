@@ -55,7 +55,7 @@ export function VerdictCard({
     ? copy.verdict.stale_main_issue
     : displayStatus === "UNAVAILABLE"
       ? copy.south.main_issue
-      : (mainIssue ?? copy.view.unknown_main_issue);
+      : (mainIssue ?? copy.view.data_unavailable_main_issue);
   const displayLook = lookToward
     ? lookToward.charAt(0).toUpperCase() + lookToward.slice(1)
     : copy.verdict.look_north;

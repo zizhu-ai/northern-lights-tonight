@@ -10,18 +10,17 @@ import {
   WAVE_ONE_SLUGS,
   type ForecastDossier,
 } from "@/lib/forecast-places";
-import { haversineMiles, roundCoordinate } from "@/lib/place-search";
+import { haversineMiles } from "@/lib/place-search";
+import {
+  resolveViewParams,
+  type QueryValue,
+} from "@/lib/view-params";
 
 import styles from "../part4.module.css";
 
-type QueryValue = string | string[] | undefined;
 type ViewPageProps = {
   searchParams: Promise<Record<string, QueryValue>>;
 };
-
-type ViewParams =
-  | { hasCoords: false }
-  | { hasCoords: true; lat: number; lng: number; name: string };
 
 export async function generateMetadata({ searchParams }: ViewPageProps): Promise<Metadata> {
   const params = resolveViewParams(await searchParams);
@@ -88,9 +87,9 @@ export default async function ViewPage({ searchParams }: ViewPageProps) {
           />
         </div>
 
-        {unavailable ? (
-          <p className={styles.hint}>{copy.south.hint}</p>
-        ) : null}
+        <p className={styles.hint}>
+          {unavailable ? copy.south.hint : copy.view.live_disclaimer}
+        </p>
 
         <section className={styles.nearby}>
           <h2>Nearby</h2>
@@ -105,37 +104,6 @@ export default async function ViewPage({ searchParams }: ViewPageProps) {
       </div>
     </main>
   );
-}
-
-function resolveViewParams(searchParams: Record<string, QueryValue>): ViewParams {
-  const latValue = firstValue(searchParams.lat);
-  const lngValue = firstValue(searchParams.lng);
-  const rawLat = Number(latValue);
-  const rawLng = Number(lngValue);
-  const hasCoords =
-    latValue !== undefined &&
-    lngValue !== undefined &&
-    latValue !== "" &&
-    lngValue !== "" &&
-    Number.isFinite(rawLat) &&
-    Number.isFinite(rawLng);
-
-  if (!hasCoords) return { hasCoords: false };
-
-  const lat = roundCoordinate(rawLat);
-  const lng = roundCoordinate(rawLng);
-  const suppliedName = firstValue(searchParams.name)?.trim();
-
-  return {
-    hasCoords: true,
-    lat,
-    lng,
-    name: suppliedName || `${lat.toFixed(3)}, ${lng.toFixed(3)}`,
-  };
-}
-
-function firstValue(value: QueryValue): string | undefined {
-  return Array.isArray(value) ? value[0] : value;
 }
 
 function closestWaveOnePlaces(lat: number, lng: number): ForecastDossier[] {
