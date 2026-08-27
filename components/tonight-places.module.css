@@ -61,10 +61,6 @@
   text-transform: uppercase;
 }
 
-.status::before {
-  content: attr(data-text);
-}
-
 .status[data-status="go"] {
   background: var(--go-fill);
   color: var(--go-ink);
@@ -91,10 +87,6 @@
   font-size: 13px;
   text-align: right;
   font-variant-numeric: tabular-nums;
-}
-
-.window::before {
-  content: attr(data-text);
 }
 
 @media (min-width: 768px) {

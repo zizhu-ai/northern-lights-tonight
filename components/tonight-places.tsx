@@ -88,19 +88,18 @@ function renderRow({ dossier, snapshot }: TonightRow) {
       <strong
         className={styles.status}
         data-status={status.toLowerCase()}
-        data-text={status}
         aria-label={status}
-      />
+      >
+        {status}
+      </strong>
       <div className={styles.place}>
         <span className={styles.placeName}>{dossier.name}</span>
         {showPoint ? <span className={styles.placeMeta}>{pointName}</span> : null}
       </div>
       {window ? (
-        <span
-          className={styles.window}
-          data-text={window}
-          aria-label={window}
-        />
+        <span className={styles.window} aria-label={window}>
+          {window}
+        </span>
       ) : null}
     </Link>
   );
