@@ -7,6 +7,7 @@ import copy from "@/content/ui-copy.json";
 import {
   getForecastDossier,
   getHeadlinePoint,
+  WAVE_ONE_SLUGS,
   WAVE_ONE_SLUG_SET,
   type ForecastDossier,
 } from "@/lib/forecast-places";
@@ -54,9 +55,12 @@ type ForecastState = {
   bestWindow: string;
 };
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export const revalidate = 600;
 export const maxDuration = 60;
+
+export function generateStaticParams() {
+  return WAVE_ONE_SLUGS.map((slug) => ({ slug }));
+}
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;

@@ -25,7 +25,7 @@ export async function GET() {
       "X-Snapshot-Revision": data.freshness?.revision ?? "unavailable",
       "X-Snapshot-Checked-At": data.freshness?.checked_at ?? "unavailable",
       "X-Snapshot-Last-Success-At": data.freshness?.last_success_at ?? "unavailable",
-      "Cache-Control": "private, no-store, max-age=0",
+      "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
       "X-Aurora-Fallback-Used": String(data.fallback_used),
       "X-Ovation-Fetched-At": fetchedAtHeader(observations.ovation),
       "X-Kp-Fetched-At": fetchedAtHeader(observations.kp),
