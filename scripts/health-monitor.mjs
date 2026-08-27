@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { pathToFileURL } from "node:url";
 
 export const HEALTH_URL = "https://aurora-tonight.com/api/health";
@@ -11,6 +12,51 @@ const sanitizeHttpReason = (status) =>
   Number.isInteger(status) && status >= 100 && status <= 599
     ? `HTTP ${status}`
     : "invalid HTTP status";
+
+const failureResult = ({ reason, httpStatus = null, failureItems }) => ({
+  ok: false,
+  reason,
+  httpStatus,
+  failureItems,
+});
+
+const extractFailureItems = (body, fallback) => {
+  if (!isObject(body)) return [fallback];
+
+  const items = [];
+  if (
+    Number.isInteger(body.unknowns) &&
+    Number.isInteger(body.total) &&
+    body.unknowns > 0 &&
+    body.total >= body.unknowns
+  ) {
+    items.push(
+      `locations: ${body.unknowns}/${body.total} UNKNOWN (names unavailable from /api/health)`,
+    );
+  }
+
+  if (isObject(body.source_health)) {
+    const failedSources = ["ovation", "kp", "cloud"]
+      .filter(
+        (source) =>
+          body.source_health[source] === "degraded" ||
+          body.source_health[source] === "invalid",
+      )
+      .map((source) => `${source}=${body.source_health[source]}`);
+    if (failedSources.length > 0) {
+      items.push(`data sources: ${failedSources.join(", ")}`);
+    }
+  }
+
+  if (
+    body.persistence_health === "degraded" ||
+    body.persistence_health === "unavailable"
+  ) {
+    items.push(`persistence: ${body.persistence_health}`);
+  }
+
+  return items.length > 0 ? items : [fallback];
+};
 
 const normalizeRunUrl = (value) => {
   try {
@@ -44,23 +90,54 @@ export async function checkHealthOnce(
       signal: timeoutSignal(REQUEST_TIMEOUT_MS),
     });
   } catch {
-    return { ok: false, reason: "request failed" };
+    return failureResult({
+      reason: "request failed",
+      failureItems: ["request transport failed"],
+    });
   }
 
   if (response.status !== 200) {
-    return { ok: false, reason: sanitizeHttpReason(response.status) };
+    const reason = sanitizeHttpReason(response.status);
+    let body;
+    try {
+      body = await response.json();
+    } catch {
+      body = null;
+    }
+    return failureResult({
+      reason,
+      httpStatus: Number.isInteger(response.status) ? response.status : null,
+      failureItems: extractFailureItems(
+        body,
+        `health endpoint returned ${reason} without structured diagnostics`,
+      ),
+    });
   }
 
   let body;
   try {
     body = await response.json();
   } catch {
-    return { ok: false, reason: "invalid JSON" };
+    return failureResult({
+      reason: "invalid JSON",
+      httpStatus: 200,
+      failureItems: ["health response: invalid JSON"],
+    });
   }
 
-  if (!isObject(body)) return { ok: false, reason: "invalid JSON shape" };
+  if (!isObject(body)) {
+    return failureResult({
+      reason: "invalid JSON shape",
+      httpStatus: 200,
+      failureItems: ["health response: invalid JSON shape"],
+    });
+  }
   if (body.status !== "ok" && body.status !== "degraded") {
-    return { ok: false, reason: "invalid health status" };
+    return failureResult({
+      reason: "invalid health status",
+      httpStatus: 200,
+      failureItems: extractFailureItems(body, "health response: invalid status"),
+    });
   }
   if (
     typeof body.checked_age_seconds !== "number" ||
@@ -68,20 +145,36 @@ export async function checkHealthOnce(
     body.checked_age_seconds < 0 ||
     body.checked_age_seconds >= 600
   ) {
-    return { ok: false, reason: "invalid checked age" };
+    return failureResult({
+      reason: "invalid checked age",
+      httpStatus: 200,
+      failureItems: extractFailureItems(body, "health response: invalid checked age"),
+    });
   }
 
   return { ok: true };
 }
 
-const buildAlertText = ({ reason, utcTime, githubRunUrl }) =>
-  [
+const buildFailureSignature = ({ reason, httpStatus, failureItems }) =>
+  createHash("sha256")
+    .update(JSON.stringify([reason, httpStatus, failureItems]))
+    .digest("hex")
+    .slice(0, 16);
+
+const buildAlertText = ({ failure, checkedAt, githubRunUrl, consecutiveFailures }) => {
+  const failureSignature = buildFailureSignature(failure);
+  return [
     "Northern Lights Tonight health monitor failure",
-    `Reason: ${reason}`,
-    `UTC time: ${utcTime}`,
-    `Health URL: ${HEALTH_URL}`,
+    `Reason: ${failure.reason}`,
+    `Check time (ISO): ${checkedAt}`,
+    `Triggered URL: ${HEALTH_URL}`,
+    `HTTP status: ${failure.httpStatus ?? "unavailable"}`,
+    `Failure items: ${failure.failureItems.join("; ")}`,
+    `Consecutive failures (this run): ${consecutiveFailures}`,
+    `Failure signature: ${failureSignature}`,
     `GitHub run URL: ${githubRunUrl}`,
   ].join("\n");
+};
 
 const sendFeishuAlert = async ({ fetchImpl, webhook, text, timeoutSignal }) => {
   let response;
@@ -126,12 +219,18 @@ export async function runHealthMonitor({
   now = () => new Date(),
   logger = console,
   timeoutSignal = AbortSignal.timeout,
+  dryRun = false,
 }) {
   const normalizedWebhook = String(webhook ?? "").trim();
-  if (!normalizedWebhook) throw new Error("Health monitor configuration error");
+  if (!dryRun && !normalizedWebhook) {
+    throw new Error("Health monitor configuration error");
+  }
   const normalizedRunUrl = normalizeRunUrl(githubRunUrl);
 
-  let lastFailure = { ok: false, reason: "request failed" };
+  let lastFailure = failureResult({
+    reason: "request failed",
+    failureItems: ["request transport failed"],
+  });
   for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
     const result = await checkHealthOnce(fetchImpl, { timeoutSignal });
     if (result.ok) return { ok: true, attempts: attempt };
@@ -139,23 +238,27 @@ export async function runHealthMonitor({
   }
 
   const alertText = buildAlertText({
-    reason: lastFailure.reason,
-    utcTime: now().toISOString(),
+    failure: lastFailure,
+    checkedAt: now().toISOString(),
     githubRunUrl: normalizedRunUrl,
+    consecutiveFailures: MAX_ATTEMPTS,
   });
   logger.error(alertText);
-  await sendFeishuAlert({
-    fetchImpl,
-    webhook: normalizedWebhook,
-    text: alertText,
-    timeoutSignal,
-  });
+  if (!dryRun) {
+    await sendFeishuAlert({
+      fetchImpl,
+      webhook: normalizedWebhook,
+      text: alertText,
+      timeoutSignal,
+    });
+  }
   throw new Error("Health monitor reported failure");
 }
 
-export async function main(env = process.env) {
+export async function main(env = process.env, options = {}) {
   try {
     await runHealthMonitor({
+      ...options,
       webhook: env.FEISHU_MONITOR_WEBHOOK,
       githubRunUrl: env.GITHUB_RUN_URL,
     });
@@ -166,5 +269,7 @@ export async function main(env = process.env) {
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  process.exitCode = await main();
+  process.exitCode = await main(process.env, {
+    dryRun: process.argv.slice(2).includes("--dry-run"),
+  });
 }

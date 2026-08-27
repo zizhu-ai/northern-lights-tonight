@@ -18,7 +18,25 @@ const response = (status, body) => ({
 
 const healthyBody = (checkedAgeSeconds = 0, status = "ok") => ({
   status,
+  snapshot_revision: "snapshot-healthy",
+  checked_at: "2026-08-25T07:59:59.000Z",
   checked_age_seconds: checkedAgeSeconds,
+  last_success_at: "2026-08-25T07:59:59.000Z",
+  last_success_age_seconds: 1,
+  persistence_health: "ok",
+  source_health: { ovation: "ok", kp: "ok", cloud: "ok" },
+  source: "live",
+  total: 50,
+  unknowns: 0,
+  generated_at: "2026-08-25T07:59:59.000Z",
+});
+
+const unhealthyBody = () => ({
+  ...healthyBody(601, "unhealthy"),
+  persistence_health: "degraded",
+  source_health: { ovation: "invalid", kp: "invalid", cloud: "degraded" },
+  source: "lkg",
+  unknowns: 50,
 });
 
 const options = (overrides = {}) => ({
@@ -59,25 +77,40 @@ test("health validation accepts only HTTP 200 with strict status and age boundar
     [null, "invalid JSON shape"],
     [[healthyBody(1)], "invalid JSON shape"],
   ]) {
-    assert.deepEqual(
-      await checkHealthOnce(async () => response(200, body), {
-        timeoutSignal: () => ({ timeout: 60_000 }),
-      }),
-      { ok: false, reason },
-    );
+    const result = await checkHealthOnce(async () => response(200, body), {
+      timeoutSignal: () => ({ timeout: 60_000 }),
+    });
+    assert.equal(result.ok, false);
+    assert.equal(result.reason, reason);
+    assert.equal(result.httpStatus, 200);
+    assert.ok(result.failureItems.length > 0);
   }
 
   assert.deepEqual(
-    await checkHealthOnce(async () => response(503, healthyBody()), {
+    await checkHealthOnce(async () => response(503, unhealthyBody()), {
       timeoutSignal: () => ({ timeout: 60_000 }),
     }),
-    { ok: false, reason: "HTTP 503" },
+    {
+      ok: false,
+      reason: "HTTP 503",
+      httpStatus: 503,
+      failureItems: [
+        "locations: 50/50 UNKNOWN (names unavailable from /api/health)",
+        "data sources: ovation=invalid, kp=invalid, cloud=degraded",
+        "persistence: degraded",
+      ],
+    },
   );
   assert.deepEqual(
     await checkHealthOnce(async () => response(200, new Error("RAW_BODY_MUST_NOT_LEAK")), {
       timeoutSignal: () => ({ timeout: 60_000 }),
     }),
-    { ok: false, reason: "invalid JSON" },
+    {
+      ok: false,
+      reason: "invalid JSON",
+      httpStatus: 200,
+      failureItems: ["health response: invalid JSON"],
+    },
   );
 });
 
@@ -148,14 +181,69 @@ test("three failed attempts send exactly one sanitized alert and still reject", 
   assert.equal(payload.msg_type, "text");
   assert.match(payload.content.text, /Northern Lights Tonight/);
   assert.match(payload.content.text, /request failed/);
-  assert.match(payload.content.text, new RegExp(NOW.toISOString()));
+  assert.match(payload.content.text, new RegExp(`Check time \\(ISO\\): ${NOW.toISOString()}`));
   assert.match(payload.content.text, new RegExp(HEALTH_URL.replaceAll("/", "\\/")));
   assert.match(payload.content.text, new RegExp(RUN_URL.replaceAll("/", "\\/")));
+  assert.match(payload.content.text, /HTTP status: unavailable/);
+  assert.match(payload.content.text, /Failure items: request transport failed/);
+  assert.match(payload.content.text, /Consecutive failures \(this run\): 3/);
+  assert.match(payload.content.text, /Failure signature: [a-f0-9]{16}/);
 
   const emitted = JSON.stringify({ logs, payload });
   assert.doesNotMatch(emitted, /RAW_ERROR_AND_SECRET_MUST_NOT_LEAK/);
   assert.doesNotMatch(emitted, /TEST_SECRET_SENTINEL/);
   assert.ok(payload.content.text.length < 1_000);
+});
+
+test("HTTP failures include status and structured location and data-source details", async () => {
+  const { runHealthMonitor } = await loadMonitor();
+  let alertText;
+
+  await assert.rejects(
+    runHealthMonitor(
+      options({
+        fetchImpl: async (url, init) => {
+          if (url === HEALTH_URL) return response(503, unhealthyBody());
+          alertText = JSON.parse(init.body).content.text;
+          return response(200, { code: 0 });
+        },
+      }),
+    ),
+    /health monitor reported failure/i,
+  );
+
+  assert.match(alertText, /HTTP status: 503/);
+  assert.match(
+    alertText,
+    /locations: 50\/50 UNKNOWN \(names unavailable from \/api\/health\)/,
+  );
+  assert.match(
+    alertText,
+    /data sources: ovation=invalid, kp=invalid, cloud=degraded/,
+  );
+  assert.match(alertText, /persistence: degraded/);
+});
+
+test("dry-run skips webhook delivery but preserves the failing exit code", async () => {
+  const { main } = await loadMonitor();
+  const urls = [];
+
+  const exitCode = await main(
+    { GITHUB_RUN_URL: RUN_URL },
+    {
+      dryRun: true,
+      fetchImpl: async (url) => {
+        urls.push(url);
+        throw new Error("simulated request failure");
+      },
+      now: () => NOW,
+      logger: { error() {} },
+      timeoutSignal: () => ({ timeout: 60_000 }),
+    },
+  );
+
+  assert.equal(exitCode, 1);
+  assert.deepEqual(urls, [HEALTH_URL, HEALTH_URL, HEALTH_URL]);
 });
 
 test("a missing webhook fails before any health request", async () => {
