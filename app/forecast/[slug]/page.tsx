@@ -359,13 +359,13 @@ function HourRows({
         aria-label={`${timeLabel}, ${status}, ${sky}`}
       >
         <th scope="row">
-          <span className="attr-text" data-text={timeLabel} />
+          <span>{timeLabel}</span>
         </th>
         <td className={window.skip ? undefined : styles.hourStatus}>
-          <span className="attr-text" data-text={status} />
+          <span>{status}</span>
         </td>
         <td>
-          <span className="attr-text" data-text={sky} />
+          <span>{sky}</span>
         </td>
       </tr>
     );
