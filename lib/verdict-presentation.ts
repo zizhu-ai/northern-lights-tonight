@@ -194,7 +194,7 @@ export function presentVerdict(input: {
     snapshot?.main_obstacle === "DATA_MISSING_WEATHER";
 
   let mainIssue: string;
-  if (cannotJudge) {
+  if (cannotJudge || !snapshot) {
     if (sitePaused || sentenceConflicts || !snapshot) {
       mainIssue = copy.verdict.stale_main_issue;
     } else if (dataIssue) {

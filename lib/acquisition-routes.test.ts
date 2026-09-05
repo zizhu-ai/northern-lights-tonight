@@ -3,10 +3,7 @@ import test from "node:test";
 
 // Node's zero-dependency strip-types runner requires the explicit extension.
 // @ts-ignore TS5097: the production build type-checks this test but does not emit it.
-import {
-  ACQUISITION_ROUTES,
-  isAcquisitionRoute,
-} from "./acquisition-routes.ts";
+import { ACQUISITION_ROUTES, isAcquisitionRoute } from "./acquisition-routes.ts";
 
 const EXPECTED_INDEXABLE_PATHS = [
   "/",
