@@ -10,10 +10,13 @@ function redirectTo(destination: URL) {
 }
 
 export function GET(request: Request) {
-  const result = findPlace(new URL(request.url).searchParams.get("q") ?? "");
+  const query = new URL(request.url).searchParams.get("q") ?? "";
+  const result = findPlace(query);
 
-  if (result.kind === "error") {
-    return redirectTo(new URL("/near-me", request.url));
+  if (result.kind === "error" || result.kind === "ambiguous") {
+    const fallback = new URL("/near-me", request.url);
+    if (query.trim()) fallback.searchParams.set("q", query.trim());
+    return redirectTo(fallback);
   }
 
   const destination =

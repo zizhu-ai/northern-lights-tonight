@@ -34,7 +34,7 @@ export default async function NearMePage() {
       </header>
 
       <div className={styles.search}>
-        <PlaceSearchForm />
+        <PlaceSearchForm source="near_me" />
       </div>
 
       <section className={`${styles.section} ${styles.panel}`}>

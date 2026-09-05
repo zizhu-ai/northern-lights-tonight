@@ -2,7 +2,7 @@
 
 Northern lights near me is not a national map pin that follows your phone in the background. Aurora reach, clouds, and darkness change in tens of miles. A Kp 6 night in Minnesota is not a Kp 6 night on the Chicago lakeshore. This page exists to turn a city, state, or ZIP into a local GO / MAYBE / NO.
 
-Type the place. If we have a Wave 1 page, we send you there. If we only have a coordinate match, we send you to a live reading that is not a second indexed URL. The search should land on one answer, not on a gallery of cities you will not drive to tonight.
+Type the place. If we have a covered page, we send you there. If we only have a coordinate match, we send you to a live reading that is not a second indexed URL. The search should land on one answer, not on a gallery of cities you will not drive to tonight.
 
 ## City, ZIP, or GPS
 
@@ -14,11 +14,11 @@ The form never requires an account. If GPS fails, the search box still works. If
 
 ## What happens after you search
 
-A Wave 1 match opens the indexed local page: hours, main obstacle, nearby places, and the local FAQ. That is the page to bookmark. This URL is only the router.
+A covered-place match opens the indexed local page: hours, main obstacle, nearby places, and the local FAQ. That is the page to bookmark. This page is only the search.
 
 A live pin is for coordinates we do not give a dedicated URL. It is a reading, not a travel guide, and it stays noindex so it cannot cannibalize the city and state pages. Do not copy a pin URL into a blog as if it were the Fairbanks page.
 
-If nothing matches, try the state name or a nearby larger city. We do not autocomplete every hamlet in Wave 1.
+If nothing matches, try the state name or a nearby larger city. We do not autocomplete every hamlet we cover.
 
 ## Why a national “near me” widget would lie
 
