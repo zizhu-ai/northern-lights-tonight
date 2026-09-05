@@ -228,46 +228,82 @@ body:has(.twilight-band) .site-header {
 }
 
 .twilight-band[data-status="go"]::before {
+  inset: -34% -16% -26%;
   background:
-    linear-gradient(102deg, transparent 12%, rgb(0 166 118 / 0.38) 27%, rgb(0 152 185 / 0.28) 38%, transparent 53%),
-    linear-gradient(78deg, transparent 38%, rgb(0 166 118 / 0.34) 52%, rgb(0 152 185 / 0.24) 62%, transparent 76%);
-  filter: blur(10px);
+    linear-gradient(104deg, transparent 7%, rgb(0 230 157 / 0.08) 16%, rgb(0 214 146 / 0.28) 25%, rgb(0 190 225 / 0.18) 34%, transparent 45%),
+    linear-gradient(78deg, transparent 35%, rgb(0 224 151 / 0.08) 44%, rgb(0 204 147 / 0.26) 53%, rgb(0 184 220 / 0.17) 62%, transparent 73%),
+    linear-gradient(96deg, transparent 58%, rgb(0 225 169 / 0.2) 70%, rgb(0 187 224 / 0.14) 78%, transparent 88%);
+  filter: blur(7px) saturate(1.25);
   opacity: 1;
-  animation: aurora-curtain-drift 14s ease-in-out infinite alternate;
+  animation: aurora-curtain-drift 12s ease-in-out infinite alternate;
 }
 
 .twilight-band[data-status="go"]::after {
-  inset: 18% -8% -42%;
-  background: radial-gradient(ellipse at 54% 70%, rgb(0 145 125 / 0.08), transparent 60%);
-  filter: blur(18px);
+  inset: 6% -8% -40%;
+  background:
+    radial-gradient(ellipse at 24% 54%, rgb(0 214 166 / 0.06), transparent 50%),
+    radial-gradient(ellipse at 76% 46%, rgb(0 185 222 / 0.06), transparent 54%);
+  filter: blur(14px) saturate(1.2);
   opacity: 1;
-  animation: aurora-horizon-breathe 18s ease-in-out infinite alternate;
+  animation: aurora-horizon-breathe 16s ease-in-out infinite alternate;
 }
 
 .twilight-band[data-status="maybe"]::before {
-  inset: 8% -18% -18%;
-  background: linear-gradient(168deg, transparent 31%, rgb(61 166 124 / 0.22) 43%, rgb(188 145 55 / 0.22) 51%, transparent 62%);
-  filter: blur(14px);
+  inset: -4% -18% -24%;
+  background:
+    linear-gradient(164deg, transparent 24%, rgb(42 171 124 / 0.08) 34%, rgb(42 171 124 / 0.3) 43%, rgb(217 166 50 / 0.27) 52%, transparent 64%),
+    radial-gradient(ellipse at 76% 38%, rgb(205 143 35 / 0.13), transparent 46%);
+  filter: blur(11px) saturate(1.12);
   opacity: 1;
-  animation: aurora-ribbon-drift 20s ease-in-out infinite alternate;
+  animation: aurora-ribbon-drift 18s ease-in-out infinite alternate;
 }
 
 .twilight-band[data-status="maybe"]::after {
-  inset: 40% 0 -28%;
-  background: radial-gradient(ellipse at 62% 66%, rgb(187 141 50 / 0.16), transparent 56%);
+  inset: 30% -4% -34%;
+  background:
+    radial-gradient(ellipse at 58% 60%, rgb(213 158 43 / 0.12), transparent 54%),
+    linear-gradient(178deg, transparent 38%, rgb(52 143 111 / 0.1) 62%, transparent 82%);
+  filter: blur(18px) saturate(1.08);
+  opacity: 1;
+}
+
+.twilight-band[data-status="no"]::before {
+  inset: -10% -8%;
+  background:
+    linear-gradient(180deg, rgb(7 17 38 / 0.35), transparent 58%),
+    radial-gradient(ellipse at 72% 40%, rgb(48 65 106 / 0.16), transparent 48%);
+  filter: blur(14px);
+  opacity: 1;
+}
+
+.twilight-band[data-status="no"]::after {
+  inset: 22% -6% -34%;
+  background: radial-gradient(ellipse at 46% 72%, rgb(8 20 43 / 0.22), transparent 62%);
   filter: blur(20px);
   opacity: 1;
 }
 
 .twilight-band[data-status="unknown"]::before,
 .twilight-band[data-status="unavailable"]::before {
-  inset: -18% -8%;
+  inset: -26% -12%;
   background:
-    radial-gradient(ellipse at 24% 38%, rgb(91 142 203 / 0.27), transparent 44%),
-    radial-gradient(ellipse at 78% 58%, rgb(85 118 184 / 0.24), transparent 48%);
-  filter: blur(18px);
+    radial-gradient(ellipse at 18% 34%, rgb(60 125 220 / 0.26), transparent 42%),
+    radial-gradient(ellipse at 74% 56%, rgb(87 125 205 / 0.24), transparent 46%),
+    linear-gradient(112deg, transparent 30%, rgb(104 154 225 / 0.12) 49%, transparent 67%);
+  filter: blur(14px) saturate(1.08);
   opacity: 1;
-  animation: uncertainty-haze-drift 18s ease-in-out infinite alternate;
+  animation: uncertainty-haze-drift 16s ease-in-out infinite alternate;
+}
+
+.twilight-band[data-status="unknown"]::after,
+.twilight-band[data-status="unavailable"]::after {
+  inset: 8% -10% -34%;
+  background:
+    radial-gradient(ellipse at 42% 52%, rgb(122 163 226 / 0.12), transparent 48%),
+    linear-gradient(174deg, transparent 36%, rgb(73 113 184 / 0.14) 58%, transparent 76%);
+  filter: blur(22px);
+  opacity: 1;
+  animation: uncertainty-haze-breathe 20s ease-in-out infinite alternate;
 }
 
 @keyframes aurora-curtain-drift {
@@ -291,8 +327,15 @@ body:has(.twilight-band) .site-header {
 
 @keyframes uncertainty-haze-drift {
   to {
-    opacity: 0.72;
-    transform: translate3d(2%, 1%, 0) scale(1.04);
+    opacity: 0.78;
+    transform: translate3d(3%, 1%, 0) scale(1.05);
+  }
+}
+
+@keyframes uncertainty-haze-breathe {
+  to {
+    opacity: 0.7;
+    transform: translate3d(-2%, -1%, 0) scale(1.04);
   }
 }
 
