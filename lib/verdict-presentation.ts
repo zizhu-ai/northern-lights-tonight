@@ -115,13 +115,21 @@ function presentWindows(
   nightStatus: NightVerdict,
   place: string,
 ): PresentedWindow[] {
-  return windowsForNight(windows, nightStatus).map((window) => ({
-    ...window,
-    displayStatus: window.skip
+  return windowsForNight(windows, nightStatus).map((window) => {
+    const displayStatus = window.skip
       ? copy.chrome.skip_not_dark
-      : (window.status ?? "UNKNOWN"),
-    reason: windowReason(window, place),
-  }));
+      : (window.status ?? "UNKNOWN");
+    const reason = window.skip
+      ? copy.chrome.skip_not_dark
+      : nightStatus === "UNKNOWN" || nightStatus === "UNAVAILABLE"
+        ? copy.verdict.stale_main_issue
+        : windowReason(window, place);
+    return {
+      ...window,
+      displayStatus,
+      reason,
+    };
+  });
 }
 
 function buildAnswer(input: {

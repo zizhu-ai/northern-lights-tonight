@@ -22,7 +22,6 @@ import {
 } from "@/lib/snapshots";
 import {
   presentVerdict,
-  reasonText,
   type PresentedVerdict,
   type PresentedWindow,
 } from "@/lib/verdict-presentation";
@@ -304,7 +303,7 @@ function Hours({
               </tr>
             </thead>
             <tbody>
-              <HourRows windows={visible} timezone={dossier.timezone} place={dossier.name} />
+              <HourRows windows={visible} timezone={dossier.timezone} />
             </tbody>
           </table>
           {remaining.length > 0 ? (
@@ -313,7 +312,7 @@ function Hours({
               <table>
                 <caption className="visually-hidden">Rest of tonight’s 30-minute readings</caption>
                 <tbody>
-                  <HourRows windows={remaining} timezone={dossier.timezone} place={dossier.name} />
+                  <HourRows windows={remaining} timezone={dossier.timezone} />
                 </tbody>
               </table>
             </details>
@@ -327,17 +326,15 @@ function Hours({
 function HourRows({
   windows,
   timezone,
-  place,
 }: {
   windows: PresentedWindow[];
   timezone: string;
-  place: string;
 }) {
   return windows.map((window) => {
     const status = window.displayStatus;
     const sky = window.skip ? "—" : displayEnum(window.cloud_block);
     const timeLabel = formatWindow(window.start, window.end, timezone);
-    const reason = window.reason || reasonText(window.codes[0], place);
+    const reason = window.reason;
     return (
       <tr
         key={`${window.start}-${window.end}`}
