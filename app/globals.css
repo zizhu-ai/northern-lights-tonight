@@ -45,6 +45,13 @@
   --z-modal: 50;
   --ease: ease-out;
   --font-ui: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --type-caption: 0.75rem;
+  --type-ui: 0.875rem;
+  --type-body: 1rem;
+  --type-lead: 1.125rem;
+  --type-h2: 1.25rem;
+  --type-h1: 2.125rem;
+  --type-verdict: 3.25rem;
   --header-height: 56px;
 }
 
@@ -455,8 +462,31 @@ body:has(.tool-page) .site-header {
 
 .twilight-band .place-search-form input {
   background: var(--night);
-  border: 1px solid rgb(255 255 255 / 0.4);
+  border: 0;
   color: #fff;
+}
+
+.twilight-band .place-search-form__row {
+  padding: 4px;
+  gap: 4px;
+  border: 1px solid rgb(255 255 255 / 0.42);
+  border-radius: calc(var(--radius-ctrl) + 4px);
+  background: var(--night);
+  box-shadow: 0 8px 22px rgb(10 19 34 / 0.18);
+  transition:
+    border-color 200ms var(--ease),
+    box-shadow 200ms var(--ease);
+}
+
+.twilight-band .place-search-form__row:focus-within {
+  border-color: #fff;
+  box-shadow:
+    0 8px 22px rgb(10 19 34 / 0.18),
+    0 0 0 2px #fff;
+}
+
+.twilight-band .place-search-form__row input:focus-visible {
+  outline: 0;
 }
 
 .twilight-band .place-search-form input::placeholder {
@@ -582,12 +612,14 @@ body:has(.tool-page) .site-header {
   --status-color: var(--unknown);
   --word: var(--unknown);
   margin: 0;
-  padding: 22px 20px 16px;
+  padding: 24px 22px 18px;
   overflow: hidden;
   border-radius: var(--radius-card);
   background: var(--night);
   color: var(--paper);
-  box-shadow: var(--card-shadow);
+  box-shadow:
+    var(--card-shadow),
+    inset 0 0 0 1px color-mix(in srgb, var(--status-color) 22%, transparent);
 }
 
 .verdict-card:focus-within :focus-visible,
@@ -621,7 +653,7 @@ body:has(.tool-page) .site-header {
   max-width: 100%;
   margin: 0;
   color: var(--word);
-  font-size: 52px;
+  font-size: var(--type-verdict);
   font-weight: 800;
   letter-spacing: -0.03em;
   line-height: 1;
@@ -640,7 +672,7 @@ body:has(.tool-page) .site-header {
   max-width: 68ch;
   margin: 12px 0 0;
   color: var(--paper);
-  font-size: 16px;
+  font-size: var(--type-body);
   line-height: 1.4;
 }
 
@@ -661,7 +693,7 @@ body:has(.tool-page) .site-header {
 .verdict-card__meta dt {
   margin: 0;
   color: var(--no);
-  font-size: 13px;
+  font-size: var(--type-caption);
   font-weight: 400;
 }
 
@@ -669,7 +701,7 @@ body:has(.tool-page) .site-header {
   margin: 3px 0 0;
   overflow-wrap: anywhere;
   color: var(--paper);
-  font-size: 15px;
+  font-size: var(--type-body);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
@@ -691,13 +723,13 @@ body:has(.tool-page) .site-header {
 .verdict-card__footer p {
   margin: 0;
   color: var(--no);
-  font-size: 12px;
+  font-size: var(--type-caption);
 }
 
 .verdict-card__note {
   margin: 12px 0 0;
   color: var(--no);
-  font-size: 12px;
+  font-size: var(--type-caption);
   line-height: 1.45;
 }
 
@@ -739,11 +771,44 @@ body:has(.tool-page) .site-header {
   }
 
   .verdict-card {
-    padding: 26px 26px 18px;
+    padding: 30px 30px 20px;
   }
 
   .verdict-card__status {
-    font-size: 64px;
+    font-size: 4rem;
+  }
+
+  .verdict-card__meta {
+    grid-template-columns: repeat(14, minmax(0, 1fr));
+    gap: 0;
+  }
+
+  .verdict-card__meta div {
+    min-height: 64px;
+    padding: 0 18px;
+    border-left: 1px solid rgb(255 255 255 / 0.12);
+  }
+
+  .verdict-card__meta div:first-child {
+    grid-column: span 3;
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .verdict-card__meta div:nth-child(2) {
+    grid-column: span 6;
+  }
+
+  .verdict-card__meta div:nth-child(3) {
+    grid-column: span 3;
+  }
+
+  .verdict-card__meta div:nth-child(4) {
+    grid-column: span 2;
+  }
+
+  .verdict-card__meta div:last-child {
+    padding-right: 0;
   }
 }
 
@@ -752,8 +817,16 @@ body:has(.tool-page) .site-header {
     flex-direction: column;
   }
 
+  .twilight-band .place-search-form__row {
+    flex-direction: row;
+  }
+
   .place-search-form__row .button {
     width: 100%;
+  }
+
+  .twilight-band .place-search-form__row .button {
+    width: auto;
   }
 
   .place-search-form__below {
@@ -781,8 +854,8 @@ body:has(.tool-page) .site-header {
   }
 
   .verdict-card__meta {
-    grid-template-columns: 1fr;
-    gap: 12px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px 18px;
   }
 
   .verdict-card__footer {

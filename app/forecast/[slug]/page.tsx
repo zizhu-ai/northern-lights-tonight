@@ -20,6 +20,7 @@ import {
   type ForecastPoint,
   type ForecastSnapshot,
   type ForecastWindow,
+  type SnapshotRow,
 } from "@/lib/snapshots";
 
 import { ForecastLocalGuide } from "@/components/forecast-local-guide";
@@ -109,7 +110,12 @@ export default async function ForecastPage({ params }: PageProps) {
   const nearby = dossier.nearby_slugs
     .filter((nearbySlug) => WAVE_ONE_SLUG_SET.has(nearbySlug))
     .map((nearbySlug) => getForecastDossier(nearbySlug))
-    .filter((place): place is ForecastDossier => place !== null);
+    .filter((place): place is ForecastDossier => place !== null)
+    .map((place) => ({
+      place,
+      snapshot:
+        latest.locations.find((row) => row.location_slug === place.slug) ?? null,
+    }));
   const schemas = buildSchemas(dossier, titleFor(dossier), state);
 
   return (
@@ -186,13 +192,7 @@ export default async function ForecastPage({ params }: PageProps) {
 
         <section className={`${styles.section} ${styles.nearby}`}>
           <h2>Nearby</h2>
-          <ul className={styles.linkList}>
-            {nearby.map((place) => (
-              <li key={place.slug}>
-                <Link href={`/forecast/${place.slug}`}>{place.name} tonight</Link>
-              </li>
-            ))}
-          </ul>
+          <NearbyForecasts readings={nearby} />
         </section>
 
         <section className={styles.section}>
@@ -226,6 +226,43 @@ export default async function ForecastPage({ params }: PageProps) {
 
       <JsonLd value={schemas} />
     </main>
+  );
+}
+
+function NearbyForecasts({
+  readings,
+}: {
+  readings: Array<{ place: ForecastDossier; snapshot: SnapshotRow | null }>;
+}) {
+  return (
+    <ul className={styles.nearbyList}>
+      {readings.map(({ place, snapshot }) => {
+        const status = snapshot?.status ?? "UNKNOWN";
+        const window = snapshot
+          ? formatWindow(
+              snapshot.best_window_start,
+              snapshot.best_window_end,
+              place.timezone,
+            )
+          : copy.verdict.unknown_window;
+
+        return (
+          <li key={place.slug}>
+            <Link href={`/forecast/${place.slug}`}>
+              <span className={styles.nearbyTopline}>
+                <strong>{place.name}</strong>
+                <span className="stamp" data-status={status.toLowerCase()}>
+                  {status}
+                </span>
+              </span>
+              <span className={styles.nearbyWindow}>
+                {copy.verdict.best_window_label}: {window}
+              </span>
+            </Link>
+          </li>
+        );
+      })}
+    </ul>
   );
 }
 

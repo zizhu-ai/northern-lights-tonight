@@ -5,7 +5,7 @@
 
 .group h2 {
   margin: 0 0 12px;
-  font-size: 20px;
+  font-size: var(--type-h2);
   font-weight: 700;
   line-height: 1.2;
 }
@@ -91,7 +91,7 @@
 
 @media (min-width: 768px) {
   .group h2 {
-    font-size: 24px;
+    font-size: 1.5rem;
   }
 }
 
