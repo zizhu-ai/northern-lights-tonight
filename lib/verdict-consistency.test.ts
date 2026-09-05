@@ -5,12 +5,7 @@ import test from "node:test";
 // @ts-ignore TS5097: the production build type-checks this test but does not emit it.
 import { sanitizeBundledLocationRow } from "./bundled-sanitize.ts";
 // @ts-ignore TS5097
-import {
-  nightSurfacesAgree,
-  resolveNightStatus,
-  shouldTrustStoredAnswer,
-  windowsForNight,
-} from "./verdict-consistency.ts";
+import { nightSurfacesAgree, resolveNightStatus, shouldTrustStoredAnswer, windowsForNight } from "./verdict-consistency.ts";
 
 /**
  * Production-shaped Michigan row: live engine wrote NO, then a stale/bundled
@@ -63,7 +58,11 @@ test("Michigan-style leftover NO title/hours do not mix with an UNKNOWN night", 
   const windows = windowsForNight(michiganContradictory.windows, status);
   assert.equal(windows[0]?.skip, true);
   assert.equal(windows[0]?.status, null);
-  assert.ok(windows.filter((window) => !window.skip).every((window) => window.status === "UNKNOWN"));
+  assert.ok(
+    windows
+      .filter((window) => !window.skip)
+      .every((window) => (window.status as string | null) === "UNKNOWN"),
+  );
 
   const rebuilt =
     "Michigan · Traverse City area · cannot judge tonight. Source data is too old to treat as live.";
@@ -107,7 +106,11 @@ test("sanitize of a stale Michigan NO row rewrites title, hours, and obstacle to
   assert.doesNotMatch(String(result.answer_sentence), /^NO\b/);
   const windows = result.windows as typeof michiganContradictory.windows;
   assert.equal(windows[0]?.skip, true);
-  assert.ok(windows.filter((window) => !window.skip).every((window) => window.status === "UNKNOWN"));
+  assert.ok(
+    windows
+      .filter((window) => !window.skip)
+      .every((window) => (window.status as string | null) === "UNKNOWN"),
+  );
   assert.equal(
     nightSurfacesAgree({
       status: "UNKNOWN",
