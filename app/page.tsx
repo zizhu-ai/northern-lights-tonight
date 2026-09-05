@@ -10,14 +10,19 @@ import {
   isSiteReadingsPaused,
   loadTonightRows,
   TonightPlaces,
+  type TonightRow,
 } from "@/components/tonight-places";
-import { VerdictCard } from "@/components/verdict-card";
+import {
+  VerdictCard,
+  verdictDataStatus,
+} from "@/components/verdict-card";
 import copy from "@/content/ui-copy.json";
 import { HOME_REPRESENTATIVE_SLUG } from "@/lib/forecast-places";
 import {
   formatUpdatedAt,
   formatWindow,
   loadLatest,
+  type SnapshotBundle,
 } from "@/lib/snapshots";
 import { ogFor, SITE_URL } from "@/lib/site";
 
@@ -37,10 +42,15 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const [latest, extra] = await Promise.all([
+  const [latest, rows, extra] = await Promise.all([
     loadLatest(),
+    loadTonightRows(),
     loadMarkdownBody("pages/home.md"),
   ]);
+  const readingsPaused = isSiteReadingsPaused(rows);
+  const representative =
+    rows.find((row) => row.dossier.slug === HOME_REPRESENTATIVE_SLUG) ?? rows[0];
+  const skyStatus = representative?.snapshot?.status ?? "UNKNOWN";
   const revision = latest.freshness?.revision ?? "unavailable";
   const checkedAt = latest.freshness?.checked_at ?? "unavailable";
   return (
@@ -49,7 +59,10 @@ export default async function HomePage() {
       data-snapshot-revision={revision}
       data-snapshot-checked-at={checkedAt}
     >
-      <div className={`twilight-band ${styles.twilight}`}>
+      <div
+        className={`twilight-band ${styles.twilight}`}
+        data-status={verdictDataStatus(skyStatus, readingsPaused)}
+      >
         <div className={styles.inner}>
           <header className={styles.hero}>
             <h1>{copy.home.title}</h1>
@@ -64,7 +77,7 @@ export default async function HomePage() {
 
       <div className={styles.inner}>
         <div className={`${styles.verdictSlot} ${styles.verdictSlotWide}`}>
-          <HomeVerdict />
+          <HomeVerdict latest={latest} rows={rows} stale={readingsPaused} />
         </div>
 
         <section className={styles.section}>
@@ -119,10 +132,16 @@ export default async function HomePage() {
   );
 }
 
-async function HomeVerdict() {
-  const [latest, rows] = await Promise.all([loadLatest(), loadTonightRows()]);
-
-  if (isSiteReadingsPaused(rows)) {
+function HomeVerdict({
+  latest,
+  rows,
+  stale,
+}: {
+  latest: SnapshotBundle;
+  rows: TonightRow[];
+  stale: boolean;
+}) {
+  if (stale) {
     return (
       <VerdictCard
         status="UNKNOWN"
