@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { StickyPlaceBar } from "@/components/sticky-place-bar";
 import { VerdictCard, type VerdictStatus } from "@/components/verdict-card";
 import copy from "@/content/ui-copy.json";
 import {
@@ -12,15 +13,18 @@ import {
   type ForecastDossier,
 } from "@/lib/forecast-places";
 import {
-  formatUpdatedAt,
   formatWindow,
   formatZoneAbbreviation,
   loadLatest,
   loadForecastSnapshot,
   type ForecastPoint,
   type ForecastSnapshot,
-  type ForecastWindow,
 } from "@/lib/snapshots";
+import {
+  presentVerdict,
+  type PresentedVerdict,
+  type PresentedWindow,
+} from "@/lib/verdict-presentation";
 
 import { ForecastLocalGuide } from "@/components/forecast-local-guide";
 import { clampSeoText, SITE_URL, titleCasePhrase } from "@/lib/site";
@@ -50,6 +54,7 @@ type PageProps = {
 
 type ForecastState = {
   snapshot: ForecastSnapshot | null;
+  presented: PresentedVerdict;
   status: VerdictStatus;
   mainIssue: string;
   bestWindow: string;
@@ -68,7 +73,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!dossier) notFound();
 
   const headlinePoint = getHeadlinePoint(dossier);
-  const state = await getForecastState(slug, dossier.timezone);
+  const state = await getForecastState(dossier);
   const title = titleFor(dossier);
   const description = seoDescription(dossier, headlinePoint.name, state);
   const url = `${SITE_URL}/forecast/${slug}`;
@@ -95,17 +100,11 @@ export default async function ForecastPage({ params }: PageProps) {
 
   const headlinePoint = getHeadlinePoint(dossier);
   const [state, latest] = await Promise.all([
-    getForecastState(slug, dossier.timezone),
+    getForecastState(dossier),
     loadLatest(),
   ]);
   const timezone = formatZoneAbbreviation(new Date(), dossier.timezone);
-  const updated = formatUpdatedAt(
-    state.snapshot?.updated_at ?? state.snapshot?.generated_at,
-    dossier.timezone,
-  );
-  const answer = state.snapshot
-    ? state.snapshot.answer_sentence
-    : unknownAnswer(dossier, headlinePoint.name, state.mainIssue);
+  const answer = state.presented.answerSentence;
   const nearby = dossier.nearby_slugs
     .filter((nearbySlug) => WAVE_ONE_SLUG_SET.has(nearbySlug))
     .map((nearbySlug) => getForecastDossier(nearbySlug))
@@ -122,7 +121,7 @@ export default async function ForecastPage({ params }: PageProps) {
         <div className={styles.inner}>
           <header className={styles.hero}>
             <p className={styles.kicker}>
-              {dossier.name} · {timezone}
+              {state.presented.placeLine} · {timezone}
             </p>
             <h1>{h1For(dossier)}</h1>
             <p className={styles.answer}>{answer}</p>
@@ -133,20 +132,20 @@ export default async function ForecastPage({ params }: PageProps) {
       <div className={styles.shell}>
         <div className={styles.verdictSlot}>
           <VerdictCard
-            status={state.status}
-            bestWindow={state.bestWindow}
-            mainIssue={state.mainIssue}
-            confidence={state.snapshot?.confidence ?? "low"}
-            updated={updated}
-            place={dossier.name}
-            lookToward={state.snapshot?.look_toward ?? dossier.viewing_direction}
+            presented={state.presented}
             alaskaKicker={slug === "alaska"}
+            sentinelId="forecast-verdict"
+          />
+          <StickyPlaceBar
+            placeLine={state.presented.placeLine}
+            sentinelId="forecast-verdict"
           />
         </div>
 
         <Hours
           dossier={dossier}
-          snapshot={state.snapshot}
+          windows={state.presented.windows}
+          cannotJudge={state.presented.cannotJudge}
           fallback={copy.verdict.hours_need_live}
         />
 
@@ -229,24 +228,16 @@ export default async function ForecastPage({ params }: PageProps) {
   );
 }
 
-async function getForecastState(
-  slug: string,
-  timezone: string,
-): Promise<ForecastState> {
-  const snapshot = await loadForecastSnapshot(slug);
-  const mainIssue = snapshot?.main_obstacle_text ?? copy.view.data_unavailable_main_issue;
+async function getForecastState(dossier: ForecastDossier): Promise<ForecastState> {
+  const snapshot = await loadForecastSnapshot(dossier.slug);
+  const presented = presentVerdict({ snapshot, dossier });
 
   return {
     snapshot,
-    status: snapshot?.status ?? "UNKNOWN",
-    mainIssue,
-    bestWindow: snapshot
-      ? formatWindow(
-          snapshot.best_window_start,
-          snapshot.best_window_end,
-          timezone,
-        )
-      : copy.verdict.unknown_window,
+    presented,
+    status: presented.status,
+    mainIssue: presented.mainIssue,
+    bestWindow: presented.bestWindow,
   };
 }
 
@@ -267,8 +258,8 @@ function seoDescription(
   state: ForecastState,
 ): string {
   const phrase = titleCasePhrase(dossier.primary_keyword);
-  const status = state.snapshot?.status ?? "UNKNOWN";
-  const obstacle = state.snapshot?.main_obstacle_text ?? state.mainIssue;
+  const status = state.presented.status;
+  const obstacle = state.presented.mainIssue;
   return clampSeoText(
     `${phrase} tonight: ${status} from ${headlinePointName}. Best window ${state.bestWindow}. ${obstacle}`,
     70,
@@ -280,29 +271,17 @@ function h1For(dossier: ForecastDossier): string {
   return `Can You See the Northern Lights in ${dossier.name} Tonight?`;
 }
 
-function unknownAnswer(
-  dossier: ForecastDossier,
-  headlinePointName: string,
-  mainIssue: string,
-): string {
-  const place = dossier.location_type === "state"
-    ? `${dossier.name} (${headlinePointName} area)`
-    : dossier.name === headlinePointName
-      ? headlinePointName
-      : `${dossier.name} (${headlinePointName})`;
-  return `UNKNOWN in ${place}. ${copy.verdict.unknown_human} Best window ${copy.verdict.unknown_window}. Main issue: ${mainIssue}`;
-}
-
 function Hours({
   dossier,
-  snapshot,
+  windows,
+  cannotJudge,
   fallback,
 }: {
   dossier: ForecastDossier;
-  snapshot: ForecastSnapshot | null;
+  windows: PresentedWindow[];
+  cannotJudge: boolean;
   fallback: string;
 }) {
-  const windows = snapshot?.windows ?? [];
   const visible = windows.slice(0, 5);
   const remaining = windows.slice(5);
   const timezone = formatZoneAbbreviation(new Date(), dossier.timezone);
@@ -314,12 +293,13 @@ function Hours({
         <p>{fallback}</p>
       ) : (
         <>
+          {cannotJudge ? <p className={styles.hoursNote}>{fallback}</p> : null}
           <table>
             <thead>
               <tr>
-                <th scope="col">Time</th>
+                <th scope="col">Period</th>
                 <th scope="col">Reading</th>
-                <th scope="col">Sky</th>
+                <th scope="col" className={styles.skyCol}>Sky</th>
               </tr>
             </thead>
             <tbody>
@@ -347,28 +327,28 @@ function HourRows({
   windows,
   timezone,
 }: {
-  windows: ForecastWindow[];
+  windows: PresentedWindow[];
   timezone: string;
 }) {
   return windows.map((window) => {
-    const status = window.skip
-      ? copy.chrome.skip_not_dark
-      : (window.status ?? "UNKNOWN");
+    const status = window.displayStatus;
     const sky = window.skip ? "—" : displayEnum(window.cloud_block);
     const timeLabel = formatWindow(window.start, window.end, timezone);
+    const reason = window.reason;
     return (
       <tr
         key={`${window.start}-${window.end}`}
-        data-status={window.status?.toLowerCase()}
-        aria-label={`${timeLabel}, ${status}, ${sky}`}
+        data-status={window.skip ? "skip" : (window.status ?? "unknown").toLowerCase()}
+        aria-label={`${timeLabel}, ${status}, ${reason || sky}`}
       >
         <th scope="row">
           <span>{timeLabel}</span>
         </th>
-        <td className={window.skip ? undefined : styles.hourStatus}>
-          <span>{status}</span>
+        <td className={styles.hourCell}>
+          <span className={window.skip ? undefined : styles.hourStatus}>{status}</span>
+          {reason ? <span className={styles.hourReason}>{reason}</span> : null}
         </td>
-        <td>
+        <td className={styles.skyCol}>
           <span>{sky}</span>
         </td>
       </tr>
@@ -383,11 +363,12 @@ function WhyThisVerdict({
   dossier: ForecastDossier;
   state: ForecastState;
 }) {
-  if (!state.snapshot) {
+  if (!state.snapshot || state.presented.cannotJudge) {
     return (
       <section className={styles.section}>
         <h2>Why this verdict</h2>
-        <p>Data live → {state.mainIssue}</p>
+        <p>{state.presented.mainIssue}</p>
+        {state.presented.lastValid ? <p>{state.presented.lastValid}</p> : null}
       </section>
     );
   }
@@ -465,7 +446,9 @@ function OtherPoints({
       <ul className={styles.pointList}>
         {points.map((point) => {
           const snapshotPoint: ForecastPoint | undefined = snapshotById.get(point.id);
-          const status = snapshotPoint?.status ?? "UNKNOWN";
+          const status = state.presented.cannotJudge
+            ? "UNKNOWN"
+            : (snapshotPoint?.status ?? "UNKNOWN");
           return (
             <li key={point.id}>
               <span>{point.name}</span>
@@ -500,9 +483,7 @@ function buildSchemas(
 ) {
   const url = `${SITE_URL}/forecast/${dossier.slug}`;
   const headline = getHeadlinePoint(dossier).name;
-  const description = state.snapshot
-    ? `${state.snapshot.status} for ${dossier.name}, using ${headline}. ${state.snapshot.main_obstacle_text}`
-    : `UNKNOWN for ${dossier.name}, using ${headline}. ${state.mainIssue}`;
+  const description = `${state.presented.status} for ${dossier.name}, using ${headline}. ${state.presented.mainIssue}`;
   const breadcrumbId = `${url}#breadcrumb`;
   const faqId = `${url}#faq`;
 

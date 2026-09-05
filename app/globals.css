@@ -395,6 +395,51 @@ body:has(.tool-page) .site-header {
 
 /* Page search */
 
+.place-search-form__label {
+  display: block;
+  margin: 0 0 8px;
+  color: inherit;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.twilight-band .place-search-form__label {
+  color: #fff;
+}
+
+.place-search-form__matches {
+  margin-top: 12px;
+  color: inherit;
+  font-size: 14px;
+}
+
+.place-search-form__matches p {
+  margin: 0 0 8px;
+  font-weight: 700;
+}
+
+.place-search-form__matches ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.place-search-form__matches button {
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.sticky-place-bar {
+  display: none;
+}
+
 .place-search-form {
   padding: 0;
   border: 0;
@@ -485,6 +530,10 @@ body:has(.tool-page) .site-header {
 
 .twilight-band .place-search-form__error {
   color: var(--danger-on-twilight);
+}
+
+.twilight-band .place-search-form__matches {
+  color: #fff;
 }
 
 /* Footer */
@@ -616,15 +665,59 @@ body:has(.tool-page) .site-header {
   --word: var(--unknown);
 }
 
+.verdict-card__place-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 0 14px;
+}
+
+.verdict-card__place {
+  margin: 0;
+  color: var(--paper);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.verdict-card__sample {
+  display: inline-block;
+  margin-right: 8px;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  background: rgb(255 255 255 / 0.12);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  vertical-align: 2px;
+}
+
+.verdict-card__change {
+  flex: 0 0 auto;
+  min-height: 36px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #fff;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .verdict-card__status {
   width: fit-content;
   max-width: 100%;
   margin: 0;
   color: var(--word);
-  font-size: 52px;
+  font-size: 32px;
   font-weight: 800;
   letter-spacing: -0.03em;
-  line-height: 1;
+  line-height: 1.05;
   text-transform: uppercase;
   overflow-wrap: anywhere;
 }
@@ -743,7 +836,52 @@ body:has(.tool-page) .site-header {
   }
 
   .verdict-card__status {
-    font-size: 64px;
+    font-size: 40px;
+  }
+}
+
+@media (max-width: 430px) {
+  .verdict-card__secondary {
+    display: none;
+  }
+
+  .sticky-place-bar {
+    position: fixed;
+    top: var(--header-height);
+    right: 0;
+    left: 0;
+    z-index: 19;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 16px;
+    background: var(--night);
+    color: #fff;
+    border-bottom: 1px solid rgb(255 255 255 / 0.12);
+  }
+
+  .sticky-place-bar__place {
+    min-width: 0;
+    font-size: 14px;
+    font-weight: 700;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .sticky-place-bar__change {
+    flex: 0 0 auto;
+    min-height: 36px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: #fff;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
 }
 

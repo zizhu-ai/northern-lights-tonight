@@ -2,7 +2,7 @@
 
 Northern lights near me is not a national map pin that follows your phone in the background. Aurora reach, clouds, and darkness change in tens of miles. A Kp 6 night in Minnesota is not a Kp 6 night on the Chicago lakeshore. This page exists to turn a city, state, or ZIP into a local GO / MAYBE / NO.
 
-Type the place. If we have a Wave 1 page, we send you there. If we only have a coordinate match, we send you to a live reading that is not a second indexed URL. The search should land on one answer, not on a gallery of cities you will not drive to tonight.
+Type the place. If we have a covered page, we send you there. If we only have a coordinate match, we send you to a live reading that is not a second indexed URL. The search should land on one answer, not on a gallery of cities you will not drive to tonight.
 
 ## City, ZIP, or GPS
 
@@ -14,11 +14,11 @@ The form never requires an account. If GPS fails, the search box still works. If
 
 ## What happens after you search
 
-A Wave 1 match opens the indexed local page: hours, main obstacle, nearby places, and the local FAQ. That is the page to bookmark. This URL is only the router.
+A covered-place match opens the indexed local page: hours, main obstacle, nearby places, and the local FAQ. That is the page to bookmark. This page is only the search.
 
 A live pin is for coordinates we do not give a dedicated URL. It is a reading, not a travel guide, and it stays noindex so it cannot cannibalize the city and state pages. Do not copy a pin URL into a blog as if it were the Fairbanks page.
 
-If nothing matches, try the state name or a nearby larger city. We do not autocomplete every hamlet in Wave 1.
+If nothing matches, try the state name or a nearby larger city. We do not autocomplete every hamlet we cover.
 
 ## Why a national “near me” widget would lie
 
@@ -47,17 +47,17 @@ Related: [Tonight home](/) · [Where tonight](/guides/where-to-see-northern-ligh
 - **Downtown vs headline** — Colorado’s headline is not Denver. If you meant “from my apartment,” read the glow note before you treat a MAYBE as a balcony event.
 - **Photo from elsewhere** — a curtain in another time zone is not your ZIP.
 
-The search should reduce those mismatches, not add a map for its own sake. If Wave 2 adds more states later, this search box is how you will reach them. Until then, the honest answer for an unmatched place is a live pin or a nearby Wave 1 page, never a fabricated GO.
+The search should reduce those mismatches, not add a map for its own sake. If we add more states later, this search box is how you will reach them. Until then, the honest answer for an unmatched place is a live pin or a nearby covered page, never a fabricated GO.
 
 If you came here from a national Kp graphic, type the ZIP anyway. Northern lights near me is the step that graphic skipped.
 
 ## What the matcher will not do
 
-It will not invent a Wave 1 page for a hamlet we do not cover. It will not send you to a random overseas city. It will not keep GPS running in the background. It will not store the point in an account. If the query is empty, it asks you to type something. If the query is junk, it says no match.
+It will not invent a dedicated page for a hamlet we do not cover. It will not send you to a random overseas city. It will not keep GPS running in the background. It will not store the point in an account. If the query is empty, it asks you to type something. If the query is junk, it says no match.
 
 ## After you land
 
-Bookmark the indexed local page, not this router, if you come back often. Read status, window, obstacle. Use nearby links if you actually might drive that far. Ignore nearby links if they are other time zones you will not visit tonight.
+Bookmark the indexed local page, not this search page, if you come back often. Read status, window, obstacle. Use nearby links if you actually might drive that far. Ignore nearby links if they are other time zones you will not visit tonight.
 
 ## Related
 
@@ -75,9 +75,9 @@ Bad queries: empty string, a country name, a southern-hemisphere city you hope w
 
 ## What you should do after a miss
 
-Try the state. Try a larger nearby city. Use the homepage table if you only needed Wave 1. Do not keep sending GPS if you already denied permission; type instead.
+Try the state. Try a larger nearby city. Use the homepage table if you only needed a covered place. Do not keep sending GPS if you already denied permission; type instead.
 
-If Wave 2 adds your state later, the same box will be the entry. Until then a live pin is the honest fallback, and it stays noindex.
+If we add your state later, the same box will be the entry. Until then a live pin is the honest fallback, and it stays noindex.
 
 ## Why ZIP beats a national map
 
