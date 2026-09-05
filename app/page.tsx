@@ -12,18 +12,12 @@ import {
   TonightPlaces,
   type TonightRow,
 } from "@/components/tonight-places";
-import {
-  VerdictCard,
-  verdictDataStatus,
-} from "@/components/verdict-card";
+import { StickyPlaceBar } from "@/components/sticky-place-bar";
+import { VerdictCard, verdictDataStatus } from "@/components/verdict-card";
 import copy from "@/content/ui-copy.json";
-import { HOME_REPRESENTATIVE_SLUG } from "@/lib/forecast-places";
-import {
-  formatUpdatedAt,
-  formatWindow,
-  loadLatest,
-  type SnapshotBundle,
-} from "@/lib/snapshots";
+import { getForecastDossier, HOME_REPRESENTATIVE_SLUG } from "@/lib/forecast-places";
+import { loadLatest } from "@/lib/snapshots";
+import { presentVerdict } from "@/lib/verdict-presentation";
 import { ogFor, SITE_URL } from "@/lib/site";
 
 import styles from "./part4.module.css";
@@ -70,14 +64,14 @@ export default async function HomePage() {
           </header>
 
           <div className={styles.search}>
-            <PlaceSearchForm />
+            <PlaceSearchForm source="home" />
           </div>
         </div>
       </div>
 
       <div className={styles.inner}>
         <div className={`${styles.verdictSlot} ${styles.verdictSlotWide}`}>
-          <HomeVerdict latest={latest} rows={rows} stale={readingsPaused} />
+          <HomeVerdict rows={rows} stale={readingsPaused} />
         </div>
 
         <section className={styles.section}>
@@ -132,50 +126,26 @@ export default async function HomePage() {
   );
 }
 
-function HomeVerdict({
-  latest,
-  rows,
-  stale,
-}: {
-  latest: SnapshotBundle;
-  rows: TonightRow[];
-  stale: boolean;
-}) {
-  if (stale) {
-    return (
-      <VerdictCard
-        status="UNKNOWN"
-        confidence="low"
-        updated={formatUpdatedAt(latest.generated_at)}
-        human={copy.verdict.site_stale_human}
-        lookToward={rows[0]?.snapshot?.look_toward ?? rows[0]?.dossier.viewing_direction}
-        stale
-      />
-    );
-  }
+function HomeVerdict({ rows, stale }: { rows: TonightRow[]; stale: boolean }) {
+  const dossier =
+    rows.find((row) => row.dossier.slug === HOME_REPRESENTATIVE_SLUG)?.dossier ??
+    getForecastDossier(HOME_REPRESENTATIVE_SLUG);
+  if (!dossier) return null;
 
   const representative =
     rows.find((row) => row.dossier.slug === HOME_REPRESENTATIVE_SLUG) ?? rows[0];
-  const snapshot = representative.snapshot;
-  const timezone = representative.dossier.timezone;
+  const sitePaused = stale;
+  const presented = presentVerdict({
+    snapshot: representative?.snapshot ?? null,
+    dossier,
+    sample: true,
+    sitePaused,
+  });
 
   return (
-    <VerdictCard
-      status={snapshot?.status ?? "UNKNOWN"}
-      bestWindow={
-        snapshot
-          ? formatWindow(snapshot.best_window_start, snapshot.best_window_end, timezone)
-          : copy.verdict.unknown_window
-      }
-      mainIssue={
-        snapshot
-          ? (snapshot.main_obstacle_text ?? snapshot.main_obstacle)
-          : copy.view.data_unavailable_main_issue
-      }
-      confidence={snapshot?.confidence ?? "low"}
-      updated={formatUpdatedAt(snapshot?.updated_at ?? snapshot?.generated_at ?? latest.generated_at, timezone)}
-      place={representative.dossier.name}
-      lookToward={snapshot?.look_toward ?? representative.dossier.viewing_direction}
-    />
+    <>
+      <VerdictCard presented={presented} sample changePlace sentinelId="home-verdict" />
+      <StickyPlaceBar placeLine={presented.placeLine} sentinelId="home-verdict" />
+    </>
   );
 }
