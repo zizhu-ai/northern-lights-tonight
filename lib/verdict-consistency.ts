@@ -29,7 +29,9 @@ export function shouldTrustStoredAnswer(
   status: NightStatus,
 ): boolean {
   const lead = sentenceLead(sentence);
-  return Boolean(lead && lead === status);
+  if (!lead || lead !== status) return false;
+  if (status === "UNKNOWN") return /cannot judge/i.test(sentence ?? "");
+  return true;
 }
 
 export function windowsForNight<
@@ -51,8 +53,9 @@ export function nightSurfacesAgree(input: {
 }): boolean {
   const lead = sentenceLead(input.answerSentence);
   const titleOk =
-    lead === input.status ||
-    (input.status === "UNKNOWN" && /cannot judge/i.test(input.answerSentence));
+    input.status === "UNKNOWN"
+      ? /cannot judge/i.test(input.answerSentence)
+      : lead === input.status;
   if (!titleOk) return false;
   return (input.windows ?? [])
     .filter((window) => !window.skip)
