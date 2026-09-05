@@ -139,8 +139,9 @@ function buildAnswer(input: {
   placeContext: string;
   mainIssue: string;
   bestWindow: string;
+  lastValid?: string | null;
 }): string {
-  const { status, placeLine, placeLabel, placeContext, mainIssue, bestWindow } = input;
+  const { status, placeLine, placeLabel, placeContext, mainIssue, bestWindow, lastValid } = input;
   const extra = placeContext ? ` (${placeContext})` : "";
   if (status === "GO") {
     const window = bestWindow !== copy.verdict.unknown_window ? ` Best window ${bestWindow}.` : "";
@@ -155,7 +156,8 @@ function buildAnswer(input: {
   if (status === "UNAVAILABLE") {
     return `${placeLine}. ${copy.south.human}`;
   }
-  return `${placeLine} · ${copy.verdict.cannot_judge_short}. ${mainIssue}`;
+  const valid = lastValid ? ` ${lastValid}.` : "";
+  return `${placeLine} · ${copy.verdict.cannot_judge_short}. ${mainIssue}${valid}`;
 }
 
 export function presentVerdict(input: {
@@ -237,7 +239,7 @@ export function presentVerdict(input: {
   );
 
   const answerSentence =
-    snapshot?.answer_sentence && !sentenceConflicts
+    !cannotJudge && snapshot?.answer_sentence && !sentenceConflicts
       ? snapshot.answer_sentence
       : buildAnswer({
           status,
@@ -246,6 +248,7 @@ export function presentVerdict(input: {
           placeContext: ownership.placeContext,
           mainIssue,
           bestWindow,
+          lastValid,
         });
 
   return {

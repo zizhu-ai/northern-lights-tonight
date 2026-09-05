@@ -121,6 +121,29 @@ test("sanitize of a stale Michigan NO row rewrites title, hours, and obstacle to
   );
 });
 
+test("engine UNKNOWN legacy copy is not trusted for the hero", () => {
+  const legacy =
+    "UNKNOWN (Traverse City area). We are not guessing. Aurora data is unavailable, so we are not guessing.";
+  assert.equal(shouldTrustStoredAnswer(legacy, "UNKNOWN"), false);
+  assert.equal(
+    nightSurfacesAgree({
+      status: "UNKNOWN",
+      answerSentence: legacy,
+      windows: [{ skip: false, status: "UNKNOWN" }],
+    }),
+    false,
+  );
+  assert.equal(
+    nightSurfacesAgree({
+      status: "UNKNOWN",
+      answerSentence:
+        "Michigan · Traverse City area · cannot judge tonight. Source data is too old to treat as live. Last valid data Sun 7:05 AM ET.",
+      windows: [{ skip: false, status: "UNKNOWN" }],
+    }),
+    true,
+  );
+});
+
 test("a live NO night keeps title, card, and hourly aligned", () => {
   const status = resolveNightStatus({ snapshotStatus: "NO" });
   assert.equal(status, "NO");
