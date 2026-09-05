@@ -155,7 +155,7 @@ export function FindPlace() {
                 <button
                   className="button button--secondary"
                   type="button"
-                  disabled={search.locating}
+                  disabled={search.locating || search.checking}
                   aria-busy={search.locating}
                   onClick={search.locate}
                 >

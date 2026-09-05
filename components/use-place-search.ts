@@ -7,6 +7,11 @@ import copy from "@/content/ui-copy.json";
 import { trackBrowserProductEvent } from "@/lib/search-analytics";
 import type { SearchAnalyticsSource } from "@/lib/search-event";
 import {
+  checkingAfterLookup,
+  planLocate,
+  planTypedSubmit,
+} from "@/lib/place-search-flow";
+import {
   findPlace,
   nearestPlace,
   queryKind,
@@ -53,17 +58,23 @@ export function usePlaceSearch(source: SearchAnalyticsSource) {
 
   function goTo(path: string, destination: "forecast" | "view") {
     void trackBrowserProductEvent("result_shown", { source, destination });
-    setChecking(false);
     router.push(path);
   }
 
   function navigatePlace(place: Place) {
+    if (checking) return;
+    cancelLocate();
     setMatches([]);
     setError(null);
+    setChecking(checkingAfterLookup("navigate"));
     goTo(routeForPlace(place), place.slug ? "forecast" : "view");
   }
 
   function submitQuery(nextQuery = query) {
+    const plan = planTypedSubmit(checking);
+    if (!plan.proceed) return;
+    if (plan.cancelGps) cancelLocate();
+
     setError(null);
     setMatches([]);
     const kind = queryKind(nextQuery);
@@ -71,6 +82,7 @@ export function usePlaceSearch(source: SearchAnalyticsSource) {
 
     const result = findPlace(nextQuery);
     if (result.kind === "error") {
+      setChecking(checkingAfterLookup("error"));
       setError(result.code);
       void trackBrowserProductEvent("search_match", {
         source,
@@ -85,13 +97,14 @@ export function usePlaceSearch(source: SearchAnalyticsSource) {
       return;
     }
     if (result.kind === "ambiguous") {
+      setChecking(checkingAfterLookup("ambiguous"));
       setMatches(result.places);
       void trackBrowserProductEvent("search_match", { source, result: "ambiguous" });
       return;
     }
 
     void trackBrowserProductEvent("search_match", { source, result: "success" });
-    setChecking(true);
+    setChecking(checkingAfterLookup("navigate"));
     if (result.kind === "slug") {
       goTo(`/forecast/${result.slug}`, "forecast");
       return;
@@ -100,6 +113,7 @@ export function usePlaceSearch(source: SearchAnalyticsSource) {
   }
 
   function locate() {
+    if (!planLocate(checking).proceed) return;
     setError(null);
     if (!navigator.geolocation) {
       setError("gps_unavailable");
