@@ -203,6 +203,106 @@ body:has(.twilight-band) .site-header {
   border-bottom: 0;
 }
 
+/* Status-linked sky: the base twilight stays flat; atmosphere lives in these
+   bounded CSS layers so the forecast remains legible without them. */
+.twilight-band {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.twilight-band::before,
+.twilight-band::after {
+  position: absolute;
+  z-index: 0;
+  inset: -24% -12%;
+  content: "";
+  pointer-events: none;
+  opacity: 0;
+  transform: translate3d(0, 0, 0);
+}
+
+.twilight-band > * {
+  position: relative;
+  z-index: 1;
+}
+
+.twilight-band[data-status="go"]::before {
+  background:
+    linear-gradient(102deg, transparent 12%, rgb(0 166 118 / 0.38) 27%, rgb(0 152 185 / 0.28) 38%, transparent 53%),
+    linear-gradient(78deg, transparent 38%, rgb(0 166 118 / 0.34) 52%, rgb(0 152 185 / 0.24) 62%, transparent 76%);
+  filter: blur(10px);
+  opacity: 1;
+  animation: aurora-curtain-drift 14s ease-in-out infinite alternate;
+}
+
+.twilight-band[data-status="go"]::after {
+  inset: 18% -8% -42%;
+  background: radial-gradient(ellipse at 54% 70%, rgb(0 145 125 / 0.08), transparent 60%);
+  filter: blur(18px);
+  opacity: 1;
+  animation: aurora-horizon-breathe 18s ease-in-out infinite alternate;
+}
+
+.twilight-band[data-status="maybe"]::before {
+  inset: 8% -18% -18%;
+  background: linear-gradient(168deg, transparent 31%, rgb(61 166 124 / 0.22) 43%, rgb(188 145 55 / 0.22) 51%, transparent 62%);
+  filter: blur(14px);
+  opacity: 1;
+  animation: aurora-ribbon-drift 20s ease-in-out infinite alternate;
+}
+
+.twilight-band[data-status="maybe"]::after {
+  inset: 40% 0 -28%;
+  background: radial-gradient(ellipse at 62% 66%, rgb(187 141 50 / 0.16), transparent 56%);
+  filter: blur(20px);
+  opacity: 1;
+}
+
+.twilight-band[data-status="unknown"]::before,
+.twilight-band[data-status="unavailable"]::before {
+  inset: -18% -8%;
+  background:
+    radial-gradient(ellipse at 24% 38%, rgb(91 142 203 / 0.27), transparent 44%),
+    radial-gradient(ellipse at 78% 58%, rgb(85 118 184 / 0.24), transparent 48%);
+  filter: blur(18px);
+  opacity: 1;
+  animation: uncertainty-haze-drift 18s ease-in-out infinite alternate;
+}
+
+@keyframes aurora-curtain-drift {
+  to {
+    transform: translate3d(4%, -2%, 0) skewX(-2deg) scaleX(1.05);
+  }
+}
+
+@keyframes aurora-horizon-breathe {
+  to {
+    opacity: 0.72;
+    transform: translate3d(-3%, -2%, 0) scale(1.06);
+  }
+}
+
+@keyframes aurora-ribbon-drift {
+  to {
+    transform: translate3d(-3%, 2%, 0) rotate(-1deg) scaleX(1.04);
+  }
+}
+
+@keyframes uncertainty-haze-drift {
+  to {
+    opacity: 0.72;
+    transform: translate3d(2%, 1%, 0) scale(1.04);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .twilight-band::before,
+  .twilight-band::after {
+    animation: none;
+  }
+}
+
 body:has(.twilight-band) .wordmark,
 body:has(.twilight-band) .site-nav,
 body:has(.twilight-band) .site-nav a {

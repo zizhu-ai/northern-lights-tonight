@@ -7,6 +7,17 @@ import { ShareButton } from "./share-button";
 export type VerdictStatus = "GO" | "MAYBE" | "NO" | "UNKNOWN" | "UNAVAILABLE";
 export type VerdictConfidence = "high" | "medium" | "low";
 
+export function verdictDisplayStatus(
+  status: VerdictStatus,
+  stale = false,
+): VerdictStatus {
+  return stale ? "UNKNOWN" : status;
+}
+
+export function verdictDataStatus(status: VerdictStatus, stale = false) {
+  return verdictDisplayStatus(status, stale).toLowerCase();
+}
+
 type VerdictCardProps = {
   status: VerdictStatus;
   bestWindow?: string;
@@ -46,7 +57,7 @@ export function VerdictCard({
   stale = false,
   human,
 }: VerdictCardProps) {
-  const displayStatus = stale ? "UNKNOWN" : status;
+  const displayStatus = verdictDisplayStatus(status, stale);
   const displayWindow =
     displayStatus === "UNKNOWN" || displayStatus === "UNAVAILABLE"
       ? copy.verdict.unknown_window
@@ -67,7 +78,7 @@ export function VerdictCard({
     : undefined;
 
   return (
-    <section className="verdict-card" data-status={displayStatus.toLowerCase()}>
+    <section className="verdict-card" data-status={verdictDataStatus(status, stale)}>
       <p className="verdict-card__status">{displayStatus}</p>
       {alaskaKicker ? (
         <p className="verdict-card__alaska-kicker">{copy.verdict.alaska_kicker}</p>
