@@ -3,10 +3,13 @@ import { NextResponse } from "next/server";
 import { findPlace, routeForPlace } from "@/lib/place-search";
 
 export function GET(request: Request) {
-  const result = findPlace(new URL(request.url).searchParams.get("q") ?? "");
+  const query = new URL(request.url).searchParams.get("q") ?? "";
+  const result = findPlace(query);
 
-  if (result.kind === "error") {
-    return NextResponse.redirect(new URL("/near-me", request.url));
+  if (result.kind === "error" || result.kind === "ambiguous") {
+    const fallback = new URL("/near-me", request.url);
+    if (query.trim()) fallback.searchParams.set("q", query.trim());
+    return NextResponse.redirect(fallback);
   }
 
   const destination =

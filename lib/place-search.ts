@@ -1,4 +1,4 @@
-import placeDataJson from "@/data/us-places.json";
+import placeDataJson from "../data/us-places.json";
 
 export type Place = {
   name: string;
@@ -23,7 +23,17 @@ export type PlaceSearchError =
 export type PlaceSearchResult =
   | { kind: "slug"; slug: string }
   | { kind: "place"; place: Place }
+  | { kind: "ambiguous"; places: Place[] }
   | { kind: "error"; code: PlaceSearchError };
+
+export type SearchQueryKind = "empty" | "zip" | "text";
+
+export function queryKind(query: string): SearchQueryKind {
+  const trimmed = query.trim();
+  if (!trimmed) return "empty";
+  if (/^\d{5}$/.test(trimmed)) return "zip";
+  return "text";
+}
 
 const placeData = placeDataJson as PlaceData;
 
@@ -34,6 +44,51 @@ export function normalizePlaceQuery(value: string): string {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, " ")
     .trim();
+}
+
+function destinationKey(place: Place): string {
+  return place.slug ? `slug:${place.slug}` : `pin:${place.lat},${place.lng},${place.name}`;
+}
+
+function keyMatches(key: string, normalized: string): boolean {
+  const value = normalizePlaceQuery(key);
+  return value === normalized || value.startsWith(`${normalized} `);
+}
+
+function nameMatches(name: string, normalized: string): boolean {
+  const value = normalizePlaceQuery(name);
+  if (value === normalized) return true;
+  const first = value.split(" ")[0] ?? "";
+  return first === normalized;
+}
+
+function firstPlaceForSlug(slug: string): Place | undefined {
+  return (
+    placeData.places.find((item) => item.slug === slug && nameMatches(item.name, slug)) ??
+    placeData.places.find((item) => item.slug === slug)
+  );
+}
+
+function uniquePlaces(places: Place[]): Place[] {
+  const seen = new Set<string>();
+  const unique: Place[] = [];
+  for (const place of places) {
+    const key = destinationKey(place);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    unique.push(place);
+  }
+  return unique;
+}
+
+function resultFromPlaces(places: Place[]): PlaceSearchResult {
+  const unique = uniquePlaces(places);
+  if (unique.length === 0) return { kind: "error", code: "search_no_match" };
+  if (unique.length === 1) {
+    const place = unique[0];
+    return place.slug ? { kind: "slug", slug: place.slug } : { kind: "place", place };
+  }
+  return { kind: "ambiguous", places: unique };
 }
 
 export function findPlace(query: string): PlaceSearchResult {
@@ -48,25 +103,24 @@ export function findPlace(query: string): PlaceSearchResult {
   }
 
   const normalized = normalizePlaceQuery(trimmed);
-  const alias = placeData.aliases.find((item) =>
-    item.keys.some((key) => normalizePlaceQuery(key) === normalized),
-  );
-  if (alias) return { kind: "slug", slug: alias.slug };
+  const matches: Place[] = [];
 
-  const waveOnePlace = placeData.places.find(
-    (item) =>
-      item.slug !== null &&
-      (normalizePlaceQuery(item.name) === normalized ||
-        normalizePlaceQuery(item.slug) === normalized),
-  );
-  if (waveOnePlace) return { kind: "place", place: waveOnePlace };
+  for (const alias of placeData.aliases) {
+    if (alias.keys.some((key) => keyMatches(key, normalized))) {
+      const place = firstPlaceForSlug(alias.slug);
+      if (place) matches.push(place);
+    }
+  }
 
-  const keyedPlace = placeData.places.find((item) =>
-    item.keys.some((key) => normalizePlaceQuery(key) === normalized),
-  );
-  return keyedPlace
-    ? { kind: "place", place: keyedPlace }
-    : { kind: "error", code: "search_no_match" };
+  for (const place of placeData.places) {
+    const exactName =
+      nameMatches(place.name, normalized) ||
+      (place.slug !== null && normalizePlaceQuery(place.slug) === normalized);
+    const keyed = place.keys.some((key) => keyMatches(key, normalized));
+    if (exactName || keyed) matches.push(place);
+  }
+
+  return resultFromPlaces(matches);
 }
 
 export function nearestPlace(lat: number, lng: number): Place {
