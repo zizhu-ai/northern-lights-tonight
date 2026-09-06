@@ -252,6 +252,33 @@ test("twenty concurrent calls in one isolate share one upstream refresh", async 
   assert.equal(h.calls(), 1);
 });
 
+test("an empty store leases, fetches, and publishes completed state", async () => {
+  const store = new MemoryStore();
+  const h = harness({ now: BASE, store, fetched: success(BASE) });
+  const result = usable(await h.resolve());
+  assert.equal(result.mode, "refreshed");
+  assert.equal(result.source, "live");
+  assert.equal(store.writes.length, 2);
+  assert.equal(store.writes[0]?.lease?.owner, "test-owner");
+  assert.equal(store.writes[1]?.lease, null);
+  assert.equal(store.current?.state.lease, null);
+  assert.equal(h.calls(), 1);
+});
+
+test("an empty store publishes all-negative state instead of leaving a stuck lease", async () => {
+  const store = new MemoryStore();
+  const h = harness({ now: BASE, store, fetched: failure() });
+  const result = await h.resolve();
+  assert.equal(result.kind, "failed_closed");
+  assert.equal(result.kind === "failed_closed" && result.reason, "no_usable_aurora");
+  assert.equal(store.writes.length, 2);
+  assert.equal(store.current?.state.lease, null);
+  assert.equal(
+    store.current?.state.retry_after,
+    new Date(BASE + 60_000).toISOString(),
+  );
+});
+
 test("a live foreign lease is polled and an expired lease is acquired", async () => {
   const liveLeaseStore = new MemoryStore(stateAt(BASE - 600_000, {
     lease: { owner: "foreign", expires_at: new Date(BASE + 2_000).toISOString() },

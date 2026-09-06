@@ -47,6 +47,10 @@ before any health request. Feishu HTTP failures, malformed responses, and
 nonzero application error codes also fail generically without exposing the
 secret or response body.
 
+Preview may persist last-known-good state on the remote LKG API instead of
+Hobby Blob when `AURORA_LKG_BASE_URL` and both LKG tokens are set. Production
+stays on Blob until that cutover. See [lkg-store.md](lkg-store.md).
+
 ## Hobby Blob budget
 
 At one health run every two hours, the monitor runs about 360 times per rolling

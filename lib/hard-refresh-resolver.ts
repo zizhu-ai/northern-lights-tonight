@@ -453,10 +453,17 @@ export function createSourceResolver(runtime: HardRefreshRuntime): () => Promise
       if (leasedStored === undefined || leasedStored === null) {
         return failed("refresh_unresolved", "unavailable");
       }
+      const observedLease = leasedStored.state.lease;
+      const observedExpiryMs =
+        observedLease === undefined || observedLease === null
+          ? Number.NaN
+          : Date.parse(observedLease.expires_at);
+      // Owner identity is the takeover boundary. Do not require the ISO
+      // expires_at string to round-trip byte-for-byte after a remote store.
       if (
-        leasedStored.state.lease?.owner !== owner ||
-        leasedStored.state.lease.expires_at !== expiresAt ||
-        runtime.now().getTime() >= Date.parse(expiresAt)
+        observedLease?.owner !== owner ||
+        !Number.isFinite(observedExpiryMs) ||
+        runtime.now().getTime() >= observedExpiryMs
       ) {
         stored = leasedStored;
         continue;
