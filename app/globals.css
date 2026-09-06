@@ -235,7 +235,7 @@ body:has(.twilight-band) .site-header {
     linear-gradient(96deg, transparent 58%, rgb(0 225 169 / 0.2) 70%, rgb(0 187 224 / 0.14) 78%, transparent 88%);
   filter: blur(7px) saturate(1.25);
   opacity: 1;
-  animation: aurora-curtain-drift 12s ease-in-out infinite alternate;
+  animation: aurora-curtain-drift 7s ease-in-out infinite alternate;
 }
 
 .twilight-band[data-status="go"]::after {
@@ -245,7 +245,7 @@ body:has(.twilight-band) .site-header {
     radial-gradient(ellipse at 76% 46%, rgb(0 185 222 / 0.06), transparent 54%);
   filter: blur(14px) saturate(1.2);
   opacity: 1;
-  animation: aurora-horizon-breathe 16s ease-in-out infinite alternate;
+  animation: aurora-horizon-breathe 9s ease-in-out infinite alternate;
 }
 
 .twilight-band[data-status="maybe"]::before {
@@ -255,7 +255,7 @@ body:has(.twilight-band) .site-header {
     radial-gradient(ellipse at 76% 38%, rgb(205 143 35 / 0.13), transparent 46%);
   filter: blur(11px) saturate(1.12);
   opacity: 1;
-  animation: aurora-ribbon-drift 18s ease-in-out infinite alternate;
+  animation: aurora-ribbon-drift 9s ease-in-out infinite alternate;
 }
 
 .twilight-band[data-status="maybe"]::after {
@@ -265,6 +265,7 @@ body:has(.twilight-band) .site-header {
     linear-gradient(178deg, transparent 38%, rgb(52 143 111 / 0.1) 62%, transparent 82%);
   filter: blur(18px) saturate(1.08);
   opacity: 1;
+  animation: aurora-ribbon-glow 11s ease-in-out infinite alternate;
 }
 
 .twilight-band[data-status="no"]::before {
@@ -274,6 +275,7 @@ body:has(.twilight-band) .site-header {
     radial-gradient(ellipse at 72% 40%, rgb(48 65 106 / 0.16), transparent 48%);
   filter: blur(14px);
   opacity: 1;
+  animation: night-haze-breathe 22s ease-in-out infinite alternate;
 }
 
 .twilight-band[data-status="no"]::after {
@@ -281,6 +283,7 @@ body:has(.twilight-band) .site-header {
   background: radial-gradient(ellipse at 46% 72%, rgb(8 20 43 / 0.22), transparent 62%);
   filter: blur(20px);
   opacity: 1;
+  animation: night-haze-breathe 22s ease-in-out infinite alternate;
 }
 
 .twilight-band[data-status="unknown"]::before,
@@ -292,7 +295,7 @@ body:has(.twilight-band) .site-header {
     linear-gradient(112deg, transparent 30%, rgb(104 154 225 / 0.12) 49%, transparent 67%);
   filter: blur(14px) saturate(1.08);
   opacity: 1;
-  animation: uncertainty-haze-drift 16s ease-in-out infinite alternate;
+  animation: uncertainty-haze-drift 8s ease-in-out infinite alternate;
 }
 
 .twilight-band[data-status="unknown"]::after,
@@ -303,39 +306,84 @@ body:has(.twilight-band) .site-header {
     linear-gradient(174deg, transparent 36%, rgb(73 113 184 / 0.14) 58%, transparent 76%);
   filter: blur(22px);
   opacity: 1;
-  animation: uncertainty-haze-breathe 20s ease-in-out infinite alternate;
+  animation: uncertainty-haze-breathe 10s ease-in-out infinite alternate;
 }
 
 @keyframes aurora-curtain-drift {
+  from {
+    transform: translate3d(-6%, 2%, 0) skewX(3deg) scaleX(0.96);
+  }
+
   to {
-    transform: translate3d(4%, -2%, 0) skewX(-2deg) scaleX(1.05);
+    transform: translate3d(6%, -2%, 0) skewX(-4deg) scaleX(1.08);
   }
 }
 
 @keyframes aurora-horizon-breathe {
+  from {
+    opacity: 0.58;
+    transform: translate3d(4%, 2%, 0) scale(0.97);
+  }
+
   to {
-    opacity: 0.72;
-    transform: translate3d(-3%, -2%, 0) scale(1.06);
+    opacity: 1;
+    transform: translate3d(-4%, -3%, 0) scale(1.08);
   }
 }
 
 @keyframes aurora-ribbon-drift {
+  from {
+    transform: translate3d(5%, -3%, 0) rotate(1.5deg) scaleX(0.96);
+  }
+
   to {
-    transform: translate3d(-3%, 2%, 0) rotate(-1deg) scaleX(1.04);
+    transform: translate3d(-6%, 3%, 0) rotate(-2deg) scaleX(1.07);
+  }
+}
+
+@keyframes aurora-ribbon-glow {
+  from {
+    opacity: 0.55;
+    transform: translate3d(-2%, 2%, 0) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(2%, -2%, 0) scale(1.05);
+  }
+}
+
+@keyframes night-haze-breathe {
+  from {
+    opacity: 0.88;
+  }
+
+  to {
+    opacity: 1;
   }
 }
 
 @keyframes uncertainty-haze-drift {
+  from {
+    opacity: 0.62;
+    transform: translate3d(-5%, -2%, 0) scale(0.96);
+  }
+
   to {
-    opacity: 0.78;
-    transform: translate3d(3%, 1%, 0) scale(1.05);
+    opacity: 1;
+    transform: translate3d(5%, 3%, 0) scale(1.07);
   }
 }
 
 @keyframes uncertainty-haze-breathe {
+  from {
+    opacity: 0.5;
+    transform: translate3d(4%, 2%, 0) scale(0.96);
+  }
+
   to {
-    opacity: 0.7;
-    transform: translate3d(-2%, -1%, 0) scale(1.04);
+    opacity: 0.95;
+    transform: translate3d(-4%, -2%, 0) scale(1.07);
   }
 }
 
