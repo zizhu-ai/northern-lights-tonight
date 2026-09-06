@@ -45,6 +45,13 @@
   --z-modal: 50;
   --ease: ease-out;
   --font-ui: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --type-caption: 0.75rem;
+  --type-ui: 0.875rem;
+  --type-body: 1rem;
+  --type-lead: 1.125rem;
+  --type-h2: 1.25rem;
+  --type-h1: 2.125rem;
+  --type-verdict: 3.25rem;
   --header-height: 56px;
 }
 
@@ -194,6 +201,197 @@ input {
 body:has(.twilight-band) .site-header {
   background: var(--twilight);
   border-bottom: 0;
+}
+
+/* Status-linked sky: the base twilight stays flat; atmosphere lives in these
+   bounded CSS layers so the forecast remains legible without them. */
+.twilight-band {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.twilight-band::before,
+.twilight-band::after {
+  position: absolute;
+  z-index: 0;
+  inset: -24% -12%;
+  content: "";
+  pointer-events: none;
+  opacity: 0;
+  transform: translate3d(0, 0, 0);
+}
+
+.twilight-band > * {
+  position: relative;
+  z-index: 1;
+}
+
+.twilight-band[data-status="go"]::before {
+  inset: -34% -16% -26%;
+  background:
+    linear-gradient(104deg, transparent 7%, rgb(0 230 157 / 0.08) 16%, rgb(0 214 146 / 0.28) 25%, rgb(0 190 225 / 0.18) 34%, transparent 45%),
+    linear-gradient(78deg, transparent 35%, rgb(0 224 151 / 0.08) 44%, rgb(0 204 147 / 0.26) 53%, rgb(0 184 220 / 0.17) 62%, transparent 73%),
+    linear-gradient(96deg, transparent 58%, rgb(0 225 169 / 0.2) 70%, rgb(0 187 224 / 0.14) 78%, transparent 88%);
+  filter: blur(7px) saturate(1.25);
+  opacity: 1;
+  animation: aurora-curtain-drift 7s ease-in-out infinite alternate;
+}
+
+.twilight-band[data-status="go"]::after {
+  inset: 6% -8% -40%;
+  background:
+    radial-gradient(ellipse at 24% 54%, rgb(0 214 166 / 0.06), transparent 50%),
+    radial-gradient(ellipse at 76% 46%, rgb(0 185 222 / 0.06), transparent 54%);
+  filter: blur(14px) saturate(1.2);
+  opacity: 1;
+  animation: aurora-horizon-breathe 9s ease-in-out infinite alternate;
+}
+
+.twilight-band[data-status="maybe"]::before {
+  inset: -4% -18% -24%;
+  background:
+    linear-gradient(164deg, transparent 24%, rgb(42 171 124 / 0.08) 34%, rgb(42 171 124 / 0.3) 43%, rgb(217 166 50 / 0.27) 52%, transparent 64%),
+    radial-gradient(ellipse at 76% 38%, rgb(205 143 35 / 0.13), transparent 46%);
+  filter: blur(11px) saturate(1.12);
+  opacity: 1;
+  animation: aurora-ribbon-drift 9s ease-in-out infinite alternate;
+}
+
+.twilight-band[data-status="maybe"]::after {
+  inset: 30% -4% -34%;
+  background:
+    radial-gradient(ellipse at 58% 60%, rgb(213 158 43 / 0.12), transparent 54%),
+    linear-gradient(178deg, transparent 38%, rgb(52 143 111 / 0.1) 62%, transparent 82%);
+  filter: blur(18px) saturate(1.08);
+  opacity: 1;
+  animation: aurora-ribbon-glow 11s ease-in-out infinite alternate;
+}
+
+.twilight-band[data-status="no"]::before {
+  inset: -10% -8%;
+  background:
+    linear-gradient(180deg, rgb(7 17 38 / 0.35), transparent 58%),
+    radial-gradient(ellipse at 72% 40%, rgb(48 65 106 / 0.16), transparent 48%);
+  filter: blur(14px);
+  opacity: 1;
+  animation: night-haze-breathe 22s ease-in-out infinite alternate;
+}
+
+.twilight-band[data-status="no"]::after {
+  inset: 22% -6% -34%;
+  background: radial-gradient(ellipse at 46% 72%, rgb(8 20 43 / 0.22), transparent 62%);
+  filter: blur(20px);
+  opacity: 1;
+  animation: night-haze-breathe 22s ease-in-out infinite alternate;
+}
+
+.twilight-band[data-status="unknown"]::before,
+.twilight-band[data-status="unavailable"]::before {
+  inset: -26% -12%;
+  background:
+    radial-gradient(ellipse at 18% 34%, rgb(60 125 220 / 0.26), transparent 42%),
+    radial-gradient(ellipse at 74% 56%, rgb(87 125 205 / 0.24), transparent 46%),
+    linear-gradient(112deg, transparent 30%, rgb(104 154 225 / 0.12) 49%, transparent 67%);
+  filter: blur(14px) saturate(1.08);
+  opacity: 1;
+  animation: uncertainty-haze-drift 8s ease-in-out infinite alternate;
+}
+
+.twilight-band[data-status="unknown"]::after,
+.twilight-band[data-status="unavailable"]::after {
+  inset: 8% -10% -34%;
+  background:
+    radial-gradient(ellipse at 42% 52%, rgb(122 163 226 / 0.12), transparent 48%),
+    linear-gradient(174deg, transparent 36%, rgb(73 113 184 / 0.14) 58%, transparent 76%);
+  filter: blur(22px);
+  opacity: 1;
+  animation: uncertainty-haze-breathe 10s ease-in-out infinite alternate;
+}
+
+@keyframes aurora-curtain-drift {
+  from {
+    transform: translate3d(-6%, 2%, 0) skewX(3deg) scaleX(0.96);
+  }
+
+  to {
+    transform: translate3d(6%, -2%, 0) skewX(-4deg) scaleX(1.08);
+  }
+}
+
+@keyframes aurora-horizon-breathe {
+  from {
+    opacity: 0.58;
+    transform: translate3d(4%, 2%, 0) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(-4%, -3%, 0) scale(1.08);
+  }
+}
+
+@keyframes aurora-ribbon-drift {
+  from {
+    transform: translate3d(5%, -3%, 0) rotate(1.5deg) scaleX(0.96);
+  }
+
+  to {
+    transform: translate3d(-6%, 3%, 0) rotate(-2deg) scaleX(1.07);
+  }
+}
+
+@keyframes aurora-ribbon-glow {
+  from {
+    opacity: 0.55;
+    transform: translate3d(-2%, 2%, 0) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(2%, -2%, 0) scale(1.05);
+  }
+}
+
+@keyframes night-haze-breathe {
+  from {
+    opacity: 0.88;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes uncertainty-haze-drift {
+  from {
+    opacity: 0.62;
+    transform: translate3d(-5%, -2%, 0) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(5%, 3%, 0) scale(1.07);
+  }
+}
+
+@keyframes uncertainty-haze-breathe {
+  from {
+    opacity: 0.5;
+    transform: translate3d(4%, 2%, 0) scale(0.96);
+  }
+
+  to {
+    opacity: 0.95;
+    transform: translate3d(-4%, -2%, 0) scale(1.07);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .twilight-band::before,
+  .twilight-band::after {
+    animation: none;
+  }
 }
 
 body:has(.twilight-band) .wordmark,
@@ -455,8 +653,31 @@ body:has(.tool-page) .site-header {
 
 .twilight-band .place-search-form input {
   background: var(--night);
-  border: 1px solid rgb(255 255 255 / 0.4);
+  border: 0;
   color: #fff;
+}
+
+.twilight-band .place-search-form__row {
+  padding: 4px;
+  gap: 4px;
+  border: 1px solid rgb(255 255 255 / 0.42);
+  border-radius: calc(var(--radius-ctrl) + 4px);
+  background: var(--night);
+  box-shadow: 0 8px 22px rgb(10 19 34 / 0.18);
+  transition:
+    border-color 200ms var(--ease),
+    box-shadow 200ms var(--ease);
+}
+
+.twilight-band .place-search-form__row:focus-within {
+  border-color: #fff;
+  box-shadow:
+    0 8px 22px rgb(10 19 34 / 0.18),
+    0 0 0 2px #fff;
+}
+
+.twilight-band .place-search-form__row input:focus-visible {
+  outline: 0;
 }
 
 .twilight-band .place-search-form input::placeholder {
@@ -582,12 +803,14 @@ body:has(.tool-page) .site-header {
   --status-color: var(--unknown);
   --word: var(--unknown);
   margin: 0;
-  padding: 22px 20px 16px;
+  padding: 24px 22px 18px;
   overflow: hidden;
   border-radius: var(--radius-card);
   background: var(--night);
   color: var(--paper);
-  box-shadow: var(--card-shadow);
+  box-shadow:
+    var(--card-shadow),
+    inset 0 0 0 1px color-mix(in srgb, var(--status-color) 22%, transparent);
 }
 
 .verdict-card:focus-within :focus-visible,
@@ -621,7 +844,7 @@ body:has(.tool-page) .site-header {
   max-width: 100%;
   margin: 0;
   color: var(--word);
-  font-size: 52px;
+  font-size: var(--type-verdict);
   font-weight: 800;
   letter-spacing: -0.03em;
   line-height: 1;
@@ -640,7 +863,7 @@ body:has(.tool-page) .site-header {
   max-width: 68ch;
   margin: 12px 0 0;
   color: var(--paper);
-  font-size: 16px;
+  font-size: var(--type-body);
   line-height: 1.4;
 }
 
@@ -661,7 +884,7 @@ body:has(.tool-page) .site-header {
 .verdict-card__meta dt {
   margin: 0;
   color: var(--no);
-  font-size: 13px;
+  font-size: var(--type-caption);
   font-weight: 400;
 }
 
@@ -669,7 +892,7 @@ body:has(.tool-page) .site-header {
   margin: 3px 0 0;
   overflow-wrap: anywhere;
   color: var(--paper);
-  font-size: 15px;
+  font-size: var(--type-body);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
@@ -691,13 +914,13 @@ body:has(.tool-page) .site-header {
 .verdict-card__footer p {
   margin: 0;
   color: var(--no);
-  font-size: 12px;
+  font-size: var(--type-caption);
 }
 
 .verdict-card__note {
   margin: 12px 0 0;
   color: var(--no);
-  font-size: 12px;
+  font-size: var(--type-caption);
   line-height: 1.45;
 }
 
@@ -739,11 +962,44 @@ body:has(.tool-page) .site-header {
   }
 
   .verdict-card {
-    padding: 26px 26px 18px;
+    padding: 30px 30px 20px;
   }
 
   .verdict-card__status {
-    font-size: 64px;
+    font-size: 4rem;
+  }
+
+  .verdict-card__meta {
+    grid-template-columns: repeat(14, minmax(0, 1fr));
+    gap: 0;
+  }
+
+  .verdict-card__meta div {
+    min-height: 64px;
+    padding: 0 18px;
+    border-left: 1px solid rgb(255 255 255 / 0.12);
+  }
+
+  .verdict-card__meta div:first-child {
+    grid-column: span 3;
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .verdict-card__meta div:nth-child(2) {
+    grid-column: span 6;
+  }
+
+  .verdict-card__meta div:nth-child(3) {
+    grid-column: span 3;
+  }
+
+  .verdict-card__meta div:nth-child(4) {
+    grid-column: span 2;
+  }
+
+  .verdict-card__meta div:last-child {
+    padding-right: 0;
   }
 }
 
@@ -752,8 +1008,16 @@ body:has(.tool-page) .site-header {
     flex-direction: column;
   }
 
+  .twilight-band .place-search-form__row {
+    flex-direction: row;
+  }
+
   .place-search-form__row .button {
     width: 100%;
+  }
+
+  .twilight-band .place-search-form__row .button {
+    width: auto;
   }
 
   .place-search-form__below {
@@ -781,8 +1045,8 @@ body:has(.tool-page) .site-header {
   }
 
   .verdict-card__meta {
-    grid-template-columns: 1fr;
-    gap: 12px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px 18px;
   }
 
   .verdict-card__footer {
