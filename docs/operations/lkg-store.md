@@ -34,6 +34,12 @@ Do not put these values in source control, client-visible `NEXT_PUBLIC_*` variab
 
 Lease CAS semantics are unchanged: a 412 is `"conflict"`; 401/403 are sanitized failures, not conflicts.
 
+The remote API accepts ~256KiB JSON bodies. Live NOAA OVATION is a global
+grid (~2–3MiB). The remote adapter keeps the Wave 1 interpolation neighborhood
+(sample points plus 8° north) and only then drops cloud/OVATION if the body
+still exceeds the cap. Lease writes are tiny and are never the oversized path.
+A completed publish still clears `lease` so an empty store cannot stay stuck.
+
 ## Error classification
 
 Sanitized store errors may include a `code` that is safe to log:

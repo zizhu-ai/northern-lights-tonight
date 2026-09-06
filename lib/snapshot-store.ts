@@ -1,12 +1,14 @@
 import { BlobPreconditionFailedError, get, put } from "@vercel/blob";
 
 import {
+  fingerprintPayload,
   isValidRawSourceEnvelopes,
   type RawSourceEnvelopes,
   type SourceName,
 // Node's strip-types runner requires a runtime TypeScript import extension.
 // @ts-ignore TS5097: Next's bundler resolves this source import without emitting it.
 } from "./aurora-sources.ts";
+import wave1Json from "../地点档案/wave1.json" with { type: "json" };
 
 export const SNAPSHOT_STATE_SCHEMA_VERSION = 2 as const;
 export const CHECK_TTL_MS = 600_000;
@@ -100,6 +102,114 @@ function isBlobSuspendedError(error: unknown): boolean {
 
 function utf8ByteLength(value: string): number {
   return new TextEncoder().encode(value).length;
+}
+
+type PersistPlace = { lat: number; lng: number };
+
+function wave1PersistPlaces(): PersistPlace[] {
+  const locations = (wave1Json as { locations?: unknown }).locations;
+  if (!Array.isArray(locations)) return [];
+  const places: PersistPlace[] = [];
+  for (const location of locations) {
+    if (!isObject(location) || !Array.isArray(location.sample_points)) continue;
+    for (const point of location.sample_points) {
+      if (!isObject(point)) continue;
+      const lat = Number(point.lat);
+      const lng = Number(point.lng);
+      if (Number.isFinite(lat) && Number.isFinite(lng)) places.push({ lat, lng });
+    }
+  }
+  return places;
+}
+
+function ovationPersistCellKeys(places: readonly PersistPlace[]): Set<string> {
+  const keys = new Set<string>();
+  const add = (lon: number, lat: number) => {
+    const lon360 = ((Math.trunc(lon) % 360) + 360) % 360;
+    keys.add(`${lon360},${Math.trunc(lat)}`);
+    keys.add(`${Math.trunc(lon)},${Math.trunc(lat)}`);
+  };
+  for (const place of places) {
+    for (let d = 0; d <= 8; d += 1) {
+      const lat = Math.min(90, place.lat + d);
+      const lon360 = ((place.lng % 360) + 360) % 360;
+      const x0 = Math.floor(lon360);
+      const y0 = Math.floor(lat);
+      const x1 = (x0 + 1) % 360;
+      const y1 = Math.min(90, y0 + 1);
+      add(x0, y0);
+      add(x1, y0);
+      add(x0, y1);
+      add(x1, y1);
+    }
+  }
+  return keys;
+}
+
+function compactOvationEnvelope(
+  envelope: SnapshotStateV2["envelopes"]["ovation"],
+  cells: Set<string>,
+): SnapshotStateV2["envelopes"]["ovation"] {
+  if (envelope === null || !isObject(envelope.payload)) return envelope;
+  const payload = envelope.payload;
+  if (!Array.isArray(payload.coordinates)) return envelope;
+  const coordinates = payload.coordinates.filter((row) => {
+    if (!Array.isArray(row) || row.length < 2) return false;
+    const lon = Number(row[0]);
+    const lat = Number(row[1]);
+    if (!Number.isFinite(lon) || !Number.isFinite(lat)) return false;
+    const lon360 = ((Math.trunc(lon) % 360) + 360) % 360;
+    return (
+      cells.has(`${lon360},${Math.trunc(lat)}`) ||
+      cells.has(`${Math.trunc(lon)},${Math.trunc(lat)}`)
+    );
+  });
+  if (coordinates.length === 0) return null;
+  const nextPayload = { ...payload, coordinates };
+  return {
+    ...envelope,
+    fingerprint: fingerprintPayload(nextPayload),
+    payload: nextPayload,
+  };
+}
+
+function markSourceError(state: SnapshotStateV2, source: SourceName): SnapshotStateV2 {
+  return {
+    ...state,
+    envelopes: { ...state.envelopes, [source]: null },
+    outcomes: {
+      ...state.outcomes,
+      [source]: {
+        ...state.outcomes[source],
+        status: "error",
+        error_code: state.outcomes[source].error_code ?? "unavailable",
+      },
+    },
+  };
+}
+
+export function fitRemoteLkgSnapshotState(state: SnapshotStateV2): SnapshotStateV2 {
+  if (utf8ByteLength(JSON.stringify(state)) <= REMOTE_LKG_MAX_BODY_BYTES) return state;
+  const cells = ovationPersistCellKeys(wave1PersistPlaces());
+  let next: SnapshotStateV2 = {
+    ...state,
+    envelopes: {
+      ...state.envelopes,
+      ovation: compactOvationEnvelope(state.envelopes.ovation, cells),
+    },
+  };
+  if (state.envelopes.ovation !== null && next.envelopes.ovation === null) {
+    next = markSourceError(next, "ovation");
+  }
+  if (utf8ByteLength(JSON.stringify(next)) <= REMOTE_LKG_MAX_BODY_BYTES) return next;
+  if (next.envelopes.cloud !== null) {
+    next = markSourceError(next, "cloud");
+    if (utf8ByteLength(JSON.stringify(next)) <= REMOTE_LKG_MAX_BODY_BYTES) return next;
+  }
+  if (next.envelopes.ovation !== null) {
+    next = markSourceError(next, "ovation");
+  }
+  return next;
 }
 
 const isObject = (value: unknown): value is Record<string, unknown> =>
@@ -468,11 +578,9 @@ export function createRemoteLkgSnapshotStore(
     read,
     async compareAndSwap(expectedEtag, next) {
       const { stateUrl, writeToken, secrets } = resolveRemoteLkgContext(env);
-      assertSafeState(next, secrets);
-      const body = JSON.stringify(next);
-      if (utf8ByteLength(body) > REMOTE_LKG_MAX_BODY_BYTES) {
-        throw sanitizedWriteError();
-      }
+      const fitted = fitRemoteLkgSnapshotState(next);
+      assertSafeState(fitted, secrets);
+      const body = JSON.stringify(fitted);
       const headers = remoteHeaders(writeToken, {
         "Content-Type": "application/json",
       });

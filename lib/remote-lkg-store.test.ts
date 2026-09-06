@@ -2,9 +2,11 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
+  REMOTE_LKG_MAX_BODY_BYTES,
   SNAPSHOT_STATE_SCHEMA_VERSION,
   createRemoteLkgSnapshotStore,
   createSnapshotStore,
+  fitRemoteLkgSnapshotState,
   isRemoteLkgConfigured,
   type SnapshotStateV2,
   type SnapshotStore,
@@ -12,6 +14,14 @@ import {
 // Node's zero-dependency strip-types runner requires the explicit extension.
 // @ts-ignore TS5097: the production build type-checks this test but does not emit it.
 } from "./snapshot-store.ts";
+import {
+  fingerprintPayload,
+// @ts-ignore TS5097: see the strip-types runner note above.
+} from "./aurora-sources.ts";
+import {
+  createSourceResolver,
+// @ts-ignore TS5097: see the strip-types runner note above.
+} from "./hard-refresh-resolver.ts";
 
 const READ_TOKEN = "lkg_read_SENTINEL";
 const WRITE_TOKEN = "lkg_write_SENTINEL";
@@ -378,3 +388,128 @@ test("each remote write rebuilds its secret scan from the current tokens", async
   );
   assert.equal(operationCalls, 0);
 });
+
+function ovationEnvelope(coordinates: number[][]): NonNullable<SnapshotStateV2["envelopes"]["ovation"]> {
+  const payload = {
+    "Observation Time": new Date(BASE_TIME).toISOString(),
+    coordinates,
+  };
+  return {
+    schema_version: 1,
+    source: "ovation",
+    fetched_at: new Date(BASE_TIME).toISOString(),
+    source_time: new Date(BASE_TIME).toISOString(),
+    fingerprint: fingerprintPayload(payload),
+    coverage: { coordinate_count: coordinates.length },
+    payload,
+  };
+}
+
+test("fitRemoteLkgSnapshotState keeps Wave 1 OVATION cells and drops the global grid", () => {
+  const coordinates = Array.from({ length: 80_000 }, (_, index) => [
+    index % 360,
+    (index % 181) - 90,
+    1,
+  ]);
+  coordinates.push([254, 40, 21]);
+  const state = stateAt(BASE_TIME);
+  state.envelopes.ovation = ovationEnvelope(coordinates);
+  assert.ok(utf8ByteLength(JSON.stringify(state)) > REMOTE_LKG_MAX_BODY_BYTES);
+  const fitted = fitRemoteLkgSnapshotState(state);
+  assert.ok(utf8ByteLength(JSON.stringify(fitted)) <= REMOTE_LKG_MAX_BODY_BYTES);
+  const kept = fitted.envelopes.ovation?.payload.coordinates as number[][];
+  assert.ok(Array.isArray(kept));
+  assert.ok(kept.length > 0);
+  assert.ok(kept.length < 2_000);
+  assert.equal(
+    kept.some((row) => row[0] === 254 && row[1] === 40 && row[2] === 21),
+    true,
+  );
+});
+
+test("an oversized completed state still PUTs under the remote body cap", async () => {
+  const calls: HttpCall[] = [];
+  const coordinates = Array.from({ length: 80_000 }, (_, index) => [
+    index % 360,
+    (index % 181) - 90,
+    1,
+  ]);
+  coordinates.push([254, 40, 21]);
+  const next = stateAt(BASE_TIME, "huge");
+  next.envelopes.ovation = ovationEnvelope(coordinates);
+  assert.ok(utf8ByteLength(JSON.stringify(next)) > REMOTE_LKG_MAX_BODY_BYTES);
+  const store = createRemoteWithFake(
+    { ...TEST_ENV },
+    {
+      async request(url, init) {
+        calls.push({ url, init });
+        return new Response(null, { status: 201 });
+      },
+    },
+  );
+  assert.equal(await store.compareAndSwap('"etag-lease"', next), "written");
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0]?.init.method, "PUT");
+  assert.equal(header(calls[0]!.init, "If-Match"), '"etag-lease"');
+  const body = String(calls[0]?.init.body);
+  assert.ok(utf8ByteLength(body) <= REMOTE_LKG_MAX_BODY_BYTES);
+  const parsed = JSON.parse(body) as SnapshotStateV2;
+  assert.equal(parsed.lease, null);
+  assert.ok(parsed.envelopes.ovation !== null);
+});
+
+test("empty remote LKG leases, fetches all-unavailable, then publishes If-Match without a stuck lease", async () => {
+  let current: { body: string; etag: string } | null = null;
+  const calls: HttpCall[] = [];
+  let etagSequence = 0;
+  const store = createRemoteWithFake(
+    { ...TEST_ENV },
+    {
+      async request(url, init) {
+        calls.push({ url, init });
+        if ((init.method ?? "GET") === "GET") {
+          if (current === null) return new Response(null, { status: 404 });
+          return jsonResponse(200, JSON.parse(current.body), current.etag);
+        }
+        const ifNoneMatch = header(init, "If-None-Match");
+        const ifMatch = header(init, "If-Match");
+        if (ifNoneMatch === "*" && current !== null) {
+          return new Response(null, { status: 412 });
+        }
+        if (ifMatch && current?.etag !== ifMatch) {
+          return new Response(null, { status: 412 });
+        }
+        etagSequence += 1;
+        current = { body: String(init.body), etag: `"etag-${etagSequence}"` };
+        return new Response(null, { status: current && etagSequence === 1 ? 201 : 204 });
+      },
+    },
+  );
+  const resolver = createSourceResolver({
+    now: () => new Date(BASE_TIME),
+    ownerId: () => "test-owner",
+    sleep: async () => undefined,
+    store,
+    fetchSources: async () => ({
+      ovation: { ok: false, error: "unavailable" },
+      kp: { ok: false, error: "unavailable" },
+      cloud: { ok: false, error: "unavailable" },
+    }),
+  });
+  const result = await resolver();
+  assert.equal(result.kind, "failed_closed");
+  assert.equal(result.kind === "failed_closed" && result.reason, "no_usable_aurora");
+  assert.equal(result.kind === "failed_closed" && result.persistence_health, "degraded");
+  const puts = calls.filter((call) => call.init.method === "PUT");
+  assert.equal(puts.length, 2);
+  assert.equal(header(puts[0]!.init, "If-None-Match"), "*");
+  assert.equal(header(puts[1]!.init, "If-Match"), '"etag-1"');
+  if (current === null) throw new Error("expected published remote state");
+  const published = JSON.parse(current.body) as SnapshotStateV2;
+  assert.equal(published.lease, null);
+  assert.equal(published.retry_after, new Date(BASE_TIME + 60_000).toISOString());
+});
+
+function utf8ByteLength(value: string): number {
+  return new TextEncoder().encode(value).length;
+}

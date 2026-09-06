@@ -358,7 +358,19 @@ function updatedAtForLocation(
 
 export const getAuroraBundle = cache(async (): Promise<AuroraBundle> => {
   let resolution = await getSourceEnvelopes();
-  if (resolution.kind === "failed_closed") return (await bundledResolution(new Date())).bundle;
+  if (resolution.kind === "failed_closed") {
+    const bundled = (await bundledResolution(new Date())).bundle;
+    if (resolution.persistence_health === "unavailable") return bundled;
+    return {
+      ...bundled,
+      freshness: {
+        revision: "unavailable",
+        checked_at: bundled.generated_at,
+        last_success_at: null,
+        persistence_health: resolution.persistence_health,
+      },
+    };
+  }
 
   const now = new Date();
   const observations = observationsAt(resolution, now);
