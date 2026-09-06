@@ -2,7 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { VerdictCard, type VerdictStatus } from "@/components/verdict-card";
+import {
+  VerdictCard,
+  verdictDataStatus,
+  type VerdictStatus,
+} from "@/components/verdict-card";
 import copy from "@/content/ui-copy.json";
 import {
   getForecastDossier,
@@ -124,7 +128,10 @@ export default async function ForecastPage({ params }: PageProps) {
       data-snapshot-revision={latest.freshness?.revision ?? "unavailable"}
       data-snapshot-checked-at={latest.freshness?.checked_at ?? "unavailable"}
     >
-      <div className={`twilight-band ${styles.twilight}`}>
+      <div
+        className={`twilight-band ${styles.twilight}`}
+        data-status={verdictDataStatus(state.status)}
+      >
         <div className={styles.inner}>
           <header className={styles.hero}>
             <p className={styles.kicker}>
