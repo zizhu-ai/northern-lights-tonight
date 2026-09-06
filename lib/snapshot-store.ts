@@ -12,9 +12,19 @@ export const SNAPSHOT_STATE_SCHEMA_VERSION = 2 as const;
 export const CHECK_TTL_MS = 600_000;
 export const NEGATIVE_RETRY_MS = 60_000;
 export const LEASE_TTL_MS = 40_000;
+export const REMOTE_LKG_MAX_BODY_BYTES = 256 * 1024;
+export const REMOTE_LKG_TIMEOUT_MS = 8_000;
 
 const SNAPSHOT_PATHNAME = "aurora/state/source-state-v2.json";
+const REMOTE_LKG_STATE_PATH = "/v1/state";
 const SOURCE_NAMES: readonly SourceName[] = ["ovation", "kp", "cloud"];
+const REMOTE_LKG_USER_AGENT =
+  "NorthernLightsTonight/1.0 (+https://aurora-tonight.com; aurora lkg)";
+
+export type SnapshotStoreErrorCode =
+  | "blob_suspended"
+  | "remote_lkg_down"
+  | "remote_lkg_unauthorized";
 
 export type SourceOutcome = {
   status: "ok" | "error";
@@ -41,6 +51,55 @@ export interface SnapshotStore {
     expectedEtag: string | null,
     next: SnapshotStateV2,
   ): Promise<"written" | "conflict">;
+}
+
+export function isRemoteLkgConfigured(env: NodeJS.ProcessEnv = process.env): boolean {
+  return Boolean(
+    env.AURORA_LKG_BASE_URL?.trim() &&
+      env.AURORA_LKG_READ_TOKEN?.trim() &&
+      env.AURORA_LKG_WRITE_TOKEN?.trim(),
+  );
+}
+
+function hasPartialRemoteLkgConfig(env: NodeJS.ProcessEnv): boolean {
+  const present = [
+    env.AURORA_LKG_BASE_URL?.trim(),
+    env.AURORA_LKG_READ_TOKEN?.trim(),
+    env.AURORA_LKG_WRITE_TOKEN?.trim(),
+  ].filter(Boolean).length;
+  return present > 0 && present < 3;
+}
+
+function storeErrorCode(error: unknown): SnapshotStoreErrorCode | undefined {
+  if (typeof error === "object" && error !== null && "code" in error) {
+    const code = (error as { code?: unknown }).code;
+    if (
+      code === "blob_suspended" ||
+      code === "remote_lkg_down" ||
+      code === "remote_lkg_unauthorized"
+    ) {
+      return code;
+    }
+  }
+  return undefined;
+}
+
+function normalizeStrongEtag(etag: string): string {
+  return etag.startsWith("W/") ? etag.slice(2) : etag;
+}
+
+function isBlobSuspendedError(error: unknown): boolean {
+  const text =
+    error instanceof Error
+      ? `${error.name}\n${error.message}\n${error.stack ?? ""}`
+      : String(error);
+  return /limits-exceeded-suspended|store has been disabled|blob[^.\n]*suspend/i.test(
+    text,
+  );
+}
+
+function utf8ByteLength(value: string): number {
+  return new TextEncoder().encode(value).length;
 }
 
 const isObject = (value: unknown): value is Record<string, unknown> =>
@@ -140,12 +199,53 @@ function assertSafeState(state: SnapshotStateV2, secrets: readonly string[]): vo
   if (!isValidSnapshotState(state)) throw new Error("Snapshot state validation failed");
 }
 
-function sanitizedReadError(): Error {
-  return new Error("Snapshot store read failed");
+function sanitizedReadError(code?: SnapshotStoreErrorCode): Error {
+  const error = new Error("Snapshot store read failed");
+  if (code) Object.assign(error, { code });
+  return error;
 }
 
-function sanitizedWriteError(): Error {
-  return new Error("Snapshot store write failed");
+function sanitizedWriteError(code?: SnapshotStoreErrorCode): Error {
+  const error = new Error("Snapshot store write failed");
+  if (code) Object.assign(error, { code });
+  return error;
+}
+
+function classifyBlobFailure(error: unknown): SnapshotStoreErrorCode | undefined {
+  return isBlobSuspendedError(error) ? "blob_suspended" : undefined;
+}
+
+function classifyRemoteStatus(status: number): SnapshotStoreErrorCode | undefined {
+  if (status === 401 || status === 403) return "remote_lkg_unauthorized";
+  if (status >= 500 || status === 429) return "remote_lkg_down";
+  return undefined;
+}
+
+function classifyRemoteNetworkFailure(error: unknown): SnapshotStoreErrorCode | undefined {
+  const existing = storeErrorCode(error);
+  if (existing) return existing;
+  if (error instanceof TypeError) return "remote_lkg_down";
+  if (
+    error instanceof Error &&
+    (error.name === "AbortError" ||
+      /timeout|aborted|fetch failed|network/i.test(error.message))
+  ) {
+    return "remote_lkg_down";
+  }
+  return undefined;
+}
+
+function rethrowIfSanitizedStoreError(error: unknown, fallback: Error): never {
+  if (
+    error instanceof Error &&
+    (error.message === "Snapshot store read failed" ||
+      error.message === "Snapshot store write failed" ||
+      error.message === "Snapshot store is not configured" ||
+      error.message === "Snapshot state contains a secret")
+  ) {
+    throw error;
+  }
+  throw fallback;
 }
 
 type BlobOperations = {
@@ -195,14 +295,14 @@ export function createVercelSnapshotStore(
       if (result === null) return null;
       const parsed: unknown = await new Response(result.stream).json();
       // Large private Blob reads may return weak validators, but Blob ifMatch requires the strong form.
-      const etag = result.etag.startsWith("W/") ? result.etag.slice(2) : result.etag;
+      const etag = normalizeStrongEtag(result.etag);
       if (!isValidSnapshotState(parsed) || etag.length === 0) {
         throw sanitizedReadError();
       }
       assertSafeState(parsed, secrets);
       return { state: parsed, etag };
-    } catch {
-      throw sanitizedReadError();
+    } catch (error) {
+      throw sanitizedReadError(classifyBlobFailure(error));
     }
   };
 
@@ -231,15 +331,218 @@ export function createVercelSnapshotStore(
           } catch {
             // An ambiguous write is a conflict only when a valid reread proves a new winner.
           }
-          throw sanitizedWriteError();
+          throw sanitizedWriteError(classifyBlobFailure(error));
         }
         try {
           if ((await read()) !== null) return "conflict";
-          throw sanitizedWriteError();
+          throw sanitizedWriteError(classifyBlobFailure(error));
         } catch {
-          throw sanitizedWriteError();
+          throw sanitizedWriteError(classifyBlobFailure(error));
         }
       }
     },
   };
+}
+
+type RemoteLkgContext = {
+  stateUrl: string;
+  readToken: string;
+  writeToken: string;
+  secrets: readonly string[];
+};
+
+function resolveRemoteLkgContext(env: NodeJS.ProcessEnv): RemoteLkgContext {
+  const baseUrl = env.AURORA_LKG_BASE_URL?.trim();
+  const readToken = env.AURORA_LKG_READ_TOKEN?.trim();
+  const writeToken = env.AURORA_LKG_WRITE_TOKEN?.trim();
+  if (!baseUrl || !readToken || !writeToken) {
+    throw new Error("Snapshot store is not configured");
+  }
+  let parsed: URL;
+  try {
+    parsed = new URL(baseUrl);
+  } catch {
+    throw new Error("Snapshot store is not configured");
+  }
+  if (
+    (parsed.protocol !== "https:" && parsed.protocol !== "http:") ||
+    parsed.username !== "" ||
+    parsed.password !== ""
+  ) {
+    throw new Error("Snapshot store is not configured");
+  }
+  const originAndPath = `${parsed.protocol}//${parsed.host}${parsed.pathname.replace(/\/$/, "")}`;
+  const weatherKey = env.OPEN_METEO_API_KEY?.trim();
+  const blobToken = env.AURORA_STATE_BLOB_READ_WRITE_TOKEN?.trim();
+  const secrets = [readToken, writeToken];
+  if (blobToken) secrets.push(blobToken);
+  if (weatherKey) secrets.push(weatherKey);
+  return {
+    stateUrl: `${originAndPath}${REMOTE_LKG_STATE_PATH}`,
+    readToken,
+    writeToken,
+    secrets,
+  };
+}
+
+type HttpOperations = {
+  request(url: string, init: RequestInit): Promise<Response>;
+};
+
+const remoteLkgHttpOperations: HttpOperations = {
+  async request(url, init) {
+    return globalThis.fetch(url, {
+      ...init,
+      cache: "no-store",
+      redirect: "error",
+      signal: init.signal ?? AbortSignal.timeout(REMOTE_LKG_TIMEOUT_MS),
+    });
+  },
+};
+
+function remoteHeaders(token: string, extra?: HeadersInit): Headers {
+  const headers = new Headers(extra);
+  headers.set("Authorization", `Bearer ${token}`);
+  headers.set("Accept", "application/json");
+  headers.set("User-Agent", REMOTE_LKG_USER_AGENT);
+  return headers;
+}
+
+async function consumeBody(response: Response): Promise<void> {
+  try {
+    await response.arrayBuffer();
+  } catch {
+    // Drain failures must not mask the HTTP status already observed.
+  }
+}
+
+export function createRemoteLkgSnapshotStore(env?: NodeJS.ProcessEnv): SnapshotStore;
+export function createRemoteLkgSnapshotStore(
+  env: NodeJS.ProcessEnv = process.env,
+  operations: HttpOperations = remoteLkgHttpOperations,
+): SnapshotStore {
+  const read = async (): Promise<StoredSnapshotState | null> => {
+    const { stateUrl, readToken, secrets } = resolveRemoteLkgContext(env);
+    try {
+      const response = await operations.request(stateUrl, {
+        method: "GET",
+        headers: remoteHeaders(readToken),
+      });
+      if (response.status === 404) {
+        await consumeBody(response);
+        return null;
+      }
+      if (response.status === 401 || response.status === 403) {
+        await consumeBody(response);
+        throw sanitizedReadError("remote_lkg_unauthorized");
+      }
+      if (!response.ok) {
+        await consumeBody(response);
+        throw sanitizedReadError(classifyRemoteStatus(response.status));
+      }
+      const declaredLength = Number(response.headers.get("content-length"));
+      if (Number.isFinite(declaredLength) && declaredLength > REMOTE_LKG_MAX_BODY_BYTES) {
+        await consumeBody(response);
+        throw sanitizedReadError();
+      }
+      const text = await response.text();
+      if (utf8ByteLength(text) > REMOTE_LKG_MAX_BODY_BYTES) {
+        throw sanitizedReadError();
+      }
+      const parsed: unknown = JSON.parse(text) as unknown;
+      const etag = normalizeStrongEtag((response.headers.get("etag") ?? "").trim());
+      if (!isValidSnapshotState(parsed) || etag.length === 0) {
+        throw sanitizedReadError();
+      }
+      assertSafeState(parsed, secrets);
+      return { state: parsed, etag };
+    } catch (error) {
+      rethrowIfSanitizedStoreError(
+        error,
+        sanitizedReadError(classifyRemoteNetworkFailure(error)),
+      );
+    }
+  };
+
+  return {
+    read,
+    async compareAndSwap(expectedEtag, next) {
+      const { stateUrl, writeToken, secrets } = resolveRemoteLkgContext(env);
+      assertSafeState(next, secrets);
+      const body = JSON.stringify(next);
+      if (utf8ByteLength(body) > REMOTE_LKG_MAX_BODY_BYTES) {
+        throw sanitizedWriteError();
+      }
+      const headers = remoteHeaders(writeToken, {
+        "Content-Type": "application/json",
+      });
+      if (expectedEtag === null) {
+        headers.set("If-None-Match", "*");
+      } else {
+        headers.set("If-Match", expectedEtag);
+      }
+      try {
+        const response = await operations.request(stateUrl, {
+          method: "PUT",
+          headers,
+          body,
+        });
+        if (response.status === 412) {
+          await consumeBody(response);
+          return "conflict";
+        }
+        if (response.status === 401 || response.status === 403) {
+          await consumeBody(response);
+          throw sanitizedWriteError("remote_lkg_unauthorized");
+        }
+        if (!response.ok) {
+          await consumeBody(response);
+          throw sanitizedWriteError(classifyRemoteStatus(response.status));
+        }
+        await consumeBody(response);
+        return "written";
+      } catch (error) {
+        if (error instanceof Error && error.message === "Snapshot store write failed") {
+          throw error;
+        }
+        if (expectedEtag !== null) {
+          try {
+            const observed = await read();
+            if (observed !== null && observed.etag !== expectedEtag) return "conflict";
+          } catch {
+            // An ambiguous write is a conflict only when a valid reread proves a new winner.
+          }
+          rethrowIfSanitizedStoreError(
+            error,
+            sanitizedWriteError(classifyRemoteNetworkFailure(error)),
+          );
+        }
+        try {
+          if ((await read()) !== null) return "conflict";
+          rethrowIfSanitizedStoreError(
+            error,
+            sanitizedWriteError(classifyRemoteNetworkFailure(error)),
+          );
+        } catch (rereadError) {
+          if (
+            rereadError instanceof Error &&
+            rereadError.message === "Snapshot store write failed"
+          ) {
+            throw rereadError;
+          }
+          throw sanitizedWriteError(classifyRemoteNetworkFailure(error));
+        }
+      }
+    },
+  };
+}
+
+export function createSnapshotStore(env: NodeJS.ProcessEnv = process.env): SnapshotStore {
+  if (hasPartialRemoteLkgConfig(env)) {
+    throw new Error("Snapshot store is not configured");
+  }
+  if (isRemoteLkgConfigured(env)) {
+    return createRemoteLkgSnapshotStore(env);
+  }
+  return createVercelSnapshotStore(env);
 }

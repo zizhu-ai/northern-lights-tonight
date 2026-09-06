@@ -19,7 +19,7 @@ import {
   type SnapshotFreshness,
   type SourceResolution,
 } from "@/lib/hard-refresh-resolver";
-import { createVercelSnapshotStore } from "@/lib/snapshot-store";
+import { createSnapshotStore } from "@/lib/snapshot-store";
 import type { SnapshotRow } from "@/lib/snapshots";
 
 export type SnapshotSource = "live" | "lkg" | "bundled";
@@ -275,7 +275,7 @@ const sourceResolver = createSourceResolver({
   now: () => new Date(),
   ownerId: () => randomUUID(),
   sleep: (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds)),
-  store: createVercelSnapshotStore(),
+  store: createSnapshotStore(),
   fetchSources: (_unused, previous) => fetchAuroraSources(dossiers, previous),
 });
 

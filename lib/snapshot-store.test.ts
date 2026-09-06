@@ -513,6 +513,34 @@ test("ambiguous initial-create errors are sanitized when the origin has no valid
   );
 });
 
+test("read classifies a suspended Blob store without exposing vendor text", async () => {
+  const store = createStoreWithFake(
+    { ...TEST_ENV },
+    {
+      async read() {
+        throw new Error("limits-exceeded-suspended: nlt-aurora-state-v2");
+      },
+      async write() {
+        throw new Error("not used");
+      },
+    },
+  );
+  await assert.rejects(
+    () => store.read(),
+    (error: unknown) => {
+      assert.equal(error instanceof Error && error.message, "Snapshot store read failed");
+      assert.equal(
+        typeof error === "object" && error !== null && "code" in error
+          ? (error as { code?: string }).code
+          : undefined,
+        "blob_suspended",
+      );
+      assertErrorDoesNotExpose(error, /nlt-aurora-state-v2|limits-exceeded-suspended/);
+      return true;
+    },
+  );
+});
+
 test("every persistence call requires a current non-empty token", async () => {
   const env: NodeJS.ProcessEnv = { ...TEST_ENV };
   let operationCalls = 0;

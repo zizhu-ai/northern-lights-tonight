@@ -8,7 +8,7 @@ The product is live and indexable at `https://aurora-tonight.com`. Do not start 
 
 - Request-time freshness, not Git commits, keeps the site live. `/`, the 15 forecast routes, and the where-to-see guide synchronously refresh expired raw-source state.
 - The hard check TTL is 10 minutes. All-source failure retries after 60 seconds; only scientifically valid last-known-good evidence may be reused, labelled degraded.
-- Private state uses `AURORA_STATE_BLOB_READ_WRITE_TOKEN`; production weather uses `OPEN_METEO_API_BASE` and `OPEN_METEO_API_KEY`.
+- Private state uses `AURORA_STATE_BLOB_READ_WRITE_TOKEN` unless Preview sets the remote LKG trio (`AURORA_LKG_BASE_URL`, `AURORA_LKG_READ_TOKEN`, `AURORA_LKG_WRITE_TOKEN`). See `docs/operations/lkg-store.md`. Production weather uses `OPEN_METEO_API_BASE` and `OPEN_METEO_API_KEY`.
 - Git snapshots are only a bundled cold-start fallback. Do not add a commit/deploy scheduler as the liveness mechanism.
 - Exactly 23 approved routes are indexable and in the sitemap. `/view` stays `noindex,follow`; unknown forecast routes and `/forecast/boston` stay 404.
 - US English, no login, no ads, no percentage chances, and no request-path geocoder remain product constraints.

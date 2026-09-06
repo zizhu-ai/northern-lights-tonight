@@ -17,7 +17,9 @@ The current Vercel Hobby deployment and Open-Meteo free endpoint are for non-com
 - `OPEN_METEO_USAGE_MODE=noncommercial`
 - `AURORA_STATE_BLOB_READ_WRITE_TOKEN`
 
-Do not set `OPEN_METEO_API_BASE` or `OPEN_METEO_API_KEY` in this mode. The application uses only `https://api.open-meteo.com/v1/forecast` and fails closed if a key or a different base URL is configured. Keep all server-side variables out of source control and client-visible variables; mark the Blob token Sensitive in Vercel.
+Production currently stays on Vercel Blob. To point **Preview only** at the remote last-known-good (LKG) API instead, set all three of `AURORA_LKG_BASE_URL`, `AURORA_LKG_READ_TOKEN`, and `AURORA_LKG_WRITE_TOKEN` on the Preview environment. Leave them unset in Production until a deliberate cutover. See [docs/operations/lkg-store.md](docs/operations/lkg-store.md).
+
+Do not set `OPEN_METEO_API_BASE` or `OPEN_METEO_API_KEY` in this mode. The application uses only `https://api.open-meteo.com/v1/forecast` and fails closed if a key or a different base URL is configured. Keep all server-side variables out of source control and client-visible variables; mark the Blob token and any LKG tokens Sensitive in Vercel.
 
 Before adding advertising, subscriptions, affiliate revenue, sponsorship, paid lead generation, or any other commercial use, upgrade Vercel to an appropriate commercial plan, remove `OPEN_METEO_USAGE_MODE=noncommercial`, and configure `OPEN_METEO_API_BASE=https://customer-api.open-meteo.com/v1/forecast` plus a non-empty `OPEN_METEO_API_KEY`. Reassess the providers' current terms before monetization.
 
