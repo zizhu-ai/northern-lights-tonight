@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { API_ROBOTS_TAG } from "@/lib/indexing";
 import { loadLatestWithMeta } from "@/lib/snapshots";
 
 export const dynamic = "force-dynamic";
@@ -19,7 +20,7 @@ export async function GET() {
   const observations = data.source_observations;
   return NextResponse.json(data, {
     headers: {
-      "X-Robots-Tag": "noindex, nofollow",
+      "X-Robots-Tag": API_ROBOTS_TAG,
       "X-Snapshot-Source": source,
       "X-Snapshot-Generated-At": data.generated_at,
       "X-Snapshot-Revision": data.freshness?.revision ?? "unavailable",

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { assessHealth } from "@/lib/health";
+import { API_ROBOTS_TAG } from "@/lib/indexing";
 import { loadLatestWithMeta } from "@/lib/snapshots";
 
 export const dynamic = "force-dynamic";
@@ -13,7 +14,7 @@ export async function GET() {
     status,
     headers: {
       "Cache-Control": "private, no-store, max-age=0",
-      "X-Robots-Tag": "noindex, nofollow",
+      "X-Robots-Tag": API_ROBOTS_TAG,
     },
   });
 }
