@@ -63,3 +63,22 @@ test("production canonicalization redirects www, other hosts, and trailing slash
     null,
   );
 });
+
+test("malformed canonical paths cannot change the primary origin", () => {
+  for (const pathname of [
+    "//example.com/a", "///example.com/a/", "/\\example.com/a",
+    "\\\\example.com/a", "https://example.com/a", "/%5Cexample.com/a",
+    "/%2F%2Fexample.com/a", "//user:pass@example.com/a/", "/a?next=evil#fragment",
+  ]) {
+    const destination = productionCanonicalRedirectUrl(
+      "www.aurora-tonight.com", pathname, "?next=https://example.com/#fragment",
+    );
+    assert.ok(destination);
+    const url = new URL(destination);
+    assert.equal(url.origin, SITE_URL, pathname);
+    assert.equal(url.username, "", pathname);
+    assert.equal(url.password, "", pathname);
+    assert.equal(url.hash, "", pathname);
+    assert.equal(url.searchParams.get("next"), "https://example.com/#fragment");
+  }
+});

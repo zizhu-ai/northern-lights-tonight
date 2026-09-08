@@ -29,5 +29,12 @@ export function productionCanonicalRedirectUrl(
   if (host === PRIMARY_HOST && nextPath === pathname) {
     return null;
   }
-  return new URL(`${nextPath}${search}`, SITE_ORIGIN).href;
+  // Assign URL components so malformed paths cannot be parsed as a new host.
+  const destination = new URL(SITE_ORIGIN);
+  destination.pathname = nextPath;
+  destination.search = search;
+  if (destination.origin !== SITE_ORIGIN) {
+    throw new Error("Canonical redirect must stay on the primary origin");
+  }
+  return destination.href;
 }
