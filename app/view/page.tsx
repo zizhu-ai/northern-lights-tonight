@@ -84,6 +84,7 @@ export default async function ViewPage({ searchParams }: ViewPageProps) {
             confidence="low"
             updated={copy.verdict.updated_unknown}
             place={name}
+            changePlace
           />
         </div>
 

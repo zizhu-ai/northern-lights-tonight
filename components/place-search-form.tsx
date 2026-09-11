@@ -1,76 +1,27 @@
 "use client";
 
-import { type FormEvent, useState } from "react";
-import { useRouter } from "next/navigation";
+import { type FormEvent } from "react";
 
 import copy from "@/content/ui-copy.json";
-import {
-  findPlace,
-  nearestPlace,
-  roundCoordinate,
-  routeForPlace,
-  viewRoute,
-  type PlaceSearchError,
-  type PlaceSearchResult,
-} from "@/lib/place-search";
+import type { SearchAnalyticsSource } from "@/lib/search-event";
 
-const errorCopy: Record<PlaceSearchError | "gps_denied" | "gps_unavailable", string> = {
-  search_empty: copy.errors.search_empty,
-  search_no_match: copy.errors.search_no_match,
-  zip_not_found: copy.errors.zip_not_found,
-  gps_denied: copy.errors.gps_denied,
-  gps_unavailable: copy.errors.gps_unavailable,
-};
+import { searchErrorCopy, usePlaceSearch } from "./use-place-search";
 
-export function PlaceSearchForm() {
-  const router = useRouter();
-  const [query, setQuery] = useState("");
-  const [error, setError] = useState<keyof typeof errorCopy | null>(null);
-  const [locating, setLocating] = useState(false);
-
-  function navigate(result: Exclude<PlaceSearchResult, { kind: "error" }>) {
-    router.push(
-      result.kind === "slug" ? `/forecast/${result.slug}` : routeForPlace(result.place),
-    );
-  }
+export function PlaceSearchForm({
+  source = "home",
+  idPrefix = "page-place-search",
+}: {
+  source?: SearchAnalyticsSource;
+  idPrefix?: string;
+}) {
+  const search = usePlaceSearch(source);
+  const errorId = `${idPrefix}-error`;
+  const privacyId = `${idPrefix}-privacy`;
+  const matchesId = `${idPrefix}-matches`;
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const result = findPlace(query);
-    if (result.kind === "error") {
-      setError(result.code);
-      return;
-    }
-    navigate(result);
-  }
-
-  function handleLocation() {
-    setError(null);
-    if (!navigator.geolocation) {
-      setError("gps_unavailable");
-      return;
-    }
-
-    setLocating(true);
-    navigator.geolocation.getCurrentPosition(
-      ({ coords }) => {
-        const lat = roundCoordinate(coords.latitude);
-        const lng = roundCoordinate(coords.longitude);
-        setLocating(false);
-
-        if (lat < 0) {
-          router.push(viewRoute(lat, lng, `${lat.toFixed(3)}, ${lng.toFixed(3)}`));
-          return;
-        }
-
-        router.push(routeForPlace(nearestPlace(lat, lng)));
-      },
-      (positionError) => {
-        setLocating(false);
-        setError(positionError.code === 1 ? "gps_denied" : "gps_unavailable");
-      },
-      { enableHighAccuracy: false, maximumAge: 300_000, timeout: 10_000 },
-    );
+    search.submitQuery();
   }
 
   return (
@@ -80,42 +31,59 @@ export function PlaceSearchForm() {
       action="/api/search"
       onSubmit={handleSubmit}
     >
-      <label className="visually-hidden" htmlFor="page-place-search">
-        {copy.chrome.input_placeholder}
+      <label className="place-search-form__label" htmlFor={idPrefix}>
+        {copy.chrome.input_label}
       </label>
       <div className="place-search-form__row">
         <input
-          id="page-place-search"
+          id={idPrefix}
           name="q"
           type="search"
-          value={query}
+          value={search.query}
           placeholder={copy.chrome.input_placeholder}
-          aria-invalid={error !== null}
-          aria-describedby={error ? "page-place-search-error" : "page-place-search-privacy"}
+          autoComplete="off"
+          aria-invalid={search.error !== null}
+          aria-describedby={
+            search.error ? errorId : search.matches.length ? matchesId : privacyId
+          }
           onChange={(event) => {
-            setQuery(event.target.value);
-            setError(null);
+            search.setQuery(event.target.value);
+            search.setError(null);
           }}
         />
-        <button className="button button--primary" type="submit">
-          {copy.chrome.check}
+        <button className="button button--primary" type="submit" disabled={search.checking}>
+          {search.checking ? copy.chrome.checking : copy.chrome.check_tonight}
         </button>
       </div>
       <div className="place-search-form__below">
         <button
           className="button button--secondary"
           type="button"
-          disabled={locating}
-          aria-busy={locating}
-          onClick={handleLocation}
+          disabled={search.locating || search.checking}
+          aria-busy={search.locating}
+          onClick={search.locate}
         >
-          {copy.chrome.use_my_location}
+          {search.locating ? copy.chrome.locating : copy.chrome.use_my_location}
         </button>
-        <p id="page-place-search-privacy">{copy.chrome.gps_privacy}</p>
+        <p id={privacyId}>{copy.chrome.gps_privacy}</p>
       </div>
-      {error ? (
-        <p id="page-place-search-error" className="place-search-form__error" role="alert">
-          {errorCopy[error]}
+      {search.matches.length > 0 ? (
+        <div id={matchesId} className="place-search-form__matches" role="status">
+          <p>{copy.errors.search_ambiguous}</p>
+          <ul>
+            {search.matches.map((place) => (
+              <li key={`${place.name}-${place.lat}-${place.lng}`}>
+                <button type="button" onClick={() => search.navigatePlace(place)}>
+                  {place.name}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+      {search.error ? (
+        <p id={errorId} className="place-search-form__error" role="alert">
+          {searchErrorCopy[search.error]}
         </p>
       ) : null}
     </form>

@@ -63,8 +63,10 @@ test("older than 12h: explicit NO degrades to UNKNOWN", () => {
   assert.equal(result.best_window_start, null);
   assert.equal(result.best_window_end, null);
   assert.equal(result.updated_at, generatedAt);
-  // Obstacle left as-is; status/windows are what the UI gates on.
-  assert.equal(result.main_obstacle, "AURORA_NO_REACH");
+  assert.equal(result.main_obstacle, "DATA_STALE");
+  assert.equal(result.main_obstacle_text, "Source data is too old to treat as live.");
+  assert.match(String(result.answer_sentence), /Cannot judge tonight/);
+  assert.doesNotMatch(String(result.answer_sentence), /^NO\b/);
 });
 
 test("invalid generated_at counts as expired: explicit NO degrades", () => {

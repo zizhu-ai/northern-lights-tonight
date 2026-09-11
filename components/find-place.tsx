@@ -7,37 +7,35 @@ import {
   useRef,
   useState,
 } from "react";
-import { useRouter } from "next/navigation";
 
 import copy from "@/content/ui-copy.json";
-import {
-  findPlace,
-  nearestPlace,
-  roundCoordinate,
-  routeForPlace,
-  viewRoute,
-  type PlaceSearchError,
-  type PlaceSearchResult,
-} from "@/lib/place-search";
 
-const errorCopy: Record<PlaceSearchError | "gps_denied" | "gps_unavailable", string> = {
-  search_empty: copy.errors.search_empty,
-  search_no_match: copy.errors.search_no_match,
-  zip_not_found: copy.errors.zip_not_found,
-  gps_denied: copy.errors.gps_denied,
-  gps_unavailable: copy.errors.gps_unavailable,
-};
+import {
+  OPEN_FIND_PLACE_EVENT,
+  searchErrorCopy,
+  usePlaceSearch,
+} from "./use-place-search";
 
 export function FindPlace() {
-  const router = useRouter();
   const triggerRef = useRef<HTMLButtonElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const panelRef = useRef<HTMLElement>(null);
-  const gpsGeneration = useRef(0);
   const [open, setOpen] = useState(false);
-  const [query, setQuery] = useState("");
-  const [error, setError] = useState<keyof typeof errorCopy | null>(null);
-  const [locating, setLocating] = useState(false);
+  const search = usePlaceSearch("find_place");
+
+  function close() {
+    search.cancelLocate();
+    setOpen(false);
+    search.setError(null);
+  }
+
+  useEffect(() => {
+    function onOpen() {
+      setOpen(true);
+    }
+    window.addEventListener(OPEN_FIND_PLACE_EVENT, onOpen);
+    return () => window.removeEventListener(OPEN_FIND_PLACE_EVENT, onOpen);
+  }, []);
 
   useEffect(() => {
     if (!open) return;
@@ -53,61 +51,9 @@ export function FindPlace() {
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [open]);
 
-  function close() {
-    gpsGeneration.current += 1;
-    setLocating(false);
-    setOpen(false);
-    setError(null);
-  }
-
-  function navigate(result: Exclude<PlaceSearchResult, { kind: "error" }>) {
-    close();
-    router.push(
-      result.kind === "slug" ? `/forecast/${result.slug}` : routeForPlace(result.place),
-    );
-  }
-
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const result = findPlace(query);
-    if (result.kind === "error") {
-      setError(result.code);
-      return;
-    }
-    navigate(result);
-  }
-
-  function handleLocation() {
-    setError(null);
-    if (!navigator.geolocation) {
-      setError("gps_unavailable");
-      return;
-    }
-
-    const generation = ++gpsGeneration.current;
-    setLocating(true);
-    navigator.geolocation.getCurrentPosition(
-      ({ coords }) => {
-        if (generation !== gpsGeneration.current) return;
-        const lat = roundCoordinate(coords.latitude);
-        const lng = roundCoordinate(coords.longitude);
-        setLocating(false);
-        close();
-
-        if (lat < 0) {
-          router.push(viewRoute(lat, lng, `${lat.toFixed(3)}, ${lng.toFixed(3)}`));
-          return;
-        }
-
-        router.push(routeForPlace(nearestPlace(lat, lng)));
-      },
-      (positionError) => {
-        if (generation !== gpsGeneration.current) return;
-        setLocating(false);
-        setError(positionError.code === 1 ? "gps_denied" : "gps_unavailable");
-      },
-      { enableHighAccuracy: false, maximumAge: 300_000, timeout: 10_000 },
-    );
+    search.submitQuery();
   }
 
   function keepFocusInPanel(event: ReactKeyboardEvent<HTMLElement>) {
@@ -142,7 +88,7 @@ export function FindPlace() {
             return;
           }
           setOpen(true);
-          setError(null);
+          search.setError(null);
         }}
       >
         {copy.chrome.find_place}
@@ -181,43 +127,70 @@ export function FindPlace() {
               </button>
             </div>
             <form method="get" action="/api/search" onSubmit={handleSubmit}>
-              <label className="visually-hidden" htmlFor="find-place-input">
-                {copy.chrome.input_placeholder}
+              <label className="place-search-form__label" htmlFor="find-place-input">
+                {copy.chrome.input_label}
               </label>
               <input
                 ref={inputRef}
                 id="find-place-input"
                 name="q"
                 type="search"
-                value={query}
+                value={search.query}
                 placeholder={copy.chrome.input_placeholder}
-                aria-invalid={error !== null}
-                aria-describedby={error ? "find-place-error" : "find-place-privacy"}
+                autoComplete="off"
+                aria-invalid={search.error !== null}
+                aria-describedby={
+                  search.error
+                    ? "find-place-error"
+                    : search.matches.length
+                      ? "find-place-matches"
+                      : "find-place-privacy"
+                }
                 onChange={(event) => {
-                  setQuery(event.target.value);
-                  setError(null);
+                  search.setQuery(event.target.value);
+                  search.setError(null);
                 }}
               />
               <div className="find-place__actions">
                 <button
                   className="button button--secondary"
                   type="button"
-                  disabled={locating}
-                  aria-busy={locating}
-                  onClick={handleLocation}
+                  disabled={search.locating || search.checking}
+                  aria-busy={search.locating}
+                  onClick={search.locate}
                 >
-                  {copy.chrome.use_my_location}
+                  {search.locating ? copy.chrome.locating : copy.chrome.use_my_location}
                 </button>
-                <button className="button button--primary" type="submit">
-                  {copy.chrome.check}
+                <button className="button button--primary" type="submit" disabled={search.checking}>
+                  {search.checking ? copy.chrome.checking : copy.chrome.check_tonight}
                 </button>
               </div>
               <p id="find-place-privacy" className="find-place__privacy">
                 {copy.chrome.gps_privacy}
               </p>
-              {error ? (
+              {search.matches.length > 0 ? (
+                <div id="find-place-matches" className="place-search-form__matches" role="status">
+                  <p>{copy.errors.search_ambiguous}</p>
+                  <ul>
+                    {search.matches.map((place) => (
+                      <li key={`${place.name}-${place.lat}-${place.lng}`}>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            close();
+                            search.navigatePlace(place);
+                          }}
+                        >
+                          {place.name}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
+              {search.error ? (
                 <p id="find-place-error" className="find-place__error" role="alert">
-                  {errorCopy[error]}
+                  {searchErrorCopy[search.error]}
                 </p>
               ) : null}
             </form>

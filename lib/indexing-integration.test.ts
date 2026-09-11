@@ -65,11 +65,13 @@ test("middleware only canonicalizes production requests", () => {
   }
 });
 
-test("search redirects carry API noindex on slug, place and error branches", () => {
+test("search redirects carry API noindex on slug, place, error and ambiguous branches", () => {
   for (const [query, destination] of [
     ["?q=alaska", "/forecast/alaska"],
     ["?q=10001", "/view?lat=40.713&lng=-74.006&name=New+York%2C+NY"],
-    ["?q=not-a-place", "/near-me"],
+    ["?q=not-a-place", "/near-me?q=not-a-place"],
+    ["?q=portland", "/near-me?q=portland"],
+    ["?q=%20portland%20", "/near-me?q=portland"],
     ["", "/near-me"],
   ]) {
     const response = GET(new Request(`${origin}/api/search${query}`));
