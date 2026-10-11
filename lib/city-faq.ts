@@ -115,7 +115,7 @@ export function stateKeywordFaqs(
       a: `${status} for ${state} tonight from the ${headline.name} headline (magnetic latitude ${mag}). ${issue} This is the state reading, not a downtown-by-default answer.`,
     },
     {
-      q: `Can you see the aurora borealis in ${state} tonight?`,
+      q: `Aurora borealis ${state.toLowerCase()} — can you see it tonight?`,
       a: `${state} is a ${dossier.aurora_zone.replaceAll("_", " ")} location. Horizon color typically needs about Kp ${dossier.typical_kp_horizon}; overhead color typically needs about Kp ${dossier.typical_kp_overhead}. Tonight’s computed status is ${status}. ${issue}`,
     },
     {

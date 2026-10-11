@@ -65,5 +65,14 @@ test("homepage direct answer stays 40-60 words and names northern lights tonight
   const words = wordCount(answer);
   assert.ok(words >= 40, String(words));
   assert.ok(words <= 60, String(words));
+  const unknown = homeDirectAnswer(
+    [
+      { dossier: dossier("ohio"), snapshot: null },
+      { dossier: dossier("chicago"), snapshot: null },
+    ],
+    null,
+  );
+  assert.ok(unknown.toLowerCase().includes("northern lights tonight"));
+  assert.ok(wordCount(unknown) >= 40 && wordCount(unknown) <= 60, String(wordCount(unknown)));
   assert.equal(clampWords("one two", 4, 6, "three four five"), "one two three four");
 });

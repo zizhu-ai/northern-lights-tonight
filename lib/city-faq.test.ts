@@ -84,3 +84,31 @@ test("state pages emit real-phrasing city questions from sample points", () => {
   assert.ok(madison.includes("52.0"));
   assert.equal(madison.includes(wisconsin.leave_city_advice), false);
 });
+
+test("Ohio, Indiana, and New York FAQs cover the high-volume city searches", () => {
+  const ohio = localFaqsForPage(dossier("ohio"), null);
+  const indiana = localFaqsForPage(dossier("indiana"), null);
+  const york = localFaqsForPage(dossier("new-york"), null);
+  const questions = (faqs: { q: string }[]) => faqs.map((faq) => faq.q);
+  for (const question of [
+    "Can you see the northern lights in Columbus tonight?",
+    "Can you see the northern lights in Cleveland tonight?",
+  ]) {
+    assert.ok(questions(ohio).includes(question), question);
+  }
+  for (const question of [
+    "Can you see the northern lights in Indianapolis tonight?",
+    "Can you see the northern lights in Fort Wayne tonight?",
+  ]) {
+    assert.ok(questions(indiana).includes(question), question);
+  }
+  assert.ok(questions(york).includes("Can you see the northern lights in New York City tonight?"));
+  assert.ok(questions(york).some((question) => /northern lights tonight new york/i.test(question)));
+  assert.ok(questions(york).some((question) => /aurora borealis new york/i.test(question)));
+  assert.ok(questions(york).some((question) => /New York northern lights/i.test(question)));
+  const columbus = ohio.find((faq) => faq.q.includes("Columbus"))?.a ?? "";
+  const cleveland = ohio.find((faq) => faq.q.includes("Cleveland"))?.a ?? "";
+  assert.notEqual(columbus, cleveland);
+  assert.ok(columbus.includes("49.1"));
+  assert.ok(cleveland.includes("50.7"));
+});

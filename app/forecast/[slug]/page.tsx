@@ -33,6 +33,7 @@ import {
 import { ForecastHours } from "@/components/forecast-hours";
 import { ForecastLocalGuide } from "@/components/forecast-local-guide";
 import { cityFaqHeading, localFaqsForPage } from "@/lib/city-faq";
+import { forecastLead, h1For, titleFor } from "@/lib/forecast-copy";
 import { clampSeoText, SITE_URL, titleCasePhrase } from "@/lib/site";
 
 import styles from "./page.module.css";
@@ -109,7 +110,7 @@ export default async function ForecastPage({ params }: PageProps) {
     loadLatest(),
   ]);
   const timezone = formatZoneAbbreviation(new Date(), dossier.timezone);
-  const answer = state.presented.answerSentence;
+  const answer = forecastLead(dossier, state.presented.answerSentence);
   const nearby = dossier.nearby_slugs
     .filter((nearbySlug) => WAVE_ONE_SLUG_SET.has(nearbySlug))
     .map((nearbySlug) => getForecastDossier(nearbySlug))
@@ -288,17 +289,6 @@ async function getForecastState(dossier: ForecastDossier): Promise<ForecastState
   };
 }
 
-function titleFor(dossier: ForecastDossier): string {
-  if (dossier.slug === "alaska") {
-    return "Northern Lights in Alaska: Best Places, Season & Tonight";
-  }
-  const full = `Northern Lights in ${dossier.name} Tonight: Visibility & Best Time`;
-  if (full.length <= 60) return full;
-  const shorter = `Northern Lights in ${dossier.name} Tonight`;
-  if (shorter.length <= 60) return shorter;
-  return clampSeoText(`Northern Lights ${dossier.name} Tonight`, 15, 60);
-}
-
 function seoDescription(
   dossier: ForecastDossier,
   headlinePointName: string,
@@ -312,10 +302,6 @@ function seoDescription(
     70,
     160,
   );
-}
-
-function h1For(dossier: ForecastDossier): string {
-  return `Northern Lights Tonight in ${dossier.name}`;
 }
 
 function WhyThisVerdict({
