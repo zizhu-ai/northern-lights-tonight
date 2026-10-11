@@ -29,9 +29,10 @@ const hooks = registerHooks({
     return nextLoad(url, context);
   },
 });
-const { middleware } = require("../middleware.ts") as typeof import("../middleware");
+const { middleware, config: middlewareConfig } = require("../middleware.ts") as typeof import("../middleware");
 const { GET } = require("../app/api/search/route.ts") as typeof import("../app/api/search/route");
 const config = (require("../next.config.ts") as typeof import("../next.config")).default;
+const { INDEXNOW_KEY, INDEXNOW_KEY_PATH } = require("../lib/indexnow.ts") as typeof import("../lib/indexnow");
 const { NextRequest } = require("next/server") as typeof import("next/server");
 const { pathToRegexp } = require("next/dist/compiled/path-to-regexp");
 hooks.deregister();
@@ -81,6 +82,32 @@ test("search redirects carry API noindex on slug, place, error and ambiguous bra
   }
 });
 
+test("production middleware does not redirect the IndexNow key file", () => {
+  const previous = process.env.VERCEL_ENV;
+  try {
+    process.env.VERCEL_ENV = "production";
+    assert.equal(middlewareConfig.matcher.length, 1);
+    assert.equal(
+      middlewareConfig.matcher[0],
+      `/((?!${INDEXNOW_KEY}\\.txt).*)`,
+    );
+    for (const [url, host] of [
+      [`${origin}${INDEXNOW_KEY_PATH}`, "aurora-tonight.com"],
+      [`https://www.aurora-tonight.com${INDEXNOW_KEY_PATH}`, "www.aurora-tonight.com"],
+      [`https://northern-lights-tonight.vercel.app${INDEXNOW_KEY_PATH}`, "northern-lights-tonight.vercel.app"],
+      [`${origin}${INDEXNOW_KEY_PATH}/`, "aurora-tonight.com"],
+    ]) {
+      const response = middleware(new NextRequest(url, { headers: { host } }));
+      assert.equal(response.status, 200, url);
+      assert.equal(response.headers.get("location"), null, url);
+      assert.equal(response.headers.get("x-middleware-next"), "1", url);
+    }
+  } finally {
+    if (previous === undefined) delete process.env.VERCEL_ENV;
+    else process.env.VERCEL_ENV = previous;
+  }
+});
+
 test("configured noindex rules cover API paths but exclude public HTML", async () => {
   const rules = await config.headers!();
   const tagsFor = (pathname: string) => rules
@@ -91,7 +118,7 @@ test("configured noindex rules cover API paths but exclude public HTML", async (
   for (const pathname of ["/api/search", "/api/no-such-route", "/api/nested/path"]) {
     assert.deepEqual(tagsFor(pathname), ["noindex, nofollow"], pathname);
   }
-  for (const pathname of ["/", "/about", "/near-me", "/forecast/alaska", "/guides/best-time-to-see-northern-lights", "/apiary"]) {
+  for (const pathname of ["/", "/about", "/near-me", "/forecast/alaska", "/guides/best-time-to-see-northern-lights", "/apiary", INDEXNOW_KEY_PATH]) {
     assert.deepEqual(tagsFor(pathname), [], pathname);
   }
 });

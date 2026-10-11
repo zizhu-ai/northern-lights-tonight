@@ -40,6 +40,9 @@ jobs:
       - name: Health monitor tests
         run: node --test scripts/health-monitor.test.mjs
 
+      - name: IndexNow submit tests
+        run: npm run test:indexnow
+
       - name: Python engine golden tests
         run: npm run test:engine
 
