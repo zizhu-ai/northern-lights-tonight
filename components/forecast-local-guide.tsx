@@ -8,12 +8,13 @@ import styles from "@/app/forecast/[slug]/page.module.css";
 
 export function ForecastLocalGuide({ dossier }: { dossier: ForecastDossier }) {
   const phrase = titleCasePhrase(dossier.primary_keyword);
+  const localHeading = /tonight/i.test(phrase) ? phrase : `${phrase} tonight`;
   const headline = getHeadlinePoint(dossier);
   const zone = dossier.aurora_zone.replaceAll("_", " ");
 
   return (
     <section className={styles.section}>
-      <h2>{phrase} tonight</h2>
+      <h2>{localHeading}</h2>
       <p>
         The headline point is {headline.name} at magnetic latitude{" "}
         {dossier.magnetic_latitude.toFixed(1)}. {dossier.name} sits in the{" "}
