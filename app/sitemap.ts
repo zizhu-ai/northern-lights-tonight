@@ -9,7 +9,8 @@ import { SITE_URL } from "../lib/site.ts";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   // lastModified is included only when CONTENT_REVISIONS has a git committer
-  // date for that URL’s source. Forecast URLs and the homepage omit it: live
+  // date for that URL’s declared sources (page module plus copy, markdown,
+  // and helpers it depends on). Forecast URLs and the homepage omit it: live
   // NOAA/Open-Meteo freshness is not a page revision (#21). Never use
   // request/build time.
   return ACQUISITION_ROUTES.map(({ path }) => {

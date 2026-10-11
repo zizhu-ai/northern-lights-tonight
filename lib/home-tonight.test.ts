@@ -2,8 +2,10 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
+import copy from "../content/ui-copy.json" with { type: "json" };
+
 // @ts-ignore TS5097
-import { clampWords, homeDirectAnswer, overallHomeStatus, pickBestWindowPlace, wordCount, type HomePlaceReading } from "./home-overview.ts";
+import { clampWords, homeCityCards, homeDirectAnswer, overallHomeStatus, pickBestWindowPlace, wordCount, type HomePlaceReading } from "./home-overview.ts";
 import type { ForecastDossier } from "./forecast-places";
 
 const dossiers = (
@@ -75,4 +77,44 @@ test("homepage direct answer stays 40-60 words and names northern lights tonight
   assert.ok(unknown.toLowerCase().includes("northern lights tonight"));
   assert.ok(wordCount(unknown) >= 40 && wordCount(unknown) <= 60, String(wordCount(unknown)));
   assert.equal(clampWords("one two", 4, 6, "three four five"), "one two three four");
+});
+
+test("stale UNKNOWN homepage city cards keep magnetic latitude and drop leftover tonight values", () => {
+  const ohio = dossier("ohio");
+  const cards = homeCityCards([
+    {
+      dossier: ohio,
+      snapshot: {
+        location_slug: "ohio",
+        headline_point_name: "Cleveland",
+        status: "UNKNOWN",
+        confidence: "low",
+        best_window_start: "2026-10-10T04:00:00.000Z",
+        best_window_end: "2026-10-10T04:30:00.000Z",
+        main_obstacle: "AURORA_NO_REACH",
+        main_obstacle_text: "Aurora activity is not expected to reach Ohio tonight.",
+        answer_sentence: "UNKNOWN in Ohio.",
+        points: [
+          {
+            id: "cleveland",
+            name: "Cleveland",
+            status: "UNKNOWN",
+            confidence: "low",
+            aurora_reach: "horizon",
+            cloud_block: "socked",
+            urban: true,
+            main_obstacle: "CLOUD_BLOCKED",
+          },
+        ],
+      },
+    },
+  ]);
+  assert.equal(cards.length, 1);
+  assert.equal(cards[0]?.city, "Cleveland");
+  assert.equal(cards[0]?.status, "UNKNOWN");
+  assert.ok(cards[0]?.reason.includes("50.7"));
+  assert.ok(cards[0]?.reason.includes(copy.verdict.stale_main_issue));
+  assert.equal(cards[0]?.reason.includes("not expected to reach"), false);
+  assert.equal(cards[0]?.reason.includes("Cloud cover is likely to block"), false);
+  assert.equal(cards[0]?.reason.includes("horizon"), false);
 });

@@ -1,3 +1,5 @@
+import copy from "../content/ui-copy.json" with { type: "json" };
+
 // @ts-ignore TS5097
 import { getHeadlinePoint, type ForecastDossier, type ForecastSamplePoint, type LocalFaq } from "./forecast-places.ts";
 // @ts-ignore TS5097
@@ -54,11 +56,50 @@ function statusPhrase(pointName: string, status: string | undefined): string {
   return `We cannot judge ${pointName} tonight.`;
 }
 
+const STALE_LIVE_READINGS =
+  "Tonight’s clouds, oval reach, and other live readings cannot be judged.";
+
+function isUnknownStatus(status: string | null | undefined): boolean {
+  return !status || status === "UNKNOWN";
+}
+
+function unknownConsistentIssue(
+  snapshot: ForecastSnapshot | null,
+  place: string,
+): string {
+  const obstacle = snapshot?.main_obstacle;
+  if (
+    obstacle === "DATA_STALE" ||
+    obstacle === "DATA_MISSING_AURORA" ||
+    obstacle === "DATA_MISSING_WEATHER"
+  ) {
+    return (
+      snapshot?.main_obstacle_text ??
+      reasonText(obstacle, place) ??
+      copy.verdict.stale_main_issue
+    );
+  }
+  return copy.verdict.stale_main_issue;
+}
+
 export function cityTonightAnswer(
   point: ForecastSamplePoint,
   snapshotPoint: ForecastPoint | null | undefined,
   dossier: ForecastDossier,
+  snapshotStatus?: ForecastSnapshot["status"] | null,
 ): string {
+  const cannotJudge =
+    snapshotStatus === "UNKNOWN" ||
+    !snapshotPoint ||
+    snapshotPoint.status === "UNKNOWN";
+  if (cannotJudge) {
+    return [
+      statusPhrase(point.name, "UNKNOWN"),
+      magPhrase(point, dossier),
+      glowPhrase(point, undefined),
+      STALE_LIVE_READINGS,
+    ].join(" ");
+  }
   const status = snapshotPoint?.status;
   const urban = snapshotPoint?.urban;
   const reach = snapshotPoint?.aurora_reach;
@@ -86,7 +127,7 @@ export function citySearchFaqs(
   const points = dossier.sample_points.slice(0, MAX_CITY_FAQS);
   return points.map((point) => ({
     q: `Can you see the northern lights in ${point.name} tonight?`,
-    a: cityTonightAnswer(point, byId.get(point.id), dossier),
+    a: cityTonightAnswer(point, byId.get(point.id), dossier, snapshot?.status),
   }));
 }
 
@@ -103,10 +144,11 @@ export function stateKeywordFaqs(
 ): LocalFaq[] {
   const headline = getHeadlinePoint(dossier);
   const status = snapshot?.status ?? "UNKNOWN";
-  const issue =
-    snapshot?.main_obstacle_text ??
-    reasonText(snapshot?.main_obstacle, dossier.name) ??
-    "Source data is too old or missing to treat as live.";
+  const issue = isUnknownStatus(status)
+    ? unknownConsistentIssue(snapshot, dossier.name)
+    : snapshot?.main_obstacle_text ??
+      reasonText(snapshot?.main_obstacle, dossier.name) ??
+      copy.verdict.stale_main_issue;
   const state = dossier.name;
   const mag = dossier.magnetic_latitude.toFixed(1);
   return [

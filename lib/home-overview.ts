@@ -171,15 +171,23 @@ export function homeCityCards(rows: HomePlaceReading[]): HomeCityCard[] {
   for (const spec of HOME_CITY_CARDS) {
     const row = bySlug.get(spec.slug);
     if (!row) continue;
+    const sample = row.dossier.sample_points.find((item) => item.id === spec.pointId);
+    const mag = (
+      sample?.magnetic_latitude ?? row.dossier.magnetic_latitude
+    ).toFixed(1);
+    const magReason = `Magnetic latitude ${mag}.`;
     const point = row.snapshot?.points?.find((item) => item.id === spec.pointId);
-    const status = point?.status ?? statusOf(row);
-    const reason = point
-      ? reasonText(point.main_obstacle, spec.city) ||
-        `Magnetic latitude ${row.dossier.sample_points.find((item) => item.id === spec.pointId)?.magnetic_latitude.toFixed(1) ?? row.dossier.magnetic_latitude.toFixed(1)}.`
-      : row.snapshot
-        ? row.snapshot.main_obstacle_text ??
-          reasonText(row.snapshot.main_obstacle, spec.city)
-        : copy.verdict.stale_main_issue;
+    const rowStatus = statusOf(row);
+    const stale = rowStatus === "UNKNOWN" || point?.status === "UNKNOWN";
+    const status = stale ? "UNKNOWN" : (point?.status ?? rowStatus);
+    const reason = stale
+      ? `${magReason} ${copy.verdict.stale_main_issue}`
+      : point
+        ? reasonText(point.main_obstacle, spec.city) || magReason
+        : row.snapshot
+          ? row.snapshot.main_obstacle_text ??
+            reasonText(row.snapshot.main_obstacle, spec.city)
+          : copy.verdict.stale_main_issue;
     cards.push({
       city: spec.city,
       stateName: spec.slug === "fairbanks" ? "Alaska" : row.dossier.name,

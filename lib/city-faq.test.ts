@@ -112,3 +112,50 @@ test("Ohio, Indiana, and New York FAQs cover the high-volume city searches", () 
   assert.ok(columbus.includes("49.1"));
   assert.ok(cleveland.includes("50.7"));
 });
+
+test("stale UNKNOWN city FAQs keep magnetic latitude and drop leftover tonight values", () => {
+  const ohio = dossier("ohio");
+  const cleveland = ohio.sample_points.find((item) => item.id === "cleveland");
+  assert.ok(cleveland);
+  const leftover = point("cleveland", "Cleveland", "UNKNOWN", {
+    urban: true,
+    cloud_block: "socked",
+    aurora_reach: "horizon",
+    main_obstacle: "AURORA_NO_REACH",
+  });
+  const snapshot = {
+    location_slug: "ohio",
+    headline_point_name: "Cleveland",
+    status: "UNKNOWN" as const,
+    confidence: "low" as const,
+    best_window_start: null,
+    best_window_end: null,
+    main_obstacle: "AURORA_NO_REACH",
+    main_obstacle_text: "Aurora activity is not expected to reach Ohio tonight.",
+    answer_sentence: "UNKNOWN in Ohio.",
+    headline_point_id: "cleveland",
+    generated_at: "2026-10-10T00:00:00.000Z",
+    valid_until: "2026-10-10T01:00:00.000Z",
+    reason_codes: ["AURORA_NO_REACH"],
+    look_toward: "north",
+    points: [leftover],
+    windows: [],
+    seo_indexable: false as const,
+  } satisfies ForecastSnapshot;
+  const answer = cityTonightAnswer(cleveland, leftover, ohio, snapshot.status);
+  assert.ok(answer.includes("We cannot judge Cleveland tonight."));
+  assert.ok(answer.includes("50.7"));
+  assert.ok(answer.includes("cannot be judged"));
+  assert.equal(answer.includes("Oval reach at this coordinate"), false);
+  assert.equal(answer.includes("Cloud cover is likely blocking"), false);
+  assert.equal(answer.includes("not expected to reach"), false);
+  const faqs = localFaqsForPage(ohio, snapshot);
+  const clevelandFaq = faqs.find((faq) => faq.q.includes("Cleveland"))?.a ?? "";
+  assert.ok(clevelandFaq.includes("50.7"));
+  assert.equal(clevelandFaq.includes("Oval reach at this coordinate"), false);
+  assert.equal(clevelandFaq.includes("not expected to reach"), false);
+  const worthGoing = faqs.find((faq) => /is it worth going out/i.test(faq.q))?.a ?? "";
+  assert.ok(worthGoing.includes("UNKNOWN"));
+  assert.ok(worthGoing.includes("Source data is too old to treat as live."));
+  assert.equal(worthGoing.includes("not expected to reach"), false);
+});
