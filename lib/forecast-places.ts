@@ -1,4 +1,4 @@
-import dossierJson from "@/地点档案/wave1.json";
+import dossierJson from "../地点档案/wave1.json" with { type: "json" };
 
 export type ForecastSamplePoint = {
   id: string;
@@ -43,7 +43,7 @@ const dossierBySlug = new Map(dossiers.map((dossier) => [dossier.slug, dossier])
 
 export const WAVE_ONE_SLUGS = dossiers.map((dossier) => dossier.slug);
 export const WAVE_ONE_SLUG_SET = new Set(WAVE_ONE_SLUGS);
-/** Homepage verdict uses this row from the 15-place table, not a national aggregate. */
+/** Fallback representative place when a homepage helper still needs one row. */
 export const HOME_REPRESENTATIVE_SLUG = "fairbanks";
 
 export function getForecastDossier(slug: string): ForecastDossier | null {

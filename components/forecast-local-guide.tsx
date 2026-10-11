@@ -29,10 +29,10 @@ export function ForecastLocalGuide({ dossier }: { dossier: ForecastDossier }) {
 
       <h2>Light, weather, and {dossier.name}</h2>
       <p>{dossier.light_pollution_note}</p>
-      <p>{dossier.leave_city_advice}</p>
       <p>{dossier.local_obstacles}</p>
-      {dossier.north_south_split ? <p>{dossier.north_south_split}</p> : null}
-      <p>{dossier.best_months_note}</p>
+      {dossier.page_template === "travel_plus_tonight" ? null : (
+        <p>{dossier.best_months_note}</p>
+      )}
 
       <h2>Sample points for {phrase}</h2>
       <ul className={styles.pointList}>

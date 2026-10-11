@@ -18,6 +18,9 @@ export function PlaceSearchForm({
   const errorId = `${idPrefix}-error`;
   const privacyId = `${idPrefix}-privacy`;
   const matchesId = `${idPrefix}-matches`;
+  const suggestionsId = `${idPrefix}-suggestions`;
+  const dropdownPlaces = search.matches.length > 0 ? search.matches : search.suggestions;
+  const dropdownId = search.matches.length > 0 ? matchesId : suggestionsId;
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -44,11 +47,12 @@ export function PlaceSearchForm({
           autoComplete="off"
           aria-invalid={search.error !== null}
           aria-describedby={
-            search.error ? errorId : search.matches.length ? matchesId : privacyId
+            search.error ? errorId : dropdownPlaces.length ? dropdownId : privacyId
           }
+          aria-autocomplete="list"
+          aria-controls={dropdownPlaces.length ? dropdownId : undefined}
           onChange={(event) => {
             search.setQuery(event.target.value);
-            search.setError(null);
           }}
         />
         <button className="button button--primary" type="submit" disabled={search.checking}>
@@ -67,11 +71,11 @@ export function PlaceSearchForm({
         </button>
         <p id={privacyId}>{copy.chrome.gps_privacy}</p>
       </div>
-      {search.matches.length > 0 ? (
-        <div id={matchesId} className="place-search-form__matches" role="status">
-          <p>{copy.errors.search_ambiguous}</p>
+      {dropdownPlaces.length > 0 ? (
+        <div id={dropdownId} className="place-search-form__matches" role="listbox">
+          {search.matches.length > 0 ? <p>{copy.errors.search_ambiguous}</p> : null}
           <ul>
-            {search.matches.map((place) => (
+            {dropdownPlaces.map((place) => (
               <li key={`${place.name}-${place.lat}-${place.lng}`}>
                 <button type="button" onClick={() => search.navigatePlace(place)}>
                   {place.name}

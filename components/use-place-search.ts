@@ -17,6 +17,7 @@ import {
   queryKind,
   roundCoordinate,
   routeForPlace,
+  suggestPlaces,
   viewRoute,
   type Place,
   type PlaceSearchError,
@@ -43,6 +44,7 @@ export function usePlaceSearch(source: SearchAnalyticsSource) {
   const [query, setQuery] = useState("");
   const [error, setError] = useState<SearchFormError | null>(null);
   const [matches, setMatches] = useState<Place[]>([]);
+  const [suggestions, setSuggestions] = useState<Place[]>([]);
   const [locating, setLocating] = useState(false);
   const [checking, setChecking] = useState(false);
 
@@ -54,6 +56,7 @@ export function usePlaceSearch(source: SearchAnalyticsSource) {
     const result = findPlace(initial);
     if (result.kind === "ambiguous") setMatches(result.places);
     if (result.kind === "error") setError(result.code);
+    if (initial.trim().length >= 2) setSuggestions(suggestPlaces(initial, 8));
   }, []);
 
   function goTo(path: string, destination: "forecast" | "view") {
@@ -65,9 +68,17 @@ export function usePlaceSearch(source: SearchAnalyticsSource) {
     if (checking) return;
     cancelLocate();
     setMatches([]);
+    setSuggestions([]);
     setError(null);
     setChecking(checkingAfterLookup("navigate"));
     goTo(routeForPlace(place), place.slug ? "forecast" : "view");
+  }
+
+  function updateQuery(nextQuery: string) {
+    setQuery(nextQuery);
+    setError(null);
+    setMatches([]);
+    setSuggestions(nextQuery.trim().length >= 2 ? suggestPlaces(nextQuery, 8) : []);
   }
 
   function submitQuery(nextQuery = query) {
@@ -77,6 +88,7 @@ export function usePlaceSearch(source: SearchAnalyticsSource) {
 
     setError(null);
     setMatches([]);
+    setSuggestions([]);
     const kind = queryKind(nextQuery);
     void trackBrowserProductEvent("search_submit", { source, query_kind: kind });
 
@@ -166,10 +178,11 @@ export function usePlaceSearch(source: SearchAnalyticsSource) {
 
   return {
     query,
-    setQuery,
+    setQuery: updateQuery,
     error,
     setError,
     matches,
+    suggestions,
     locating,
     checking,
     submitQuery,

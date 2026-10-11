@@ -169,7 +169,7 @@ function isBundledBundle(value: unknown): value is JsonObject & {
     typeof value.ovation_ok === "boolean" &&
     value.seo_indexable === false &&
     Array.isArray(value.locations) &&
-    value.locations.length === dossiers.length &&
+    value.locations.length > 0 &&
     value.locations.every(
       (row) =>
         isObject(row) &&

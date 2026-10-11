@@ -3,6 +3,7 @@ import placeDataJson from "@/data/us-places.json";
 import {
   findPlaceInData,
   nearestPlaceInData,
+  suggestPlacesInData,
   type Place,
   type PlaceData,
   type PlaceSearchError,
@@ -23,6 +24,7 @@ export {
   queryKind,
   roundCoordinate,
   routeForPlace,
+  suggestPlacesInData,
   viewRoute,
 } from "@/lib/place-match";
 
@@ -34,4 +36,8 @@ export function findPlace(query: string): PlaceSearchResult {
 
 export function nearestPlace(lat: number, lng: number): Place {
   return nearestPlaceInData(placeData, lat, lng);
+}
+
+export function suggestPlaces(query: string, limit = 8): Place[] {
+  return suggestPlacesInData(placeData, query, limit);
 }

@@ -52,14 +52,12 @@ export default function AboutPage() {
 
         <h2>Where we publish forecasts</h2>
         <p>
-          Wave 1 covers 15 forecast pages across selected US states and cities:
-          Colorado, Ohio, Indiana, Michigan, Chicago, Seattle, Wisconsin,
-          Massachusetts, Maine, Minnesota, Illinois, Oregon, Utah, Alaska, and
-          Fairbanks. Coverage is intentionally limited while we verify that
-          each local page has a useful headline point, timezone, nearby places,
-          and viewing guidance. A place without a dedicated page can still be
-          checked through the Near me tool without creating another indexed
-          forecast URL.
+          Indexed coverage includes Colorado, Ohio, Indiana, Michigan, Chicago,
+          Seattle, Wisconsin, Massachusetts, Maine, Minnesota, Illinois, Oregon,
+          Utah, Alaska, Fairbanks, New York, Pennsylvania, Vermont, New
+          Hampshire, Montana, Idaho, North Dakota, South Dakota, and Iowa. A
+          place without a dedicated page can still be checked through the Near
+          me tool without creating another indexed forecast URL.
         </p>
 
         <h2>Sources and independence</h2>

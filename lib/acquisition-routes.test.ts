@@ -30,9 +30,18 @@ const EXPECTED_INDEXABLE_PATHS = [
   "/forecast/utah",
   "/forecast/alaska",
   "/forecast/fairbanks",
+  "/forecast/new-york",
+  "/forecast/pennsylvania",
+  "/forecast/vermont",
+  "/forecast/new-hampshire",
+  "/forecast/montana",
+  "/forecast/idaho",
+  "/forecast/north-dakota",
+  "/forecast/south-dakota",
+  "/forecast/iowa",
 ];
 
-test("the acquisition registry exposes exactly the 24 indexable routes", () => {
+test("the acquisition registry exposes exactly the 33 indexable routes", () => {
   assert.deepEqual(
     ACQUISITION_ROUTES.map(({ path }) => path),
     EXPECTED_INDEXABLE_PATHS,

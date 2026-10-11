@@ -23,6 +23,15 @@ export const ACQUISITION_ROUTES = [
   { path: "/forecast/utah" },
   { path: "/forecast/alaska" },
   { path: "/forecast/fairbanks" },
+  { path: "/forecast/new-york" },
+  { path: "/forecast/pennsylvania" },
+  { path: "/forecast/vermont" },
+  { path: "/forecast/new-hampshire" },
+  { path: "/forecast/montana" },
+  { path: "/forecast/idaho" },
+  { path: "/forecast/north-dakota" },
+  { path: "/forecast/south-dakota" },
+  { path: "/forecast/iowa" },
 ] as const;
 
 const ACQUISITION_PATHS: ReadonlySet<string> = new Set(

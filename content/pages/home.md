@@ -53,11 +53,11 @@ Northern lights tonight is local. Open the row that matches your state or city. 
 
 ## Coverage tonight
 
-The table is Colorado, Ohio, Indiana, Michigan, Chicago, Seattle, Wisconsin, Massachusetts, Maine, Minnesota, Illinois, Oregon, Utah, Alaska, and Fairbanks. That is not every US state. It is the first indexed set. A missing row is not a scientific claim that your county is impossible; it is a product boundary. Search a ZIP anyway.
+The table is Colorado, Ohio, Indiana, Michigan, Chicago, Seattle, Wisconsin, Massachusetts, Maine, Minnesota, Illinois, Oregon, Utah, Alaska, Fairbanks, New York, Pennsylvania, Vermont, New Hampshire, Montana, Idaho, North Dakota, South Dakota, and Iowa. That is not every US state. A missing row is not a scientific claim that your county is impossible; it is a product boundary. Search a ZIP anyway.
 
-## What the sample card is
+## What the overview card is
 
-The large card is a sample for Fairbanks, Alaska when readings are live, because that is a place people actually travel for aurora. It is not “the US tonight.” Ohio users should ignore it and open Ohio. If all rows are UNKNOWN, the card says we cannot judge tonight and we do not guess.
+The large card is tonight’s overall reading across covered US places, not one city pretending to be the whole country. City cards below it are computed per city. If all rows are UNKNOWN, the card says we cannot judge tonight and we do not guess.
 
 ## Related
 
