@@ -60,6 +60,139 @@
         "the up"
       ],
       "slug": "michigan"
+    },
+    {
+      "keys": [
+        "new york",
+        "ny",
+        "new york state",
+        "nyc",
+        "new york city",
+        "buffalo",
+        "buffalo ny",
+        "albany",
+        "albany ny",
+        "syracuse",
+        "rochester ny"
+      ],
+      "slug": "new-york"
+    },
+    {
+      "keys": [
+        "philadelphia",
+        "philly",
+        "philadelphia pa",
+        "pittsburgh",
+        "pittsburgh pa",
+        "erie pa",
+        "pennsylvania",
+        "pa"
+      ],
+      "slug": "pennsylvania"
+    },
+    {
+      "keys": [
+        "vermont",
+        "vt",
+        "burlington vt",
+        "burlington"
+      ],
+      "slug": "vermont"
+    },
+    {
+      "keys": [
+        "new hampshire",
+        "nh",
+        "manchester nh",
+        "concord nh"
+      ],
+      "slug": "new-hampshire"
+    },
+    {
+      "keys": [
+        "montana",
+        "mt",
+        "billings",
+        "billings mt",
+        "missoula"
+      ],
+      "slug": "montana"
+    },
+    {
+      "keys": [
+        "idaho",
+        "id",
+        "boise",
+        "boise id"
+      ],
+      "slug": "idaho"
+    },
+    {
+      "keys": [
+        "north dakota",
+        "nd",
+        "fargo",
+        "fargo nd",
+        "bismarck",
+        "minot"
+      ],
+      "slug": "north-dakota"
+    },
+    {
+      "keys": [
+        "south dakota",
+        "sd",
+        "sioux falls",
+        "rapid city",
+        "aberdeen sd"
+      ],
+      "slug": "south-dakota"
+    },
+    {
+      "keys": [
+        "iowa",
+        "ia",
+        "des moines",
+        "des moines ia",
+        "cedar rapids",
+        "iowa city"
+      ],
+      "slug": "iowa"
+    },
+    {
+      "keys": [
+        "fort wayne",
+        "fort wayne in"
+      ],
+      "slug": "indiana"
+    },
+    {
+      "keys": [
+        "madison",
+        "madison wi"
+      ],
+      "slug": "wisconsin"
+    },
+    {
+      "keys": [
+        "cleveland",
+        "cleveland oh"
+      ],
+      "slug": "ohio"
+    },
+    {
+      "keys": [
+        "fort wayne",
+        "fort wayne in"
+      ],
+      "slug": "indiana"
+    },
+    {
+      "keys": [
+        "fort wayne",
+        "fort wayne in"
+      ],
+      "slug": "indiana"
     }
   ],
   "places": [
@@ -592,11 +725,7 @@
       "lng": -74.006,
       "tz": "America/New_York",
       "slug": null,
-      "keys": [
-        "new york",
-        "nyc",
-        "new york ny"
-      ],
+      "keys": [],
       "zips": [
         "10001",
         "10003"
@@ -607,7 +736,7 @@
       "lat": 39.9526,
       "lng": -75.1652,
       "tz": "America/New_York",
-      "slug": null,
+      "slug": "pennsylvania",
       "keys": [
         "philadelphia",
         "philadelphia pa"
@@ -650,7 +779,7 @@
       "lat": 40.4406,
       "lng": -79.9959,
       "tz": "America/New_York",
-      "slug": null,
+      "slug": "pennsylvania",
       "keys": [
         "pittsburgh",
         "pittsburgh pa"
@@ -664,7 +793,7 @@
       "lat": 42.8864,
       "lng": -78.8784,
       "tz": "America/New_York",
-      "slug": null,
+      "slug": "new-york",
       "keys": [
         "buffalo",
         "buffalo ny"
@@ -678,7 +807,7 @@
       "lat": 43.1566,
       "lng": -77.6088,
       "tz": "America/New_York",
-      "slug": null,
+      "slug": "new-york",
       "keys": [
         "rochester ny"
       ],
@@ -691,7 +820,7 @@
       "lat": 42.6526,
       "lng": -73.7562,
       "tz": "America/New_York",
-      "slug": null,
+      "slug": "new-york",
       "keys": [
         "albany ny",
         "albany"
@@ -733,7 +862,7 @@
       "lat": 44.4759,
       "lng": -73.2121,
       "tz": "America/New_York",
-      "slug": null,
+      "slug": "vermont",
       "keys": [
         "burlington vt",
         "burlington"
@@ -774,7 +903,7 @@
       "lat": 43.615,
       "lng": -116.2023,
       "tz": "America/Boise",
-      "slug": null,
+      "slug": "idaho",
       "keys": [
         "boise",
         "boise id"
@@ -788,7 +917,7 @@
       "lat": 45.7833,
       "lng": -108.5007,
       "tz": "America/Denver",
-      "slug": null,
+      "slug": "montana",
       "keys": [
         "billings",
         "billings mt"
@@ -858,7 +987,7 @@
       "lat": 44.0805,
       "lng": -103.231,
       "tz": "America/Denver",
-      "slug": null,
+      "slug": "south-dakota",
       "keys": [
         "rapid city",
         "rapid city sd"
@@ -872,7 +1001,7 @@
       "lat": 46.8772,
       "lng": -96.7898,
       "tz": "America/Chicago",
-      "slug": null,
+      "slug": "north-dakota",
       "keys": [
         "fargo",
         "fargo nd"
@@ -900,7 +1029,7 @@
       "lat": 43.546,
       "lng": -96.7313,
       "tz": "America/Chicago",
-      "slug": null,
+      "slug": "south-dakota",
       "keys": [
         "sioux falls",
         "sioux falls sd"
@@ -914,7 +1043,7 @@
       "lat": 41.5868,
       "lng": -93.625,
       "tz": "America/Chicago",
-      "slug": null,
+      "slug": "iowa",
       "keys": [
         "des moines",
         "des moines ia"
@@ -1392,7 +1521,7 @@
       "lat": 41.0793,
       "lng": -85.1394,
       "tz": "America/Indiana/Indianapolis",
-      "slug": null,
+      "slug": "indiana",
       "keys": [
         "fort wayne",
         "fort wayne in"
@@ -1462,7 +1591,7 @@
       "lat": 41.9778,
       "lng": -91.6656,
       "tz": "America/Chicago",
-      "slug": null,
+      "slug": "iowa",
       "keys": [
         "cedar rapids"
       ],
@@ -1475,7 +1604,7 @@
       "lat": 41.6611,
       "lng": -91.5302,
       "tz": "America/Chicago",
-      "slug": null,
+      "slug": "iowa",
       "keys": [
         "iowa city"
       ],
@@ -1607,6 +1736,114 @@
       "zips": [
         "89501"
       ]
+    },
+    {
+      "name": "New Hampshire",
+      "lat": 45.0512,
+      "lng": -71.3914,
+      "tz": "America/New_York",
+      "slug": "new-hampshire",
+      "keys": [
+        "new hampshire",
+        "nh"
+      ],
+      "zips": []
+    },
+    {
+      "name": "New York",
+      "lat": 44.6995,
+      "lng": -73.4529,
+      "tz": "America/New_York",
+      "slug": "new-york",
+      "keys": [
+        "new york state",
+        "ny"
+      ],
+      "zips": []
+    },
+    {
+      "name": "Pennsylvania",
+      "lat": 42.1292,
+      "lng": -80.0851,
+      "tz": "America/New_York",
+      "slug": "pennsylvania",
+      "keys": [
+        "pennsylvania",
+        "pa"
+      ],
+      "zips": []
+    },
+    {
+      "name": "Vermont",
+      "lat": 44.9364,
+      "lng": -72.2051,
+      "tz": "America/New_York",
+      "slug": "vermont",
+      "keys": [
+        "vermont",
+        "vt"
+      ],
+      "zips": []
+    },
+    {
+      "name": "Montana",
+      "lat": 48.1969,
+      "lng": -106.6367,
+      "tz": "America/Denver",
+      "slug": "montana",
+      "keys": [
+        "montana",
+        "mt"
+      ],
+      "zips": []
+    },
+    {
+      "name": "Idaho",
+      "lat": 48.2766,
+      "lng": -116.5533,
+      "tz": "America/Los_Angeles",
+      "slug": "idaho",
+      "keys": [
+        "idaho",
+        "id"
+      ],
+      "zips": []
+    },
+    {
+      "name": "North Dakota",
+      "lat": 48.2325,
+      "lng": -101.2963,
+      "tz": "America/Chicago",
+      "slug": "north-dakota",
+      "keys": [
+        "north dakota",
+        "nd"
+      ],
+      "zips": []
+    },
+    {
+      "name": "South Dakota",
+      "lat": 45.4647,
+      "lng": -98.4865,
+      "tz": "America/Chicago",
+      "slug": "south-dakota",
+      "keys": [
+        "south dakota",
+        "sd"
+      ],
+      "zips": []
+    },
+    {
+      "name": "Iowa",
+      "lat": 43.1536,
+      "lng": -93.201,
+      "tz": "America/Chicago",
+      "slug": "iowa",
+      "keys": [
+        "iowa",
+        "ia"
+      ],
+      "zips": []
     }
   ]
 }

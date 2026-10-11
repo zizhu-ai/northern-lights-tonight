@@ -36,7 +36,9 @@ test("IndexNow payload lists every sitemap acquisition URL on the primary host",
   assert.equal(INDEXNOW_KEY_LOCATION, `${SITE_URL}${INDEXNOW_KEY_PATH}`);
   assert.equal(INDEXNOW_ENDPOINT, "https://api.indexnow.org/indexnow");
   assert.equal(urls.length, ACQUISITION_ROUTES.length);
-  assert.equal(urls.length, 24);
+  assert.equal(urls.length, 33);
+  assert.ok(urls.includes(`${SITE_URL}/forecast/new-york`));
+  assert.ok(urls.includes(`${SITE_URL}/forecast/iowa`));
   assert.deepEqual(
     urls,
     ACQUISITION_ROUTES.map(({ path }) => new URL(path, SITE_URL).href),

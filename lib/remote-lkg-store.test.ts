@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import {
@@ -412,6 +413,8 @@ test("fitRemoteLkgSnapshotState keeps Wave 1 OVATION cells and drops the global 
     1,
   ]);
   coordinates.push([254, 40, 21]);
+  coordinates.push([286, 44, 21]);
+  coordinates.push([258, 48, 21]);
   const state = stateAt(BASE_TIME);
   state.envelopes.ovation = ovationEnvelope(coordinates);
   assert.ok(utf8ByteLength(JSON.stringify(state)) > REMOTE_LKG_MAX_BODY_BYTES);
@@ -420,11 +423,85 @@ test("fitRemoteLkgSnapshotState keeps Wave 1 OVATION cells and drops the global 
   const kept = fitted.envelopes.ovation?.payload.coordinates as number[][];
   assert.ok(Array.isArray(kept));
   assert.ok(kept.length > 0);
-  assert.ok(kept.length < 2_000);
+  assert.ok(kept.length < 2_500);
   assert.equal(
     kept.some((row) => row[0] === 254 && row[1] === 40 && row[2] === 21),
     true,
   );
+  assert.equal(
+    kept.some((row) => row[0] === 286 && row[1] === 44 && row[2] === 21),
+    true,
+    "Plattsburgh / New York OVATION cell",
+  );
+  assert.equal(
+    kept.some((row) => row[0] === 258 && row[1] === 48 && row[2] === 21),
+    true,
+    "Minot / North Dakota OVATION cell",
+  );
+});
+
+test("24-location compact OVATION plus Open-Meteo clouds stay under the remote LKG cap", () => {
+  const wave1 = JSON.parse(
+    readFileSync(new URL("../地点档案/wave1.json", import.meta.url), "utf8"),
+  ) as {
+    locations: Array<{ sample_points: Array<{ lat: number; lng: number }> }>;
+  };
+  const hours = Array.from({ length: 48 }, (_, index) => `2026-10-11T${String(index).padStart(2, "0")}:00`);
+  const series = hours.map(() => 20);
+  const fatPoint = {
+    latitude: 44.7,
+    longitude: -73.45,
+    generationtime_ms: 1.234567890123,
+    utc_offset_seconds: -14400,
+    timezone: "America/New_York",
+    timezone_abbreviation: "EDT",
+    elevation: 50,
+    hourly_units: {
+      time: "iso8601",
+      cloud_cover: "%",
+      cloud_cover_low: "%",
+      cloud_cover_mid: "%",
+      cloud_cover_high: "%",
+    },
+    hourly: {
+      time: hours,
+      cloud_cover: series,
+      cloud_cover_low: series,
+      cloud_cover_mid: series,
+      cloud_cover_high: series,
+    },
+  };
+  const cloudPayload: Record<string, typeof fatPoint> = {};
+  for (const location of wave1.locations) {
+    for (const point of location.sample_points) {
+      cloudPayload[`${point.lat.toFixed(3)},${point.lng.toFixed(3)}`] = fatPoint;
+    }
+  }
+  const coordinates = Array.from({ length: 80_000 }, (_, index) => [
+    index % 360,
+    (index % 181) - 90,
+    1,
+  ]);
+  const state = stateAt(BASE_TIME);
+  state.envelopes.ovation = ovationEnvelope(coordinates);
+  state.envelopes.cloud = {
+    schema_version: 1,
+    source: "cloud",
+    fetched_at: new Date(BASE_TIME).toISOString(),
+    source_time: null,
+    fingerprint: fingerprintPayload(cloudPayload),
+    coverage: { expected_points: Object.keys(cloudPayload).length, complete: true },
+    payload: cloudPayload,
+  };
+  assert.equal(Object.keys(cloudPayload).length, 67);
+  assert.ok(utf8ByteLength(JSON.stringify(state)) > REMOTE_LKG_MAX_BODY_BYTES);
+  const fitted = fitRemoteLkgSnapshotState(state);
+  const bytes = utf8ByteLength(JSON.stringify(fitted));
+  assert.ok(bytes <= REMOTE_LKG_MAX_BODY_BYTES, `fitted LKG is ${bytes} bytes`);
+  assert.ok(fitted.envelopes.ovation !== null, "compact OVATION must be kept");
+  assert.ok(fitted.envelopes.cloud !== null, "compact clouds must be kept");
+  const cloudKeys = Object.keys(fitted.envelopes.cloud?.payload ?? {});
+  assert.equal(cloudKeys.length, 67);
 });
 
 test("an oversized completed state still PUTs under the remote body cap", async () => {

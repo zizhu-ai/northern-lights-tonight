@@ -117,8 +117,8 @@
     "why_body": "A national Kp number is not a local yes/no. Clouds, darkness, and magnetic latitude change by city."
   },
   "home": {
-    "title": "Can You See the Northern Lights Tonight?",
-    "lead": "Search a US city or ZIP for that place tonight. The card below is a labeled sample, not a nationwide answer.",
+    "title": "Northern Lights Tonight",
+    "lead": "Search a US city or ZIP. The card and half-hour table below are computed from tonight’s NOAA and cloud snapshot.",
     "what_time_title": "What time tonight?",
     "what_time_body": "There is no single US clock time. After dark, often late. Use the window on your local page.",
     "table_kicker": "Tonight in the US"

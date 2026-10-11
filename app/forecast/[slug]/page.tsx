@@ -28,10 +28,12 @@ import {
 import {
   presentVerdict,
   type PresentedVerdict,
-  type PresentedWindow,
 } from "@/lib/verdict-presentation";
 
+import { ForecastHours } from "@/components/forecast-hours";
 import { ForecastLocalGuide } from "@/components/forecast-local-guide";
+import { cityFaqHeading, localFaqsForPage } from "@/lib/city-faq";
+import { forecastLead, h1For, titleFor } from "@/lib/forecast-copy";
 import { clampSeoText, SITE_URL, titleCasePhrase } from "@/lib/site";
 
 import styles from "./page.module.css";
@@ -103,13 +105,12 @@ export default async function ForecastPage({ params }: PageProps) {
   const dossier = getForecastDossier(slug);
   if (!dossier) notFound();
 
-  const headlinePoint = getHeadlinePoint(dossier);
   const [state, latest] = await Promise.all([
     getForecastState(dossier),
     loadLatest(),
   ]);
   const timezone = formatZoneAbbreviation(new Date(), dossier.timezone);
-  const answer = state.presented.answerSentence;
+  const answer = forecastLead(dossier, state.presented.answerSentence);
   const nearby = dossier.nearby_slugs
     .filter((nearbySlug) => WAVE_ONE_SLUG_SET.has(nearbySlug))
     .map((nearbySlug) => getForecastDossier(nearbySlug))
@@ -119,7 +120,8 @@ export default async function ForecastPage({ params }: PageProps) {
       snapshot:
         latest.locations.find((row) => row.location_slug === place.slug) ?? null,
     }));
-  const schemas = buildSchemas(dossier, titleFor(dossier), state);
+  const faqs = localFaqsForPage(dossier, state.snapshot);
+  const schemas = buildSchemas(dossier, titleFor(dossier), state, faqs);
 
   return (
     <main
@@ -155,12 +157,14 @@ export default async function ForecastPage({ params }: PageProps) {
           />
         </div>
 
-        <Hours
-          dossier={dossier}
-          windows={state.presented.windows}
-          cannotJudge={state.presented.cannotJudge}
-          fallback={copy.verdict.hours_need_live}
-        />
+        <div className={styles.section}>
+          <ForecastHours
+            timezoneName={dossier.timezone}
+            windows={state.presented.windows}
+            cannotJudge={state.presented.cannotJudge}
+            fallback={copy.verdict.hours_need_live}
+          />
+        </div>
 
         <WhyThisVerdict dossier={dossier} state={state} />
 
@@ -202,9 +206,9 @@ export default async function ForecastPage({ params }: PageProps) {
         </section>
 
         <section className={styles.section}>
-          <h2>Local FAQ</h2>
+          <h2>{cityFaqHeading(dossier)}</h2>
           <div className={styles.faqs}>
-            {dossier.local_faqs.map((faq) => (
+            {faqs.map((faq) => (
               <details key={faq.q}>
                 <summary>{faq.q}</summary>
                 <p>{faq.a}</p>
@@ -285,17 +289,6 @@ async function getForecastState(dossier: ForecastDossier): Promise<ForecastState
   };
 }
 
-function titleFor(dossier: ForecastDossier): string {
-  if (dossier.slug === "alaska") {
-    return "Northern Lights in Alaska: Best Places, Season & Tonight";
-  }
-  const full = `Northern Lights in ${dossier.name} Tonight: Visibility & Best Time`;
-  if (full.length <= 60) return full;
-  const shorter = `Northern Lights in ${dossier.name} Tonight`;
-  if (shorter.length <= 60) return shorter;
-  return clampSeoText(`Northern Lights ${dossier.name} Tonight`, 15, 60);
-}
-
 function seoDescription(
   dossier: ForecastDossier,
   headlinePointName: string,
@@ -309,95 +302,6 @@ function seoDescription(
     70,
     160,
   );
-}
-
-function h1For(dossier: ForecastDossier): string {
-  return `Can You See the Northern Lights in ${dossier.name} Tonight?`;
-}
-
-function Hours({
-  dossier,
-  windows,
-  cannotJudge,
-  fallback,
-}: {
-  dossier: ForecastDossier;
-  windows: PresentedWindow[];
-  cannotJudge: boolean;
-  fallback: string;
-}) {
-  const visible = windows.slice(0, 5);
-  const remaining = windows.slice(5);
-  const timezone = formatZoneAbbreviation(new Date(), dossier.timezone);
-
-  return (
-    <section className={`${styles.section} ${styles.hours}`}>
-      <h2>Tonight’s hours ({timezone})</h2>
-      {windows.length === 0 ? (
-        <p>{fallback}</p>
-      ) : (
-        <>
-          {cannotJudge ? <p className={styles.hoursNote}>{fallback}</p> : null}
-          <table>
-            <thead>
-              <tr>
-                <th scope="col">Period</th>
-                <th scope="col">Reading</th>
-                <th scope="col" className={styles.skyCol}>Sky</th>
-              </tr>
-            </thead>
-            <tbody>
-              <HourRows windows={visible} timezone={dossier.timezone} />
-            </tbody>
-          </table>
-          {remaining.length > 0 ? (
-            <details className={styles.remainingHours}>
-              <summary>{copy.chrome.rest_of_night}</summary>
-              <table>
-                <caption className="visually-hidden">Rest of tonight’s 30-minute readings</caption>
-                <tbody>
-                  <HourRows windows={remaining} timezone={dossier.timezone} />
-                </tbody>
-              </table>
-            </details>
-          ) : null}
-        </>
-      )}
-    </section>
-  );
-}
-
-function HourRows({
-  windows,
-  timezone,
-}: {
-  windows: PresentedWindow[];
-  timezone: string;
-}) {
-  return windows.map((window) => {
-    const status = window.displayStatus;
-    const sky = window.skip ? "—" : displayEnum(window.cloud_block);
-    const timeLabel = formatWindow(window.start, window.end, timezone);
-    const reason = window.reason;
-    return (
-      <tr
-        key={`${window.start}-${window.end}`}
-        data-status={window.skip ? "skip" : (window.status ?? "unknown").toLowerCase()}
-        aria-label={`${timeLabel}, ${status}, ${reason || sky}`}
-      >
-        <th scope="row">
-          <span>{timeLabel}</span>
-        </th>
-        <td className={styles.hourCell}>
-          <span className={window.skip ? undefined : styles.hourStatus}>{status}</span>
-          {reason ? <span className={styles.hourReason}>{reason}</span> : null}
-        </td>
-        <td className={styles.skyCol}>
-          <span>{sky}</span>
-        </td>
-      </tr>
-    );
-  });
 }
 
 function WhyThisVerdict({
@@ -445,7 +349,7 @@ function WhyThisVerdict({
     },
     {
       label: "City glow",
-      value: reasonFrom(codes, ["LIGHT_POLLUTION"], dossier.name) ?? dossier.light_pollution_note,
+      value: reasonFrom(codes, ["LIGHT_POLLUTION"], dossier.name) ?? "—",
     },
     {
       label: "Data live",
@@ -524,6 +428,7 @@ function buildSchemas(
   dossier: ForecastDossier,
   title: string,
   state: ForecastState,
+  faqs: ForecastDossier["local_faqs"],
 ) {
   const url = `${SITE_URL}/forecast/${dossier.slug}`;
   const headline = getHeadlinePoint(dossier).name;
@@ -546,7 +451,7 @@ function buildSchemas(
       {
         "@type": "FAQPage",
         "@id": faqId,
-        mainEntity: dossier.local_faqs.map((faq) => ({
+        mainEntity: faqs.map((faq) => ({
           "@type": "Question",
           name: faq.q,
           acceptedAnswer: {

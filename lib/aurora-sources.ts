@@ -113,6 +113,19 @@ export function isValidKpPayload(value: unknown): value is unknown[] {
   );
 }
 
+export function compactCloudRow(value: JsonObject): JsonObject {
+  const hourly = value.hourly as JsonObject;
+  return {
+    hourly: {
+      time: hourly.time,
+      cloud_cover: hourly.cloud_cover,
+      cloud_cover_low: hourly.cloud_cover_low,
+      cloud_cover_mid: hourly.cloud_cover_mid,
+      cloud_cover_high: hourly.cloud_cover_high,
+    },
+  };
+}
+
 function hasCloudHourly(value: unknown): value is JsonObject {
   if (!isObject(value) || !isObject(value.hourly)) return false;
   const hourly = value.hourly;
@@ -355,7 +368,7 @@ async function fetchCloud(dossiers: Dossier[]): Promise<SourceFetchResult<Record
     for (let index = 0; index < points.length; index += CLOUD_BATCH_SIZE) {
       batches.push(points.slice(index, index + CLOUD_BATCH_SIZE));
     }
-    // Two bounded multi-coordinate requests replace 39 serial requests.
+    // Bounded multi-coordinate batches (20 pts) replace per-point serial fetches.
     const settled = await Promise.allSettled(
       batches.map(async (batch) => ({ batch, response: await fetchJson(cloudUrl(batch, config)) })),
     );
@@ -367,7 +380,7 @@ async function fetchCloud(dossiers: Dossier[]): Promise<SourceFetchResult<Record
       const rows = Array.isArray(response.body) ? response.body : [response.body];
       for (let index = 0; index < batch.length; index += 1) {
         const row = rows[index];
-        const value = hasCloudHourly(row) ? row : null;
+        const value = hasCloudHourly(row) ? compactCloudRow(row) : null;
         payload[batch[index].coordinateKey] = value;
         if (value) successfulPoints += 1;
       }

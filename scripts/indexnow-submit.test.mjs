@@ -50,6 +50,15 @@ const expectedPaths = [
   "/forecast/utah",
   "/forecast/alaska",
   "/forecast/fairbanks",
+  "/forecast/new-york",
+  "/forecast/pennsylvania",
+  "/forecast/vermont",
+  "/forecast/new-hampshire",
+  "/forecast/montana",
+  "/forecast/idaho",
+  "/forecast/north-dakota",
+  "/forecast/south-dakota",
+  "/forecast/iowa",
 ];
 const expectedUrls = expectedPaths.map((path) => `${PRODUCTION_ORIGIN}${path === "/" ? "/" : path}`);
 
@@ -79,7 +88,7 @@ test("committed key file and ACQUISITION_ROUTES produce the live sitemap URL lis
   const paths = parseAcquisitionPaths(routesSource);
   assert.deepEqual(paths, expectedPaths);
   const urls = urlsFromAcquisitionPaths(paths);
-  assert.equal(urls.length, 24);
+  assert.equal(urls.length, 33);
   assert.deepEqual(urls, expectedUrls);
   assert.deepEqual(parseSitemapUrls(sitemapXml), expectedUrls);
   const declaredKey = /export const INDEXNOW_KEY = "([a-f0-9]{32})";/.exec(

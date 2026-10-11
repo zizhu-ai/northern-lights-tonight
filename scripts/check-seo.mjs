@@ -26,6 +26,15 @@ const APPROVED_WAVE_ONE_PATHS = [
   "/forecast/utah",
   "/forecast/alaska",
   "/forecast/fairbanks",
+  "/forecast/new-york",
+  "/forecast/pennsylvania",
+  "/forecast/vermont",
+  "/forecast/new-hampshire",
+  "/forecast/montana",
+  "/forecast/idaho",
+  "/forecast/north-dakota",
+  "/forecast/south-dakota",
+  "/forecast/iowa",
 ];
 const APPROVED_INDEXABLE_PATHS = [...APPROVED_STATIC_PATHS, ...APPROVED_WAVE_ONE_PATHS];
 const SCHEMA_REQUIRED_PATHS = new Set([
@@ -34,7 +43,7 @@ const SCHEMA_REQUIRED_PATHS = new Set([
   "/methodology",
   ...APPROVED_WAVE_ONE_PATHS,
 ]);
-const EXPECTED_SITEMAP_PATHS = 24;
+const EXPECTED_SITEMAP_PATHS = 33;
 const VIEW_PROBES = [
   "/view",
   "/view?lat=64.840&lng=-147.720&name=Fairbanks%2C+Alaska",
@@ -44,7 +53,7 @@ const NOT_FOUND_PROBES = ["/forecast/boston", "/route-that-must-not-exist"];
 const summary = {
   ok: false,
   sitemap: { status: null, urls: 0, uniquePaths: 0, lastmod: 0, missingPaths: [], unexpectedPaths: [] },
-  indexable: { expected: EXPECTED_SITEMAP_PATHS, checked: 0, valid: 0, schemaRequired: 18 },
+  indexable: { expected: EXPECTED_SITEMAP_PATHS, checked: 0, valid: 0, schemaRequired: 27 },
   internalLinks: { discovered: 0, checked: 0, broken: 0 },
   view: { checked: 0, valid: 0 },
   notFound: { checked: 0, valid: 0 },
@@ -216,9 +225,13 @@ function parseSitemap(xml) {
   const urls = urlBlocks.map((block, index) => {
     const locs = [...block.matchAll(/<loc\b[^>]*>([\s\S]*?)<\/loc\s*>/gi)];
     if (locs.length !== 1) throw new Error(`sitemap entry ${index + 1} has ${locs.length} loc elements`);
-    return decodeEntities(locs[0][1].trim());
+    const lastmods = [...block.matchAll(/<lastmod\b[^>]*>([\s\S]*?)<\/lastmod\s*>/gi)].map((match) =>
+      decodeEntities(match[1].trim()),
+    );
+    if (lastmods.length > 1) throw new Error(`sitemap entry ${index + 1} has ${lastmods.length} lastmod elements`);
+    return { loc: decodeEntities(locs[0][1].trim()), lastmod: lastmods[0] ?? null };
   });
-  const lastmod = [...xml.matchAll(/<lastmod\b/gi)].length;
+  const lastmod = urls.filter((entry) => entry.lastmod).length;
   return { lastmod, urls };
 }
 
@@ -378,8 +391,8 @@ function internalTarget(href, pagePath, baseUrl, scope) {
 }
 
 async function main() {
-  if (APPROVED_STATIC_PATHS.length !== 9 || APPROVED_WAVE_ONE_PATHS.length !== 15 || SCHEMA_REQUIRED_PATHS.size !== 18) {
-    violation("configuration", "frozen route contract must contain 9 static, 15 Wave One, and 18 schema-bearing paths");
+  if (APPROVED_STATIC_PATHS.length !== 9 || APPROVED_WAVE_ONE_PATHS.length !== 24 || SCHEMA_REQUIRED_PATHS.size !== 27) {
+    violation("configuration", "frozen route contract must contain 9 static, 24 forecast, and 27 schema-bearing paths");
     return;
   }
   let baseUrl;
@@ -406,18 +419,26 @@ async function main() {
 
   summary.sitemap.urls = sitemap.urls.length;
   summary.sitemap.lastmod = sitemap.lastmod;
-  if (sitemap.lastmod !== 0) violation("sitemap", `lastmod is forbidden; found ${sitemap.lastmod}`);
   const paths = [];
-  for (const value of sitemap.urls) {
+  const LASTMOD_PATHS = new Set(APPROVED_STATIC_PATHS.filter((path) => path !== "/"));
+  for (const entry of sitemap.urls) {
     try {
-      const url = new URL(value);
+      const url = new URL(entry.loc);
       if (url.origin !== CANONICAL_ORIGIN || url.search || url.hash || url.username || url.password) {
         throw new Error("must be a canonical-origin URL containing only a path");
       }
       if (url.href !== `${CANONICAL_ORIGIN}${url.pathname}`) throw new Error("must use normalized canonical-origin form");
       paths.push(url.pathname);
+      const wantsLastmod = LASTMOD_PATHS.has(url.pathname);
+      if (wantsLastmod) {
+        if (!entry.lastmod || !/^\d{4}-\d{2}-\d{2}(?:T[\d:.+-Z]+)?$/.test(entry.lastmod)) {
+          violation("sitemap", `${url.pathname}: expected ISO 8601 lastmod from a real content revision`);
+        }
+      } else if (entry.lastmod) {
+        violation("sitemap", `${url.pathname}: lastmod is omitted unless a real content revision exists`);
+      }
     } catch (error) {
-      violation("sitemap", `${value}: ${error.message}`);
+      violation("sitemap", `${entry.loc}: ${error.message}`);
     }
   }
   const uniquePaths = [...new Set(paths)];

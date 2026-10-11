@@ -2,13 +2,14 @@
   "meta": {
     "version": "wave1-dossier-v1",
     "date": "2026-08-21",
-    "status": "wave1-nearby-filled",
+    "status": "wave1-plus-wave2-states",
     "notes": [
       "magnetic_latitude is a centered-dipole estimate using IGRF-13 2020 geomagnetic pole 80.65N, 72.68W. Not AACGM. Engine should prefer OVATION grid over Kp thresholds.",
       "typical_kp_* are integer bands for looking north from a dark site (horizon) vs near-overhead. Conservative. Replace with OVATION reach in the engine.",
       "cluster_volume is unique-keyword sum from the 2026-07-18 Semrush export; not traffic.",
       "Page-facing strings are English. Do not invent parking lots or driving directions.",
-      "seo_indexable stays false until the live engine returns a real snapshot for the sample points."
+      "seo_indexable stays false until the live engine returns a real snapshot for the sample points.",
+      "Wave 2 state pages (NY, PA, VT, NH, MT, ID, ND, SD, IA) reuse the tonight_local template. magnetic_latitude uses the same centered-dipole estimate as Wave 1."
     ]
   },
   "locations": [
@@ -164,7 +165,8 @@
         "indiana",
         "michigan",
         "chicago",
-        "illinois"
+        "illinois",
+        "pennsylvania"
       ],
       "light_pollution_note": "Cleveland–Akron and Columbus are bright. The Lake Erie shore can be slightly better if you look north over water, but the urban skyglow still dominates near the cities.",
       "leave_city_advice": "Get out of Columbus. Northern Ohio near Lake Erie is the realistic part of the state. Look north over the lake from a dark stretch of shoreline, not from downtown Cleveland.",
@@ -225,6 +227,14 @@
           "lng": -86.1581,
           "role": "population",
           "magnetic_latitude": 48.8
+        },
+        {
+          "id": "fort-wayne",
+          "name": "Fort Wayne",
+          "lat": 41.0793,
+          "lng": -85.1394,
+          "role": "population",
+          "magnetic_latitude": 50.2
         }
       ],
       "magnetic_latitude": 50.7,
@@ -562,7 +572,8 @@
         "minnesota",
         "michigan",
         "chicago",
-        "illinois"
+        "illinois",
+        "iowa"
       ],
       "light_pollution_note": "Milwaukee–Chicago glow covers the southeast. Madison is better than Milwaukee but still urban. Northern Wisconsin (Northwoods, Apostle Islands, Lake Superior shore) is the dark part of the state.",
       "leave_city_advice": "Leave Milwaukee. If you can keep driving north of the agricultural belt into the Northwoods, do it. Door County and the Superior shore beat the southern lakeshore suburbs.",
@@ -647,7 +658,10 @@
         "maine",
         "ohio",
         "michigan",
-        "minnesota"
+        "minnesota",
+        "new-hampshire",
+        "new-york",
+        "vermont"
       ],
       "light_pollution_note": "Boston–Providence is a dense coastal light corridor. The North Shore (beyond the inner suburbs) and the Berkshires are darker. Cape Cod is south of Boston and magnetically worse, not better.",
       "leave_city_advice": "Leave Boston. North toward the New Hampshire border or west into the Berkshires beats the harbor. Do not drive to the Cape for aurora.",
@@ -730,7 +744,9 @@
         "massachusetts",
         "minnesota",
         "michigan",
-        "alaska"
+        "alaska",
+        "new-hampshire",
+        "vermont"
       ],
       "light_pollution_note": "Portland and the southern coast are the bright part of a generally dark state. Baxter, the North Woods, and Aroostook are among the darkest Wave 1 locations in the Lower 48.",
       "leave_city_advice": "Leave Portland if you can. Interior and northern Maine beat the tourist coast. Acadia is darker than Boston but still coastal and south of the woods.",
@@ -813,7 +829,9 @@
         "wisconsin",
         "michigan",
         "alaska",
-        "maine"
+        "maine",
+        "north-dakota",
+        "iowa"
       ],
       "light_pollution_note": "The Twin Cities are a large dome. Duluth is better but still a city. The Iron Range, Ely, and the Boundary Waters are the dark, high-latitude part of the state — among the best Lower 48 odds in this set.",
       "leave_city_advice": "Leave Minneapolis. North toward Duluth and beyond is the correct direction. The Boundary Waters / Ely latitude is the in-state destination on a moderate night.",
@@ -898,7 +916,8 @@
         "chicago",
         "indiana",
         "wisconsin",
-        "ohio"
+        "ohio",
+        "iowa"
       ],
       "light_pollution_note": "Chicago’s dome covers a wide radius of northeastern Illinois. Rockford is better than the suburbs but still a city. Galena and the Mississippi palisades are the realistic in-state dark direction. Springfield and southern Illinois are much worse magnetically.",
       "leave_city_advice": "If you are in Chicago, use the Chicago page and leave the metro. If you are elsewhere in Illinois, go north and away from the Chicago glow — not south.",
@@ -978,7 +997,8 @@
         "seattle",
         "utah",
         "colorado",
-        "alaska"
+        "alaska",
+        "idaho"
       ],
       "light_pollution_note": "Portland is a sizable dome. The high desert (Bend, the east side) is much darker. Northeast Oregon (Baker City) is the better magnetic+darkness compromise; Bend is darker but slightly farther from the oval.",
       "leave_city_advice": "Leave Portland, and treat the Cascades as a cloud wall, not a viewing destination. If the west side is socked in, the dry east is the reason to drive.",
@@ -1065,7 +1085,8 @@
         "colorado",
         "oregon",
         "illinois",
-        "alaska"
+        "alaska",
+        "idaho"
       ],
       "light_pollution_note": "The Wasatch Front (Ogden–Salt Lake–Provo) is a bright valley dome. Looking north over the Great Salt Lake (Antelope Island) reduces ground lights in that direction. Northern Utah (Logan, the Idaho border) is the in-state magnetic upgrade. The west desert is darker but not farther north.",
       "leave_city_advice": "Leave downtown Salt Lake. A north-facing lake horizon is the local trick; driving north toward Logan / the Idaho line is the magnetic trick. Do not drive south to Zion for aurora.",
@@ -1265,6 +1286,663 @@
       "viewing_direction": "north",
       "seo_indexable": false,
       "status": "dossier_filled"
+    },
+    {
+      "slug": "new-york",
+      "name": "New York",
+      "location_type": "state",
+      "timezone": "America/New_York",
+      "latitude": 44.6995,
+      "longitude": -73.4529,
+      "primary_verdict_point": "plattsburgh",
+      "sample_points": [
+        {
+          "id": "plattsburgh",
+          "name": "Plattsburgh",
+          "lat": 44.6995,
+          "lng": -73.4529,
+          "role": "verdict_north",
+          "magnetic_latitude": 54.0
+        },
+        {
+          "id": "buffalo",
+          "name": "Buffalo",
+          "lat": 42.8864,
+          "lng": -78.8784,
+          "role": "dark_sky",
+          "magnetic_latitude": 52.2
+        },
+        {
+          "id": "albany",
+          "name": "Albany",
+          "lat": 42.6526,
+          "lng": -73.7562,
+          "role": "population",
+          "magnetic_latitude": 52.0
+        },
+        {
+          "id": "new-york-city",
+          "name": "New York City",
+          "lat": 40.7128,
+          "lng": -74.006,
+          "role": "population",
+          "magnetic_latitude": 50.1
+        }
+      ],
+      "magnetic_latitude": 54.0,
+      "aurora_zone": "sub_oval",
+      "typical_kp_horizon": 5,
+      "typical_kp_overhead": 7,
+      "primary_keyword": "northern lights tonight new york",
+      "variant_keywords": [
+        "aurora borealis new york",
+        "new york northern lights",
+        "northern lights tonight nyc",
+        "northern lights buffalo"
+      ],
+      "nearby_slugs": [
+        "pennsylvania",
+        "massachusetts",
+        "vermont"
+      ],
+      "light_pollution_note": "New York City–Long Island is a severe light dome. Albany and the Hudson corridor are still urban. The North Country (Plattsburgh, the Adirondacks) and a dark Lake Ontario shore near Buffalo are the realistic in-state options.",
+      "leave_city_advice": "Leave New York City. Drive north toward the Adirondacks or the Canadian border, not out onto Long Island. A North Country dark horizon beats any borough rooftop.",
+      "north_south_split": "Northern New York is a sub-oval, event-capable latitude. NYC and Long Island are mid-latitude and extreme-event only. A maybe in Plattsburgh is usually a no in Manhattan.",
+      "local_obstacles": "NYC skyglow; Adirondack trees closing the north horizon; lake-effect cloud off Ontario and Erie; humid summer haze downstate.",
+      "best_months_note": "Longer nights September–March. The North Country stays useful later into spring than the city. Summer twilight is not polar, but downstate haze is a real limiter.",
+      "local_faqs": [
+        {
+          "q": "Should I go to Canada instead of staying in New York?",
+          "a": "If you can cross and continue north, Quebec and eastern Ontario are closer to the oval than NYC. On a marginal night, north beats staying in the metro."
+        }
+      ],
+      "index_wave": 2,
+      "country": "US",
+      "viewing_direction": "north",
+      "seo_indexable": false,
+      "status": "dossier_filled",
+      "parent_slug": null,
+      "page_template": "tonight_local",
+      "short_summer_nights": false,
+      "cluster_volume": 0,
+      "weighted_kd": 0,
+      "cannibalization_pair": null
+    },
+    {
+      "slug": "pennsylvania",
+      "name": "Pennsylvania",
+      "location_type": "state",
+      "timezone": "America/New_York",
+      "latitude": 42.1292,
+      "longitude": -80.0851,
+      "primary_verdict_point": "erie",
+      "sample_points": [
+        {
+          "id": "erie",
+          "name": "Erie",
+          "lat": 42.1292,
+          "lng": -80.0851,
+          "role": "verdict_north",
+          "magnetic_latitude": 51.4
+        },
+        {
+          "id": "pittsburgh",
+          "name": "Pittsburgh",
+          "lat": 40.4406,
+          "lng": -79.9959,
+          "role": "dark_sky",
+          "magnetic_latitude": 49.7
+        },
+        {
+          "id": "philadelphia",
+          "name": "Philadelphia",
+          "lat": 39.9526,
+          "lng": -75.1652,
+          "role": "population",
+          "magnetic_latitude": 49.3
+        }
+      ],
+      "magnetic_latitude": 51.4,
+      "aurora_zone": "midlatitude_event",
+      "typical_kp_horizon": 6,
+      "typical_kp_overhead": 8,
+      "primary_keyword": "northern lights tonight pennsylvania",
+      "variant_keywords": [
+        "aurora borealis pennsylvania",
+        "pennsylvania northern lights",
+        "northern lights philadelphia",
+        "northern lights pittsburgh"
+      ],
+      "nearby_slugs": [
+        "ohio",
+        "new-york"
+      ],
+      "light_pollution_note": "Philadelphia and Pittsburgh are bright urban basins. Erie can be slightly better if you look north over Lake Erie, but the city glow still dominates near town.",
+      "leave_city_advice": "Leave Philadelphia. Northern Pennsylvania near Lake Erie is the realistic part of the state. Do not treat a Pittsburgh ridge as dark sky if the northern horizon is still orange.",
+      "north_south_split": "Erie and the northern tier are meaningfully closer to the oval than Philadelphia. Southern and southeastern Pennsylvania are extreme-event locations only.",
+      "local_obstacles": "Lake-effect cloud along Erie; Appalachian ridges blocking a north view; two large metro light domes; humid haze.",
+      "best_months_note": "September–March brings longer nights. Lake-effect overcast can ruin an otherwise usable winter storm along the snow belt.",
+      "local_faqs": [
+        {
+          "q": "Is looking over Lake Erie enough in Pennsylvania?",
+          "a": "A north-facing lake horizon removes some ground lights in that direction. It does not cancel Erie’s skyglow or a socked-in snow band."
+        }
+      ],
+      "index_wave": 2,
+      "country": "US",
+      "viewing_direction": "north",
+      "seo_indexable": false,
+      "status": "dossier_filled",
+      "parent_slug": null,
+      "page_template": "tonight_local",
+      "short_summer_nights": false,
+      "cluster_volume": 0,
+      "weighted_kd": 0,
+      "cannibalization_pair": null
+    },
+    {
+      "slug": "vermont",
+      "name": "Vermont",
+      "location_type": "state",
+      "timezone": "America/New_York",
+      "latitude": 44.9364,
+      "longitude": -72.2051,
+      "primary_verdict_point": "newport",
+      "sample_points": [
+        {
+          "id": "newport",
+          "name": "Newport",
+          "lat": 44.9364,
+          "lng": -72.2051,
+          "role": "verdict_north",
+          "magnetic_latitude": 54.3
+        },
+        {
+          "id": "burlington",
+          "name": "Burlington",
+          "lat": 44.4759,
+          "lng": -73.2121,
+          "role": "population",
+          "magnetic_latitude": 53.8
+        },
+        {
+          "id": "rutland",
+          "name": "Rutland",
+          "lat": 43.6106,
+          "lng": -72.9726,
+          "role": "dark_sky",
+          "magnetic_latitude": 53.0
+        }
+      ],
+      "magnetic_latitude": 54.3,
+      "aurora_zone": "sub_oval",
+      "typical_kp_horizon": 5,
+      "typical_kp_overhead": 7,
+      "primary_keyword": "northern lights tonight vermont",
+      "variant_keywords": [
+        "aurora borealis vermont",
+        "vermont northern lights",
+        "northern lights burlington"
+      ],
+      "nearby_slugs": [
+        "new-hampshire",
+        "maine",
+        "new-york"
+      ],
+      "light_pollution_note": "Vermont is dark by Lower 48 standards. Burlington is the main in-state light island; the Northeast Kingdom is darker than the Champlain shore.",
+      "leave_city_advice": "Leave Burlington. Go north toward the Northeast Kingdom or find a dark north horizon away from the lake-shore towns, not a downtown waterfront.",
+      "north_south_split": "The Northeast Kingdom is the best in-state latitude. Southern Vermont is only a little worse magnetically but has more trees and more village glow.",
+      "local_obstacles": "Tree-closed north horizons; lake cloud off Champlain; winter travel on rural roads; Burlington glow.",
+      "best_months_note": "Long nights September–March. Northern Vermont can work on weaker storms than Ohio or Pennsylvania.",
+      "local_faqs": [
+        {
+          "q": "Are the Green Mountains enough?",
+          "a": "Only with a dark, unobstructed north view. A south-facing slope or a summit above a valley’s lights does not help."
+        }
+      ],
+      "index_wave": 2,
+      "country": "US",
+      "viewing_direction": "north",
+      "seo_indexable": false,
+      "status": "dossier_filled",
+      "parent_slug": null,
+      "page_template": "tonight_local",
+      "short_summer_nights": false,
+      "cluster_volume": 0,
+      "weighted_kd": 0,
+      "cannibalization_pair": null
+    },
+    {
+      "slug": "new-hampshire",
+      "name": "New Hampshire",
+      "location_type": "state",
+      "timezone": "America/New_York",
+      "latitude": 45.0512,
+      "longitude": -71.3914,
+      "primary_verdict_point": "pittsburg",
+      "sample_points": [
+        {
+          "id": "pittsburg",
+          "name": "Pittsburg",
+          "lat": 45.0512,
+          "lng": -71.3914,
+          "role": "verdict_north",
+          "magnetic_latitude": 54.4
+        },
+        {
+          "id": "north-conway",
+          "name": "North Conway",
+          "lat": 44.0537,
+          "lng": -71.1284,
+          "role": "dark_sky",
+          "magnetic_latitude": 53.4
+        },
+        {
+          "id": "manchester",
+          "name": "Manchester",
+          "lat": 42.9956,
+          "lng": -71.4548,
+          "role": "population",
+          "magnetic_latitude": 52.3
+        }
+      ],
+      "magnetic_latitude": 54.4,
+      "aurora_zone": "sub_oval",
+      "typical_kp_horizon": 5,
+      "typical_kp_overhead": 7,
+      "primary_keyword": "northern lights tonight new hampshire",
+      "variant_keywords": [
+        "aurora borealis new hampshire",
+        "new hampshire northern lights",
+        "northern lights manchester nh"
+      ],
+      "nearby_slugs": [
+        "vermont",
+        "maine",
+        "massachusetts"
+      ],
+      "light_pollution_note": "Manchester–Nashua shares Boston-adjacent glow. The White Mountains and the far north (Pittsburg, the Connecticut Lakes) are the dark part of the state.",
+      "leave_city_advice": "Leave Manchester. North toward the White Mountains or the Canadian border is the correct direction, not the seacoast suburbs.",
+      "north_south_split": "Far-north New Hampshire is a sub-oval latitude similar to northern Vermont. The seacoast and Manchester are event-heavier and brighter.",
+      "local_obstacles": "Mountain weather socking in peaks; trees closing the north view; Boston-adjacent glow in the south; winter travel in the north.",
+      "best_months_note": "September–March. The far north stays useful later into spring than Massachusetts.",
+      "local_faqs": [
+        {
+          "q": "White Mountains or farther north?",
+          "a": "North Conway is already a step north of Manchester. Pittsburg and the Connecticut Lakes are darker and slightly better magnetically."
+        }
+      ],
+      "index_wave": 2,
+      "country": "US",
+      "viewing_direction": "north",
+      "seo_indexable": false,
+      "status": "dossier_filled",
+      "parent_slug": null,
+      "page_template": "tonight_local",
+      "short_summer_nights": false,
+      "cluster_volume": 0,
+      "weighted_kd": 0,
+      "cannibalization_pair": null
+    },
+    {
+      "slug": "montana",
+      "name": "Montana",
+      "location_type": "state",
+      "timezone": "America/Denver",
+      "latitude": 48.1969,
+      "longitude": -106.6367,
+      "primary_verdict_point": "glasgow",
+      "sample_points": [
+        {
+          "id": "glasgow",
+          "name": "Glasgow",
+          "lat": 48.1969,
+          "lng": -106.6367,
+          "role": "verdict_north",
+          "magnetic_latitude": 55.6
+        },
+        {
+          "id": "kalispell",
+          "name": "Kalispell",
+          "lat": 48.1919,
+          "lng": -114.3168,
+          "role": "dark_sky",
+          "magnetic_latitude": 54.7
+        },
+        {
+          "id": "billings",
+          "name": "Billings",
+          "lat": 45.7833,
+          "lng": -108.5007,
+          "role": "population",
+          "magnetic_latitude": 53.0
+        }
+      ],
+      "magnetic_latitude": 55.6,
+      "aurora_zone": "sub_oval",
+      "typical_kp_horizon": 4,
+      "typical_kp_overhead": 6,
+      "primary_keyword": "northern lights tonight montana",
+      "variant_keywords": [
+        "aurora borealis montana",
+        "montana northern lights",
+        "northern lights billings"
+      ],
+      "nearby_slugs": [
+        "north-dakota",
+        "idaho"
+      ],
+      "light_pollution_note": "Billings is the large in-state dome. The Hi-Line (Glasgow, the northern plains) and the Flathead / Whitefish country are much darker; mountains still block a north view if you sit on the wrong slope.",
+      "leave_city_advice": "Leave Billings. Go north onto the plains with a clear north horizon. Do not drive south expecting a better oval.",
+      "north_south_split": "The northern plains are the realistic aurora latitude. Southern Montana is only a little worse magnetically but is the wrong direction when a storm is marginal.",
+      "local_obstacles": "Mountain weather in the west; wind and blowing snow on the Hi-Line; Billings glow; ridges blocking north.",
+      "best_months_note": "Long, dark nights September–March. Dry air on the plains is an advantage versus the Midwest when a storm does arrive.",
+      "local_faqs": [
+        {
+          "q": "Are the mountains better than the plains?",
+          "a": "Only if the north horizon is open and dark. A pretty peak facing south is worse than a flat Hi-Line field looking north."
+        }
+      ],
+      "index_wave": 2,
+      "country": "US",
+      "viewing_direction": "north",
+      "seo_indexable": false,
+      "status": "dossier_filled",
+      "parent_slug": null,
+      "page_template": "tonight_local",
+      "short_summer_nights": false,
+      "cluster_volume": 0,
+      "weighted_kd": 0,
+      "cannibalization_pair": null
+    },
+    {
+      "slug": "idaho",
+      "name": "Idaho",
+      "location_type": "state",
+      "timezone": "America/Los_Angeles",
+      "latitude": 48.2766,
+      "longitude": -116.5533,
+      "primary_verdict_point": "sandpoint",
+      "sample_points": [
+        {
+          "id": "sandpoint",
+          "name": "Sandpoint",
+          "lat": 48.2766,
+          "lng": -116.5533,
+          "role": "verdict_north",
+          "magnetic_latitude": 54.5
+        },
+        {
+          "id": "stanley",
+          "name": "Stanley",
+          "lat": 44.2157,
+          "lng": -114.9374,
+          "role": "dark_sky",
+          "magnetic_latitude": 50.7
+        },
+        {
+          "id": "boise",
+          "name": "Boise",
+          "lat": 43.615,
+          "lng": -116.2023,
+          "role": "population",
+          "magnetic_latitude": 50.0
+        }
+      ],
+      "magnetic_latitude": 54.5,
+      "aurora_zone": "sub_oval",
+      "typical_kp_horizon": 5,
+      "typical_kp_overhead": 7,
+      "primary_keyword": "northern lights tonight idaho",
+      "variant_keywords": [
+        "aurora borealis idaho",
+        "idaho northern lights",
+        "northern lights boise"
+      ],
+      "nearby_slugs": [
+        "montana",
+        "utah",
+        "oregon"
+      ],
+      "light_pollution_note": "Boise is the main light island. The Panhandle (Sandpoint) is darker and farther north. The Sawtooth country around Stanley is very dark but magnetically farther from the oval than Sandpoint.",
+      "leave_city_advice": "Leave Boise. North toward the Panhandle is the magnetic upgrade. Do not drive south into the Snake River Plain expecting a better oval.",
+      "north_south_split": "The Panhandle is the realistic aurora latitude. Boise and southern Idaho need a stronger storm. Times on this page use Pacific, matching Sandpoint; southern Idaho is Mountain Time.",
+      "local_obstacles": "Two time zones; Boise glow; mountain weather; trees and ridges blocking north in the central mountains.",
+      "best_months_note": "September–March. The Panhandle can work on weaker storms than Utah or Colorado.",
+      "local_faqs": [
+        {
+          "q": "Is Stanley better than Sandpoint because it is darker?",
+          "a": "Stanley is darker, but it is magnetically farther from the oval. On a moderate night, north beats a darker southern basin."
+        }
+      ],
+      "index_wave": 2,
+      "country": "US",
+      "viewing_direction": "north",
+      "seo_indexable": false,
+      "status": "dossier_filled",
+      "parent_slug": null,
+      "page_template": "tonight_local",
+      "short_summer_nights": false,
+      "cluster_volume": 0,
+      "weighted_kd": 0,
+      "cannibalization_pair": null
+    },
+    {
+      "slug": "north-dakota",
+      "name": "North Dakota",
+      "location_type": "state",
+      "timezone": "America/Chicago",
+      "latitude": 48.2325,
+      "longitude": -101.2963,
+      "primary_verdict_point": "minot",
+      "sample_points": [
+        {
+          "id": "minot",
+          "name": "Minot",
+          "lat": 48.2325,
+          "lng": -101.2963,
+          "role": "verdict_north",
+          "magnetic_latitude": 56.2
+        },
+        {
+          "id": "bismarck",
+          "name": "Bismarck",
+          "lat": 46.8083,
+          "lng": -100.7837,
+          "role": "dark_sky",
+          "magnetic_latitude": 54.8
+        },
+        {
+          "id": "fargo",
+          "name": "Fargo",
+          "lat": 46.8772,
+          "lng": -96.7898,
+          "role": "population",
+          "magnetic_latitude": 55.2
+        }
+      ],
+      "magnetic_latitude": 56.2,
+      "aurora_zone": "sub_oval",
+      "typical_kp_horizon": 4,
+      "typical_kp_overhead": 6,
+      "primary_keyword": "northern lights tonight north dakota",
+      "variant_keywords": [
+        "aurora borealis north dakota",
+        "north dakota northern lights",
+        "northern lights fargo"
+      ],
+      "nearby_slugs": [
+        "minnesota",
+        "south-dakota",
+        "montana"
+      ],
+      "light_pollution_note": "Fargo is the largest glow. Minot and the open northwest are darker. Bismarck is a small capital dome, not a Lower 48 mega-metro.",
+      "leave_city_advice": "Leave Fargo. North and west onto dark prairie with a clear north horizon is the correct move. Do not sit under the interstate glow.",
+      "north_south_split": "The north of the state is among the best Lower 48 latitudes in this set. Fargo is still sub-oval, but the city itself is the wrong place to stand.",
+      "local_obstacles": "Prairie wind and blowing snow; Fargo glow; occasional ice fog; long empty-road winter travel.",
+      "best_months_note": "August–April. Northern North Dakota can work on weaker storms than Iowa or Illinois.",
+      "local_faqs": [
+        {
+          "q": "Is North Dakota as good as northern Minnesota?",
+          "a": "Magnetically it is in the same conversation. Clouds, wind, and whether you actually leave town still decide the night."
+        }
+      ],
+      "index_wave": 2,
+      "country": "US",
+      "viewing_direction": "north",
+      "seo_indexable": false,
+      "status": "dossier_filled",
+      "parent_slug": null,
+      "page_template": "tonight_local",
+      "short_summer_nights": false,
+      "cluster_volume": 0,
+      "weighted_kd": 0,
+      "cannibalization_pair": null
+    },
+    {
+      "slug": "south-dakota",
+      "name": "South Dakota",
+      "location_type": "state",
+      "timezone": "America/Chicago",
+      "latitude": 45.4647,
+      "longitude": -98.4865,
+      "primary_verdict_point": "aberdeen",
+      "sample_points": [
+        {
+          "id": "aberdeen",
+          "name": "Aberdeen",
+          "lat": 45.4647,
+          "lng": -98.4865,
+          "role": "verdict_north",
+          "magnetic_latitude": 53.7
+        },
+        {
+          "id": "rapid-city",
+          "name": "Rapid City",
+          "lat": 44.0805,
+          "lng": -103.231,
+          "role": "dark_sky",
+          "magnetic_latitude": 51.9
+        },
+        {
+          "id": "sioux-falls",
+          "name": "Sioux Falls",
+          "lat": 43.5446,
+          "lng": -96.7311,
+          "role": "population",
+          "magnetic_latitude": 51.9
+        }
+      ],
+      "magnetic_latitude": 53.7,
+      "aurora_zone": "sub_oval",
+      "typical_kp_horizon": 5,
+      "typical_kp_overhead": 7,
+      "primary_keyword": "northern lights tonight south dakota",
+      "variant_keywords": [
+        "aurora borealis south dakota",
+        "south dakota northern lights",
+        "northern lights sioux falls"
+      ],
+      "nearby_slugs": [
+        "north-dakota",
+        "iowa",
+        "minnesota"
+      ],
+      "light_pollution_note": "Sioux Falls is the main eastern dome. Rapid City is a smaller west-side city with dark prairie nearby, but it is Mountain Time and farther from the oval than Aberdeen.",
+      "leave_city_advice": "Leave Sioux Falls. North toward Aberdeen and the state line is the magnetic upgrade. The Black Hills are darker locally but not farther north.",
+      "north_south_split": "The north of the state is the realistic latitude. Sioux Falls is event-heavier. Times on this page use Central; Rapid City is Mountain Time.",
+      "local_obstacles": "Two time zones; Sioux Falls glow; prairie wind; Black Hills ridges blocking a north view if you pick the wrong canyon.",
+      "best_months_note": "September–March. A clear, cold night after a storm beats a hazy warm one.",
+      "local_faqs": [
+        {
+          "q": "Black Hills or the northern prairie?",
+          "a": "The Hills can be dark, but Aberdeen is farther north. On a marginal night, latitude beats a scenic canyon that faces the wrong way."
+        }
+      ],
+      "index_wave": 2,
+      "country": "US",
+      "viewing_direction": "north",
+      "seo_indexable": false,
+      "status": "dossier_filled",
+      "parent_slug": null,
+      "page_template": "tonight_local",
+      "short_summer_nights": false,
+      "cluster_volume": 0,
+      "weighted_kd": 0,
+      "cannibalization_pair": null
+    },
+    {
+      "slug": "iowa",
+      "name": "Iowa",
+      "location_type": "state",
+      "timezone": "America/Chicago",
+      "latitude": 43.1536,
+      "longitude": -93.201,
+      "primary_verdict_point": "mason-city",
+      "sample_points": [
+        {
+          "id": "mason-city",
+          "name": "Mason City",
+          "lat": 43.1536,
+          "lng": -93.201,
+          "role": "verdict_north",
+          "magnetic_latitude": 51.8
+        },
+        {
+          "id": "dubuque",
+          "name": "Dubuque",
+          "lat": 42.5006,
+          "lng": -90.6648,
+          "role": "dark_sky",
+          "magnetic_latitude": 51.3
+        },
+        {
+          "id": "des-moines",
+          "name": "Des Moines",
+          "lat": 41.5868,
+          "lng": -93.625,
+          "role": "population",
+          "magnetic_latitude": 50.2
+        }
+      ],
+      "magnetic_latitude": 51.8,
+      "aurora_zone": "midlatitude_event",
+      "typical_kp_horizon": 6,
+      "typical_kp_overhead": 8,
+      "primary_keyword": "northern lights tonight iowa",
+      "variant_keywords": [
+        "aurora borealis iowa",
+        "iowa northern lights",
+        "northern lights des moines"
+      ],
+      "nearby_slugs": [
+        "illinois",
+        "minnesota",
+        "wisconsin",
+        "south-dakota"
+      ],
+      "light_pollution_note": "Des Moines is the large central dome. Cedar Rapids and Iowa City add eastern glow. Northern Iowa (Mason City) and the Mississippi palisades near Dubuque are the better in-state options.",
+      "leave_city_advice": "Leave Des Moines. Go north, not south. A dark north horizon in northern Iowa beats any downtown riverwalk.",
+      "north_south_split": "Northern Iowa is an event location similar to northern Illinois. Des Moines and southern Iowa need a stronger storm.",
+      "local_obstacles": "Midwest clouds; humidity and haze on the horizon; Des Moines glow; few truly dark corridors compared with the Dakotas.",
+      "best_months_note": "Long nights September–March. Clouds, not darkness, are the usual limiter.",
+      "local_faqs": [
+        {
+          "q": "Should I drive to Minnesota instead?",
+          "a": "If you can, yes — northern Minnesota is closer to the oval. On a marginal night, driving north beats staying in Des Moines."
+        }
+      ],
+      "index_wave": 2,
+      "country": "US",
+      "viewing_direction": "north",
+      "seo_indexable": false,
+      "status": "dossier_filled",
+      "parent_slug": null,
+      "page_template": "tonight_local",
+      "short_summer_nights": false,
+      "cluster_volume": 0,
+      "weighted_kd": 0,
+      "cannibalization_pair": null
     }
   ]
 }

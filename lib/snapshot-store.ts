@@ -1,6 +1,7 @@
 import { BlobPreconditionFailedError, get, put } from "@vercel/blob";
 
 import {
+  compactCloudRow,
   fingerprintPayload,
   isValidRawSourceEnvelopes,
   type RawSourceEnvelopes,
@@ -173,6 +174,21 @@ function compactOvationEnvelope(
   };
 }
 
+function compactCloudEnvelope(
+  envelope: SnapshotStateV2["envelopes"]["cloud"],
+): SnapshotStateV2["envelopes"]["cloud"] {
+  if (envelope === null || !isObject(envelope.payload)) return envelope;
+  const payload: Record<string, ReturnType<typeof compactCloudRow> | null> = {};
+  for (const [key, row] of Object.entries(envelope.payload)) {
+    payload[key] = isObject(row) && isObject(row.hourly) ? compactCloudRow(row) : null;
+  }
+  return {
+    ...envelope,
+    fingerprint: fingerprintPayload(payload),
+    payload,
+  };
+}
+
 function markSourceError(state: SnapshotStateV2, source: SourceName): SnapshotStateV2 {
   return {
     ...state,
@@ -203,6 +219,14 @@ export function fitRemoteLkgSnapshotState(state: SnapshotStateV2): SnapshotState
   }
   if (utf8ByteLength(JSON.stringify(next)) <= REMOTE_LKG_MAX_BODY_BYTES) return next;
   if (next.envelopes.cloud !== null) {
+    next = {
+      ...next,
+      envelopes: {
+        ...next.envelopes,
+        cloud: compactCloudEnvelope(next.envelopes.cloud),
+      },
+    };
+    if (utf8ByteLength(JSON.stringify(next)) <= REMOTE_LKG_MAX_BODY_BYTES) return next;
     next = markSourceError(next, "cloud");
     if (utf8ByteLength(JSON.stringify(next)) <= REMOTE_LKG_MAX_BODY_BYTES) return next;
   }

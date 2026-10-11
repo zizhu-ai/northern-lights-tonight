@@ -59,7 +59,11 @@ function nameMatches(name: string, normalized: string): boolean {
 }
 
 function firstPlaceForSlug(data: PlaceData, slug: string): Place | undefined {
+  const slugName = normalizePlaceQuery(slug.replaceAll("-", " "));
   return (
+    data.places.find(
+      (item) => item.slug === slug && normalizePlaceQuery(item.name) === slugName,
+    ) ??
     data.places.find((item) => item.slug === slug && nameMatches(item.name, slug)) ??
     data.places.find((item) => item.slug === slug)
   );
@@ -85,6 +89,51 @@ function resultFromPlaces(places: Place[]): PlaceSearchResult {
     return place.slug ? { kind: "slug", slug: place.slug } : { kind: "place", place };
   }
   return { kind: "ambiguous", places: unique };
+}
+
+export function suggestPlacesInData(
+  data: PlaceData,
+  query: string,
+  limit = 8,
+): Place[] {
+  const normalized = normalizePlaceQuery(query);
+  if (normalized.length < 2) return [];
+  const matches: Place[] = [];
+
+  for (const alias of data.aliases) {
+    if (
+      alias.keys.some(
+        (key) =>
+          keyMatches(key, normalized) ||
+          normalizePlaceQuery(key).startsWith(normalized),
+      )
+    ) {
+      const place = firstPlaceForSlug(data, alias.slug);
+      if (place) matches.push(place);
+    }
+  }
+
+  const slugPlaces = data.places.filter((place) => place.slug);
+  const pinPlaces = data.places.filter((place) => !place.slug);
+  for (const place of [...slugPlaces, ...pinPlaces]) {
+    const name = normalizePlaceQuery(place.name);
+    const slug = place.slug ? normalizePlaceQuery(place.slug) : "";
+    const keyed = place.keys.some(
+      (key) =>
+        keyMatches(key, normalized) || normalizePlaceQuery(key).startsWith(normalized),
+    );
+    if (
+      keyed ||
+      name === normalized ||
+      name.startsWith(normalized) ||
+      name.includes(` ${normalized}`) ||
+      (slug && (slug === normalized || slug.startsWith(normalized)))
+    ) {
+      matches.push(place);
+    }
+  }
+
+  return uniquePlaces(matches).slice(0, limit);
 }
 
 export function findPlaceInData(data: PlaceData, query: string): PlaceSearchResult {
