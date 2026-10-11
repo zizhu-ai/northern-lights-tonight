@@ -43,6 +43,17 @@ const dossierBySlug = new Map(dossiers.map((dossier) => [dossier.slug, dossier])
 
 export const WAVE_ONE_SLUGS = dossiers.map((dossier) => dossier.slug);
 export const WAVE_ONE_SLUG_SET = new Set(WAVE_ONE_SLUGS);
+export const WAVE_TWO_SLUGS = [
+  "new-york",
+  "pennsylvania",
+  "vermont",
+  "new-hampshire",
+  "montana",
+  "idaho",
+  "north-dakota",
+  "south-dakota",
+  "iowa",
+] as const;
 /** Fallback representative place when a homepage helper still needs one row. */
 export const HOME_REPRESENTATIVE_SLUG = "fairbanks";
 
