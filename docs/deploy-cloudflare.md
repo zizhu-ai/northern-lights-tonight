@@ -114,6 +114,9 @@ Middleware is Edge-compatible (`NextRequest` / `NextResponse` only).
 - `worker.ts` is the Wrangler entry: it re-exports `DOQueueHandler` from the generated OpenNext worker and implements `scheduled` for `triggers.crons` (`*/10 * * * *`). The handler POSTs `/api/cron/refresh`, which runs the same hard-refresh resolver as `/api/health`.
 - Heavy CPU is `compute_bundle` / `parse_ovation` on `/`, `/forecast/[slug]`, `/guides/where-to-see-northern-lights`, `/api/snapshots/latest`, `/api/health`, and `/api/cron/refresh`. `/view` does not run the engine. Persisted OVATION is clipped to the Wave 1 neighborhood before the R2 write.
 - Mitigations: 600s ISR in R2, 60s isolate memo of the computed bundle, and OVATION grid clipped to the Wave 1 interpolation neighborhood before parse. Live verdicts cannot be build-time static.
+- `/` waits on `connection()` during `phase-production-build`; `/forecast/*` uses empty `generateStaticParams`. First request after deploy fetches live R2/NOAA instead of baking the bundled 8/23 fallback.
+- Page renders go through `getAuroraBundleForPage`. A bundled / `revision=unavailable` / both-aurora-invalid bundle throws `UncacheableFallbackSnapshotError` so OpenNext does not write that HTML into the incremental cache. Health, cron, and `/api/snapshots/latest` still use `getAuroraBundle` and may return the bundled fallback.
+- Hard-refresh give-ups log `aurora_hard_refresh_gave_up` with `detail` (`lease_held_past_budget`, `request_budget_exhausted`, store/CAS failures). A foreign lease that expires after the 33s upstream-start cutoff, or a request that already burned that budget, fail-closes rather than hanging past the 60s route limit. Pages must not cache the resulting fallback.
 
 ## Preview acceptance
 

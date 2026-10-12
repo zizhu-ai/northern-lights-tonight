@@ -19,6 +19,12 @@ import {
   type SourceResolution,
 } from "@/lib/hard-refresh-resolver";
 import {
+  UncacheableFallbackSnapshotError,
+  assertCacheableAuroraBundle,
+  isProductionBuildPhase,
+  isUnusableFallbackBundle,
+} from "@/lib/page-snapshot-guard";
+import {
   createSnapshotStore,
   limitOvationPayloadToPlaces,
   wave1ComputePlaces,
@@ -287,6 +293,32 @@ const sourceResolver = createSourceResolver({
 
 export const getSourceEnvelopes = sourceResolver;
 
+export {
+  UncacheableFallbackSnapshotError,
+  assertCacheableAuroraBundle,
+  isProductionBuildPhase,
+  isUnusableFallbackBundle,
+};
+
+function logBundleFallback(
+  resolution:
+    | Extract<SourceResolution, { kind: "failed_closed" }>
+    | {
+        reason: "no_usable_aurora";
+        detail: "no_usable_aurora";
+        persistence_health: SnapshotFreshness["persistence_health"];
+      },
+): void {
+  console.warn(
+    JSON.stringify({
+      msg: "aurora_bundle_fallback",
+      reason: resolution.reason,
+      detail: "detail" in resolution ? resolution.detail : null,
+      persistence_health: resolution.persistence_health,
+    }),
+  );
+}
+
 const downgradedConfidence = (confidence: unknown): unknown =>
   confidence === "high" ? "medium" : confidence;
 
@@ -374,6 +406,7 @@ function ovationPayloadForCompute(payload: JsonObject | null | undefined): JsonO
 export const getAuroraBundle = cache(async (): Promise<AuroraBundle> => {
   let resolution = await getSourceEnvelopes();
   if (resolution.kind === "failed_closed") {
+    logBundleFallback(resolution);
     const bundled = (await bundledResolution(new Date())).bundle;
     if (resolution.persistence_health === "unavailable") return bundled;
     return {
@@ -390,6 +423,11 @@ export const getAuroraBundle = cache(async (): Promise<AuroraBundle> => {
   const now = new Date();
   const observations = observationsAt(resolution, now);
   if (observations.ovation.health === "invalid" && observations.kp.health === "invalid") {
+    logBundleFallback({
+      reason: "no_usable_aurora",
+      detail: "no_usable_aurora",
+      persistence_health: resolution.freshness.persistence_health,
+    });
     return (await bundledResolution(now)).bundle;
   }
   const { envelopes } = resolution;
@@ -445,4 +483,15 @@ export const getAuroraBundle = cache(async (): Promise<AuroraBundle> => {
   };
   computeCache = { key: cacheKey, expiresAt: now.getTime() + COMPUTE_CACHE_MS, value: bundle };
   return bundle;
+});
+
+export const getAuroraBundleForPage = cache(async (): Promise<AuroraBundle> => {
+  if (isProductionBuildPhase()) {
+    // Home is a static route (no generateStaticParams). Waiting on connection()
+    // during `next build` opts the page out of SSG so the first request after
+    // deploy fetches live R2/NOAA instead of baking the 8/23 bundled fallback.
+    const { connection } = await import("next/server");
+    await connection();
+  }
+  return assertCacheableAuroraBundle(await getAuroraBundle());
 });

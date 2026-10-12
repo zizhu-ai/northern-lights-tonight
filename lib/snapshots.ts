@@ -1,6 +1,7 @@
 import copy from "@/content/ui-copy.json";
 import {
   getAuroraBundle,
+  getAuroraBundleForPage,
   type SnapshotSource,
   type SourceObservation,
 } from "@/lib/live-snapshots";
@@ -83,11 +84,27 @@ export async function loadLatest(): Promise<SnapshotBundle> {
   return (await loadLatestWithMeta()).data;
 }
 
+export async function loadLatestForPage(): Promise<SnapshotBundle> {
+  return getAuroraBundleForPage();
+}
+
 export async function loadForecastSnapshot(
   slug: string,
 ): Promise<ForecastSnapshot | null> {
   if (!/^[a-z0-9-]+$/.test(slug)) return null;
   const bundle = await loadLatest();
+  return (
+    (bundle.locations.find((row) => row.location_slug === slug) as
+      | ForecastSnapshot
+      | undefined) ?? null
+  );
+}
+
+export async function loadForecastSnapshotForPage(
+  slug: string,
+): Promise<ForecastSnapshot | null> {
+  if (!/^[a-z0-9-]+$/.test(slug)) return null;
+  const bundle = await loadLatestForPage();
   return (
     (bundle.locations.find((row) => row.location_slug === slug) as
       | ForecastSnapshot
