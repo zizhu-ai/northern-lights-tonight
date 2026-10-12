@@ -117,6 +117,7 @@ Middleware is Edge-compatible (`NextRequest` / `NextResponse` only).
 - `/` waits on `connection()` during `phase-production-build`; `/forecast/*` uses empty `generateStaticParams`. First request after deploy fetches live R2/NOAA instead of baking the bundled 8/23 fallback.
 - Page renders go through `getAuroraBundleForPage`. A bundled / `revision=unavailable` / both-aurora-invalid bundle throws `UncacheableFallbackSnapshotError` so OpenNext does not write that HTML into the incremental cache. Health, cron, and `/api/snapshots/latest` still use `getAuroraBundle` and may return the bundled fallback.
 - Hard-refresh give-ups log `aurora_hard_refresh_gave_up` with `detail` (`lease_held_past_budget`, `request_budget_exhausted`, store/CAS failures). A foreign lease that expires after the 33s upstream-start cutoff, or a request that already burned that budget, fail-closes rather than hanging past the 60s route limit. Pages must not cache the resulting fallback.
+- All `content/**/*.md` used by pages is committed as `lib/bundled-markdown.json` (`npm run bundle-markdown`). Home, near-me, methodology, and the guides read that module. Workerd has no `content/` tree, so request-time `readFile` is not used.
 
 ## Preview acceptance
 

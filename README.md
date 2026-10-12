@@ -8,7 +8,7 @@ This repo is the product. The custom domain, **https://aurora-tonight.com**, is 
 
 Live-data pages perform the freshness check at request time. Raw-source state is reused for at most 10 minutes; at expiry, that request waits for a hard refresh attempt instead of serving the expired state first. An all-source failure retries after 60 seconds and may use scientifically valid last-known-good evidence with a degraded label. Git snapshots are a bundled cold-start fallback for APIs and health, not a cacheable page source: `/` and `/forecast/*` throw instead of writing fallback HTML into the 10-minute ISR cache, so a failed revalidation keeps the last good page. Those routes are not prerendered at build time.
 
-The request-time live routes are `/`, all 15 `/forecast/{slug}` pages, and `/guides/where-to-see-northern-lights`. `/api/snapshots/latest` and `/api/health` are dynamic and `no-store`.
+The request-time live routes are `/`, all 15 `/forecast/{slug}` pages, and `/guides/where-to-see-northern-lights`. `/api/snapshots/latest` and `/api/health` are dynamic and `no-store`. Page markdown lives in `lib/bundled-markdown.json` so Workers do not read `content/` from disk.
 
 The Cloudflare Workers target is `@opennextjs/cloudflare` 1.20.x. See [docs/deploy-cloudflare.md](docs/deploy-cloudflare.md) for the worker name, R2 buckets, env/secret list, and local `preview` acceptance. DNS and Vercel are unchanged until an explicit cutover.
 

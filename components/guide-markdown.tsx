@@ -1,36 +1,20 @@
-import { readFile } from "node:fs/promises";
-import path from "node:path";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
-export type GuideContent = {
-  title: string;
-  h1: string;
-  body: string;
-};
+import {
+  loadGuideContent as loadBundledGuideContent,
+  loadMarkdownBody as loadBundledMarkdownBody,
+  type GuideContent as BundledGuideContent,
+} from "@/lib/bundled-markdown";
+
+export type GuideContent = BundledGuideContent;
 
 export async function loadGuideContent(fileName: string): Promise<GuideContent> {
-  const file = path.join(process.cwd(), "content", "guides", fileName);
-  const markdown = await readFile(file, "utf8");
-  const match = markdown.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n([\s\S]*)$/);
-
-  if (!match) {
-    throw new Error(`Guide frontmatter is missing or malformed: ${fileName}`);
-  }
-
-  const title = match[1].match(/^title:\s*(.+)$/m)?.[1]?.trim();
-  const h1 = match[1].match(/^h1:\s*(.+)$/m)?.[1]?.trim();
-
-  if (!title || !h1) {
-    throw new Error(`Guide title or h1 is missing: ${fileName}`);
-  }
-
-  return { title, h1, body: match[2].trim() };
+  return loadBundledGuideContent(fileName);
 }
 
 export async function loadMarkdownBody(relativePath: string): Promise<string> {
-  const file = path.join(process.cwd(), "content", relativePath);
-  return (await readFile(file, "utf8")).trim();
+  return loadBundledMarkdownBody(relativePath);
 }
 
 export function renderMarkdownBlocks(markdown: string): ReactNode[] {

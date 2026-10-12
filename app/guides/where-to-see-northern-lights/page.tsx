@@ -1,11 +1,10 @@
-import { readFile } from "node:fs/promises";
-import path from "node:path";
 import type { Metadata } from "next";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
 import { TonightPlaces } from "@/components/tonight-places";
 import copy from "@/content/ui-copy.json";
+import { loadGuideContent } from "@/lib/bundled-markdown";
 import { loadLatest } from "@/lib/snapshots";
 import { ogFor, SITE_URL } from "@/lib/site";
 
@@ -29,7 +28,8 @@ export const metadata: Metadata = {
 };
 
 export default async function WhereGuidePage() {
-  const [body, latest] = await Promise.all([loadReaderBody(), loadLatest()]);
+  const latest = await loadLatest();
+  const body = loadReaderBody();
 
   return (
     <main
@@ -50,19 +50,8 @@ export default async function WhereGuidePage() {
   );
 }
 
-async function loadReaderBody(): Promise<string> {
-  const file = path.join(
-    process.cwd(),
-    "content",
-    "guides",
-    "where-to-see-northern-lights.md",
-  );
-  const markdown = await readFile(file, "utf8");
-  const body = markdown.match(/^---\r?\n[\s\S]*?\r?\n---\r?\n([\s\S]*)$/)?.[1];
-  if (body === undefined) {
-    throw new Error("Where guide frontmatter is missing or malformed.");
-  }
-  return body.trim();
+function loadReaderBody(): string {
+  return loadGuideContent("where-to-see-northern-lights.md").body;
 }
 
 function renderMarkdownBlocks(markdown: string): ReactNode[] {
