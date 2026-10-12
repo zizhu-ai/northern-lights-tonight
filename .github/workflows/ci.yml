@@ -34,9 +34,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Lint
-        run: npm run lint
-
       - name: Node unit tests
         run: npm run test:unit
 
@@ -54,6 +51,9 @@ jobs:
 
       - name: Cloudflare Worker build
         run: npm run cf-build
+
+      - name: Lint
+        run: npm run lint
 
       - name: Worker size
         run: npm run test:worker-size
