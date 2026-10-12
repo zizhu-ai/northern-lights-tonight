@@ -43,7 +43,13 @@ export default {
     env: CloudflareEnv,
     ctx: WorkerExecutionContext,
   ): Promise<void> {
-    ctx.waitUntil(Promise.resolve(openNext.fetch(refreshRequest(), env, ctx)));
+    const refresh = Promise.resolve(openNext.fetch(refreshRequest(), env, ctx)).then(
+      async (response) => {
+        await response.arrayBuffer();
+      },
+    );
+    ctx.waitUntil(refresh);
+    await refresh;
   },
 };
 

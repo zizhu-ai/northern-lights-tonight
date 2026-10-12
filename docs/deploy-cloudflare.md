@@ -122,4 +122,5 @@ Against local wrangler preview (`APP_ENV=preview`):
 - Key pages return 200.
 - HTML canonical / sitemap / robots still name `https://aurora-tonight.com`.
 - Preview host sends `X-Robots-Tag: noindex, nofollow`.
-- Uncompressed worker stays under 64 MiB. Local `wrangler deploy --dry-run` measured **Total Upload 6375.48 KiB / gzip 1352.24 KiB**. `npm run test:worker-size` reports OpenNext excl. assets at 22.65 MiB uncompressed / 4.95 MiB gzip (the thin `worker.js` entry is not the upload).
+- Uncompressed worker stays under 64 MiB. Local `wrangler deploy --dry-run` after the custom `worker.ts` entry measured **Total Upload 6389.93 KiB / gzip 1356.72 KiB**. `npm run test:worker-size` reports OpenNext excl. assets at 22.70 MiB uncompressed / 4.96 MiB gzip (the thin generated `worker.js` is not the upload).
+- Local `wrangler dev` (simulated R2 + outbound NOAA/Open-Meteo): a pending placeholder in `aurora-tonight-state` was overwritten; `POST /api/cron/refresh` and `GET /api/health` returned **200** with `persistence_health=ok` and live OVATION/Kp/cloud. `GET /__scheduled` invoked the cron handler. This environment does not deploy.
