@@ -217,18 +217,45 @@ function markSourceError(state: SnapshotStateV2, source: SourceName): SnapshotSt
   };
 }
 
-export function fitRemoteLkgSnapshotState(state: SnapshotStateV2): SnapshotStateV2 {
-  if (utf8ByteLength(JSON.stringify(state)) <= REMOTE_LKG_MAX_BODY_BYTES) return state;
+export function emptyRecoverableSnapshotState(): SnapshotStateV2 {
+  const epoch = new Date(0).toISOString();
+  const item: SourceOutcome = {
+    status: "error",
+    checked_at: epoch,
+    error_code: "unavailable",
+  };
+  return {
+    schema_version: SNAPSHOT_STATE_SCHEMA_VERSION,
+    revision: "uninitialized",
+    checked_at: epoch,
+    last_success_at: null,
+    retry_after: epoch,
+    envelopes: { schema_version: 1, ovation: null, kp: null, cloud: null },
+    outcomes: {
+      ovation: { ...item },
+      kp: { ...item },
+      cloud: { ...item },
+    },
+    lease: null,
+  };
+}
+
+export function compactSnapshotForPersist(state: SnapshotStateV2): SnapshotStateV2 {
+  if (state.envelopes.ovation === null) return state;
+  const ovation = compactOvationEnvelope(state.envelopes.ovation);
   let next: SnapshotStateV2 = {
     ...state,
     envelopes: {
       ...state.envelopes,
-      ovation: compactOvationEnvelope(state.envelopes.ovation),
+      ovation,
     },
   };
-  if (state.envelopes.ovation !== null && next.envelopes.ovation === null) {
-    next = markSourceError(next, "ovation");
-  }
+  if (ovation === null) next = markSourceError(next, "ovation");
+  return next;
+}
+
+export function fitRemoteLkgSnapshotState(state: SnapshotStateV2): SnapshotStateV2 {
+  let next = compactSnapshotForPersist(state);
   if (utf8ByteLength(JSON.stringify(next)) <= REMOTE_LKG_MAX_BODY_BYTES) return next;
   if (next.envelopes.cloud !== null) {
     next = {
@@ -467,6 +494,11 @@ async function defaultR2Operations(): Promise<ObjectStoreOperations> {
   };
 }
 
+type InspectedOrigin =
+  | { kind: "missing" }
+  | { kind: "invalid"; etag: string }
+  | { kind: "valid"; state: SnapshotStateV2; etag: string };
+
 export function createR2SnapshotStore(env?: NodeJS.ProcessEnv): SnapshotStore;
 export function createR2SnapshotStore(
   env: NodeJS.ProcessEnv,
@@ -481,35 +513,64 @@ export function createR2SnapshotStore(
     return defaultR2Operations();
   };
 
-  const read = async (): Promise<StoredSnapshotState | null> => {
+  const inspectOrigin = async (): Promise<InspectedOrigin> => {
     const secrets = resolvePersistenceSecrets(env);
+    const store = await resolveOperations();
+    const result = await store.read(SNAPSHOT_PATHNAME);
+    if (result === null) return { kind: "missing" };
+    const etag = normalizeStrongEtag(result.etag);
+    let parsed: unknown;
     try {
-      const store = await resolveOperations();
-      const result = await store.read(SNAPSHOT_PATHNAME);
-      if (result === null) return null;
-      const parsed: unknown = await new Response(result.stream).json();
-      const etag = normalizeStrongEtag(result.etag);
-      if (!isValidSnapshotState(parsed) || etag.length === 0) {
-        throw sanitizedReadError();
+      parsed = await new Response(result.stream).json();
+    } catch {
+      return { kind: "invalid", etag };
+    }
+    if (!isValidSnapshotState(parsed) || etag.length === 0) {
+      return { kind: "invalid", etag };
+    }
+    assertSafeState(parsed, secrets);
+    return { kind: "valid", state: parsed, etag };
+  };
+
+  const read = async (): Promise<StoredSnapshotState | null> => {
+    try {
+      const inspected = await inspectOrigin();
+      if (inspected.kind === "missing") return null;
+      if (inspected.kind === "invalid") {
+        // Placeholder / corrupt objects must not fail-close the NOAA cold start.
+        return {
+          state: emptyRecoverableSnapshotState(),
+          etag: inspected.etag,
+        };
       }
-      assertSafeState(parsed, secrets);
-      return { state: parsed, etag };
+      return { state: inspected.state, etag: inspected.etag };
     } catch (error) {
       if (error instanceof Error && error.message === "Snapshot store is not configured") {
         throw error;
       }
+      if (error instanceof Error && error.message === "Snapshot state contains a secret") {
+        throw sanitizedReadError();
+      }
       throw sanitizedReadError(classifyBlobFailure(error));
     }
+  };
+
+  const persist = async (
+    next: SnapshotStateV2,
+    options: { ifMatch?: string; ifNoneMatch?: "*" },
+  ): Promise<void> => {
+    const store = await resolveOperations();
+    await store.write(SNAPSHOT_PATHNAME, JSON.stringify(next), options);
   };
 
   return {
     read,
     async compareAndSwap(expectedEtag, next) {
       const secrets = resolvePersistenceSecrets(env);
-      assertSafeState(next, secrets);
+      const fitted = compactSnapshotForPersist(next);
+      assertSafeState(fitted, secrets);
       try {
-        const store = await resolveOperations();
-        await store.write(SNAPSHOT_PATHNAME, JSON.stringify(next), {
+        await persist(fitted, {
           ...(expectedEtag === null ? { ifNoneMatch: "*" as const } : { ifMatch: expectedEtag }),
         });
         return "written";
@@ -517,19 +578,23 @@ export function createR2SnapshotStore(
         if (error instanceof Error && error.message === "Snapshot store is not configured") {
           throw error;
         }
-        if (expectedEtag !== null) {
-          if (isPreconditionFailure(error)) return "conflict";
-          try {
-            const observed = await read();
-            if (observed !== null && observed.etag !== expectedEtag) return "conflict";
-          } catch {
-            // An ambiguous write is a conflict only when a valid reread proves a new winner.
-          }
+        if (expectedEtag !== null && isPreconditionFailure(error)) return "conflict";
+        let inspected: InspectedOrigin;
+        try {
+          inspected = await inspectOrigin();
+        } catch {
           throw sanitizedWriteError(classifyBlobFailure(error));
         }
-        try {
-          if ((await read()) !== null) return "conflict";
+        if (inspected.kind === "valid") {
+          if (expectedEtag === null || inspected.etag !== expectedEtag) return "conflict";
+          if (isPreconditionFailure(error)) return "conflict";
           throw sanitizedWriteError(classifyBlobFailure(error));
+        }
+        // Missing or invalid origin: overwrite so an empty/placeholder bucket
+        // can cold-start without a copied Vercel Blob object.
+        try {
+          await persist(fitted, {});
+          return "written";
         } catch {
           throw sanitizedWriteError(classifyBlobFailure(error));
         }

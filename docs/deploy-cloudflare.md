@@ -51,6 +51,8 @@ npx wrangler r2 object put aurora-tonight-state/aurora/state/source-state-v2.jso
 
 If remote LKG (`AURORA_LKG_*`) is already the source of truth, skip the Blob copy; the worker will keep using LKG until those vars are unset.
 
+**Cold start without a copied Blob object:** an empty bucket, unparseable JSON, or a placeholder that is not schema-version-2 is treated as uninitialized. The next request (or the 10-minute cron) leases the key, fetches NOAA OVATION / Kp and Open-Meteo, and overwrites the placeholder. Do not require a Vercel Blob export to bring the worker online.
+
 ## Environment and secrets
 
 Set Worker vars / secrets in the Cloudflare dashboard or `wrangler secret put`. Never commit values. Local overrides belong in gitignored `.dev.vars` (see `.dev.vars.example`).
@@ -60,7 +62,7 @@ Set Worker vars / secrets in the Cloudflare dashboard or `wrangler secret put`. 
 | Name | Kind | Notes |
 | --- | --- | --- |
 | `APP_ENV` | var | Must be `production` on the custom domain. `wrangler.jsonc` defaults it. Local preview uses `preview` via `.dev.vars`. |
-| `OPEN_METEO_USAGE_MODE` | var | `noncommercial` while the site stays on the free Open-Meteo endpoint. |
+| `OPEN_METEO_USAGE_MODE` | var | `noncommercial` while the site stays on the free Open-Meteo endpoint. Set in `wrangler.jsonc` so production Workers do not throw when resolving the free endpoint. |
 
 ### Required before commercial Open-Meteo
 
@@ -109,7 +111,8 @@ Middleware is Edge-compatible (`NextRequest` / `NextResponse` only).
 
 - `next/image` is unused. `images.unoptimized` is set; no Cloudflare Images binding.
 - ISR uses the R2 incremental cache + Durable Object queue. `enableCacheInterception` is `false`.
-- Heavy CPU is `compute_bundle` / `parse_ovation` on `/`, `/forecast/[slug]`, `/guides/where-to-see-northern-lights`, `/api/snapshots/latest`, and `/api/health`. `/view` does not run the engine.
+- `worker.ts` is the Wrangler entry: it re-exports `DOQueueHandler` from the generated OpenNext worker and implements `scheduled` for `triggers.crons` (`*/10 * * * *`). The handler POSTs `/api/cron/refresh`, which runs the same hard-refresh resolver as `/api/health`.
+- Heavy CPU is `compute_bundle` / `parse_ovation` on `/`, `/forecast/[slug]`, `/guides/where-to-see-northern-lights`, `/api/snapshots/latest`, `/api/health`, and `/api/cron/refresh`. `/view` does not run the engine. Persisted OVATION is clipped to the Wave 1 neighborhood before the R2 write.
 - Mitigations: 600s ISR in R2, 60s isolate memo of the computed bundle, and OVATION grid clipped to the Wave 1 interpolation neighborhood before parse. Live verdicts cannot be build-time static.
 
 ## Preview acceptance

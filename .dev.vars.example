@@ -1,3 +1,5 @@
 # Copy to `.dev.vars` for `npm run preview` / `next dev`. Do not put secrets here.
 NEXTJS_ENV=development
 APP_ENV=preview
+# Production Workers set OPEN_METEO_USAGE_MODE=noncommercial in wrangler.jsonc.
+# Leave it unset locally so APP_ENV=preview can use the free Open-Meteo endpoint.

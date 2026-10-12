@@ -54,7 +54,7 @@ Public `/api/health` still reports `persistence_health` as `ok` / `degraded` / `
 
 1. Confirm Preview with the remote trio set: `/api/health` is 200 or degraded with in-contract `checked_age_seconds`, not bundled-unknown 503 from store unavailability.
 2. Confirm `GET https://lkg.aurora-tonight.com/healthz` and authenticated `GET /v1/state` from a trusted network.
-3. Seed or verify schema-version-2 state exists (or allow the first Preview refresh to create it via `If-None-Match: *`).
+3. Seed or verify schema-version-2 state exists, or allow the first Preview/cron refresh to create it. An empty key uses `If-None-Match: *`; an invalid placeholder is overwritten so NOAA/Open-Meteo can cold-start without a copied Blob object.
 4. Set the same three variables on Production. Keep the R2 bucket until remote LKG has been Production-healthy through at least one 10-minute refresh cycle.
 5. Watch `/api/health` and the Feishu monitor. If remote LKG is down, the app fail-closes to bundled and health is 503.
 6. Only after that window, optionally stop writing the R2 state object. That cleanup is a separate change.

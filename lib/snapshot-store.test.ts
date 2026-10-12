@@ -6,7 +6,9 @@ import {
   NEGATIVE_RETRY_MS,
   SNAPSHOT_STATE_SCHEMA_VERSION,
   canAcquireLease,
+  compactSnapshotForPersist,
   createR2SnapshotStore,
+  emptyRecoverableSnapshotState,
   ObjectStorePreconditionFailedError,
   isCheckFresh,
   limitOvationPayloadToPlaces,
@@ -222,7 +224,7 @@ test("an expired-lease takeover prevents the late original writer from publishin
   assert.equal(winner?.state.revision, "leased-by-b");
 });
 
-test("read uses the private fixed path and rejects invalid runtime schema", async () => {
+test("read uses the private fixed path and treats invalid schema as empty recoverable state", async () => {
   const reads: string[] = [];
   const invalid = { ...stateAt(BASE_TIME), schema_version: 1 };
   const store = createStoreWithFake(
@@ -237,15 +239,115 @@ test("read uses the private fixed path and rejects invalid runtime schema", asyn
       },
     },
   );
-  await assert.rejects(
-    () => store.read(),
-    (error: unknown) => {
-      assert.equal(error instanceof Error && error.message, "Snapshot store read failed");
-      assertErrorDoesNotExpose(error, /BLOB_TOKEN_SENTINEL/);
-      return true;
+  const observed = await store.read();
+  assert.ok(observed);
+  assert.equal(observed.etag, "etag-origin");
+  assert.deepEqual(observed.state, emptyRecoverableSnapshotState());
+  assert.deepEqual(reads, [PATHNAME]);
+});
+
+test("placeholder JSON and missing etags are treated as empty so NOAA can cold-start", async () => {
+  const cases: Array<{
+    label: string;
+    read: () => Promise<{ stream: ReadableStream; etag: string } | null>;
+  }> = [
+    {
+      label: "pending placeholder",
+      read: async () => storedBlob({ status: "pending" } as unknown as SnapshotStateV2, "etag-pending"),
+    },
+    {
+      label: "unparseable body",
+      read: async () => {
+        const stream = new Response("not-json").body;
+        assert.ok(stream);
+        return { stream, etag: "etag-garbage" };
+      },
+    },
+    {
+      label: "valid schema but empty etag",
+      read: async () => storedBlob(stateAt(BASE_TIME), ""),
+    },
+  ];
+
+  for (const { label, read } of cases) {
+    const store = createStoreWithFake(
+      { ...TEST_ENV },
+      {
+        read,
+        async write() {
+          throw new Error("not used");
+        },
+      },
+    );
+    const observed = await store.read();
+    assert.ok(observed, label);
+    assert.deepEqual(observed.state, emptyRecoverableSnapshotState(), label);
+  }
+});
+
+test("create overwrites an invalid placeholder instead of staying stuck on If-None-Match", async () => {
+  const writes: Array<{ options: Record<string, unknown>; body: string }> = [];
+  const store = createStoreWithFake(
+    { ...TEST_ENV },
+    {
+      async read() {
+        return storedBlob({ status: "pending" } as unknown as SnapshotStateV2, "etag-pending");
+      },
+      async write(_pathname, body, options) {
+        writes.push({ options, body });
+        if (options.ifNoneMatch === "*") {
+          throw new ObjectStorePreconditionFailedError();
+        }
+      },
     },
   );
-  assert.deepEqual(reads, [PATHNAME]);
+  const next = stateAt(BASE_TIME, { revision: "cold-start" });
+  assert.equal(await store.compareAndSwap(null, next), "written");
+  assert.equal(writes.length, 2);
+  assert.equal(writes[0]?.options.ifNoneMatch, "*");
+  assert.equal(writes[1]?.options.ifNoneMatch, undefined);
+  assert.equal(writes[1]?.options.ifMatch, undefined);
+  assert.equal(JSON.parse(writes[1]?.body ?? "").revision, "cold-start");
+});
+
+test("persist compacting keeps only the Wave 1 OVATION neighborhood", async () => {
+  const writes: string[] = [];
+  const store = createStoreWithFake(
+    { ...TEST_ENV },
+    {
+      async read() {
+        return null;
+      },
+      async write(_pathname, body) {
+        writes.push(body);
+      },
+    },
+  );
+  const checkedAt = new Date(BASE_TIME).toISOString();
+  const payload = {
+    "Observation Time": checkedAt,
+    coordinates: [
+      [0, 0, 1],
+      [-147, 64, 12],
+      [10, 10, 3],
+    ],
+  };
+  const next = stateAt(BASE_TIME);
+  next.envelopes.ovation = {
+    schema_version: 1,
+    source: "ovation",
+    fetched_at: checkedAt,
+    source_time: checkedAt,
+    fingerprint: "a".repeat(64),
+    coverage: {},
+    payload,
+  };
+  assert.equal(await store.compareAndSwap(null, next), "written");
+  const persisted = JSON.parse(writes[0] ?? "") as SnapshotStateV2;
+  const coordinates = persisted.envelopes.ovation?.payload.coordinates as number[][];
+  assert.ok(Array.isArray(coordinates));
+  assert.equal(coordinates.some((row) => row[0] === 10 && row[1] === 10), false);
+  assert.deepEqual(persisted, compactSnapshotForPersist(next));
 });
 
 test("runtime validation accepts the declared nullable error_code contract", async () => {
@@ -305,7 +407,7 @@ test("read preserves an already-strong ETag", async () => {
   assert.equal((await store.read())?.etag, '"etag-origin"');
 });
 
-test("read rejects a weak marker with no remaining ETag", async () => {
+test("read treats a weak marker with no remaining ETag as empty recoverable state", async () => {
   const store = createStoreWithFake(
     { ...TEST_ENV },
     {
@@ -318,7 +420,10 @@ test("read rejects a weak marker with no remaining ETag", async () => {
     },
   );
 
-  await assert.rejects(() => store.read(), { message: "Snapshot store read failed" });
+  const observed = await store.read();
+  assert.ok(observed);
+  assert.equal(observed.etag, "");
+  assert.deepEqual(observed.state, emptyRecoverableSnapshotState());
 });
 
 test("existing writes use fixed-path ifMatch and map the precondition error to conflict", async () => {

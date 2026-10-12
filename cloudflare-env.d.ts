@@ -13,6 +13,7 @@ declare namespace NodeJS {
 interface CloudflareEnv {
   APP_ENV?: string;
   NEXTJS_ENV?: string;
+  OPEN_METEO_USAGE_MODE?: string;
   AURORA_STATE_BUCKET: R2Bucket;
   NEXT_INC_CACHE_R2_BUCKET: R2Bucket;
   NEXT_CACHE_DO_QUEUE: DurableObjectNamespace;
