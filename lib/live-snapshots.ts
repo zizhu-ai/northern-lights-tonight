@@ -83,7 +83,11 @@ const observationFor = (
   health: SourceHealth,
   fallbackUsed: boolean,
 ): SourceObservation => {
-  if (!envelope) return { ...emptyObservation(), fallback_used: fallbackUsed };
+  if (!envelope) {
+    const empty = emptyObservation();
+    empty.fallback_used = fallbackUsed;
+    return empty;
+  }
   const ageAnchor = envelope.source_time ?? envelope.fetched_at;
   return {
     source_time: envelope.source_time,

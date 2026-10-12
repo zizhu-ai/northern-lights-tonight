@@ -119,4 +119,4 @@ Against local wrangler preview (`APP_ENV=preview`):
 - Key pages return 200.
 - HTML canonical / sitemap / robots still name `https://aurora-tonight.com`.
 - Preview host sends `X-Robots-Tag: noindex, nofollow`.
-- Uncompressed worker stays under 64 MiB; record the gzip size from `npm run test:worker-size`.
+- Uncompressed worker stays under 64 MiB. Local `wrangler deploy --dry-run` measured **Total Upload 6375.48 KiB / gzip 1352.24 KiB**. `npm run test:worker-size` reports OpenNext excl. assets at 22.65 MiB uncompressed / 4.95 MiB gzip (the thin `worker.js` entry is not the upload).
