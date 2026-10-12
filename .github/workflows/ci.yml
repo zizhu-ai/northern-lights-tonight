@@ -19,6 +19,11 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+        with:
+          # sitemap lastmod tests need full history for `git log --format=%cI`
+          # on CONTENT_SOURCES. The default depth-1 clone reports HEAD's date
+          # for every tracked file and fails `lib/sitemap.test.ts`.
+          fetch-depth: 0
 
       - name: Set up Node
         uses: actions/setup-node@v4
