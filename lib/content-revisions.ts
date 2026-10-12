@@ -61,10 +61,10 @@ export const CONTENT_SOURCES: Readonly<Record<string, readonly string[]>> = {
 export const CONTENT_REVISIONS: Readonly<Record<string, string>> = {
   "/about": "2026-10-11T06:41:32.000Z",
   "/near-me": "2026-10-11T06:41:32.000Z",
-  "/guides/best-time-to-see-northern-lights": "2026-10-11T06:41:32.000Z",
-  "/guides/how-to-see-northern-lights": "2026-10-11T06:41:32.000Z",
-  "/guides/where-to-see-northern-lights": "2026-10-11T06:41:32.000Z",
-  "/methodology": "2026-10-11T06:41:32.000Z",
+  "/guides/best-time-to-see-northern-lights": "2026-10-12T16:09:26.000Z",
+  "/guides/how-to-see-northern-lights": "2026-10-12T16:09:26.000Z",
+  "/guides/where-to-see-northern-lights": "2026-10-12T16:09:26.000Z",
+  "/methodology": "2026-10-12T16:09:26.000Z",
   "/privacy": "2026-10-11T06:41:32.000Z",
   "/terms": "2026-10-11T06:41:32.000Z",
 };
