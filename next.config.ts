@@ -9,12 +9,12 @@ import path from "node:path";
 // by its account-verification loader; do not broaden this to arbitrary HTTPS.
 const csp = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' https://pagead2.googlesyndication.com",
+  "script-src 'self' 'unsafe-inline' https://pagead2.googlesyndication.com https://*.adtrafficquality.google https://static.cloudflareinsights.com",
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net",
+  "img-src 'self' data: https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://*.adtrafficquality.google",
   "font-src 'self' data:",
-  "connect-src 'self' https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net",
-  "frame-src 'self' https://googleads.g.doubleclick.net https://tpc.googlesyndication.com",
+  "connect-src 'self' https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://*.adtrafficquality.google https://cloudflareinsights.com",
+  "frame-src 'self' https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://*.adtrafficquality.google https://www.google.com",
   "manifest-src 'self'",
   "base-uri 'self'",
   "form-action 'self'",
