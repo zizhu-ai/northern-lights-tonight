@@ -15,7 +15,7 @@ permissions:
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 25
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -34,6 +34,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Lint
+        run: npm run lint
+
       - name: Node unit tests
         run: npm run test:unit
 
@@ -49,5 +52,8 @@ jobs:
       - name: TypeScript/Python parity tests
         run: npm run test:parity
 
-      - name: Production build
-        run: npm run build
+      - name: Cloudflare Worker build
+        run: npm run cf-build
+
+      - name: Worker size
+        run: npm run test:worker-size

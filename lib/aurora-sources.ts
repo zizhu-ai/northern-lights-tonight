@@ -357,7 +357,7 @@ const cloudUrl = (points: CloudPoint[], config: OpenMeteoConfig): string => {
 async function fetchCloud(dossiers: Dossier[]): Promise<SourceFetchResult<Record<string, JsonObject | null>>> {
   try {
     const config = resolveOpenMeteoConfig({
-      VERCEL_ENV: process.env.VERCEL_ENV,
+      APP_ENV: process.env.APP_ENV,
       OPEN_METEO_USAGE_MODE: process.env.OPEN_METEO_USAGE_MODE,
       OPEN_METEO_API_BASE: process.env.OPEN_METEO_API_BASE,
       OPEN_METEO_API_KEY: process.env.OPEN_METEO_API_KEY,

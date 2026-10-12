@@ -10,18 +10,20 @@ Live-data pages perform the freshness check at request time. Raw-source state is
 
 The request-time live routes are `/`, all 15 `/forecast/{slug}` pages, and `/guides/where-to-see-northern-lights`. `/api/snapshots/latest` and `/api/health` are dynamic and `no-store`.
 
+The Cloudflare Workers target is `@opennextjs/cloudflare` 1.20.x. See [docs/deploy-cloudflare.md](docs/deploy-cloudflare.md) for the worker name, R2 buckets, env/secret list, and local `preview` acceptance. DNS and Vercel are unchanged until an explicit cutover.
+
 ## Non-commercial validation production environment
 
-The current Vercel Hobby deployment and Open-Meteo free endpoint are for non-commercial validation only. Set:
+The current public deployment and Open-Meteo free endpoint are for non-commercial validation only. Set:
 
+- `APP_ENV=production`
 - `OPEN_METEO_USAGE_MODE=noncommercial`
-- `AURORA_STATE_BLOB_READ_WRITE_TOKEN`
 
-Production currently stays on Vercel Blob. To point **Preview only** at the remote last-known-good (LKG) API instead, set all three of `AURORA_LKG_BASE_URL`, `AURORA_LKG_READ_TOKEN`, and `AURORA_LKG_WRITE_TOKEN` on the Preview environment. Leave them unset in Production until a deliberate cutover. See [docs/operations/lkg-store.md](docs/operations/lkg-store.md).
+On Cloudflare, live source state uses the `AURORA_STATE_BUCKET` R2 binding (bucket `aurora-tonight-state`). To point an environment at the remote last-known-good (LKG) API instead, set all three of `AURORA_LKG_BASE_URL`, `AURORA_LKG_READ_TOKEN`, and `AURORA_LKG_WRITE_TOKEN`. See [docs/operations/lkg-store.md](docs/operations/lkg-store.md).
 
-Do not set `OPEN_METEO_API_BASE` or `OPEN_METEO_API_KEY` in this mode. The application uses only `https://api.open-meteo.com/v1/forecast` and fails closed if a key or a different base URL is configured. Keep all server-side variables out of source control and client-visible variables; mark the Blob token and any LKG tokens Sensitive in Vercel.
+Do not set `OPEN_METEO_API_BASE` or `OPEN_METEO_API_KEY` in this mode. The application uses only `https://api.open-meteo.com/v1/forecast` and fails closed if a key or a different base URL is configured. Keep all server-side variables out of source control and client-visible variables.
 
-Before adding advertising, subscriptions, affiliate revenue, sponsorship, paid lead generation, or any other commercial use, upgrade Vercel to an appropriate commercial plan, remove `OPEN_METEO_USAGE_MODE=noncommercial`, and configure `OPEN_METEO_API_BASE=https://customer-api.open-meteo.com/v1/forecast` plus a non-empty `OPEN_METEO_API_KEY`. Reassess the providers' current terms before monetization.
+Before adding advertising, subscriptions, affiliate revenue, sponsorship, paid lead generation, or any other commercial use, remove `OPEN_METEO_USAGE_MODE=noncommercial`, and configure `OPEN_METEO_API_BASE=https://customer-api.open-meteo.com/v1/forecast` plus a non-empty `OPEN_METEO_API_KEY`. Reassess the providers' current terms before monetization.
 
 ## Develop
 
@@ -37,13 +39,12 @@ npm run test:unit
 npm run test:engine
 npm run test:parity
 npm test
-npx tsc --noEmit
-npm run build
-npm run start -- -p 3107
-BASE_URL=http://127.0.0.1:3107 npm run test:seo
+npm run lint
+npm run cf-build
+npm run test:worker-size
 ```
 
-The SEO release check requires the production server lifecycle shown above; it is intentionally not run as a serverless CI step.
+The SEO release check (`npm run start` + `npm run test:seo`) is intentionally not run as a serverless CI step. Cloudflare preview acceptance is `npm run preview` plus `BASE_URL=http://127.0.0.1:8787 npm run test:cf-preview`.
 
 ## Accepted npm audit baseline
 
@@ -57,4 +58,4 @@ The SEO release check requires the production server lifecycle shown above; it i
 
 This is an accepted, currently unreachable launch risk, not a claim that the vulnerabilities are fixed. The PostCSS advisories require attacker-controlled CSS or source-map directives to be parsed/stringified with filesystem access; production only builds trusted repository CSS and accepts no user CSS. The sharp advisory requires attacker-controlled image bytes to reach sharp/libvips; the launch product accepts no uploads and performs no request-time transformation of user-supplied images. The `next` entry aggregates those two transitive paths and has no separate underlying advisory in this baseline.
 
-Any new advisory ID, any Critical, or either precondition becoming reachable blocks release. The available fix is a semver-major upgrade to Next 16; that migration is a separate post-launch project with its own compatibility and regression work. Do not use `npm audit fix --force` to fold it into launch hardening.
+Any new advisory ID, any Critical, or either precondition becoming reachable blocks release. This branch upgrades Next to 16.3.8 for the Cloudflare Workers adapter. Re-run `npm audit --omit=dev` after install and refresh this baseline if the advisory set changes. Do not use `npm audit fix --force`.

@@ -5,6 +5,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "cf-build": "opennextjs-cloudflare build",
+    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "cf-typegen": "wrangler types --env-interface CloudflareEnv --include-runtime false cloudflare-env.d.ts",
+    "lint": "tsc --noEmit",
     "snapshot": "python3 engine/snapshot.py",
     "test:unit": "node --experimental-strip-types --test lib/*.test.ts",
     "test:engine": "python3 -m unittest engine.test_compute",
@@ -12,12 +17,13 @@
     "test:indexnow": "node --test scripts/indexnow-submit.test.mjs",
     "test": "npm run test:unit && npm run test:engine && npm run test:parity && npm run test:indexnow",
     "indexnow": "node scripts/indexnow-submit.mjs",
-    "test:seo": "node scripts/check-seo.mjs"
+    "test:seo": "node scripts/check-seo.mjs",
+    "test:worker-size": "node scripts/check-worker-size.mjs",
+    "test:cf-preview": "node scripts/cf-preview-smoke.mjs"
   },
   "dependencies": {
-    "@vercel/analytics": "^2.0.1",
-    "@vercel/blob": "2.8.0",
-    "next": "^15.4.6",
+    "@opennextjs/cloudflare": "1.20.10",
+    "next": "16.3.8",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
   },
@@ -25,6 +31,7 @@
     "@types/node": "^22.17.0",
     "@types/react": "^19.1.9",
     "@types/react-dom": "^19.1.7",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "wrangler": "^4.148.0"
   }
 }

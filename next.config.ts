@@ -38,7 +38,12 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   trailingSlash: false,
+  // next/image is unused; skip the image optimizer (no sharp / no CF Images).
+  images: { unoptimized: true },
   outputFileTracingRoot: path.join(__dirname),
+  outputFileTracingIncludes: {
+    "/*": ["./content/**/*", "./snapshots/**/*"],
+  },
   async headers() {
     return [
       { source: "/:path*", headers: securityHeaders },
@@ -52,3 +57,11 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
+
+if (process.env.npm_lifecycle_event === "dev") {
+  void import("@opennextjs/cloudflare")
+    .then(({ initOpenNextCloudflareForDev }) => initOpenNextCloudflareForDev())
+    .catch(() => {
+      // Bindings proxy is only needed for `next dev`; `next build` / CI stay fine.
+    });
+}

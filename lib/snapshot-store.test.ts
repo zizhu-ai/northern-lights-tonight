@@ -1,20 +1,21 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { BlobPreconditionFailedError } from "@vercel/blob";
-
 import {
   CHECK_TTL_MS,
   LEASE_TTL_MS,
   NEGATIVE_RETRY_MS,
   SNAPSHOT_STATE_SCHEMA_VERSION,
   canAcquireLease,
-  createVercelSnapshotStore,
+  createR2SnapshotStore,
+  ObjectStorePreconditionFailedError,
   isCheckFresh,
+  limitOvationPayloadToPlaces,
   stateContainsAnySecret,
 // Node's zero-dependency strip-types runner requires the explicit extension.
 // @ts-ignore TS5097: the production build type-checks this test but does not emit it.
 } from "./snapshot-store.ts";
 import type {
+  ObjectStoreOperations,
   SnapshotStateV2,
   SnapshotStore,
   StoredSnapshotState,
@@ -30,29 +31,10 @@ const TEST_ENV = {
   AURORA_STATE_BLOB_READ_WRITE_TOKEN: TOKEN,
 } satisfies NodeJS.ProcessEnv;
 
-type FakeBlobOperations = {
-  read(
-    pathname: string,
-    options: { access: "private"; token: string; useCache: false },
-  ): Promise<{ stream: ReadableStream; etag: string } | null>;
-  write(
-    pathname: string,
-    body: string,
-    options: {
-      access: "private";
-      token: string;
-      addRandomSuffix: false;
-      contentType: "application/json";
-      allowOverwrite?: false;
-      ifMatch?: string;
-    },
-  ): Promise<void>;
-};
-
-const createStoreWithFake = createVercelSnapshotStore as unknown as (
+const createStoreWithFake = (
   env: NodeJS.ProcessEnv,
-  operations: FakeBlobOperations,
-) => SnapshotStore;
+  operations: ObjectStoreOperations,
+): SnapshotStore => createR2SnapshotStore(env, operations);
 
 function stateAt(
   checkedAtMs: number,
@@ -240,14 +222,14 @@ test("an expired-lease takeover prevents the late original writer from publishin
   assert.equal(winner?.state.revision, "leased-by-b");
 });
 
-test("read uses the private fixed path, bypasses cache, and rejects invalid runtime schema", async () => {
-  const reads: Array<{ pathname: string; options: unknown }> = [];
+test("read uses the private fixed path and rejects invalid runtime schema", async () => {
+  const reads: string[] = [];
   const invalid = { ...stateAt(BASE_TIME), schema_version: 1 };
   const store = createStoreWithFake(
     { ...TEST_ENV },
     {
-      async read(pathname, options) {
-        reads.push({ pathname, options });
+      async read(pathname) {
+        reads.push(pathname);
         return storedBlob(invalid as unknown as SnapshotStateV2);
       },
       async write() {
@@ -263,12 +245,7 @@ test("read uses the private fixed path, bypasses cache, and rejects invalid runt
       return true;
     },
   );
-  assert.deepEqual(reads, [
-    {
-      pathname: PATHNAME,
-      options: { access: "private", token: TOKEN, useCache: false },
-    },
-  ]);
+  assert.deepEqual(reads, [PATHNAME]);
 });
 
 test("runtime validation accepts the declared nullable error_code contract", async () => {
@@ -290,7 +267,7 @@ test("runtime validation accepts the declared nullable error_code contract", asy
   assert.deepEqual((await store.read())?.state, valid);
 });
 
-test("read normalizes a weak Blob ETag before exposing it to compare-and-swap", async () => {
+test("read normalizes a weak ETag before exposing it to compare-and-swap", async () => {
   const writes: Array<{ options: Record<string, unknown> }> = [];
   const current = stateAt(BASE_TIME, { revision: "current" });
   const store = createStoreWithFake(
@@ -312,7 +289,7 @@ test("read normalizes a weak Blob ETag before exposing it to compare-and-swap", 
   assert.equal(writes[0]?.options.ifMatch, '"etag-origin"');
 });
 
-test("read preserves an already-strong Blob ETag", async () => {
+test("read preserves an already-strong ETag", async () => {
   const store = createStoreWithFake(
     { ...TEST_ENV },
     {
@@ -344,7 +321,7 @@ test("read rejects a weak marker with no remaining ETag", async () => {
   await assert.rejects(() => store.read(), { message: "Snapshot store read failed" });
 });
 
-test("existing writes use fixed-path ifMatch and map the SDK precondition error to conflict", async () => {
+test("existing writes use fixed-path ifMatch and map the precondition error to conflict", async () => {
   const writes: Array<{ pathname: string; body: string; options: Record<string, unknown> }> = [];
   const store = createStoreWithFake(
     { ...TEST_ENV },
@@ -354,7 +331,7 @@ test("existing writes use fixed-path ifMatch and map the SDK precondition error 
       },
       async write(pathname, body, options) {
         writes.push({ pathname, body, options });
-        throw new BlobPreconditionFailedError();
+        throw new ObjectStorePreconditionFailedError();
       },
     },
   );
@@ -363,9 +340,7 @@ test("existing writes use fixed-path ifMatch and map the SDK precondition error 
   assert.equal(writes.length, 1);
   assert.equal(writes[0]?.pathname, PATHNAME);
   assert.equal(writes[0]?.options.ifMatch, "etag-expected");
-  assert.equal(writes[0]?.options.allowOverwrite, undefined);
-  assert.equal(writes[0]?.options.addRandomSuffix, false);
-  assert.equal(writes[0]?.options.access, "private");
+  assert.equal(writes[0]?.options.ifNoneMatch, undefined);
 });
 
 test("an ambiguous existing-write error is a conflict only when origin has a different ETag", async () => {
@@ -445,7 +420,7 @@ test("ambiguous existing-write errors stay sanitized unless reread proves a chan
   }
 });
 
-test("initial create uses non-overwriting fixed-path semantics", async () => {
+test("initial create uses non-overwriting If-None-Match semantics", async () => {
   const writes: Array<{ pathname: string; options: Record<string, unknown> }> = [];
   const store = createStoreWithFake(
     { ...TEST_ENV },
@@ -464,8 +439,7 @@ test("initial create uses non-overwriting fixed-path semantics", async () => {
   );
   assert.equal(writes[0]?.pathname, PATHNAME);
   assert.equal(writes[0]?.options.ifMatch, undefined);
-  assert.equal(writes[0]?.options.allowOverwrite, false);
-  assert.equal(writes[0]?.options.addRandomSuffix, false);
+  assert.equal(writes[0]?.options.ifNoneMatch, "*");
 });
 
 test("ambiguous initial-create errors reread origin and return conflict only for a valid winner", async () => {
@@ -541,27 +515,22 @@ test("read classifies a suspended Blob store without exposing vendor text", asyn
   );
 });
 
-test("every persistence call requires a current non-empty token", async () => {
-  const env: NodeJS.ProcessEnv = { ...TEST_ENV };
-  let operationCalls = 0;
-  const store = createStoreWithFake(env, {
-    async read() {
-      operationCalls += 1;
-      return null;
+test("R2 adapter with injected operations does not require a blob token", async () => {
+  const store = createStoreWithFake(
+    { NODE_ENV: "test" },
+    {
+      async read() {
+        return null;
+      },
+      async write() {
+        throw new Error("not used");
+      },
     },
-    async write() {
-      operationCalls += 1;
-    },
-  });
-  env.AURORA_STATE_BLOB_READ_WRITE_TOKEN = "   ";
-  await assert.rejects(
-    () => store.read(),
-    { message: "Snapshot store is not configured" },
   );
-  assert.equal(operationCalls, 0);
+  assert.equal(await store.read(), null);
 });
 
-test("each write rebuilds its guard from the current Blob token and optional weather key", async () => {
+test("each write rebuilds its guard from the current leftover blob token and optional weather key", async () => {
   const env: NodeJS.ProcessEnv = {
     NODE_ENV: "test",
     AURORA_STATE_BLOB_READ_WRITE_TOKEN: TOKEN,
@@ -596,4 +565,19 @@ test("each write rebuilds its guard from the current Blob token and optional wea
     },
   );
   assert.equal(operationCalls, 0);
+});
+
+test("ovation payload compacting keeps only the Wave 1 interpolation neighborhood", () => {
+  const payload = {
+    coordinates: [
+      [0, 0, 1],
+      [-147, 64, 12],
+      [213, 64, 12],
+      [10, 10, 3],
+    ],
+  };
+  const limited = limitOvationPayloadToPlaces(payload, [{ lat: 64.84, lng: -147.72 }]);
+  const rows = limited.coordinates as number[][];
+  assert.ok(rows.every((row) => row[1] >= 64 && row[1] <= 73));
+  assert.equal(rows.some((row) => row[0] === 10 && row[1] === 10), false);
 });

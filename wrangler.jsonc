@@ -1,0 +1,50 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "main": ".open-next/worker.js",
+  "name": "aurora-tonight",
+  "compatibility_date": "2025-12-30",
+  "compatibility_flags": [
+    "nodejs_compat",
+    "global_fetch_strictly_public",
+  ],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS",
+  },
+  "vars": {
+    "APP_ENV": "production",
+  },
+  "services": [
+    {
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "aurora-tonight",
+    },
+  ],
+  // Create these R2 buckets in the Cloudflare account before the first
+  // production deploy (see docs/deploy-cloudflare.md). Local `preview`
+  // uses Wrangler's simulated R2 and does not need the remote buckets.
+  "r2_buckets": [
+    {
+      "binding": "NEXT_INC_CACHE_R2_BUCKET",
+      "bucket_name": "aurora-tonight-next-cache",
+    },
+    {
+      "binding": "AURORA_STATE_BUCKET",
+      "bucket_name": "aurora-tonight-state",
+    },
+  ],
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "NEXT_CACHE_DO_QUEUE",
+        "class_name": "DOQueueHandler",
+      },
+    ],
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["DOQueueHandler"],
+    },
+  ],
+}

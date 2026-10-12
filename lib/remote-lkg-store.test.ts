@@ -118,7 +118,7 @@ test("remote LKG is configured only when base URL and both tokens are present", 
   );
 });
 
-test("createSnapshotStore keeps the Blob path when remote LKG env is unset", async () => {
+test("createSnapshotStore keeps the R2 path when remote LKG env is unset", async () => {
   const store = createSnapshotStore({ NODE_ENV: "test" });
   await assert.rejects(() => store.read(), { message: "Snapshot store is not configured" });
 });

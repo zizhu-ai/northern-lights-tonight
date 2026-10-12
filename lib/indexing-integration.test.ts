@@ -51,12 +51,12 @@ if (typeof registerHooks !== "function") {
 
 const origin = "https://aurora-tonight.com";
 
-test("middleware only canonicalizes production requests", () => {
-  const previous = process.env.VERCEL_ENV;
+test("middleware only canonicalizes production APP_ENV requests", () => {
+  const previous = process.env.APP_ENV;
   try {
     for (const env of ["production", "preview", "development", undefined]) {
-      if (env === undefined) delete process.env.VERCEL_ENV;
-      else process.env.VERCEL_ENV = env;
+      if (env === undefined) delete process.env.APP_ENV;
+      else process.env.APP_ENV = env;
       const response = middleware(new NextRequest("https://www.aurora-tonight.com/about/?ref=gsc", {
         headers: { host: "www.aurora-tonight.com" },
       }));
@@ -66,15 +66,33 @@ test("middleware only canonicalizes production requests", () => {
       } else {
         assert.equal(response.headers.get("location"), null, String(env));
         assert.equal(response.headers.get("x-middleware-next"), "1", String(env));
+        assert.equal(response.headers.get("x-robots-tag"), "noindex, nofollow", String(env));
       }
     }
-    process.env.VERCEL_ENV = "production";
+    process.env.APP_ENV = "production";
     const canonical = middleware(new NextRequest(`${origin}/about`, { headers: { host: "aurora-tonight.com" } }));
     assert.equal(canonical.headers.get("location"), null);
     assert.equal(canonical.headers.get("x-middleware-next"), "1");
+    assert.equal(canonical.headers.get("x-robots-tag"), null);
   } finally {
-    if (previous === undefined) delete process.env.VERCEL_ENV;
-    else process.env.VERCEL_ENV = previous;
+    if (previous === undefined) delete process.env.APP_ENV;
+    else process.env.APP_ENV = previous;
+  }
+});
+
+test("workers.dev hosts stay on the preview origin and return noindex", () => {
+  const previous = process.env.APP_ENV;
+  try {
+    process.env.APP_ENV = "production";
+    const response = middleware(new NextRequest("https://aurora-tonight.workers.dev/about", {
+      headers: { host: "aurora-tonight.workers.dev" },
+    }));
+    assert.equal(response.headers.get("location"), null);
+    assert.equal(response.headers.get("x-middleware-next"), "1");
+    assert.equal(response.headers.get("x-robots-tag"), "noindex, nofollow");
+  } finally {
+    if (previous === undefined) delete process.env.APP_ENV;
+    else process.env.APP_ENV = previous;
   }
 });
 
@@ -95,9 +113,9 @@ test("search redirects carry API noindex on slug, place, error and ambiguous bra
 });
 
 test("production middleware does not redirect the IndexNow key file", () => {
-  const previous = process.env.VERCEL_ENV;
+  const previous = process.env.APP_ENV;
   try {
-    process.env.VERCEL_ENV = "production";
+    process.env.APP_ENV = "production";
     assert.equal(middlewareConfig.matcher.length, 1);
     assert.equal(
       middlewareConfig.matcher[0],
@@ -115,8 +133,8 @@ test("production middleware does not redirect the IndexNow key file", () => {
       assert.equal(response.headers.get("x-middleware-next"), "1", url);
     }
   } finally {
-    if (previous === undefined) delete process.env.VERCEL_ENV;
-    else process.env.VERCEL_ENV = previous;
+    if (previous === undefined) delete process.env.APP_ENV;
+    else process.env.APP_ENV = previous;
   }
 });
 

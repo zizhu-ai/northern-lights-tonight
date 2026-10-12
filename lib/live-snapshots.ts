@@ -1,10 +1,9 @@
-import { readFile } from "node:fs/promises";
-import path from "node:path";
 import { randomUUID } from "node:crypto";
 
 import { cache } from "react";
 
 import dossierJson from "@/地点档案/wave1.json";
+import bundledLatestJson from "@/snapshots/latest.json";
 import { compute_bundle } from "@/lib/aurora-engine";
 import {
   fetchAuroraSources,
@@ -19,7 +18,11 @@ import {
   type SnapshotFreshness,
   type SourceResolution,
 } from "@/lib/hard-refresh-resolver";
-import { createSnapshotStore } from "@/lib/snapshot-store";
+import {
+  createSnapshotStore,
+  limitOvationPayloadToPlaces,
+  wave1ComputePlaces,
+} from "@/lib/snapshot-store";
 import type { SnapshotRow } from "@/lib/snapshots";
 
 export type SnapshotSource = "live" | "lkg" | "bundled";
@@ -193,8 +196,7 @@ async function readBundledLatest(): Promise<unknown> {
       // Fall through to the deployment-bundled copy.
     }
   }
-  const raw = await readFile(path.join(process.cwd(), "snapshots", "latest.json"), "utf8");
-  return JSON.parse(raw);
+  return bundledLatestJson;
 }
 
 const sourceTimeFromBundled = (bundle: JsonObject & { locations: JsonObject[] }) => {
@@ -356,6 +358,15 @@ function updatedAtForLocation(
   return times[0] ?? generatedAt;
 }
 
+const COMPUTE_CACHE_MS = 60_000;
+let computeCache: { key: string; expiresAt: number; value: AuroraBundle } | null = null;
+
+function ovationPayloadForCompute(payload: JsonObject | null | undefined): JsonObject | null {
+  if (!payload) return null;
+  const limited = limitOvationPayloadToPlaces(payload, wave1ComputePlaces());
+  return isObject(limited) ? limited : payload;
+}
+
 export const getAuroraBundle = cache(async (): Promise<AuroraBundle> => {
   let resolution = await getSourceEnvelopes();
   if (resolution.kind === "failed_closed") {
@@ -378,9 +389,27 @@ export const getAuroraBundle = cache(async (): Promise<AuroraBundle> => {
     return (await bundledResolution(now)).bundle;
   }
   const { envelopes } = resolution;
+  const ovationPayload =
+    observations.ovation.health === "invalid"
+      ? null
+      : ovationPayloadForCompute(envelopes.ovation?.payload ?? null);
+  const cacheKey = [
+    envelopes.ovation?.fingerprint ?? "none",
+    envelopes.kp?.fingerprint ?? "none",
+    envelopes.cloud?.fingerprint ?? "none",
+    String(Math.floor(now.getTime() / COMPUTE_CACHE_MS)),
+    resolution.source,
+  ].join("|");
+  if (
+    computeCache &&
+    computeCache.key === cacheKey &&
+    computeCache.expiresAt > now.getTime()
+  ) {
+    return computeCache.value;
+  }
   const computed = compute_bundle(
     now,
-    observations.ovation.health === "invalid" ? null : envelopes.ovation?.payload ?? null,
+    ovationPayload,
     observations.kp.health === "invalid" ? null : envelopes.kp?.payload ?? null,
     observations.cloud.health === "invalid" ? {} : envelopes.cloud?.payload ?? {},
     dossierJson,
@@ -399,7 +428,7 @@ export const getAuroraBundle = cache(async (): Promise<AuroraBundle> => {
       updated_at: updatedAt,
     };
   });
-  return {
+  const bundle: AuroraBundle = {
     ...computed,
     generated_at: computed.generated_at,
     ovation_ok: computed.ovation_ok === true,
@@ -410,4 +439,6 @@ export const getAuroraBundle = cache(async (): Promise<AuroraBundle> => {
     source_observations: observations,
     freshness: resolution.freshness,
   };
+  computeCache = { key: cacheKey, expiresAt: now.getTime() + COMPUTE_CACHE_MS, value: bundle };
+  return bundle;
 });
