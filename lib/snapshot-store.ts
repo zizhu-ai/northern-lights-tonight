@@ -466,28 +466,16 @@ function isPreconditionFailure(error: unknown): boolean {
   return /precondition|412|10068/i.test(text);
 }
 
-async function resolveStateBucket(): Promise<R2Like> {
-  try {
-    const { getCloudflareContext } = await import("@opennextjs/cloudflare");
-    const { env } = await getCloudflareContext({ async: true });
-    const bucket = (env as { AURORA_STATE_BUCKET?: R2Like }).AURORA_STATE_BUCKET;
-    if (bucket) return bucket;
-  } catch {
-    // Fall through to the Worker env binding.
-  }
-  try {
-    // @ts-ignore `cloudflare:workers` is provided by the Workers runtime.
-    const { env } = await import("cloudflare:workers");
-    const bucket = (env as { AURORA_STATE_BUCKET?: R2Like }).AURORA_STATE_BUCKET;
-    if (bucket) return bucket;
-  } catch {
-    // Store remains unconfigured when neither context exposes the binding.
-  }
-  throw new Error("Snapshot store is not configured");
-}
-
 async function defaultR2Operations(): Promise<ObjectStoreOperations> {
-  const bucket = await resolveStateBucket();
+  const { getCloudflareContext } = await import("@opennextjs/cloudflare");
+  let bucket: R2Like | undefined;
+  try {
+    const { env } = await getCloudflareContext({ async: true });
+    bucket = (env as { AURORA_STATE_BUCKET?: R2Like }).AURORA_STATE_BUCKET;
+  } catch {
+    bucket = undefined;
+  }
+  if (!bucket) throw new Error("Snapshot store is not configured");
   return {
     async read(pathname) {
       const object = await bucket.get(pathname);
