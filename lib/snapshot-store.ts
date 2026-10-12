@@ -89,6 +89,10 @@ function normalizeStrongEtag(etag: string): string {
   return etag.startsWith("W/") ? etag.slice(2) : etag;
 }
 
+function r2PreconditionEtag(etag: string): string {
+  return normalizeStrongEtag(etag).replaceAll('"', "");
+}
+
 function isBlobSuspendedError(error: unknown): boolean {
   const text =
     error instanceof Error
@@ -462,16 +466,28 @@ function isPreconditionFailure(error: unknown): boolean {
   return /precondition|412|10068/i.test(text);
 }
 
-async function defaultR2Operations(): Promise<ObjectStoreOperations> {
-  const { getCloudflareContext } = await import("@opennextjs/cloudflare");
-  let bucket: R2Like | undefined;
+async function resolveStateBucket(): Promise<R2Like> {
   try {
+    const { getCloudflareContext } = await import("@opennextjs/cloudflare");
     const { env } = await getCloudflareContext({ async: true });
-    bucket = (env as { AURORA_STATE_BUCKET?: R2Like }).AURORA_STATE_BUCKET;
+    const bucket = (env as { AURORA_STATE_BUCKET?: R2Like }).AURORA_STATE_BUCKET;
+    if (bucket) return bucket;
   } catch {
-    bucket = undefined;
+    // Fall through to the Worker env binding.
   }
-  if (!bucket) throw new Error("Snapshot store is not configured");
+  try {
+    // @ts-ignore `cloudflare:workers` is provided by the Workers runtime.
+    const { env } = await import("cloudflare:workers");
+    const bucket = (env as { AURORA_STATE_BUCKET?: R2Like }).AURORA_STATE_BUCKET;
+    if (bucket) return bucket;
+  } catch {
+    // Store remains unconfigured when neither context exposes the binding.
+  }
+  throw new Error("Snapshot store is not configured");
+}
+
+async function defaultR2Operations(): Promise<ObjectStoreOperations> {
+  const bucket = await resolveStateBucket();
   return {
     async read(pathname) {
       const object = await bucket.get(pathname);
@@ -481,7 +497,7 @@ async function defaultR2Operations(): Promise<ObjectStoreOperations> {
     },
     async write(pathname, body, options) {
       const onlyIf = options.ifMatch
-        ? { etagMatches: options.ifMatch }
+        ? { etagMatches: r2PreconditionEtag(options.ifMatch) }
         : options.ifNoneMatch === "*"
           ? { etagDoesNotMatch: "*" }
           : undefined;
@@ -578,11 +594,11 @@ export function createR2SnapshotStore(
         if (error instanceof Error && error.message === "Snapshot store is not configured") {
           throw error;
         }
-        if (expectedEtag !== null && isPreconditionFailure(error)) return "conflict";
         let inspected: InspectedOrigin;
         try {
           inspected = await inspectOrigin();
         } catch {
+          if (expectedEtag !== null && isPreconditionFailure(error)) return "conflict";
           throw sanitizedWriteError(classifyBlobFailure(error));
         }
         if (inspected.kind === "valid") {

@@ -285,6 +285,30 @@ test("placeholder JSON and missing etags are treated as empty so NOAA can cold-s
   }
 });
 
+test("ifMatch precondition failure still overwrites an invalid placeholder", async () => {
+  const writes: Array<{ options: Record<string, unknown> }> = [];
+  const store = createStoreWithFake(
+    { ...TEST_ENV },
+    {
+      async read() {
+        return storedBlob({ status: "pending" } as unknown as SnapshotStateV2, "etag-pending");
+      },
+      async write(_pathname, _body, options) {
+        writes.push({ options });
+        if (options.ifMatch === "etag-pending") {
+          throw new ObjectStorePreconditionFailedError();
+        }
+      },
+    },
+  );
+  assert.equal(
+    await store.compareAndSwap("etag-pending", stateAt(BASE_TIME, { revision: "rescued" })),
+    "written",
+  );
+  assert.equal(writes[0]?.options.ifMatch, "etag-pending");
+  assert.equal(writes[1]?.options.ifMatch, undefined);
+});
+
 test("create overwrites an invalid placeholder instead of staying stuck on If-None-Match", async () => {
   const writes: Array<{ options: Record<string, unknown>; body: string }> = [];
   const store = createStoreWithFake(
