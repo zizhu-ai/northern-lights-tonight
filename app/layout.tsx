@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 
 import { AdSenseLoader } from "@/components/adsense-loader";
 import { JsonLd } from "@/components/guide-markdown";
+import { GoogleAnalytics } from "@/components/google-analytics";
 import { PrivacyAnalytics } from "@/components/privacy-analytics";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import copy from "@/content/ui-copy.json";
@@ -50,6 +51,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         />
         <PrivacyAnalytics />
+        <GoogleAnalytics />
       </body>
     </html>
   );

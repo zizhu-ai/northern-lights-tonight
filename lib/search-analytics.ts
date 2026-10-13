@@ -28,5 +28,7 @@ export async function trackBrowserProductEvent(
   props: ProductEventProps,
 ): Promise<void> {
   if (typeof window === "undefined" || analyticsSessionGate.isDisabled()) return;
-  trackProductEvent(name, props);
+  trackProductEvent(name, props, (event, data) => {
+    (window as unknown as { gtag?: (...args: unknown[]) => void }).gtag?.("event", event, data);
+  });
 }
