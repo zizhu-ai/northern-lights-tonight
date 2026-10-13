@@ -1,10 +1,9 @@
-import { readFile } from "node:fs/promises";
-import path from "node:path";
 import { randomUUID } from "node:crypto";
 
 import { cache } from "react";
 
 import dossierJson from "@/地点档案/wave1.json";
+import bundledLatestJson from "@/snapshots/latest.json";
 import { compute_bundle } from "@/lib/aurora-engine";
 import {
   fetchAuroraSources,
@@ -19,7 +18,17 @@ import {
   type SnapshotFreshness,
   type SourceResolution,
 } from "@/lib/hard-refresh-resolver";
-import { createSnapshotStore } from "@/lib/snapshot-store";
+import {
+  UncacheableFallbackSnapshotError,
+  assertCacheableAuroraBundle,
+  isProductionBuildPhase,
+  isUnusableFallbackBundle,
+} from "@/lib/page-snapshot-guard";
+import {
+  createSnapshotStore,
+  limitOvationPayloadToPlaces,
+  wave1ComputePlaces,
+} from "@/lib/snapshot-store";
 import type { SnapshotRow } from "@/lib/snapshots";
 
 export type SnapshotSource = "live" | "lkg" | "bundled";
@@ -80,7 +89,11 @@ const observationFor = (
   health: SourceHealth,
   fallbackUsed: boolean,
 ): SourceObservation => {
-  if (!envelope) return { ...emptyObservation(), fallback_used: fallbackUsed };
+  if (!envelope) {
+    const empty = emptyObservation();
+    empty.fallback_used = fallbackUsed;
+    return empty;
+  }
   const ageAnchor = envelope.source_time ?? envelope.fetched_at;
   return {
     source_time: envelope.source_time,
@@ -193,8 +206,7 @@ async function readBundledLatest(): Promise<unknown> {
       // Fall through to the deployment-bundled copy.
     }
   }
-  const raw = await readFile(path.join(process.cwd(), "snapshots", "latest.json"), "utf8");
-  return JSON.parse(raw);
+  return bundledLatestJson;
 }
 
 const sourceTimeFromBundled = (bundle: JsonObject & { locations: JsonObject[] }) => {
@@ -281,6 +293,32 @@ const sourceResolver = createSourceResolver({
 
 export const getSourceEnvelopes = sourceResolver;
 
+export {
+  UncacheableFallbackSnapshotError,
+  assertCacheableAuroraBundle,
+  isProductionBuildPhase,
+  isUnusableFallbackBundle,
+};
+
+function logBundleFallback(
+  resolution:
+    | Extract<SourceResolution, { kind: "failed_closed" }>
+    | {
+        reason: "no_usable_aurora";
+        detail: "no_usable_aurora";
+        persistence_health: SnapshotFreshness["persistence_health"];
+      },
+): void {
+  console.warn(
+    JSON.stringify({
+      msg: "aurora_bundle_fallback",
+      reason: resolution.reason,
+      detail: "detail" in resolution ? resolution.detail : null,
+      persistence_health: resolution.persistence_health,
+    }),
+  );
+}
+
 const downgradedConfidence = (confidence: unknown): unknown =>
   confidence === "high" ? "medium" : confidence;
 
@@ -356,9 +394,19 @@ function updatedAtForLocation(
   return times[0] ?? generatedAt;
 }
 
+const COMPUTE_CACHE_MS = 60_000;
+let computeCache: { key: string; expiresAt: number; value: AuroraBundle } | null = null;
+
+function ovationPayloadForCompute(payload: JsonObject | null | undefined): JsonObject | null {
+  if (!payload) return null;
+  const limited = limitOvationPayloadToPlaces(payload, wave1ComputePlaces());
+  return isObject(limited) ? limited : payload;
+}
+
 export const getAuroraBundle = cache(async (): Promise<AuroraBundle> => {
   let resolution = await getSourceEnvelopes();
   if (resolution.kind === "failed_closed") {
+    logBundleFallback(resolution);
     const bundled = (await bundledResolution(new Date())).bundle;
     if (resolution.persistence_health === "unavailable") return bundled;
     return {
@@ -375,12 +423,35 @@ export const getAuroraBundle = cache(async (): Promise<AuroraBundle> => {
   const now = new Date();
   const observations = observationsAt(resolution, now);
   if (observations.ovation.health === "invalid" && observations.kp.health === "invalid") {
+    logBundleFallback({
+      reason: "no_usable_aurora",
+      detail: "no_usable_aurora",
+      persistence_health: resolution.freshness.persistence_health,
+    });
     return (await bundledResolution(now)).bundle;
   }
   const { envelopes } = resolution;
+  const ovationPayload =
+    observations.ovation.health === "invalid"
+      ? null
+      : ovationPayloadForCompute(envelopes.ovation?.payload ?? null);
+  const cacheKey = [
+    envelopes.ovation?.fingerprint ?? "none",
+    envelopes.kp?.fingerprint ?? "none",
+    envelopes.cloud?.fingerprint ?? "none",
+    String(Math.floor(now.getTime() / COMPUTE_CACHE_MS)),
+    resolution.source,
+  ].join("|");
+  if (
+    computeCache &&
+    computeCache.key === cacheKey &&
+    computeCache.expiresAt > now.getTime()
+  ) {
+    return computeCache.value;
+  }
   const computed = compute_bundle(
     now,
-    observations.ovation.health === "invalid" ? null : envelopes.ovation?.payload ?? null,
+    ovationPayload,
     observations.kp.health === "invalid" ? null : envelopes.kp?.payload ?? null,
     observations.cloud.health === "invalid" ? {} : envelopes.cloud?.payload ?? {},
     dossierJson,
@@ -399,7 +470,7 @@ export const getAuroraBundle = cache(async (): Promise<AuroraBundle> => {
       updated_at: updatedAt,
     };
   });
-  return {
+  const bundle: AuroraBundle = {
     ...computed,
     generated_at: computed.generated_at,
     ovation_ok: computed.ovation_ok === true,
@@ -410,4 +481,17 @@ export const getAuroraBundle = cache(async (): Promise<AuroraBundle> => {
     source_observations: observations,
     freshness: resolution.freshness,
   };
+  computeCache = { key: cacheKey, expiresAt: now.getTime() + COMPUTE_CACHE_MS, value: bundle };
+  return bundle;
+});
+
+export const getAuroraBundleForPage = cache(async (): Promise<AuroraBundle> => {
+  if (isProductionBuildPhase()) {
+    // Home is a static route (no generateStaticParams). Waiting on connection()
+    // during `next build` opts the page out of SSG so the first request after
+    // deploy fetches live R2/NOAA instead of baking the 8/23 bundled fallback.
+    const { connection } = await import("next/server");
+    await connection();
+  }
+  return assertCacheableAuroraBundle(await getAuroraBundle());
 });

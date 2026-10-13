@@ -28,10 +28,7 @@ export async function trackBrowserProductEvent(
   props: ProductEventProps,
 ): Promise<void> {
   if (typeof window === "undefined" || analyticsSessionGate.isDisabled()) return;
-  try {
-    const { track } = await import("@vercel/analytics");
-    track(name, sanitizeProductEventProps(props));
-  } catch {
-    // Analytics must never break search.
-  }
+  trackProductEvent(name, props, (event, data) => {
+    (window as unknown as { gtag?: (...args: unknown[]) => void }).gtag?.("event", event, data);
+  });
 }

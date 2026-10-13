@@ -16,7 +16,7 @@ import { StickyPlaceBar } from "@/components/sticky-place-bar";
 import { VerdictCard, verdictDataStatus } from "@/components/verdict-card";
 import copy from "@/content/ui-copy.json";
 import { presentHomeOverview } from "@/lib/home-tonight";
-import { formatZoneAbbreviation, loadLatest } from "@/lib/snapshots";
+import { formatZoneAbbreviation, loadLatestForPage } from "@/lib/snapshots";
 import { ogFor, SITE_URL } from "@/lib/site";
 
 import styles from "./part4.module.css";
@@ -35,8 +35,8 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const [latest, rows, extra] = await Promise.all([
-    loadLatest(),
+  const latest = await loadLatestForPage();
+  const [rows, extra] = await Promise.all([
     loadTonightRows(),
     loadMarkdownBody("pages/home.md"),
   ]);

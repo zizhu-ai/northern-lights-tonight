@@ -1,5 +1,5 @@
 export type OpenMeteoEnvironment = {
-  VERCEL_ENV?: string;
+  APP_ENV?: string;
   OPEN_METEO_USAGE_MODE?: string;
   OPEN_METEO_API_BASE?: string;
   OPEN_METEO_API_KEY?: string;
@@ -24,7 +24,7 @@ const isCanonicalCustomerDestination = (url: URL): boolean =>
   url.hash === "";
 
 export function resolveOpenMeteoConfig(env: OpenMeteoEnvironment): OpenMeteoConfig {
-  if (env.VERCEL_ENV !== "production") {
+  if (env.APP_ENV !== "production") {
     return {
       baseUrl: env.AURORA_CLOUD_URL ?? env.OPEN_METEO_API_BASE ?? FREE_EVALUATION_URL,
       apiKey: env.OPEN_METEO_API_KEY?.trim() || null,

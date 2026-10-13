@@ -1,5 +1,3 @@
-import { BlobPreconditionFailedError, get, put } from "@vercel/blob";
-
 import {
   compactCloudRow,
   fingerprintPayload,
@@ -91,6 +89,10 @@ function normalizeStrongEtag(etag: string): string {
   return etag.startsWith("W/") ? etag.slice(2) : etag;
 }
 
+function r2PreconditionEtag(etag: string): string {
+  return normalizeStrongEtag(etag).replaceAll('"', "");
+}
+
 function isBlobSuspendedError(error: unknown): boolean {
   const text =
     error instanceof Error
@@ -147,13 +149,12 @@ function ovationPersistCellKeys(places: readonly PersistPlace[]): Set<string> {
   return keys;
 }
 
-function compactOvationEnvelope(
-  envelope: SnapshotStateV2["envelopes"]["ovation"],
-  cells: Set<string>,
-): SnapshotStateV2["envelopes"]["ovation"] {
-  if (envelope === null || !isObject(envelope.payload)) return envelope;
-  const payload = envelope.payload;
-  if (!Array.isArray(payload.coordinates)) return envelope;
+export function limitOvationPayloadToPlaces(
+  payload: Record<string, unknown>,
+  places: readonly PersistPlace[],
+): Record<string, unknown> {
+  if (!Array.isArray(payload.coordinates)) return payload;
+  const cells = ovationPersistCellKeys(places);
   const coordinates = payload.coordinates.filter((row) => {
     if (!Array.isArray(row) || row.length < 2) return false;
     const lon = Number(row[0]);
@@ -165,8 +166,24 @@ function compactOvationEnvelope(
       cells.has(`${Math.trunc(lon)},${Math.trunc(lat)}`)
     );
   });
-  if (coordinates.length === 0) return null;
-  const nextPayload = { ...payload, coordinates };
+  return { ...payload, coordinates };
+}
+
+export function wave1ComputePlaces(): PersistPlace[] {
+  return wave1PersistPlaces();
+}
+
+function compactOvationEnvelope(
+  envelope: SnapshotStateV2["envelopes"]["ovation"],
+): SnapshotStateV2["envelopes"]["ovation"] {
+  if (envelope === null || !isObject(envelope.payload)) return envelope;
+  const nextPayload = limitOvationPayloadToPlaces(
+    envelope.payload,
+    wave1PersistPlaces(),
+  );
+  if (!Array.isArray(nextPayload.coordinates) || nextPayload.coordinates.length === 0) {
+    return null;
+  }
   return {
     ...envelope,
     fingerprint: fingerprintPayload(nextPayload),
@@ -204,19 +221,45 @@ function markSourceError(state: SnapshotStateV2, source: SourceName): SnapshotSt
   };
 }
 
-export function fitRemoteLkgSnapshotState(state: SnapshotStateV2): SnapshotStateV2 {
-  if (utf8ByteLength(JSON.stringify(state)) <= REMOTE_LKG_MAX_BODY_BYTES) return state;
-  const cells = ovationPersistCellKeys(wave1PersistPlaces());
+export function emptyRecoverableSnapshotState(): SnapshotStateV2 {
+  const epoch = new Date(0).toISOString();
+  const item: SourceOutcome = {
+    status: "error",
+    checked_at: epoch,
+    error_code: "unavailable",
+  };
+  return {
+    schema_version: SNAPSHOT_STATE_SCHEMA_VERSION,
+    revision: "uninitialized",
+    checked_at: epoch,
+    last_success_at: null,
+    retry_after: epoch,
+    envelopes: { schema_version: 1, ovation: null, kp: null, cloud: null },
+    outcomes: {
+      ovation: { ...item },
+      kp: { ...item },
+      cloud: { ...item },
+    },
+    lease: null,
+  };
+}
+
+export function compactSnapshotForPersist(state: SnapshotStateV2): SnapshotStateV2 {
+  if (state.envelopes.ovation === null) return state;
+  const ovation = compactOvationEnvelope(state.envelopes.ovation);
   let next: SnapshotStateV2 = {
     ...state,
     envelopes: {
       ...state.envelopes,
-      ovation: compactOvationEnvelope(state.envelopes.ovation, cells),
+      ovation,
     },
   };
-  if (state.envelopes.ovation !== null && next.envelopes.ovation === null) {
-    next = markSourceError(next, "ovation");
-  }
+  if (ovation === null) next = markSourceError(next, "ovation");
+  return next;
+}
+
+export function fitRemoteLkgSnapshotState(state: SnapshotStateV2): SnapshotStateV2 {
+  let next = compactSnapshotForPersist(state);
   if (utf8ByteLength(JSON.stringify(next)) <= REMOTE_LKG_MAX_BODY_BYTES) return next;
   if (next.envelopes.cloud !== null) {
     next = {
@@ -317,13 +360,13 @@ export function stateContainsAnySecret(
   });
 }
 
-type PersistenceContext = { token: string; secrets: readonly string[] };
-
-function resolvePersistenceContext(env: NodeJS.ProcessEnv): PersistenceContext {
-  const token = env.AURORA_STATE_BLOB_READ_WRITE_TOKEN?.trim();
-  if (!token) throw new Error("Snapshot store is not configured");
+function resolvePersistenceSecrets(env: NodeJS.ProcessEnv): readonly string[] {
+  const secrets: string[] = [];
   const weatherKey = env.OPEN_METEO_API_KEY?.trim();
-  return { token, secrets: weatherKey ? [token, weatherKey] : [token] };
+  if (weatherKey) secrets.push(weatherKey);
+  const leftoverBlobToken = env.AURORA_STATE_BLOB_READ_WRITE_TOKEN?.trim();
+  if (leftoverBlobToken) secrets.push(leftoverBlobToken);
+  return secrets;
 }
 
 function assertSafeState(state: SnapshotStateV2, secrets: readonly string[]): void {
@@ -382,94 +425,180 @@ function rethrowIfSanitizedStoreError(error: unknown, fallback: Error): never {
   throw fallback;
 }
 
-type BlobOperations = {
-  read(
-    pathname: string,
-    options: { access: "private"; token: string; useCache: false },
-  ): Promise<{ stream: ReadableStream; etag: string } | null>;
+export class ObjectStorePreconditionFailedError extends Error {
+  constructor() {
+    super("Object store precondition failed");
+    this.name = "ObjectStorePreconditionFailedError";
+  }
+}
+
+export type ObjectStoreOperations = {
+  read(pathname: string): Promise<{ stream: ReadableStream; etag: string } | null>;
   write(
     pathname: string,
     body: string,
-    options: {
-      access: "private";
-      token: string;
-      addRandomSuffix: false;
-      contentType: "application/json";
-      allowOverwrite?: false;
-      ifMatch?: string;
-    },
+    options: { ifMatch?: string; ifNoneMatch?: "*" },
   ): Promise<void>;
 };
 
-const vercelBlobOperations: BlobOperations = {
-  async read(pathname, options) {
-    const result = await get(pathname, options);
-    if (result === null) return null;
-    if (result.stream === null) throw new Error("Blob response stream is missing");
-    return { stream: result.stream, etag: result.blob.etag };
-  },
-  async write(pathname, body, options) {
-    await put(pathname, body, options);
-  },
+type R2Like = {
+  get(key: string): Promise<{
+    body: ReadableStream;
+    httpEtag?: string;
+    etag?: string;
+  } | null>;
+  put(
+    key: string,
+    value: string,
+    options?: {
+      httpMetadata?: { contentType?: string };
+      onlyIf?: { etagMatches?: string; etagDoesNotMatch?: string };
+    },
+  ): Promise<unknown>;
 };
 
-export function createVercelSnapshotStore(env?: NodeJS.ProcessEnv): SnapshotStore;
-export function createVercelSnapshotStore(
-  env: NodeJS.ProcessEnv = process.env,
-  operations: BlobOperations = vercelBlobOperations,
-): SnapshotStore {
-  const read = async (): Promise<StoredSnapshotState | null> => {
-    const { token, secrets } = resolvePersistenceContext(env);
-    try {
-      const result = await operations.read(SNAPSHOT_PATHNAME, {
-        access: "private",
-        token,
-        useCache: false,
+function isPreconditionFailure(error: unknown): boolean {
+  if (error instanceof ObjectStorePreconditionFailedError) return true;
+  const text =
+    error instanceof Error
+      ? `${error.name}\n${error.message}`
+      : String(error);
+  return /precondition|412|10068/i.test(text);
+}
+
+async function defaultR2Operations(): Promise<ObjectStoreOperations> {
+  const { getCloudflareContext } = await import("@opennextjs/cloudflare");
+  let bucket: R2Like | undefined;
+  try {
+    const { env } = await getCloudflareContext({ async: true });
+    bucket = (env as { AURORA_STATE_BUCKET?: R2Like }).AURORA_STATE_BUCKET;
+  } catch {
+    bucket = undefined;
+  }
+  if (!bucket) throw new Error("Snapshot store is not configured");
+  return {
+    async read(pathname) {
+      const object = await bucket.get(pathname);
+      if (object === null) return null;
+      const etag = object.httpEtag ?? object.etag ?? "";
+      return { stream: object.body, etag };
+    },
+    async write(pathname, body, options) {
+      const onlyIf = options.ifMatch
+        ? { etagMatches: r2PreconditionEtag(options.ifMatch) }
+        : options.ifNoneMatch === "*"
+          ? { etagDoesNotMatch: "*" }
+          : undefined;
+      const result = await bucket.put(pathname, body, {
+        httpMetadata: { contentType: "application/json" },
+        ...(onlyIf ? { onlyIf } : {}),
       });
-      if (result === null) return null;
-      const parsed: unknown = await new Response(result.stream).json();
-      // Large private Blob reads may return weak validators, but Blob ifMatch requires the strong form.
-      const etag = normalizeStrongEtag(result.etag);
-      if (!isValidSnapshotState(parsed) || etag.length === 0) {
+      if (result === null) throw new ObjectStorePreconditionFailedError();
+    },
+  };
+}
+
+type InspectedOrigin =
+  | { kind: "missing" }
+  | { kind: "invalid"; etag: string }
+  | { kind: "valid"; state: SnapshotStateV2; etag: string };
+
+export function createR2SnapshotStore(env?: NodeJS.ProcessEnv): SnapshotStore;
+export function createR2SnapshotStore(
+  env: NodeJS.ProcessEnv,
+  operations: ObjectStoreOperations,
+): SnapshotStore;
+export function createR2SnapshotStore(
+  env: NodeJS.ProcessEnv = process.env,
+  operations?: ObjectStoreOperations,
+): SnapshotStore {
+  const resolveOperations = async (): Promise<ObjectStoreOperations> => {
+    if (operations) return operations;
+    return defaultR2Operations();
+  };
+
+  const inspectOrigin = async (): Promise<InspectedOrigin> => {
+    const secrets = resolvePersistenceSecrets(env);
+    const store = await resolveOperations();
+    const result = await store.read(SNAPSHOT_PATHNAME);
+    if (result === null) return { kind: "missing" };
+    const etag = normalizeStrongEtag(result.etag);
+    let parsed: unknown;
+    try {
+      parsed = await new Response(result.stream).json();
+    } catch {
+      return { kind: "invalid", etag };
+    }
+    if (!isValidSnapshotState(parsed) || etag.length === 0) {
+      return { kind: "invalid", etag };
+    }
+    assertSafeState(parsed, secrets);
+    return { kind: "valid", state: parsed, etag };
+  };
+
+  const read = async (): Promise<StoredSnapshotState | null> => {
+    try {
+      const inspected = await inspectOrigin();
+      if (inspected.kind === "missing") return null;
+      if (inspected.kind === "invalid") {
+        // Placeholder / corrupt objects must not fail-close the NOAA cold start.
+        return {
+          state: emptyRecoverableSnapshotState(),
+          etag: inspected.etag,
+        };
+      }
+      return { state: inspected.state, etag: inspected.etag };
+    } catch (error) {
+      if (error instanceof Error && error.message === "Snapshot store is not configured") {
+        throw error;
+      }
+      if (error instanceof Error && error.message === "Snapshot state contains a secret") {
         throw sanitizedReadError();
       }
-      assertSafeState(parsed, secrets);
-      return { state: parsed, etag };
-    } catch (error) {
       throw sanitizedReadError(classifyBlobFailure(error));
     }
+  };
+
+  const persist = async (
+    next: SnapshotStateV2,
+    options: { ifMatch?: string; ifNoneMatch?: "*" },
+  ): Promise<void> => {
+    const store = await resolveOperations();
+    await store.write(SNAPSHOT_PATHNAME, JSON.stringify(next), options);
   };
 
   return {
     read,
     async compareAndSwap(expectedEtag, next) {
-      const { token, secrets } = resolvePersistenceContext(env);
-      assertSafeState(next, secrets);
+      const secrets = resolvePersistenceSecrets(env);
+      const fitted = compactSnapshotForPersist(next);
+      assertSafeState(fitted, secrets);
       try {
-        await operations.write(SNAPSHOT_PATHNAME, JSON.stringify(next), {
-          access: "private",
-          token,
-          addRandomSuffix: false,
-          contentType: "application/json",
-          ...(expectedEtag === null
-            ? { allowOverwrite: false }
-            : { ifMatch: expectedEtag }),
+        await persist(fitted, {
+          ...(expectedEtag === null ? { ifNoneMatch: "*" as const } : { ifMatch: expectedEtag }),
         });
         return "written";
       } catch (error) {
-        if (expectedEtag !== null) {
-          if (error instanceof BlobPreconditionFailedError) return "conflict";
-          try {
-            const observed = await read();
-            if (observed !== null && observed.etag !== expectedEtag) return "conflict";
-          } catch {
-            // An ambiguous write is a conflict only when a valid reread proves a new winner.
-          }
+        if (error instanceof Error && error.message === "Snapshot store is not configured") {
+          throw error;
+        }
+        let inspected: InspectedOrigin;
+        try {
+          inspected = await inspectOrigin();
+        } catch {
+          if (expectedEtag !== null && isPreconditionFailure(error)) return "conflict";
           throw sanitizedWriteError(classifyBlobFailure(error));
         }
-        try {
-          if ((await read()) !== null) return "conflict";
+        if (inspected.kind === "valid") {
+          if (expectedEtag === null || inspected.etag !== expectedEtag) return "conflict";
+          if (isPreconditionFailure(error)) return "conflict";
           throw sanitizedWriteError(classifyBlobFailure(error));
+        }
+        // Missing or invalid origin: overwrite so an empty/placeholder bucket
+        // can cold-start without a copied Vercel Blob object.
+        try {
+          await persist(fitted, {});
+          return "written";
         } catch {
           throw sanitizedWriteError(classifyBlobFailure(error));
         }
@@ -477,6 +606,9 @@ export function createVercelSnapshotStore(
     },
   };
 }
+
+/** @deprecated Use createR2SnapshotStore. Kept so older tests/docs still resolve. */
+export const createVercelSnapshotStore = createR2SnapshotStore;
 
 type RemoteLkgContext = {
   stateUrl: string;
@@ -676,5 +808,5 @@ export function createSnapshotStore(env: NodeJS.ProcessEnv = process.env): Snaps
   if (isRemoteLkgConfigured(env)) {
     return createRemoteLkgSnapshotStore(env);
   }
-  return createVercelSnapshotStore(env);
+  return createR2SnapshotStore(env);
 }

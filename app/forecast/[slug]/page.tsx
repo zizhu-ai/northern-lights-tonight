@@ -12,15 +12,14 @@ import copy from "@/content/ui-copy.json";
 import {
   getForecastDossier,
   getHeadlinePoint,
-  WAVE_ONE_SLUGS,
   WAVE_ONE_SLUG_SET,
   type ForecastDossier,
 } from "@/lib/forecast-places";
 import {
   formatWindow,
   formatZoneAbbreviation,
-  loadLatest,
-  loadForecastSnapshot,
+  loadLatestForPage,
+  loadForecastSnapshotForPage,
   type ForecastPoint,
   type ForecastSnapshot,
   type SnapshotRow,
@@ -69,9 +68,12 @@ type ForecastState = {
 
 export const revalidate = 600;
 export const maxDuration = 60;
+export const dynamicParams = true;
 
 export function generateStaticParams() {
-  return WAVE_ONE_SLUGS.map((slug) => ({ slug }));
+  // On-demand ISR: do not SSG Wave 1 slugs with the build-time bundled
+  // fallback. The first request after deploy fetches live R2/NOAA.
+  return [];
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -107,7 +109,7 @@ export default async function ForecastPage({ params }: PageProps) {
 
   const [state, latest] = await Promise.all([
     getForecastState(dossier),
-    loadLatest(),
+    loadLatestForPage(),
   ]);
   const timezone = formatZoneAbbreviation(new Date(), dossier.timezone);
   const answer = forecastLead(dossier, state.presented.answerSentence);
@@ -277,7 +279,7 @@ function NearbyForecasts({
 }
 
 async function getForecastState(dossier: ForecastDossier): Promise<ForecastState> {
-  const snapshot = await loadForecastSnapshot(dossier.slug);
+  const snapshot = await loadForecastSnapshotForPage(dossier.slug);
   const presented = presentVerdict({ snapshot, dossier });
 
   return {

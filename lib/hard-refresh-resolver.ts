@@ -56,9 +56,21 @@ export type SourceResolution =
       kind: "failed_closed";
       mode: "failed_closed";
       reason: "state_unavailable" | "no_usable_aurora" | "refresh_unresolved";
+      detail: RefreshGiveUpDetail;
       fallback: "bundled_unknown";
       persistence_health: "degraded" | "unavailable";
     };
+
+export type RefreshGiveUpDetail =
+  | "store_read_failed"
+  | "lease_held_past_budget"
+  | "request_budget_exhausted"
+  | "lease_write_failed"
+  | "lease_conflict_reread_failed"
+  | "lease_reread_missing"
+  | "publish_write_failed"
+  | "winner_reread_missing"
+  | "no_usable_aurora";
 
 const isObject = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
@@ -267,14 +279,34 @@ function freshness(
 function failed(
   reason: Extract<SourceResolution, { kind: "failed_closed" }>["reason"],
   persistenceHealth: "degraded" | "unavailable",
+  detail: RefreshGiveUpDetail,
+  context: Record<string, string | number | boolean | null | undefined> = {},
 ): SourceResolution {
-  return {
+  const resolution: SourceResolution = {
     kind: "failed_closed",
     mode: "failed_closed",
     reason,
+    detail,
     fallback: "bundled_unknown",
     persistence_health: persistenceHealth,
   };
+  // ISR revalidation fail-closes here instead of hanging past the 60s route
+  // budget. Typical lock/wait details:
+  // - lease_held_past_budget: another owner holds a lease that expires after
+  //   latestRefreshStart (request start + 33s). Waiting would leave <26s for
+  //   OVATION/Kp/cloud, so this request stops.
+  // - request_budget_exhausted: this request already passed latestRefreshStart
+  //   (CAS delay, poll loop) before it could start upstream work.
+  console.warn(
+    JSON.stringify({
+      msg: "aurora_hard_refresh_gave_up",
+      reason,
+      detail,
+      persistence_health: persistenceHealth,
+      ...context,
+    }),
+  );
+  return resolution;
 }
 
 function resolveState(
@@ -284,7 +316,9 @@ function resolveState(
   persistenceHealth: SnapshotFreshness["persistence_health"] = "ok",
 ): SourceResolution {
   const envelopes = scientificallyValid(state.envelopes, now);
-  if (!hasUsableAurora(envelopes)) return failed("no_usable_aurora", "degraded");
+  if (!hasUsableAurora(envelopes)) {
+    return failed("no_usable_aurora", "degraded", "no_usable_aurora");
+  }
   const degraded =
     allNegative(state) ||
     SOURCE_NAMES.some((name) => state.outcomes[name].status === "error") ||
@@ -403,7 +437,7 @@ export function createSourceResolver(runtime: HardRefreshRuntime): () => Promise
       if (memoryState && isFresh(memoryState, now)) {
         return resolveState(memoryState, now, "fresh_hit", "degraded");
       }
-      return failed("state_unavailable", "unavailable");
+      return failed("state_unavailable", "unavailable", "store_read_failed");
     }
 
     while (true) {
@@ -415,16 +449,26 @@ export function createSourceResolver(runtime: HardRefreshRuntime): () => Promise
       if (!leaseAcquirable(stored?.state ?? null, now)) {
         const expiresAt = Date.parse(stored!.state.lease!.expires_at);
         if (expiresAt > latestRefreshStart) {
-          return failed("refresh_unresolved", "degraded");
+          return failed("refresh_unresolved", "degraded", "lease_held_past_budget", {
+            lease_expires_at: stored!.state.lease!.expires_at,
+            latest_refresh_start: new Date(latestRefreshStart).toISOString(),
+            remaining_ms: latestRefreshStart - now.getTime(),
+          });
         }
         await runtime.sleep(Math.max(1, Math.min(POLL_MS, expiresAt - now.getTime())));
         stored = await read();
-        if (stored === undefined) return failed("state_unavailable", "unavailable");
+        if (stored === undefined) {
+          return failed("state_unavailable", "unavailable", "store_read_failed");
+        }
         continue;
       }
 
       if (now.getTime() > latestRefreshStart) {
-        return failed("refresh_unresolved", "degraded");
+        return failed("refresh_unresolved", "degraded", "request_budget_exhausted", {
+          now: now.toISOString(),
+          latest_refresh_start: new Date(latestRefreshStart).toISOString(),
+          elapsed_ms: now.getTime() - requestStartedAt,
+        });
       }
 
       const base = stored?.state ?? emptyLeaseState(now);
@@ -441,17 +485,19 @@ export function createSourceResolver(runtime: HardRefreshRuntime): () => Promise
       try {
         leaseWrite = await runtime.store.compareAndSwap(stored?.etag ?? null, leased);
       } catch {
-        return failed("refresh_unresolved", "unavailable");
+        return failed("refresh_unresolved", "unavailable", "lease_write_failed");
       }
       if (leaseWrite === "conflict") {
         stored = await read();
-        if (stored === undefined) return failed("refresh_unresolved", "unavailable");
+        if (stored === undefined) {
+          return failed("refresh_unresolved", "unavailable", "lease_conflict_reread_failed");
+        }
         continue;
       }
 
       const leasedStored = await read();
       if (leasedStored === undefined || leasedStored === null) {
-        return failed("refresh_unresolved", "unavailable");
+        return failed("refresh_unresolved", "unavailable", "lease_reread_missing");
       }
       const observedLease = leasedStored.state.lease;
       const observedExpiryMs =
@@ -469,7 +515,11 @@ export function createSourceResolver(runtime: HardRefreshRuntime): () => Promise
         continue;
       }
       if (runtime.now().getTime() > latestRefreshStart) {
-        return failed("refresh_unresolved", "degraded");
+        return failed("refresh_unresolved", "degraded", "request_budget_exhausted", {
+          now: runtime.now().toISOString(),
+          latest_refresh_start: new Date(latestRefreshStart).toISOString(),
+          elapsed_ms: runtime.now().getTime() - requestStartedAt,
+        });
       }
       let fetched: SourceFetchResults;
       try {
@@ -486,7 +536,7 @@ export function createSourceResolver(runtime: HardRefreshRuntime): () => Promise
       try {
         publish = await runtime.store.compareAndSwap(leasedStored.etag, completed);
       } catch {
-        return failed("refresh_unresolved", "unavailable");
+        return failed("refresh_unresolved", "unavailable", "publish_write_failed");
       }
       if (publish === "written") {
         memoryState = completed;
@@ -494,7 +544,9 @@ export function createSourceResolver(runtime: HardRefreshRuntime): () => Promise
       }
 
       const winner = await read();
-      if (winner === undefined || winner === null) return failed("refresh_unresolved", "unavailable");
+      if (winner === undefined || winner === null) {
+        return failed("refresh_unresolved", "unavailable", "winner_reread_missing");
+      }
       if (winner.state.lease !== null) {
         stored = winner;
         continue;

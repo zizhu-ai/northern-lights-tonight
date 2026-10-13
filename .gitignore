@@ -1,7 +1,10 @@
 node_modules/
 .next/
+.open-next/
+.wrangler/
 out/
 tsconfig.tsbuildinfo
+.dev.vars
 engine/.cache/
 __pycache__/
 .vercel/

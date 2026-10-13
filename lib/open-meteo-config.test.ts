@@ -17,7 +17,7 @@ test("production rejects the free endpoint", () => {
   assert.throws(
     () =>
       resolveOpenMeteoConfig({
-        VERCEL_ENV: "production",
+        APP_ENV: "production",
         OPEN_METEO_API_BASE: FREE_URL,
         OPEN_METEO_API_KEY: SENTINEL_KEY,
       }),
@@ -27,7 +27,7 @@ test("production rejects the free endpoint", () => {
 
 test("production noncommercial mode uses only the canonical free endpoint without a key", () => {
   const config = resolveOpenMeteoConfig({
-    VERCEL_ENV: "production",
+    APP_ENV: "production",
     OPEN_METEO_USAGE_MODE: "noncommercial",
   });
   const requestUrl = new URL(config.baseUrl);
@@ -43,7 +43,7 @@ test("production noncommercial mode rejects any configured API key", () => {
   assert.throws(
     () =>
       resolveOpenMeteoConfig({
-        VERCEL_ENV: "production",
+        APP_ENV: "production",
         OPEN_METEO_USAGE_MODE: "noncommercial",
         OPEN_METEO_API_KEY: SENTINEL_KEY,
       }),
@@ -60,7 +60,7 @@ test("production noncommercial mode rejects a noncanonical configured endpoint",
     assert.throws(
       () =>
         resolveOpenMeteoConfig({
-          VERCEL_ENV: "production",
+          APP_ENV: "production",
           OPEN_METEO_USAGE_MODE: "noncommercial",
           OPEN_METEO_API_BASE: baseUrl,
         }),
@@ -74,7 +74,7 @@ test("production rejects invalid Open-Meteo usage modes", () => {
     assert.throws(
       () =>
         resolveOpenMeteoConfig({
-          VERCEL_ENV: "production",
+          APP_ENV: "production",
           OPEN_METEO_USAGE_MODE: usageMode,
           OPEN_METEO_API_BASE: CUSTOMER_URL,
           OPEN_METEO_API_KEY: SENTINEL_KEY,
@@ -93,7 +93,7 @@ test("production rejects a noncanonical customer endpoint", () => {
     assert.throws(
       () =>
         resolveOpenMeteoConfig({
-          VERCEL_ENV: "production",
+          APP_ENV: "production",
           OPEN_METEO_API_BASE: baseUrl,
           OPEN_METEO_API_KEY: SENTINEL_KEY,
         }),
@@ -106,7 +106,7 @@ test("production rejects a missing API key", () => {
   assert.throws(
     () =>
       resolveOpenMeteoConfig({
-        VERCEL_ENV: "production",
+        APP_ENV: "production",
         OPEN_METEO_API_BASE: CUSTOMER_URL,
         OPEN_METEO_API_KEY: "   ",
       }),
@@ -116,7 +116,7 @@ test("production rejects a missing API key", () => {
 
 test("production returns customer endpoint and appends apikey", () => {
   const config = resolveOpenMeteoConfig({
-    VERCEL_ENV: "production",
+    APP_ENV: "production",
     OPEN_METEO_API_BASE: CUSTOMER_URL,
     OPEN_METEO_API_KEY: SENTINEL_KEY,
   });
@@ -135,7 +135,7 @@ test("production returns customer endpoint and appends apikey", () => {
 });
 
 test("preview may use the free evaluation endpoint", () => {
-  assert.deepEqual(resolveOpenMeteoConfig({ VERCEL_ENV: "preview" }), {
+  assert.deepEqual(resolveOpenMeteoConfig({ APP_ENV: "preview" }), {
     baseUrl: FREE_URL,
     apiKey: null,
   });
@@ -144,7 +144,7 @@ test("preview may use the free evaluation endpoint", () => {
 test("usage mode does not change preview behavior", () => {
   assert.deepEqual(
     resolveOpenMeteoConfig({
-      VERCEL_ENV: "preview",
+      APP_ENV: "preview",
       OPEN_METEO_USAGE_MODE: "invalid-outside-production",
     }),
     { baseUrl: FREE_URL, apiKey: null },
@@ -155,7 +155,7 @@ test("fault-injection override works outside production", () => {
   const faultUrl = "https://fault.invalid/open-meteo";
   assert.deepEqual(
     resolveOpenMeteoConfig({
-      VERCEL_ENV: "development",
+      APP_ENV: "development",
       OPEN_METEO_API_BASE: FREE_URL,
       AURORA_CLOUD_URL: faultUrl,
     }),
@@ -165,7 +165,7 @@ test("fault-injection override works outside production", () => {
 
 test("fault-injection override never receives a configured API key", () => {
   const config = resolveOpenMeteoConfig({
-    VERCEL_ENV: "preview",
+    APP_ENV: "preview",
     OPEN_METEO_API_KEY: SENTINEL_KEY,
     AURORA_CLOUD_URL: "https://fault.invalid/open-meteo",
   });
@@ -203,7 +203,7 @@ for (const { label, url } of [
 ]) {
   test(`noncanonical ${label} customer URL never receives a configured API key`, () => {
     const config = resolveOpenMeteoConfig({
-      VERCEL_ENV: "preview",
+      APP_ENV: "preview",
       OPEN_METEO_API_BASE: CUSTOMER_URL,
       OPEN_METEO_API_KEY: SENTINEL_KEY,
     });
@@ -223,7 +223,7 @@ for (const { label, url } of [
 test("production ignores AURORA_CLOUD_URL even when it names the free endpoint", () => {
   assert.deepEqual(
     resolveOpenMeteoConfig({
-      VERCEL_ENV: "production",
+      APP_ENV: "production",
       OPEN_METEO_API_BASE: CUSTOMER_URL,
       OPEN_METEO_API_KEY: SENTINEL_KEY,
       AURORA_CLOUD_URL: FREE_URL,

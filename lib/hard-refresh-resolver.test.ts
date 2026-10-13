@@ -314,8 +314,21 @@ test("a crashed winner can be taken over exactly when its 40-second lease expire
     lease: { owner: "crashed", expires_at: new Date(BASE + 40_000).toISOString() },
   }));
   const exhausted = harness({ now: BASE, store, owner: "too-early" });
-  const exhaustedResult = await exhausted.resolve();
+  const warnings: string[] = [];
+  const warn = console.warn;
+  console.warn = (message?: unknown) => {
+    warnings.push(String(message));
+  };
+  let exhaustedResult;
+  try {
+    exhaustedResult = await exhausted.resolve();
+  } finally {
+    console.warn = warn;
+  }
   assert.equal(exhaustedResult.kind, "failed_closed");
+  assert.equal(exhaustedResult.kind === "failed_closed" && exhaustedResult.detail, "lease_held_past_budget");
+  assert.match(warnings.join("\n"), /aurora_hard_refresh_gave_up/);
+  assert.match(warnings.join("\n"), /lease_held_past_budget/);
   assert.equal(exhausted.calls(), 0);
   assert.equal(exhausted.now(), BASE);
 
@@ -368,8 +381,20 @@ test("post-acquisition persistence delay cannot start upstream work outside the 
   };
   const h = harness({ now: BASE, store });
   advanceClock = h.setNow;
-  const result = await h.resolve();
+  const warnings: string[] = [];
+  const warn = console.warn;
+  console.warn = (message?: unknown) => {
+    warnings.push(String(message));
+  };
+  let result;
+  try {
+    result = await h.resolve();
+  } finally {
+    console.warn = warn;
+  }
   assert.equal(result.kind, "failed_closed");
+  assert.equal(result.kind === "failed_closed" && result.detail, "request_budget_exhausted");
+  assert.match(warnings.join("\n"), /request_budget_exhausted/);
   assert.equal(h.calls(), 0);
 });
 
@@ -434,6 +459,7 @@ test("OVATION older than 90 minutes cannot provide usable aurora evidence", asyn
     kind: "failed_closed",
     mode: "failed_closed",
     reason: "no_usable_aurora",
+    detail: "no_usable_aurora",
     fallback: "bundled_unknown",
     persistence_health: "degraded",
   });
@@ -507,6 +533,7 @@ test("a Blob read failure with no in-contract state fails closed", async () => {
     kind: "failed_closed",
     mode: "failed_closed",
     reason: "state_unavailable",
+    detail: "store_read_failed",
     fallback: "bundled_unknown",
     persistence_health: "unavailable",
   });

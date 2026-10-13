@@ -22,7 +22,24 @@ export function createAnalyticsSessionGate(): AnalyticsSessionGate {
   };
 }
 
-export const analyticsSessionGate = createAnalyticsSessionGate();
+function setGaDisabled(disabled: boolean): void {
+  if (typeof window === "undefined") return;
+  const id = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+  if (id) (window as unknown as Record<string, unknown>)[`ga-disable-${id}`] = disabled;
+}
+
+const baseGate = createAnalyticsSessionGate();
+export const analyticsSessionGate: AnalyticsSessionGate = {
+  isDisabled: baseGate.isDisabled,
+  disable: () => {
+    baseGate.disable();
+    setGaDisabled(true);
+  },
+  enable: () => {
+    baseGate.enable();
+    setGaDisabled(false);
+  },
+};
 
 export type AnalyticsStorageState = "enabled" | "disabled" | "unavailable";
 
