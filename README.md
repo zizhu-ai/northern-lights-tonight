@@ -10,7 +10,7 @@ Live-data pages perform the freshness check at request time. Raw-source state is
 
 The request-time live routes are `/`, all 15 `/forecast/{slug}` pages, and `/guides/where-to-see-northern-lights`. `/api/snapshots/latest` and `/api/health` are dynamic and `no-store`. Page markdown lives in `lib/bundled-markdown.json` so Workers do not read `content/` from disk.
 
-The Cloudflare Workers target is `@opennextjs/cloudflare` 1.20.x. See [docs/deploy-cloudflare.md](docs/deploy-cloudflare.md) for the worker name, R2 buckets, env/secret list, and local `preview` acceptance. DNS and Vercel are unchanged until an explicit cutover.
+The Cloudflare Workers target is `@opennextjs/cloudflare` 1.20.x. See [docs/deploy-cloudflare.md](docs/deploy-cloudflare.md) for the worker name, R2 buckets, env/secret list, and local `preview` acceptance. Production deploys via Cloudflare Workers Builds: every push to `main` builds and deploys automatically.
 
 ## Non-commercial validation production environment
 
