@@ -18,6 +18,7 @@ export type ForecastDossier = {
   slug: string;
   name: string;
   location_type: "state" | "city";
+  parent_slug?: string | null;
   page_template: "tonight_local" | "travel_plus_tonight";
   timezone: string;
   primary_verdict_point: string;

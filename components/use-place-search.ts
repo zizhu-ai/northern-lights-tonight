@@ -90,7 +90,11 @@ export function usePlaceSearch(source: SearchAnalyticsSource) {
     setMatches([]);
     setSuggestions([]);
     const kind = queryKind(nextQuery);
-    void trackBrowserProductEvent("search_submit", { source, query_kind: kind });
+    void trackBrowserProductEvent("search_submit", {
+      source,
+      query_kind: kind,
+      method: "typed",
+    });
 
     const result = findPlace(nextQuery);
     if (result.kind === "error") {
@@ -99,6 +103,8 @@ export function usePlaceSearch(source: SearchAnalyticsSource) {
       void trackBrowserProductEvent("search_match", {
         source,
         result: "fail",
+        query_kind: kind,
+        method: "typed",
         failure_type:
           result.code === "search_empty"
             ? "empty"
@@ -111,17 +117,30 @@ export function usePlaceSearch(source: SearchAnalyticsSource) {
     if (result.kind === "ambiguous") {
       setChecking(checkingAfterLookup("ambiguous"));
       setMatches(result.places);
-      void trackBrowserProductEvent("search_match", { source, result: "ambiguous" });
+      void trackBrowserProductEvent("search_match", {
+        source,
+        result: "ambiguous",
+        query_kind: kind,
+        method: "typed",
+      });
       return;
     }
 
-    void trackBrowserProductEvent("search_match", { source, result: "success" });
+    const destination =
+      result.kind === "slug" ? "forecast" : result.place.slug ? "forecast" : "view";
+    void trackBrowserProductEvent("search_match", {
+      source,
+      result: "success",
+      query_kind: kind,
+      method: "typed",
+      destination,
+    });
     setChecking(checkingAfterLookup("navigate"));
     if (result.kind === "slug") {
       goTo(`/forecast/${result.slug}`, "forecast");
       return;
     }
-    goTo(routeForPlace(result.place), result.place.slug ? "forecast" : "view");
+    goTo(routeForPlace(result.place), destination);
   }
 
   function locate() {
@@ -145,15 +164,27 @@ export function usePlaceSearch(source: SearchAnalyticsSource) {
         const lng = roundCoordinate(coords.longitude);
         setLocating(false);
         setChecking(true);
-        void trackBrowserProductEvent("search_match", { source, result: "success" });
 
         if (lat < 0) {
+          void trackBrowserProductEvent("search_match", {
+            source,
+            result: "success",
+            method: "gps",
+            destination: "view",
+          });
           goTo(viewRoute(lat, lng, `${lat.toFixed(3)}, ${lng.toFixed(3)}`), "view");
           return;
         }
 
         const place = nearestPlace(lat, lng);
-        goTo(routeForPlace(place), place.slug ? "forecast" : "view");
+        const destination = place.slug ? "forecast" : "view";
+        void trackBrowserProductEvent("search_match", {
+          source,
+          result: "success",
+          method: "gps",
+          destination,
+        });
+        goTo(routeForPlace(place), destination);
       },
       (positionError) => {
         if (generation !== gpsGeneration.current) return;

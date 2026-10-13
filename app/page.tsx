@@ -6,7 +6,9 @@ import {
   renderMarkdownBlocks,
 } from "@/components/guide-markdown";
 import { ForecastHours } from "@/components/forecast-hours";
+import { ForecastViewTracker } from "@/components/forecast-view-tracker";
 import { PlaceSearchForm } from "@/components/place-search-form";
+import { StateNavLink } from "@/components/state-nav-link";
 import {
   isSiteReadingsPaused,
   loadTonightRows,
@@ -15,7 +17,9 @@ import {
 import { StickyPlaceBar } from "@/components/sticky-place-bar";
 import { VerdictCard, verdictDataStatus } from "@/components/verdict-card";
 import copy from "@/content/ui-copy.json";
+import { getForecastDossier } from "@/lib/forecast-places";
 import { presentHomeOverview } from "@/lib/home-tonight";
+import { analyticsStateSlug } from "@/lib/search-event";
 import { formatZoneAbbreviation, loadLatestForPage } from "@/lib/snapshots";
 import { ogFor, SITE_URL } from "@/lib/site";
 
@@ -71,6 +75,7 @@ export default async function HomePage() {
 
       <div className={styles.inner}>
         <div className={`${styles.verdictSlot} ${styles.verdictSlotWide}`}>
+          <ForecastViewTracker pageType="home" verdict={overview.presented.status} />
           <VerdictCard
             presented={overview.presented}
             changePlace
@@ -96,10 +101,12 @@ export default async function HomePage() {
           <h2>City verdicts tonight</h2>
           <div className={styles.cityCards}>
             {overview.cityCards.map((card) => (
-              <Link
+              <StateNavLink
                 className={styles.cityCard}
                 href={`/forecast/${card.slug}`}
                 key={`${card.slug}-${card.city}`}
+                fromPageType="home"
+                toState={destinationStateSlug(card.slug)}
               >
                 <p className={styles.cityCardPlace}>
                   {card.city}
@@ -109,7 +116,7 @@ export default async function HomePage() {
                   {card.status}
                 </p>
                 <p className={styles.cityCardReason}>{card.reason}</p>
-              </Link>
+              </StateNavLink>
             ))}
           </div>
         </section>
@@ -164,4 +171,10 @@ export default async function HomePage() {
       </div>
     </main>
   );
+}
+
+function destinationStateSlug(slug: string): string {
+  const dossier = getForecastDossier(slug);
+  if (!dossier) return slug;
+  return analyticsStateSlug(dossier) ?? dossier.slug;
 }

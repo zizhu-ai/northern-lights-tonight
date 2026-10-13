@@ -1,10 +1,10 @@
-import Link from "next/link";
-
+import { StateNavLink } from "@/components/state-nav-link";
 import {
   getForecastDossier,
   WAVE_ONE_SLUGS,
   type ForecastDossier,
 } from "@/lib/forecast-places";
+import { analyticsStateSlug, type AnalyticsPageType } from "@/lib/search-event";
 import {
   formatWindow,
   loadLatest,
@@ -15,6 +15,7 @@ import styles from "./tonight-places.module.css";
 
 type TonightPlacesProps = {
   grouped?: boolean;
+  fromPageType?: AnalyticsPageType;
 };
 
 export type TonightRow = {
@@ -45,8 +46,12 @@ export function isSiteReadingsPaused(rows: TonightRow[]): boolean {
   return rows.every((row) => displayTonightStatus(row.snapshot) === "UNKNOWN");
 }
 
-export async function TonightPlaces({ grouped = false }: TonightPlacesProps) {
+export async function TonightPlaces({
+  grouped = false,
+  fromPageType = "home",
+}: TonightPlacesProps) {
   const rows = await loadTonightRows();
+  const renderRow = (row: TonightRow) => renderTonightRow(row, fromPageType);
 
   if (grouped) {
     return (
@@ -74,7 +79,7 @@ export async function TonightPlaces({ grouped = false }: TonightPlacesProps) {
   return <div className={styles.list}>{sorted.map(renderRow)}</div>;
 }
 
-function renderRow({ dossier, snapshot }: TonightRow) {
+function renderTonightRow({ dossier, snapshot }: TonightRow, fromPageType: AnalyticsPageType) {
   const status = displayTonightStatus(snapshot);
   const window =
     snapshot
@@ -84,7 +89,13 @@ function renderRow({ dossier, snapshot }: TonightRow) {
   const showPoint = Boolean(pointName && pointName !== dossier.name);
 
   return (
-    <Link className={styles.row} href={`/forecast/${dossier.slug}`} key={dossier.slug}>
+    <StateNavLink
+      className={styles.row}
+      href={`/forecast/${dossier.slug}`}
+      key={dossier.slug}
+      fromPageType={fromPageType}
+      toState={analyticsStateSlug(dossier) ?? dossier.slug}
+    >
       <strong
         className={styles.status}
         data-status={status.toLowerCase()}
@@ -101,6 +112,6 @@ function renderRow({ dossier, snapshot }: TonightRow) {
           {window}
         </span>
       ) : null}
-    </Link>
+    </StateNavLink>
   );
 }

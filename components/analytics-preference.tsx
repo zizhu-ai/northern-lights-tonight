@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import {
   ANALYTICS_OPT_OUT_KEY,
   analyticsSessionGate,
-  reconcileAnalyticsStorageEvent,
+  syncAnalyticsSessionFromBrowser,
 } from "@/lib/analytics-privacy";
 
 type PreferenceState = "loading" | "enabled" | "disabled" | "unavailable";
@@ -14,30 +14,11 @@ export function AnalyticsPreference() {
   const [preference, setPreference] = useState<PreferenceState>("loading");
 
   useEffect(() => {
-    try {
-      const optedOut =
-        window.localStorage.getItem(ANALYTICS_OPT_OUT_KEY) === "1";
-
-      if (optedOut) {
-        analyticsSessionGate.disable();
-        setPreference("disabled");
-      } else {
-        setPreference(
-          analyticsSessionGate.isDisabled() ? "unavailable" : "enabled",
-        );
-      }
-    } catch {
-      analyticsSessionGate.disable();
-      setPreference("unavailable");
-    }
+    setPreference(syncAnalyticsSessionFromBrowser());
 
     function syncFromOtherTab(event: StorageEvent) {
       if (event.key === ANALYTICS_OPT_OUT_KEY) {
-        setPreference(
-          reconcileAnalyticsStorageEvent(analyticsSessionGate, () =>
-            window.localStorage.getItem(ANALYTICS_OPT_OUT_KEY),
-          ),
-        );
+        setPreference(syncAnalyticsSessionFromBrowser());
       }
     }
 
@@ -62,10 +43,10 @@ export function AnalyticsPreference() {
 
     if (nextValue) {
       analyticsSessionGate.disable();
-    } else {
-      analyticsSessionGate.enable();
+      setPreference("disabled");
+      return;
     }
-    setPreference(nextValue ? "disabled" : "enabled");
+    setPreference(syncAnalyticsSessionFromBrowser());
   }
 
   if (preference === "loading") {
