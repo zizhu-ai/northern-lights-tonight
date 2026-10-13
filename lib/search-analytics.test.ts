@@ -4,6 +4,8 @@ import test from "node:test";
 
 import type { ForecastDossier } from "./forecast-places";
 // @ts-ignore TS5097
+import { prepareForecastViewEvent } from "./forecast-view-event.ts";
+// @ts-ignore TS5097
 import {
   analyticsStateSlug,
   faqAnalyticsId,
@@ -75,6 +77,55 @@ test("event name allowlist includes new events and rejects city_search and outbo
 
 test("trackProductEvent is a no-op when the session gate is disabled", () => {
   assert.deepEqual(capture("forecast_view", { page_type: "home", verdict: "GO" }, true), []);
+});
+
+test("forecast_view after SPA navigation uses the new sanitized page_location once per view", () => {
+  const once = { lastPageLocation: null as string | null };
+
+  const ohio = prepareForecastViewEvent(
+    "https://aurora-tonight.com/forecast/ohio",
+    { pageType: "forecast", state: "ohio", verdict: "GO" },
+    once,
+  );
+  assert.deepEqual(ohio, {
+    page_type: "forecast",
+    state: "ohio",
+    verdict: "GO",
+    page_location: "https://aurora-tonight.com/forecast/ohio",
+  });
+  assert.deepEqual(
+    capture("forecast_view", ohio!),
+    [{ name: "forecast_view", props: ohio }],
+  );
+
+  assert.equal(
+    prepareForecastViewEvent(
+      "https://aurora-tonight.com/forecast/ohio?utm_source=share",
+      { pageType: "forecast", state: "ohio", verdict: "MAYBE" },
+      once,
+    ),
+    null,
+  );
+
+  const indiana = prepareForecastViewEvent(
+    "https://aurora-tonight.com/forecast/indiana",
+    { pageType: "forecast", state: "indiana", verdict: "NO" },
+    once,
+  );
+  assert.equal(indiana?.page_location, "https://aurora-tonight.com/forecast/indiana");
+  assert.equal(indiana?.state, "indiana");
+  assert.deepEqual(capture("forecast_view", indiana!), [
+    { name: "forecast_view", props: indiana },
+  ]);
+
+  const pin = prepareForecastViewEvent(
+    "https://aurora-tonight.com/view?lat=40.123&lng=-86.100&name=Home",
+    { pageType: "view", verdict: "UNKNOWN" },
+    once,
+  );
+  assert.equal(pin?.page_location, "https://aurora-tonight.com/view");
+  assert.equal("lat" in (pin ?? {}), false);
+  assert.equal("name" in (pin ?? {}), false);
 });
 
 test("forecast_view param shape is page_type, optional state, and verdict", () => {

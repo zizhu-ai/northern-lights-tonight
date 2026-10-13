@@ -67,6 +67,7 @@ export type ProductEventProps = {
   verdict?: VerdictAnalyticsStatus;
   faq_id?: string;
   percent?: "50";
+  page_location?: string;
 };
 
 const BLOCKED_KEYS = new Set([
