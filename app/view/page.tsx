@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 
+import { ForecastViewTracker } from "@/components/forecast-view-tracker";
 import { PlaceSearchForm } from "@/components/place-search-form";
+import { StateNavLink } from "@/components/state-nav-link";
 import { VerdictCard } from "@/components/verdict-card";
 import copy from "@/content/ui-copy.json";
 import {
@@ -10,6 +11,7 @@ import {
   WAVE_ONE_SLUGS,
   type ForecastDossier,
 } from "@/lib/forecast-places";
+import { analyticsStateSlug } from "@/lib/search-event";
 import { haversineMiles } from "@/lib/place-search";
 import {
   resolveViewParams,
@@ -53,7 +55,7 @@ export default async function ViewPage({ searchParams }: ViewPageProps) {
           <h1>{copy.chrome.find_place_title}</h1>
         </header>
         <div className={styles.search}>
-          <PlaceSearchForm />
+          <PlaceSearchForm source="view" />
         </div>
       </main>
     );
@@ -78,6 +80,10 @@ export default async function ViewPage({ searchParams }: ViewPageProps) {
 
       <div className={styles.inner}>
         <div className={styles.verdictSlot}>
+          <ForecastViewTracker
+            pageType="view"
+            verdict={unavailable ? "UNAVAILABLE" : "UNKNOWN"}
+          />
           <VerdictCard
             status={unavailable ? "UNAVAILABLE" : "UNKNOWN"}
             mainIssue={unavailable ? copy.south.main_issue : copy.view.unknown_main_issue}
@@ -97,7 +103,13 @@ export default async function ViewPage({ searchParams }: ViewPageProps) {
           <ul className={styles.nearbyList}>
             {nearby.map((place) => (
               <li key={place.slug}>
-                <Link href={`/forecast/${place.slug}`}>{place.name} tonight</Link>
+                <StateNavLink
+                  href={`/forecast/${place.slug}`}
+                  fromPageType="view"
+                  toState={analyticsStateSlug(place) ?? place.slug}
+                >
+                  {place.name} tonight
+                </StateNavLink>
               </li>
             ))}
           </ul>

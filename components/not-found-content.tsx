@@ -24,7 +24,7 @@ export function NotFoundContent({ variant = "generic" }: NotFoundContentProps) {
       ) : (
         <div className={styles.notFoundActions}>
           <p>{copy.not_found.find_cta}</p>
-          <PlaceSearchForm />
+          <PlaceSearchForm source="not_found" />
         </div>
       )}
     </main>

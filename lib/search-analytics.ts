@@ -1,14 +1,27 @@
-import { analyticsSessionGate } from "@/lib/analytics-privacy";
+import {
+  analyticsAllowed,
+  analyticsSessionGate,
+  readAnalyticsOptOut,
+  readBrowserDoNotTrack,
+} from "@/lib/analytics-privacy";
+import { ensureGtagInstalled, queueGtag } from "@/lib/ga-client";
 import { queryKind } from "@/lib/place-search";
 import {
-  sanitizeProductEventProps,
+  trackProductEvent as emitProductEvent,
   type ProductEventName,
   type ProductEventProps,
   type SearchQueryKind,
 } from "@/lib/search-event";
 
 export type { ProductEventName, ProductEventProps, SearchQueryKind };
-export { sanitizeProductEventProps };
+export {
+  analyticsStateSlug,
+  faqAnalyticsId,
+  isAllowedProductEventName,
+  pageTypeFromPath,
+  PRODUCT_EVENT_NAMES,
+  sanitizeProductEventProps,
+} from "@/lib/search-event";
 
 export function queryKindForAnalytics(query: string): SearchQueryKind {
   return queryKind(query);
@@ -19,16 +32,28 @@ export function trackProductEvent(
   props: ProductEventProps,
   send: (event: string, data: Record<string, string>) => void = () => {},
 ): void {
-  if (analyticsSessionGate.isDisabled()) return;
-  send(name, sanitizeProductEventProps(props));
+  emitProductEvent(name, props, send, analyticsSessionGate.isDisabled());
 }
 
 export async function trackBrowserProductEvent(
   name: ProductEventName,
   props: ProductEventProps,
 ): Promise<void> {
-  if (typeof window === "undefined" || analyticsSessionGate.isDisabled()) return;
+  if (typeof window === "undefined") return;
+  if (
+    !analyticsAllowed({
+      measurementId: process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?? "",
+      hostname: window.location.hostname,
+      storageOptOut: readAnalyticsOptOut(),
+      dnt: readBrowserDoNotTrack(),
+      requireProductionHost: true,
+    })
+  ) {
+    return;
+  }
+  const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?? "";
   trackProductEvent(name, props, (event, data) => {
-    (window as unknown as { gtag?: (...args: unknown[]) => void }).gtag?.("event", event, data);
+    ensureGtagInstalled(measurementId);
+    queueGtag("event", event, data);
   });
 }

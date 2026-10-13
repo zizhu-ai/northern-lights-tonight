@@ -42,7 +42,7 @@ export default async function WhereGuidePage() {
       </header>
 
       <section className={styles.section} aria-label={copy.home.table_kicker}>
-        <TonightPlaces grouped />
+        <TonightPlaces grouped fromPageType="guides" />
       </section>
 
       <article className={styles.reader}>{renderMarkdownBlocks(body)}</article>

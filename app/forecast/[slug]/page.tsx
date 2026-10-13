@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { ForecastViewTracker } from "@/components/forecast-view-tracker";
+import { StateNavLink } from "@/components/state-nav-link";
+import { TrackedFaqDetails } from "@/components/tracked-faq-details";
 import {
   VerdictCard,
   verdictDataStatus,
@@ -32,6 +35,7 @@ import {
 import { ForecastHours } from "@/components/forecast-hours";
 import { ForecastLocalGuide } from "@/components/forecast-local-guide";
 import { cityFaqHeading, localFaqsForPage } from "@/lib/city-faq";
+import { analyticsStateSlug, faqAnalyticsId } from "@/lib/search-event";
 import { forecastLead, h1For, titleFor } from "@/lib/forecast-copy";
 import { clampSeoText, SITE_URL, titleCasePhrase } from "@/lib/site";
 
@@ -148,6 +152,11 @@ export default async function ForecastPage({ params }: PageProps) {
 
       <div className={styles.shell}>
         <div className={styles.verdictSlot}>
+          <ForecastViewTracker
+            pageType="forecast"
+            state={analyticsStateSlug(dossier) ?? dossier.slug}
+            verdict={state.presented.status}
+          />
           <VerdictCard
             presented={state.presented}
             alaskaKicker={slug === "alaska"}
@@ -210,11 +219,11 @@ export default async function ForecastPage({ params }: PageProps) {
         <section className={styles.section}>
           <h2>{cityFaqHeading(dossier)}</h2>
           <div className={styles.faqs}>
-            {faqs.map((faq) => (
-              <details key={faq.q}>
+            {faqs.map((faq, index) => (
+              <TrackedFaqDetails key={faq.q} faqId={faqAnalyticsId(faq.q, index)}>
                 <summary>{faq.q}</summary>
                 <p>{faq.a}</p>
-              </details>
+              </TrackedFaqDetails>
             ))}
           </div>
         </section>
@@ -260,7 +269,11 @@ function NearbyForecasts({
 
         return (
           <li key={place.slug}>
-            <Link href={`/forecast/${place.slug}`}>
+            <StateNavLink
+              href={`/forecast/${place.slug}`}
+              fromPageType="forecast"
+              toState={analyticsStateSlug(place) ?? place.slug}
+            >
               <span className={styles.nearbyTopline}>
                 <strong>{place.name}</strong>
                 <span className="stamp" data-status={status.toLowerCase()}>
@@ -270,7 +283,7 @@ function NearbyForecasts({
               <span className={styles.nearbyWindow}>
                 {copy.verdict.best_window_label}: {window}
               </span>
-            </Link>
+            </StateNavLink>
           </li>
         );
       })}
