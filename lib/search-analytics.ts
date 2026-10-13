@@ -3,8 +3,9 @@ import {
   analyticsSessionGate,
   readAnalyticsOptOut,
   readBrowserDoNotTrack,
+  sanitizePageLocation,
 } from "@/lib/analytics-privacy";
-import { ensureGtagInstalled, queueGtag } from "@/lib/ga-client";
+import { ensureGtagInstalled, queueGtag, syncGtagPageLocation } from "@/lib/ga-client";
 import { queryKind } from "@/lib/place-search";
 import {
   trackProductEvent as emitProductEvent,
@@ -54,6 +55,13 @@ export async function trackBrowserProductEvent(
   const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?? "";
   trackProductEvent(name, props, (event, data) => {
     ensureGtagInstalled(measurementId);
+    if (event === "forecast_view") {
+      const page_location = sanitizePageLocation(
+        data.page_location || window.location.href,
+      );
+      data = { ...data, page_location };
+      syncGtagPageLocation(measurementId, page_location);
+    }
     queueGtag("event", event, data);
   });
 }

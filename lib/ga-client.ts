@@ -41,11 +41,19 @@ export function ensureGtagInstalled(measurementId: string): void {
     gtagScriptInjected = true;
   }
   if (!gtagConfigured) {
-    const page = {
-      page_location: sanitizePageLocation(window.location.href),
-      page_referrer: document.referrer ? sanitizePageLocation(document.referrer) : "",
-    };
-    queueGtag("config", measurementId, ga4ConfigFields(page));
-    gtagConfigured = true;
+    syncGtagPageLocation(measurementId, window.location.href);
   }
+}
+
+export function syncGtagPageLocation(measurementId: string, href: string): string {
+  const page_location = sanitizePageLocation(href);
+  if (typeof window === "undefined") return page_location;
+  queueGtag();
+  const page = {
+    page_location,
+    page_referrer: document.referrer ? sanitizePageLocation(document.referrer) : "",
+  };
+  queueGtag("config", measurementId, ga4ConfigFields(page));
+  gtagConfigured = true;
+  return page_location;
 }
