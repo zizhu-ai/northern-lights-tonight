@@ -1,16 +1,23 @@
 import Link from "next/link";
 
 import type { ForecastDossier } from "@/lib/forecast-places";
-import { getHeadlinePoint } from "@/lib/forecast-places";
+import { getHeadlinePoint, seoFlag } from "@/lib/forecast-places";
 import { titleCasePhrase } from "@/lib/site";
 
 import styles from "@/app/forecast/[slug]/page.module.css";
 
-export function ForecastLocalGuide({ dossier }: { dossier: ForecastDossier }) {
+export function ForecastLocalGuide({
+  dossier,
+  lookToward,
+}: {
+  dossier: ForecastDossier;
+  lookToward?: string;
+}) {
   const phrase = titleCasePhrase(dossier.primary_keyword);
   const localHeading = /tonight/i.test(phrase) ? phrase : `${phrase} tonight`;
   const headline = getHeadlinePoint(dossier);
   const zone = dossier.aurora_zone.replaceAll("_", " ");
+  const whereToSee = seoFlag(dossier, "whereToSee");
 
   return (
     <section className={styles.section}>
@@ -28,12 +35,29 @@ export function ForecastLocalGuide({ dossier }: { dossier: ForecastDossier }) {
           : `Summer twilight in ${dossier.name} is shorter than in Alaska, so a strong storm can still be usable if the sky is dark enough and clear.`}
       </p>
 
-      <h2>Light, weather, and {dossier.name}</h2>
+      <h2>
+        {whereToSee
+          ? `Where to see the northern lights in ${dossier.name}`
+          : `Light, weather, and ${dossier.name}`}
+      </h2>
       <p>{dossier.light_pollution_note}</p>
       <p>{dossier.local_obstacles}</p>
       {dossier.page_template === "travel_plus_tonight" ? null : (
         <p>{dossier.best_months_note}</p>
       )}
+      {whereToSee ? (
+        <>
+          <ul className={styles.actionList}>
+            <li>{dossier.leave_city_advice}</li>
+            <li>Face {lookToward ?? dossier.viewing_direction}.</li>
+          </ul>
+          <p>
+            <Link href="/guides/where-to-see-northern-lights">
+              Where to see the northern lights
+            </Link>
+          </p>
+        </>
+      ) : null}
 
       <h2>Sample points for {phrase}</h2>
       <ul className={styles.pointList}>

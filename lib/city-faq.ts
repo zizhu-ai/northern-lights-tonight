@@ -138,6 +138,52 @@ function isGeneratedCityQuestion(question: string, dossier: ForecastDossier): bo
   );
 }
 
+export function wordCount(text: string): number {
+  return text.trim().split(/\s+/).filter(Boolean).length;
+}
+
+export function evergreenVisibilityAnswer(
+  dossier: ForecastDossier,
+  status: string,
+): string {
+  const headline = getHeadlinePoint(dossier);
+  const mag = dossier.magnetic_latitude.toFixed(1);
+  const kp = dossier.typical_kp_horizon;
+  if (dossier.slug === "illinois") {
+    return `Yes, but only during strong geomagnetic storms, and mainly in northern Illinois. From anywhere in Illinois, horizon aurora typically needs about Kp ${kp} at ${headline.name}’s magnetic latitude (${mag}); you can see it when a storm hits on a dark, clear night. Tonight: ${status}.`;
+  }
+  if (dossier.slug === "maine") {
+    return `Yes — Maine is one of the better Lower 48 states on a moderate storm. From ${headline.name} (magnetic latitude ${mag}) horizon aurora typically needs about Kp ${kp}; you can see it when that coincides with a dark, clear, north-facing sky. Tonight: ${status}.`;
+  }
+  return `${dossier.name} is a ${dossier.aurora_zone.replaceAll("_", " ")} location. Horizon color typically needs about Kp ${dossier.typical_kp_horizon}. Tonight’s computed status is ${status}.`;
+}
+
+export function bestTimeFaqAnswer(dossier: ForecastDossier, status: string): string {
+  if (dossier.slug === "illinois") {
+    return `It depends on geomagnetic activity, not the calendar: storms can arrive in any month, but the long, dark nights from autumn through spring offer more chances. Tonight: ${status}. See our best-time guide for the full picture.`;
+  }
+  if (dossier.slug === "maine") {
+    return `It depends on geomagnetic activity, not the month: Maine’s season runs August–April, and September and March are popular for long nights without the worst winter weather. Tonight: ${status}. Check the 30-minute table for tonight’s window.`;
+  }
+  return `It depends on geomagnetic activity, not the calendar. Tonight: ${status}.`;
+}
+
+function mergedWorthGoingOutAnswer(
+  dossier: ForecastDossier,
+  status: string,
+  issue: string,
+): string {
+  const headline = getHeadlinePoint(dossier);
+  const mag = dossier.magnetic_latitude.toFixed(1);
+  if (dossier.slug === "illinois") {
+    return `${status} for Illinois tonight from the ${headline.name} headline (magnetic latitude ${mag}). ${issue} This is not a statewide yes: northern Illinois is the gate, and southern Illinois can still be no.`;
+  }
+  if (dossier.slug === "maine") {
+    return `${status} for Maine tonight from the ${headline.name} headline (magnetic latitude ${mag}). ${issue} This is not a statewide yes: Aroostook can still differ from Portland on the same night.`;
+  }
+  return `${status} for ${dossier.name} tonight from the ${headline.name} headline (magnetic latitude ${mag}). ${issue} This is not a statewide yes.`;
+}
+
 export function stateKeywordFaqs(
   dossier: ForecastDossier,
   snapshot: ForecastSnapshot | null,
@@ -151,6 +197,22 @@ export function stateKeywordFaqs(
       copy.verdict.stale_main_issue;
   const state = dossier.name;
   const mag = dossier.magnetic_latitude.toFixed(1);
+  if (dossier.faqMerge) {
+    return [
+      {
+        q: `Can you see the northern lights in ${state}?`,
+        a: evergreenVisibilityAnswer(dossier, status),
+      },
+      {
+        q: `Northern lights tonight ${state.toLowerCase()} — is it worth going out?`,
+        a: mergedWorthGoingOutAnswer(dossier, status, issue),
+      },
+      {
+        q: `When is the best time to see the northern lights in ${state}?`,
+        a: bestTimeFaqAnswer(dossier, status),
+      },
+    ];
+  }
   return [
     {
       q: `Northern lights tonight ${state.toLowerCase()} — is it worth going out?`,
@@ -188,6 +250,7 @@ export function localFaqsForPage(
 }
 
 export function cityFaqHeading(dossier: ForecastDossier): string {
+  if (dossier.cityH2Override) return dossier.cityH2Override;
   const names = dossier.sample_points.slice(0, MAX_CITY_FAQS).map((point) => point.name);
   if (names.length === 0) return `Northern lights tonight in ${dossier.name}`;
   if (names.length === 1) return `Northern lights tonight in ${names[0]}`;

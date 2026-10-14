@@ -3,8 +3,15 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 
 // @ts-ignore TS5097
-import { cityTonightAnswer, localFaqsForPage } from "./city-faq.ts";
-import type { ForecastDossier } from "./forecast-places";
+import {
+  cityFaqHeading,
+  cityTonightAnswer,
+  localFaqsForPage,
+  stateKeywordFaqs,
+  wordCount,
+} from "./city-faq.ts";
+import { h1For, titleFor } from "./forecast-copy.ts";
+import { SEO_BLOCK_FLAGS, type ForecastDossier } from "./forecast-places.ts";
 import type { ForecastPoint, ForecastSnapshot } from "./snapshots";
 
 const dossiers = (
@@ -158,4 +165,120 @@ test("stale UNKNOWN city FAQs keep magnetic latitude and drop leftover tonight v
   assert.ok(worthGoing.includes("UNKNOWN"));
   assert.ok(worthGoing.includes("Source data is too old to treat as live."));
   assert.equal(worthGoing.includes("not expected to reach"), false);
+});
+
+test("FAQ merge and city H2 stay off except Illinois and Maine", () => {
+  for (const item of dossiers) {
+    const enabled = item.slug === "illinois" || item.slug === "maine";
+    for (const flag of SEO_BLOCK_FLAGS) {
+      if (flag === "predictionBlock" || flag === "leadInNameTonight") continue;
+      assert.equal(Boolean(item[flag]), enabled, `${item.slug} ${flag}`);
+    }
+    assert.equal(Boolean(item.predictionBlock), item.slug === "illinois", item.slug);
+    assert.equal(Boolean(item.leadInNameTonight), item.slug === "maine", item.slug);
+    if (item.slug === "maine") {
+      assert.equal(
+        item.cityH2Override,
+        "Can you see the northern lights in Portland, Bangor, or Aroostook?",
+      );
+      assert.equal(item.h1Override, "Can You See the Northern Lights in Maine Tonight?");
+    } else {
+      assert.equal(item.cityH2Override, undefined, item.slug);
+      assert.equal(item.h1Override, undefined, item.slug);
+    }
+  }
+});
+
+test("other state keyword FAQs and city H2 stay on the original template", () => {
+  const ohio = localFaqsForPage(dossier("ohio"), null);
+  const questions = ohio.map((faq) => faq.q);
+  assert.ok(questions.includes("Northern lights tonight ohio — is it worth going out?"));
+  assert.ok(questions.includes("Aurora borealis ohio — can you see it tonight?"));
+  assert.ok(questions.includes("Ohio northern lights: is tonight a statewide yes?"));
+  assert.equal(
+    questions.includes("Can you see the northern lights in Ohio?"),
+    false,
+  );
+  assert.equal(
+    questions.includes("When is the best time to see the northern lights in Ohio?"),
+    false,
+  );
+  assert.match(
+    cityFaqHeading(dossier("ohio")),
+    /^Northern lights tonight in /,
+  );
+  assert.equal(cityFaqHeading(dossier("ohio")).includes("Aroostook"), false);
+  assert.equal(titleFor(dossier("ohio")).includes("Visibility & Best Time"), true);
+  assert.equal(h1For(dossier("wisconsin")), "Northern Lights Tonight in Wisconsin");
+});
+
+test("Illinois and Maine merged FAQs are 30–50 words and conclusion-first", () => {
+  const statuses = ["GO", "MAYBE", "NO", "UNKNOWN"] as const;
+  for (const slug of ["illinois", "maine"] as const) {
+    const item = dossier(slug);
+    for (const status of statuses) {
+      const snapshot = {
+        location_slug: slug,
+        headline_point_name: slug === "illinois" ? "Rockford" : "Bangor",
+        status,
+        confidence: "medium" as const,
+        best_window_start: null,
+        best_window_end: null,
+        main_obstacle: status === "UNKNOWN" ? "DATA_STALE" : "AURORA_NO_REACH",
+        main_obstacle_text:
+          status === "UNKNOWN"
+            ? "Source data is too old to treat as live."
+            : `Aurora activity is not expected to reach ${item.name} tonight.`,
+        answer_sentence: `${status} in ${item.name}.`,
+        headline_point_id: slug === "illinois" ? "rockford" : "bangor",
+        generated_at: "2026-10-11T00:00:00.000Z",
+        valid_until: "2026-10-11T01:00:00.000Z",
+        reason_codes: ["AURORA_NO_REACH"],
+        look_toward: "north",
+        points: [],
+        windows: [],
+        seo_indexable: false as const,
+      } satisfies ForecastSnapshot;
+      const keywords = stateKeywordFaqs(item, snapshot);
+      assert.equal(keywords.length, 3);
+      assert.equal(keywords[0]?.q, `Can you see the northern lights in ${item.name}?`);
+      assert.equal(
+        keywords[2]?.q,
+        `When is the best time to see the northern lights in ${item.name}?`,
+      );
+      assert.equal(
+        keywords.some((faq) => /aurora borealis/i.test(faq.q)),
+        false,
+      );
+      assert.equal(
+        keywords.some((faq) => /statewide yes/i.test(faq.q)),
+        false,
+      );
+      for (const faq of keywords) {
+        const words = wordCount(faq.a);
+        assert.ok(
+          words >= 30 && words <= 50,
+          `${slug} ${status} “${faq.q}” is ${words} words: ${faq.a}`,
+        );
+      }
+      assert.match(keywords[0]?.a ?? "", /^(Yes|No|It depends)\b/);
+      assert.match(keywords[2]?.a ?? "", /^It depends\b/);
+    }
+  }
+});
+
+test("Maine city H2 override and Aroostook label", () => {
+  const maine = dossier("maine");
+  assert.equal(
+    cityFaqHeading(maine),
+    "Can you see the northern lights in Portland, Bangor, or Aroostook?",
+  );
+  assert.ok(maine.sample_points.some((point) => point.id === "presque-isle"));
+  assert.ok(
+    maine.sample_points.some((point) => point.name === "Aroostook (Presque Isle)"),
+  );
+  const faqs = localFaqsForPage(maine, null);
+  assert.ok(
+    faqs.some((faq) => faq.q.includes("Aroostook (Presque Isle)")),
+  );
 });
