@@ -153,6 +153,15 @@ export function editDistance(a: string, b: string): number {
   return previous[b.length] ?? b.length;
 }
 
+function isCanonicalSlugPlace(place: Place): boolean {
+  if (!place.slug) return false;
+  return normalizePlaceQuery(place.name) === normalizePlaceQuery(place.slug.replaceAll("-", " "));
+}
+
+function isStateNamePlace(place: Place): boolean {
+  return isCanonicalSlugPlace(place) && !place.name.includes(",");
+}
+
 export function closestTypedPlaceInData(data: PlaceData, query: string): Place | null {
   const normalized = normalizePlaceQuery(query);
   if (normalized.length < 5) return null;
@@ -161,16 +170,47 @@ export function closestTypedPlaceInData(data: PlaceData, query: string): Place |
   const consider = (place: Place, value: string) => {
     if (!value || Math.abs(value.length - normalized.length) > 2) return;
     const distance = editDistance(value, normalized);
-    if (distance === 0 || distance > 2 || distance >= bestDistance) return;
+    if (distance === 0 || distance > 2) return;
+    if (bestPlace && distance > bestDistance) return;
+    if (bestPlace && distance === bestDistance) {
+      const nextState = isStateNamePlace(place);
+      const bestState = isStateNamePlace(bestPlace);
+      if (bestState || !nextState) return;
+    }
     bestPlace = place;
     bestDistance = distance;
   };
   for (const place of data.places) {
     consider(place, normalizePlaceQuery(place.name));
-    if (place.slug) consider(place, normalizePlaceQuery(place.slug.replaceAll("-", " ")));
+    if (isCanonicalSlugPlace(place) && place.slug) {
+      consider(place, normalizePlaceQuery(place.slug.replaceAll("-", " ")));
+    }
     for (const key of place.keys) consider(place, normalizePlaceQuery(key));
   }
   return bestPlace;
+}
+
+export function searchStateFromQueryInData(
+  data: PlaceData,
+  query: string,
+): {
+  error: PlaceSearchError | null;
+  matches: Place[];
+  suggestions: Place[];
+} {
+  const result = findPlaceInData(data, query);
+  if (result.kind === "ambiguous") {
+    return { error: null, matches: result.places, suggestions: [] };
+  }
+  if (result.kind === "error") {
+    const closest = result.code === "search_no_match" ? closestTypedPlaceInData(data, query) : null;
+    return {
+      error: result.code,
+      matches: [],
+      suggestions: closest ? [closest] : [],
+    };
+  }
+  return { error: null, matches: [], suggestions: [] };
 }
 
 export function findPlaceInData(data: PlaceData, query: string): PlaceSearchResult {

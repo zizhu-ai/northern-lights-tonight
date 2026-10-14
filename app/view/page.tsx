@@ -24,6 +24,7 @@ import { windowReason } from "@/lib/verdict-presentation";
 import { loadViewReading, timezoneForView } from "@/lib/view-live";
 import { isCoordinateLabel } from "@/lib/view-reading";
 import {
+  hasRecheckParam,
   resolveViewParams,
   type QueryValue,
 } from "@/lib/view-params";
@@ -61,7 +62,9 @@ export async function generateMetadata({ searchParams }: ViewPageProps): Promise
 }
 
 export default async function ViewPage({ searchParams }: ViewPageProps) {
-  const params = resolveViewParams(await searchParams);
+  const query = await searchParams;
+  const params = resolveViewParams(query);
+  const recheck = hasRecheckParam(query);
 
   if (!params.hasCoords) {
     return (
@@ -81,7 +84,7 @@ export default async function ViewPage({ searchParams }: ViewPageProps) {
   const nearby = closestWaveOnePlaces(lat, lng);
   const reading = unavailable
     ? null
-    : await readViewReading({ lat, lng, name });
+    : await readViewReading({ lat, lng, name, recheck });
   const timezone = unavailable ? "America/Denver" : timezoneForView(lat, lng);
   const timezoneAbbr = formatZoneAbbreviation(new Date(), timezone);
   const kicker = isCoordinateLabel(name, lat, lng) ? null : `${name} · ${timezoneAbbr}`;
@@ -164,6 +167,7 @@ export default async function ViewPage({ searchParams }: ViewPageProps) {
                 >
                   {place.name} tonight
                 </StateNavLink>
+                {/* Mileage is /view-only; forecast/state Nearby lists stay status + window. */}
                 <span className={styles.nearbyMiles}>
                   {" "}
                   · about {Math.round(place.distance)} miles

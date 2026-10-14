@@ -4,6 +4,11 @@ import Link from "next/link";
 import { useEffect, useId, useRef, useState } from "react";
 
 import copy from "@/content/ui-copy.json";
+import {
+  CLOSE_MOBILE_NAV_EVENT,
+  OPEN_FIND_PLACE_EVENT,
+  OPEN_MOBILE_NAV_EVENT,
+} from "./use-place-search";
 
 const links = [
   { label: copy.chrome.nav_tonight, href: "/" },
@@ -23,6 +28,18 @@ export function MobileNav() {
   function close() {
     setOpen(false);
   }
+
+  useEffect(() => {
+    function onOtherPanel() {
+      close();
+    }
+    window.addEventListener(OPEN_FIND_PLACE_EVENT, onOtherPanel);
+    window.addEventListener(CLOSE_MOBILE_NAV_EVENT, onOtherPanel);
+    return () => {
+      window.removeEventListener(OPEN_FIND_PLACE_EVENT, onOtherPanel);
+      window.removeEventListener(CLOSE_MOBILE_NAV_EVENT, onOtherPanel);
+    };
+  }, []);
 
   useEffect(() => {
     if (!open) return;
@@ -45,7 +62,13 @@ export function MobileNav() {
         type="button"
         aria-expanded={open}
         aria-controls={panelId}
-        onClick={() => setOpen((current) => !current)}
+        onClick={() => {
+          setOpen((current) => {
+            const next = !current;
+            if (next) window.dispatchEvent(new Event(OPEN_MOBILE_NAV_EVENT));
+            return next;
+          });
+        }}
       >
         {copy.chrome.nav_menu}
       </button>

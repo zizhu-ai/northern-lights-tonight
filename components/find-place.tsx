@@ -12,6 +12,7 @@ import copy from "@/content/ui-copy.json";
 
 import {
   OPEN_FIND_PLACE_EVENT,
+  OPEN_MOBILE_NAV_EVENT,
   searchErrorCopy,
   usePlaceSearch,
 } from "./use-place-search";
@@ -33,8 +34,15 @@ export function FindPlace() {
     function onOpen() {
       setOpen(true);
     }
+    function onOtherPanel() {
+      close();
+    }
     window.addEventListener(OPEN_FIND_PLACE_EVENT, onOpen);
-    return () => window.removeEventListener(OPEN_FIND_PLACE_EVENT, onOpen);
+    window.addEventListener(OPEN_MOBILE_NAV_EVENT, onOtherPanel);
+    return () => {
+      window.removeEventListener(OPEN_FIND_PLACE_EVENT, onOpen);
+      window.removeEventListener(OPEN_MOBILE_NAV_EVENT, onOtherPanel);
+    };
   }, []);
 
   useEffect(() => {
@@ -89,6 +97,7 @@ export function FindPlace() {
           }
           setOpen(true);
           search.setError(null);
+          window.dispatchEvent(new Event(OPEN_FIND_PLACE_EVENT));
         }}
       >
         {copy.chrome.find_place}

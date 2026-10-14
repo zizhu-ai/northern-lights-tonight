@@ -4,6 +4,7 @@ import {
   closestTypedPlaceInData,
   findPlaceInData,
   nearestPlaceInData,
+  searchStateFromQueryInData,
   suggestPlacesInData,
   type Place,
   type PlaceData,
@@ -22,6 +23,7 @@ export {
   closestTypedPlaceInData,
   findPlaceInData,
   haversineMiles,
+  searchStateFromQueryInData,
   normalizePlaceQuery,
   queryKind,
   roundCoordinate,
@@ -46,4 +48,12 @@ export function suggestPlaces(query: string, limit = 8): Place[] {
 
 export function closestTypedPlace(query: string): Place | null {
   return closestTypedPlaceInData(placeData, query);
+}
+
+export function searchStateFromQuery(query: string): {
+  error: PlaceSearchError | null;
+  matches: Place[];
+  suggestions: Place[];
+} {
+  return searchStateFromQueryInData(placeData, query);
 }

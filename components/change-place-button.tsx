@@ -45,7 +45,6 @@ export function RecheckButton() {
           router.replace(`${url.pathname}?${url.searchParams.toString()}`, {
             scroll: false,
           });
-          router.refresh();
         });
       }}
     >
