@@ -3,6 +3,7 @@ import Link from "next/link";
 import copy from "@/content/ui-copy.json";
 
 import { FindPlace } from "./find-place";
+import { MobileNav } from "./mobile-nav";
 
 const links = [
   { label: copy.chrome.nav_tonight, href: "/" },
@@ -36,7 +37,10 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        <FindPlace />
+        <div className="site-header__tools">
+          <MobileNav />
+          <FindPlace />
+        </div>
       </div>
     </header>
   );

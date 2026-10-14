@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 
 // @ts-ignore TS5097
-import { findPlaceInData, queryKind, suggestPlacesInData, type PlaceData } from "./place-match.ts";
+import { closestTypedPlaceInData, findPlaceInData, queryKind, suggestPlacesInData, type PlaceData } from "./place-match.ts";
 
 const placeData = JSON.parse(
   readFileSync(new URL("../data/us-places.json", import.meta.url), "utf8"),
@@ -63,6 +63,12 @@ test("New York ZIP stays a live pin, not a new city forecast URL", () => {
     assert.equal(zip.place.slug, null);
     assert.equal(zip.place.name, "New York, NY");
   }
+});
+
+test("near-miss city names suggest the closest covered or pin place", () => {
+  const fairbanks = closestTypedPlaceInData(placeData, "fairbnks");
+  assert.ok(fairbanks);
+  assert.match(fairbanks.name, /fairbanks/i);
 });
 
 test("empty and unknown queries keep a typed-input error code", () => {

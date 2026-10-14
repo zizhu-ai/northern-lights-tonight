@@ -73,7 +73,7 @@ test("strips every query and hash from page URLs", () => {
 test("sanitizePageLocation strips lat lng name q zip and similar keys", () => {
   assert.equal(
     sanitizePageLocation(
-      "https://aurora-tonight.com/view?lat=42.123&lng=-71.456&name=Home&q=80521#hash",
+      "https://aurora-tonight.com/view?lat=42.123&lng=-71.456&name=Home&q=80521&recheck=1#hash",
     ),
     "https://aurora-tonight.com/view",
   );

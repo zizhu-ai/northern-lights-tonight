@@ -12,6 +12,7 @@ import {
   planTypedSubmit,
 } from "@/lib/place-search-flow";
 import {
+  closestTypedPlace,
   findPlace,
   nearestPlace,
   queryKind,
@@ -100,6 +101,10 @@ export function usePlaceSearch(source: SearchAnalyticsSource) {
     if (result.kind === "error") {
       setChecking(checkingAfterLookup("error"));
       setError(result.code);
+      if (result.code === "search_no_match") {
+        const closest = closestTypedPlace(nextQuery);
+        setSuggestions(closest ? [closest] : []);
+      }
       void trackBrowserProductEvent("search_match", {
         source,
         result: "fail",

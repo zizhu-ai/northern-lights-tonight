@@ -254,6 +254,12 @@
   margin-top: 36px;
 }
 
+.nearbyMiles {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+
 .reader {
   max-width: 68ch;
   margin-top: 36px;

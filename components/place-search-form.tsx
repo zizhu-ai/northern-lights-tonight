@@ -74,6 +74,9 @@ export function PlaceSearchForm({
       {dropdownPlaces.length > 0 ? (
         <div id={dropdownId} className="place-search-form__matches" role="listbox">
           {search.matches.length > 0 ? <p>{copy.errors.search_ambiguous}</p> : null}
+          {search.error === "search_no_match" && search.suggestions.length > 0 ? (
+            <p>{copy.errors.search_did_you_mean.replace("{Place}", search.suggestions[0]?.name ?? "")}</p>
+          ) : null}
           <ul>
             {dropdownPlaces.map((place) => (
               <li key={`${place.name}-${place.lat}-${place.lng}`}>

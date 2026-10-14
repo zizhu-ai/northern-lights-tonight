@@ -168,11 +168,14 @@ export function FindPlace() {
               <p id="find-place-privacy" className="find-place__privacy">
                 {copy.chrome.gps_privacy}
               </p>
-              {search.matches.length > 0 ? (
+              {search.matches.length > 0 || (search.error === "search_no_match" && search.suggestions.length > 0) ? (
                 <div id="find-place-matches" className="place-search-form__matches" role="status">
-                  <p>{copy.errors.search_ambiguous}</p>
+                  {search.matches.length > 0 ? <p>{copy.errors.search_ambiguous}</p> : null}
+                  {search.error === "search_no_match" && search.suggestions.length > 0 ? (
+                    <p>{copy.errors.search_did_you_mean.replace("{Place}", search.suggestions[0]?.name ?? "")}</p>
+                  ) : null}
                   <ul>
-                    {search.matches.map((place) => (
+                    {(search.matches.length > 0 ? search.matches : search.suggestions).map((place) => (
                       <li key={`${place.name}-${place.lat}-${place.lng}`}>
                         <button
                           type="button"

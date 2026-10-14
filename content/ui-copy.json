@@ -10,6 +10,7 @@
     "nav_tonight": "Tonight",
     "nav_near_me": "Near me",
     "nav_guides": "Guides",
+    "nav_menu": "Menu",
     "find_place": "Find place",
     "find_place_title": "Find a place",
     "close": "Close",
@@ -79,6 +80,7 @@
   "errors": {
     "search_empty": "Enter a US city, state, or ZIP.",
     "search_no_match": "No match for that place. Try a city, state, or 5-digit ZIP.",
+    "search_did_you_mean": "Did you mean {Place}?",
     "search_ambiguous": "Several places match. Pick one, or add a state.",
     "gps_denied": "Location permission is off. Search a city or ZIP instead.",
     "gps_unavailable": "Could not read your location. Search a city or ZIP instead.",
