@@ -6,8 +6,12 @@ import test from "node:test";
 import {
   forecastLead,
   h1For,
+  nearbyAnchorText,
+  nearbyWindowLine,
   repeatedDossierSentences,
+  seoDescription,
   titleFor,
+  whatTimeTonightCopy,
 } from "./forecast-copy.ts";
 import type { ForecastDossier } from "./forecast-places";
 
@@ -22,9 +26,22 @@ test("forecast titles and H1 contain Northern Lights Tonight", () => {
     const title = titleFor(dossier);
     const h1 = h1For(dossier);
     assert.ok(title.toLowerCase().includes("northern lights tonight"), title);
-    assert.equal(h1, `Northern Lights Tonight in ${dossier.name}`);
+    if (dossier.slug === "maine") {
+      assert.equal(h1, "Can You See the Northern Lights in Maine Tonight?");
+    } else {
+      assert.equal(h1, `Northern Lights Tonight in ${dossier.name}`);
+    }
     assert.ok(title.length <= 60, `${dossier.slug} title length ${title.length}: ${title}`);
   }
+});
+
+test("Illinois and Maine titles stay on the existing Visibility & Best Time form", () => {
+  const illinois = dossiers.find((item) => item.slug === "illinois");
+  const maine = dossiers.find((item) => item.slug === "maine");
+  assert.ok(illinois && maine);
+  assert.equal(titleFor(illinois), "Northern Lights Tonight in Illinois: Visibility & Best Time");
+  assert.equal(titleFor(maine), "Northern Lights Tonight in Maine: Visibility & Best Time");
+  assert.equal(h1For(illinois), "Northern Lights Tonight in Illinois");
 });
 
 test("forecast lead prefixes the main term when the verdict sentence omits it", () => {
@@ -43,4 +60,66 @@ test("template blocks do not reuse the same sentence", () => {
   for (const dossier of dossiers) {
     assert.deepEqual(repeatedDossierSentences(dossier), [], dossier.slug);
   }
+});
+
+test("seoDescription omits Best window when the window is unknown", () => {
+  const ohio = dossiers.find((item) => item.slug === "ohio");
+  assert.ok(ohio);
+  const description = seoDescription(ohio, "Cleveland", {
+    status: "NO",
+    mainIssue: "Aurora activity is not expected to reach Ohio tonight.",
+    bestWindow: "—",
+  });
+  assert.equal(description.includes("Best window"), false);
+  assert.equal(description.includes("—."), false);
+  assert.match(description, /Northern Lights Ohio tonight: NO from Cleveland\./);
+  assert.match(description, /Aurora activity is not expected to reach Ohio tonight/);
+});
+
+test("seoDescription keeps Best window when a real window exists", () => {
+  const ohio = dossiers.find((item) => item.slug === "ohio");
+  assert.ok(ohio);
+  const description = seoDescription(ohio, "Cleveland", {
+    status: "MAYBE",
+    mainIssue: "Clouds are the main uncertainty.",
+    bestWindow: "10:00 PM–12:00 AM ET",
+  });
+  assert.match(description, /Best window 10:00 PM–12:00 AM ET\./);
+});
+
+test("nearby window line and anchors stay gated", () => {
+  const ohio = dossiers.find((item) => item.slug === "ohio");
+  const illinois = dossiers.find((item) => item.slug === "illinois");
+  assert.ok(ohio && illinois);
+  assert.equal(nearbyWindowLine("—"), null);
+  assert.equal(nearbyWindowLine("10:00 PM–11:00 PM CT"), "Best window: 10:00 PM–11:00 PM CT");
+  assert.equal(nearbyAnchorText(ohio, "Indiana"), "Indiana");
+  assert.equal(nearbyAnchorText(illinois, "Wisconsin"), "Northern lights Wisconsin tonight");
+});
+
+test("Maine lead uses in Maine tonight and what-time copy binds the window", () => {
+  const maine = dossiers.find((item) => item.slug === "maine");
+  const illinois = dossiers.find((item) => item.slug === "illinois");
+  assert.ok(maine && illinois);
+  assert.equal(
+    forecastLead(maine, "NO (Bangor area). Not worth a special trip tonight."),
+    "Northern lights in Maine tonight: NO (Bangor area). Not worth a special trip tonight.",
+  );
+  const noWindow = whatTimeTonightCopy(illinois, {
+    status: "NO",
+    bestWindow: "—",
+    windows: [],
+  });
+  assert.match(noWindow, /no useful window in Illinois/);
+  assert.equal(noWindow.includes("10 pm"), false);
+  const withWindow = whatTimeTonightCopy(illinois, {
+    status: "MAYBE",
+    bestWindow: "10:00 PM–12:00 AM CT",
+    windows: [
+      { start: "2026-10-14T03:00:00.000Z", end: "2026-10-14T03:30:00.000Z", skip: false },
+      { start: "2026-10-14T07:00:00.000Z", end: "2026-10-14T07:30:00.000Z", skip: false },
+    ],
+  });
+  assert.match(withWindow, /best window in Illinois is 10:00 PM–12:00 AM CT/);
+  assert.match(withWindow, /30-minute table/);
 });

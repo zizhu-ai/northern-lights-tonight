@@ -34,10 +34,25 @@ import {
 
 import { ForecastHours } from "@/components/forecast-hours";
 import { ForecastLocalGuide } from "@/components/forecast-local-guide";
+import {
+  EvergreenVisibility,
+  IllinoisCityAnchors,
+  IllinoisPrediction,
+  MaineCityAnchors,
+  TopToolEntry,
+  WhatTimeTonight,
+} from "@/components/forecast-seo-blocks";
 import { cityFaqHeading, localFaqsForPage } from "@/lib/city-faq";
 import { analyticsStateSlug, faqAnalyticsId } from "@/lib/search-event";
-import { forecastLead, h1For, titleFor } from "@/lib/forecast-copy";
-import { clampSeoText, SITE_URL, titleCasePhrase } from "@/lib/site";
+import {
+  forecastLead,
+  h1For,
+  nearbyAnchorText,
+  nearbyWindowLine,
+  seoDescription,
+  titleFor,
+} from "@/lib/forecast-copy";
+import { SITE_URL } from "@/lib/site";
 
 import styles from "./page.module.css";
 const REASON_COPY: Record<string, string> = {
@@ -88,7 +103,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const headlinePoint = getHeadlinePoint(dossier);
   const state = await getForecastState(dossier);
   const title = titleFor(dossier);
-  const description = seoDescription(dossier, headlinePoint.name, state);
+  const description = seoDescription(dossier, headlinePoint.name, {
+    status: state.presented.status,
+    mainIssue: state.presented.mainIssue,
+    bestWindow: state.bestWindow,
+  });
   const url = `${SITE_URL}/forecast/${slug}`;
 
   return {
@@ -146,12 +165,16 @@ export default async function ForecastPage({ params }: PageProps) {
             </p>
             <h1>{h1For(dossier)}</h1>
             <p className={styles.answer}>{answer}</p>
+            <TopToolEntry enabled={dossier.topToolEntry} />
           </header>
         </div>
       </div>
 
       <div className={styles.shell}>
-        <div className={styles.verdictSlot}>
+        <div
+          className={styles.verdictSlot}
+          id={dossier.slug === "illinois" || dossier.slug === "maine" ? "verdict" : undefined}
+        >
           <ForecastViewTracker
             pageType="forecast"
             state={analyticsStateSlug(dossier) ?? dossier.slug}
@@ -177,17 +200,55 @@ export default async function ForecastPage({ params }: PageProps) {
           />
         </div>
 
+        <WhatTimeTonight
+          dossier={dossier}
+          status={state.presented.status}
+          bestWindow={state.bestWindow}
+          windows={state.presented.windows}
+        />
+
         <WhyThisVerdict dossier={dossier} state={state} />
 
-        <ForecastLocalGuide dossier={dossier} />
+        <EvergreenVisibility
+          dossier={dossier}
+          status={state.presented.status}
+          snapshot={state.snapshot}
+          cannotJudge={state.presented.cannotJudge}
+        />
 
-        <section className={styles.section}>
-          <h2>What to do</h2>
-          <ul className={styles.actionList}>
-            <li>{dossier.leave_city_advice}</li>
-            <li>Face {state.snapshot?.look_toward ?? dossier.viewing_direction}.</li>
-          </ul>
-        </section>
+        <ForecastLocalGuide
+          dossier={dossier}
+          lookToward={state.snapshot?.look_toward ?? dossier.viewing_direction}
+        />
+
+        <IllinoisCityAnchors
+          dossier={dossier}
+          chicago={
+            latest.locations.find((row) => row.location_slug === "chicago") ?? null
+          }
+        />
+
+        <MaineCityAnchors
+          dossier={dossier}
+          snapshot={state.snapshot}
+          cannotJudge={state.presented.cannotJudge}
+        />
+
+        <IllinoisPrediction
+          dossier={dossier}
+          headlinePoint={getHeadlinePoint(dossier).name}
+          snapshot={state.snapshot}
+        />
+
+        {dossier.slug === "illinois" || dossier.slug === "maine" ? null : (
+          <section className={styles.section}>
+            <h2>What to do</h2>
+            <ul className={styles.actionList}>
+              <li>{dossier.leave_city_advice}</li>
+              <li>Face {state.snapshot?.look_toward ?? dossier.viewing_direction}.</li>
+            </ul>
+          </section>
+        )}
 
         {dossier.page_template === "travel_plus_tonight" ? (
           <section className={styles.section}>
@@ -213,7 +274,7 @@ export default async function ForecastPage({ params }: PageProps) {
 
         <section className={`${styles.section} ${styles.nearby}`}>
           <h2>Nearby</h2>
-          <NearbyForecasts readings={nearby} />
+          <NearbyForecasts from={dossier} readings={nearby} />
         </section>
 
         <section className={styles.section}>
@@ -241,6 +302,13 @@ export default async function ForecastPage({ params }: PageProps) {
                 How to see the northern lights
               </Link>
             </li>
+            {dossier.slug === "illinois" || dossier.slug === "maine" ? (
+              <li>
+                <Link href="/guides/where-to-see-northern-lights">
+                  Where to see the northern lights
+                </Link>
+              </li>
+            ) : null}
           </ul>
         </section>
       </div>
@@ -251,8 +319,10 @@ export default async function ForecastPage({ params }: PageProps) {
 }
 
 function NearbyForecasts({
+  from,
   readings,
 }: {
+  from: ForecastDossier;
   readings: Array<{ place: ForecastDossier; snapshot: SnapshotRow | null }>;
 }) {
   return (
@@ -266,6 +336,7 @@ function NearbyForecasts({
               place.timezone,
             )
           : copy.verdict.unknown_window;
+        const windowLine = nearbyWindowLine(window);
 
         return (
           <li key={place.slug}>
@@ -275,14 +346,14 @@ function NearbyForecasts({
               toState={analyticsStateSlug(place) ?? place.slug}
             >
               <span className={styles.nearbyTopline}>
-                <strong>{place.name}</strong>
+                <strong>{nearbyAnchorText(from, place.name)}</strong>
                 <span className="stamp" data-status={status.toLowerCase()}>
                   {status}
                 </span>
               </span>
-              <span className={styles.nearbyWindow}>
-                {copy.verdict.best_window_label}: {window}
-              </span>
+              {windowLine ? (
+                <span className={styles.nearbyWindow}>{windowLine}</span>
+              ) : null}
             </StateNavLink>
           </li>
         );
@@ -302,21 +373,6 @@ async function getForecastState(dossier: ForecastDossier): Promise<ForecastState
     mainIssue: presented.mainIssue,
     bestWindow: presented.bestWindow,
   };
-}
-
-function seoDescription(
-  dossier: ForecastDossier,
-  headlinePointName: string,
-  state: ForecastState,
-): string {
-  const phrase = titleCasePhrase(dossier.primary_keyword);
-  const status = state.presented.status;
-  const obstacle = state.presented.mainIssue;
-  return clampSeoText(
-    `${phrase} tonight: ${status} from ${headlinePointName}. Best window ${state.bestWindow}. ${obstacle}`,
-    70,
-    160,
-  );
 }
 
 function WhyThisVerdict({

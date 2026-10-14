@@ -37,6 +37,16 @@ export type ForecastDossier = {
   typical_kp_horizon: number;
   typical_kp_overhead: number;
   short_summer_nights: boolean;
+  /** Per-state H1 override. Unset = default `Northern Lights Tonight in {name}`. */
+  h1Override?: string;
+  /** Merge worth-going-out + statewide FAQs; rewrite evergreen + best-time. Default off. */
+  faqMerge?: boolean;
+  /** Override the city-FAQ H2. Unset = generated `Northern lights tonight in {cities}`. */
+  cityH2Override?: string;
+  /** Nearby anchors as “Northern lights {Place} tonight”. Default off. */
+  descriptiveNearbyAnchors?: boolean;
+  /** Hero “Change place / Near me” tool line. Default off. */
+  topToolEntry?: boolean;
 };
 
 const dossiers = dossierJson.locations as ForecastDossier[];

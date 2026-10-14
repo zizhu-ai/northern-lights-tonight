@@ -347,7 +347,9 @@
         "ohio",
         "indiana",
         "chicago",
-        "minnesota"
+        "minnesota",
+        "illinois",
+        "maine"
       ],
       "light_pollution_note": "Detroit–Ann Arbor–Toledo is a major light complex. Traverse City and the lakeshores are better. The Upper Peninsula (Marquette, Keweenaw, the Lake Superior shore) is the dark, high-latitude part of the state.",
       "leave_city_advice": "Leave Detroit. For a serious attempt, go north: at least to the Traverse City / Mackinac latitude, and to the Upper Peninsula when the storm is only moderate.",
@@ -701,7 +703,7 @@
       "sample_points": [
         {
           "id": "presque-isle",
-          "name": "Presque Isle",
+          "name": "Aroostook (Presque Isle)",
           "lat": 46.6812,
           "lng": -68.0159,
           "role": "dark_sky",
@@ -741,12 +743,12 @@
       ],
       "cannibalization_pair": null,
       "nearby_slugs": [
+        "new-hampshire",
+        "vermont",
         "massachusetts",
         "minnesota",
         "michigan",
-        "alaska",
-        "new-hampshire",
-        "vermont"
+        "alaska"
       ],
       "light_pollution_note": "Portland and the southern coast are the bright part of a generally dark state. Baxter, the North Woods, and Aroostook are among the darkest Wave 1 locations in the Lower 48.",
       "leave_city_advice": "Leave Portland if you can. Interior and northern Maine beat the tourist coast. Acadia is darker than Boston but still coastal and south of the woods.",
@@ -771,7 +773,12 @@
       "country": "US",
       "viewing_direction": "north",
       "seo_indexable": false,
-      "status": "dossier_filled"
+      "status": "dossier_filled",
+      "h1Override": "Can You See the Northern Lights in Maine Tonight?",
+      "faqMerge": true,
+      "cityH2Override": "Can you see the northern lights in Portland, Bangor, or Aroostook?",
+      "descriptiveNearbyAnchors": true,
+      "topToolEntry": true
     },
     {
       "slug": "minnesota",
@@ -916,6 +923,7 @@
         "chicago",
         "indiana",
         "wisconsin",
+        "michigan",
         "ohio",
         "iowa"
       ],
@@ -942,7 +950,10 @@
       "country": "US",
       "viewing_direction": "north",
       "seo_indexable": false,
-      "status": "dossier_filled"
+      "status": "dossier_filled",
+      "faqMerge": true,
+      "descriptiveNearbyAnchors": true,
+      "topToolEntry": true
     },
     {
       "slug": "oregon",
