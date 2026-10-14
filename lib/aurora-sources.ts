@@ -438,3 +438,22 @@ export async function fetchAuroraSources(
   ]);
   return { ovation, kp, cloud };
 }
+
+export async function fetchAuroraProducts(
+  previous: RawSourceEnvelopes | null = null,
+): Promise<{
+  ovation: SourceFetchResult<JsonObject>;
+  kp: SourceFetchResult<unknown[]>;
+}> {
+  const [ovation, kp] = await Promise.all([
+    fetchOvation(previous?.ovation ?? null),
+    fetchKp(previous?.kp ?? null),
+  ]);
+  return { ovation, kp };
+}
+
+export async function fetchCloudsForLocations(
+  dossiers: Dossier[],
+): Promise<SourceFetchResult<Record<string, JsonObject | null>>> {
+  return fetchCloud(dossiers);
+}

@@ -136,6 +136,83 @@ export function suggestPlacesInData(
   return uniquePlaces(matches).slice(0, limit);
 }
 
+export function editDistance(a: string, b: string): number {
+  if (a === b) return 0;
+  if (!a.length) return b.length;
+  if (!b.length) return a.length;
+  const previous = Array.from({ length: b.length + 1 }, (_, index) => index);
+  const current = new Array<number>(b.length + 1);
+  for (let i = 0; i < a.length; i += 1) {
+    current[0] = i + 1;
+    for (let j = 0; j < b.length; j += 1) {
+      const cost = a[i] === b[j] ? 0 : 1;
+      current[j + 1] = Math.min(current[j] + 1, previous[j + 1] + 1, previous[j] + cost);
+    }
+    previous.splice(0, previous.length, ...current);
+  }
+  return previous[b.length] ?? b.length;
+}
+
+function isCanonicalSlugPlace(place: Place): boolean {
+  if (!place.slug) return false;
+  return normalizePlaceQuery(place.name) === normalizePlaceQuery(place.slug.replaceAll("-", " "));
+}
+
+function isStateNamePlace(place: Place): boolean {
+  return isCanonicalSlugPlace(place) && !place.name.includes(",");
+}
+
+export function closestTypedPlaceInData(data: PlaceData, query: string): Place | null {
+  const normalized = normalizePlaceQuery(query);
+  if (normalized.length < 5) return null;
+  let bestPlace: Place | null = null;
+  let bestDistance = Number.POSITIVE_INFINITY;
+  const consider = (place: Place, value: string) => {
+    if (!value || Math.abs(value.length - normalized.length) > 2) return;
+    const distance = editDistance(value, normalized);
+    if (distance === 0 || distance > 2) return;
+    if (bestPlace && distance > bestDistance) return;
+    if (bestPlace && distance === bestDistance) {
+      const nextState = isStateNamePlace(place);
+      const bestState = isStateNamePlace(bestPlace);
+      if (bestState || !nextState) return;
+    }
+    bestPlace = place;
+    bestDistance = distance;
+  };
+  for (const place of data.places) {
+    consider(place, normalizePlaceQuery(place.name));
+    if (isCanonicalSlugPlace(place) && place.slug) {
+      consider(place, normalizePlaceQuery(place.slug.replaceAll("-", " ")));
+    }
+    for (const key of place.keys) consider(place, normalizePlaceQuery(key));
+  }
+  return bestPlace;
+}
+
+export function searchStateFromQueryInData(
+  data: PlaceData,
+  query: string,
+): {
+  error: PlaceSearchError | null;
+  matches: Place[];
+  suggestions: Place[];
+} {
+  const result = findPlaceInData(data, query);
+  if (result.kind === "ambiguous") {
+    return { error: null, matches: result.places, suggestions: [] };
+  }
+  if (result.kind === "error") {
+    const closest = result.code === "search_no_match" ? closestTypedPlaceInData(data, query) : null;
+    return {
+      error: result.code,
+      matches: [],
+      suggestions: closest ? [closest] : [],
+    };
+  }
+  return { error: null, matches: [], suggestions: [] };
+}
+
 export function findPlaceInData(data: PlaceData, query: string): PlaceSearchResult {
   const trimmed = query.trim();
   if (!trimmed) return { kind: "error", code: "search_empty" };

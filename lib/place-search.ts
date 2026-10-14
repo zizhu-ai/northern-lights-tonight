@@ -1,8 +1,10 @@
 import placeDataJson from "@/data/us-places.json";
 
 import {
+  closestTypedPlaceInData,
   findPlaceInData,
   nearestPlaceInData,
+  searchStateFromQueryInData,
   suggestPlacesInData,
   type Place,
   type PlaceData,
@@ -18,8 +20,10 @@ export type {
   SearchQueryKind,
 } from "@/lib/place-match";
 export {
+  closestTypedPlaceInData,
   findPlaceInData,
   haversineMiles,
+  searchStateFromQueryInData,
   normalizePlaceQuery,
   queryKind,
   roundCoordinate,
@@ -40,4 +44,16 @@ export function nearestPlace(lat: number, lng: number): Place {
 
 export function suggestPlaces(query: string, limit = 8): Place[] {
   return suggestPlacesInData(placeData, query, limit);
+}
+
+export function closestTypedPlace(query: string): Place | null {
+  return closestTypedPlaceInData(placeData, query);
+}
+
+export function searchStateFromQuery(query: string): {
+  error: PlaceSearchError | null;
+  matches: Place[];
+  suggestions: Place[];
+} {
+  return searchStateFromQueryInData(placeData, query);
 }

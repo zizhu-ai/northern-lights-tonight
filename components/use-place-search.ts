@@ -17,6 +17,7 @@ import {
   queryKind,
   roundCoordinate,
   routeForPlace,
+  searchStateFromQuery,
   suggestPlaces,
   viewRoute,
   type Place,
@@ -53,10 +54,10 @@ export function usePlaceSearch(source: SearchAnalyticsSource) {
     const initial = new URLSearchParams(window.location.search).get("q");
     if (!initial) return;
     setQuery(initial);
-    const result = findPlace(initial);
-    if (result.kind === "ambiguous") setMatches(result.places);
-    if (result.kind === "error") setError(result.code);
-    if (initial.trim().length >= 2) setSuggestions(suggestPlaces(initial, 8));
+    const state = searchStateFromQuery(initial);
+    setError(state.error);
+    setMatches(state.matches);
+    setSuggestions(state.suggestions);
   }, []);
 
   function goTo(path: string, destination: "forecast" | "view") {
@@ -98,8 +99,10 @@ export function usePlaceSearch(source: SearchAnalyticsSource) {
 
     const result = findPlace(nextQuery);
     if (result.kind === "error") {
+      const state = searchStateFromQuery(nextQuery);
       setChecking(checkingAfterLookup("error"));
-      setError(result.code);
+      setError(state.error);
+      setSuggestions(state.suggestions);
       void trackBrowserProductEvent("search_match", {
         source,
         result: "fail",
@@ -224,10 +227,13 @@ export function usePlaceSearch(source: SearchAnalyticsSource) {
 }
 
 export const OPEN_FIND_PLACE_EVENT = "nlt:open-find-place";
+export const OPEN_MOBILE_NAV_EVENT = "nlt:open-mobile-nav";
+export const CLOSE_MOBILE_NAV_EVENT = "nlt:close-mobile-nav";
 
 export function openFindPlace() {
   const input = document.getElementById("page-place-search");
   if (input instanceof HTMLInputElement) {
+    window.dispatchEvent(new Event(CLOSE_MOBILE_NAV_EVENT));
     input.focus();
     input.scrollIntoView({ behavior: "smooth", block: "center" });
     return;

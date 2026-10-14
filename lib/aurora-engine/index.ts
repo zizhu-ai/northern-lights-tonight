@@ -474,6 +474,11 @@ export function night_slots(zone: string, nowUtc: number, lat: number, lon: numb
   return [];
 }
 
+export type SnapshotPointOptions = {
+  hasDossier?: boolean;
+  magneticLatitude?: number;
+};
+
 export function snapshot_point(
   point: JsonObject,
   location: JsonObject,
@@ -484,7 +489,10 @@ export function snapshot_point(
   ovationOk: boolean,
   stale45: boolean,
   stale90: boolean,
+  options?: SnapshotPointOptions,
 ): JsonObject {
+  const hasDossier = options?.hasDossier ?? true;
+  const magneticLatitude = options?.magneticLatitude;
   const lat = Number(point.lat);
   const lon = Number(point.lng);
   const zoneName = String(location.timezone);
@@ -501,7 +509,7 @@ export function snapshot_point(
     const isNear = ovation?.fcst !== null && ovation?.fcst !== undefined && midEpoch <= ovation.fcst + 30 * MINUTE;
     const [kp, kpKind] = kp_at(kpSeries, midEpoch);
     const [cloud] = cloud_block_at(clouds, mid);
-    const classified = classify_window({
+    let classified = classify_window({
       sun_alt: sun,
       is_near: isNear,
       ovation_ok: ovationOk,
@@ -511,7 +519,7 @@ export function snapshot_point(
       lon,
       kp,
       kp_kind: kpKind,
-      has_dossier: true,
+      has_dossier: hasDossier,
       horizon_kp: location.typical_kp_horizon ?? null,
       overhead_kp: location.typical_kp_overhead ?? null,
       zone: location.aurora_zone ?? null,
@@ -519,6 +527,24 @@ export function snapshot_point(
       urban,
       bright_moon: brightMoon,
     });
+    if (
+      !hasDossier &&
+      !isNear &&
+      !classified.skip &&
+      classified.status === "MAYBE" &&
+      Array.isArray(classified.codes) &&
+      classified.codes.includes("FORECAST_FAR") &&
+      typeof magneticLatitude === "number" &&
+      magneticLatitude < 45
+    ) {
+      classified = {
+        ...classified,
+        status: "NO",
+        aurora_reach: "none",
+        source: classified.source ?? "none",
+        codes: ["AURORA_NO_REACH"],
+      };
+    }
     windows.push({
       start,
       end,
@@ -595,11 +621,12 @@ export function snapshot_location(
   ovationOk: boolean,
   stale45: boolean,
   stale90: boolean,
+  options?: SnapshotPointOptions,
 ): JsonObject {
   const nowLocal = utcToWall(nowUtc, String(location.timezone));
   const points = location.sample_points.map((point: JsonObject) => {
     const key = `${Number(point.lat).toFixed(3)},${Number(point.lng).toFixed(3)}`;
-    return snapshot_point(point, location, nowUtc, ovation, kpSeries, cloudByKey[key] ?? null, ovationOk, stale45, stale90);
+    return snapshot_point(point, location, nowUtc, ovation, kpSeries, cloudByKey[key] ?? null, ovationOk, stale45, stale90, options);
   });
   const headline = points.find((point: JsonObject) => point.id === location.primary_verdict_point);
   if (!headline) throw new Error(`headline point missing for ${location.slug}`);

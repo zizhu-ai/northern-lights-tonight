@@ -37,6 +37,13 @@ export function resolveViewParams(
   };
 }
 
+export function hasRecheckParam(searchParams: Record<string, QueryValue>): boolean {
+  const value = firstValue(searchParams.recheck);
+  if (!value) return false;
+  const timestamp = Number(value);
+  return Number.isFinite(timestamp) && timestamp > 0;
+}
+
 function firstValue(value: QueryValue): string | undefined {
   return Array.isArray(value) ? value[0] : value;
 }

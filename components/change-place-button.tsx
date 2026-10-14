@@ -1,5 +1,6 @@
 "use client";
 
+import { useTransition } from "react";
 import { useRouter } from "next/navigation";
 
 import copy from "@/content/ui-copy.json";
@@ -30,15 +31,24 @@ export function ChangePlaceButton({
 
 export function RecheckButton() {
   const router = useRouter();
+  const [pending, startTransition] = useTransition();
   return (
     <button
       className="verdict-card__share"
       type="button"
+      disabled={pending}
+      aria-busy={pending}
       onClick={() => {
-        router.refresh();
+        const url = new URL(window.location.href);
+        url.searchParams.set("recheck", String(Date.now()));
+        startTransition(() => {
+          router.replace(`${url.pathname}?${url.searchParams.toString()}`, {
+            scroll: false,
+          });
+        });
       }}
     >
-      {copy.chrome.recheck}
+      {pending ? copy.chrome.checking : copy.chrome.recheck}
     </button>
   );
 }

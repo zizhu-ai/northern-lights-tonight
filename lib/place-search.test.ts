@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 
 // @ts-ignore TS5097
-import { findPlaceInData, queryKind, suggestPlacesInData, type PlaceData } from "./place-match.ts";
+import { closestTypedPlaceInData, findPlaceInData, queryKind, searchStateFromQueryInData, suggestPlacesInData, type PlaceData } from "./place-match.ts";
 
 const placeData = JSON.parse(
   readFileSync(new URL("../data/us-places.json", import.meta.url), "utf8"),
@@ -63,6 +63,30 @@ test("New York ZIP stays a live pin, not a new city forecast URL", () => {
     assert.equal(zip.place.slug, null);
     assert.equal(zip.place.name, "New York, NY");
   }
+});
+
+test("near-miss city names suggest the closest covered or pin place", () => {
+  const fairbanks = closestTypedPlaceInData(placeData, "fairbnks");
+  assert.ok(fairbanks);
+  assert.match(fairbanks.name, /fairbanks/i);
+});
+
+test("near-miss state names prefer the state page, not a city that shares the slug", () => {
+  const vermont = closestTypedPlaceInData(placeData, "vermon");
+  assert.ok(vermont);
+  assert.equal(vermont.name, "Vermont");
+  assert.equal(vermont.slug, "vermont");
+
+  const michigan = closestTypedPlaceInData(placeData, "michgan");
+  assert.ok(michigan);
+  assert.equal(michigan.name, "Michigan");
+});
+
+test("a typed or pasted near-me query uses the same Did you mean suggestion", () => {
+  const fromUrl = searchStateFromQueryInData(placeData, "vermon");
+  assert.equal(fromUrl.error, "search_no_match");
+  assert.equal(fromUrl.suggestions[0]?.name, "Vermont");
+  assert.equal(fromUrl.suggestions.length, 1);
 });
 
 test("empty and unknown queries keep a typed-input error code", () => {

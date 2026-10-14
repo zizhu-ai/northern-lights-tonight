@@ -12,6 +12,7 @@ import copy from "@/content/ui-copy.json";
 
 import {
   OPEN_FIND_PLACE_EVENT,
+  OPEN_MOBILE_NAV_EVENT,
   searchErrorCopy,
   usePlaceSearch,
 } from "./use-place-search";
@@ -33,8 +34,15 @@ export function FindPlace() {
     function onOpen() {
       setOpen(true);
     }
+    function onOtherPanel() {
+      close();
+    }
     window.addEventListener(OPEN_FIND_PLACE_EVENT, onOpen);
-    return () => window.removeEventListener(OPEN_FIND_PLACE_EVENT, onOpen);
+    window.addEventListener(OPEN_MOBILE_NAV_EVENT, onOtherPanel);
+    return () => {
+      window.removeEventListener(OPEN_FIND_PLACE_EVENT, onOpen);
+      window.removeEventListener(OPEN_MOBILE_NAV_EVENT, onOtherPanel);
+    };
   }, []);
 
   useEffect(() => {
@@ -89,6 +97,7 @@ export function FindPlace() {
           }
           setOpen(true);
           search.setError(null);
+          window.dispatchEvent(new Event(OPEN_FIND_PLACE_EVENT));
         }}
       >
         {copy.chrome.find_place}
@@ -168,11 +177,14 @@ export function FindPlace() {
               <p id="find-place-privacy" className="find-place__privacy">
                 {copy.chrome.gps_privacy}
               </p>
-              {search.matches.length > 0 ? (
+              {search.matches.length > 0 || (search.error === "search_no_match" && search.suggestions.length > 0) ? (
                 <div id="find-place-matches" className="place-search-form__matches" role="status">
-                  <p>{copy.errors.search_ambiguous}</p>
+                  {search.matches.length > 0 ? <p>{copy.errors.search_ambiguous}</p> : null}
+                  {search.error === "search_no_match" && search.suggestions.length > 0 ? (
+                    <p>{copy.errors.search_did_you_mean.replace("{Place}", search.suggestions[0]?.name ?? "")}</p>
+                  ) : null}
                   <ul>
-                    {search.matches.map((place) => (
+                    {(search.matches.length > 0 ? search.matches : search.suggestions).map((place) => (
                       <li key={`${place.name}-${place.lat}-${place.lng}`}>
                         <button
                           type="button"

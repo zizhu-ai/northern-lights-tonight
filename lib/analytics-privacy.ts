@@ -25,6 +25,7 @@ const BLOCKED_QUERY_KEYS = new Set([
   "place",
   "address",
   "location",
+  "recheck",
 ]);
 
 export type AnalyticsPageEvent = { url: string; [key: string]: unknown };
