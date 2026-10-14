@@ -14,7 +14,7 @@ import {
   titleFor,
 } from "./forecast-copy.ts";
 import type { ForecastDossier } from "./forecast-places.ts";
-import { getHeadlinePoint } from "./forecast-places.ts";
+import { getHeadlinePoint, SEO_BLOCK_FLAGS } from "./forecast-places.ts";
 import { clampSeoText, titleCasePhrase } from "./site.ts";
 
 const dossiers = (
@@ -83,9 +83,9 @@ test("other 22 forecast pages only change the Best-window fragment", () => {
       false,
       dossier.slug,
     );
-    assert.equal(Boolean(dossier.faqMerge), false, dossier.slug);
-    assert.equal(Boolean(dossier.topToolEntry), false, dossier.slug);
-    assert.equal(Boolean(dossier.descriptiveNearbyAnchors), false, dossier.slug);
+    for (const flag of SEO_BLOCK_FLAGS) {
+      assert.equal(Boolean(dossier[flag]), false, `${dossier.slug} ${flag}`);
+    }
     assert.equal(stateKeywordFaqs(dossier, null).length, 3);
   }
 });

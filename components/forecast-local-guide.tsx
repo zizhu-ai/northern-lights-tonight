@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import type { ForecastDossier } from "@/lib/forecast-places";
-import { getHeadlinePoint } from "@/lib/forecast-places";
+import { getHeadlinePoint, seoFlag } from "@/lib/forecast-places";
 import { titleCasePhrase } from "@/lib/site";
 
 import styles from "@/app/forecast/[slug]/page.module.css";
@@ -17,7 +17,7 @@ export function ForecastLocalGuide({
   const localHeading = /tonight/i.test(phrase) ? phrase : `${phrase} tonight`;
   const headline = getHeadlinePoint(dossier);
   const zone = dossier.aurora_zone.replaceAll("_", " ");
-  const whereToSee = dossier.slug === "illinois" || dossier.slug === "maine";
+  const whereToSee = seoFlag(dossier, "whereToSee");
 
   return (
     <section className={styles.section}>

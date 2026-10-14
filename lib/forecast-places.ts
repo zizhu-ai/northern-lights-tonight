@@ -47,7 +47,52 @@ export type ForecastDossier = {
   descriptiveNearbyAnchors?: boolean;
   /** Hero “Change place / Near me” tool line. Default off. */
   topToolEntry?: boolean;
+  /** “What time can you see… tonight?” block. Default off. */
+  whatTimeTonight?: boolean;
+  /** Evergreen “Can you see the northern lights in {State}?” block. Default off. */
+  evergreenBlock?: boolean;
+  /** “Where to see” heading, merged actions, and the where-to-see guide link. Default off. */
+  whereToSee?: boolean;
+  /** In-state city H3 anchors (Chicago/Naperville or Portland/Bangor/Aroostook). Default off. */
+  cityAnchors?: boolean;
+  /** Parent H2 for the city-anchor H3s. */
+  cityAnchorsHeading?: string;
+  /** “{State} prediction” block. Default off. */
+  predictionBlock?: boolean;
+  /** Use the IL/ME custom meta description. Default off. */
+  customSeoDescription?: boolean;
+  /** Lead as “Northern lights in {name} tonight”. Default off. */
+  leadInNameTonight?: boolean;
 };
+
+export type SeoBlockFlag =
+  | "faqMerge"
+  | "descriptiveNearbyAnchors"
+  | "topToolEntry"
+  | "whatTimeTonight"
+  | "evergreenBlock"
+  | "whereToSee"
+  | "cityAnchors"
+  | "predictionBlock"
+  | "customSeoDescription"
+  | "leadInNameTonight";
+
+export const SEO_BLOCK_FLAGS: SeoBlockFlag[] = [
+  "faqMerge",
+  "descriptiveNearbyAnchors",
+  "topToolEntry",
+  "whatTimeTonight",
+  "evergreenBlock",
+  "whereToSee",
+  "cityAnchors",
+  "predictionBlock",
+  "customSeoDescription",
+  "leadInNameTonight",
+];
+
+export function seoFlag(dossier: ForecastDossier, flag: SeoBlockFlag): boolean {
+  return dossier[flag] === true;
+}
 
 const dossiers = dossierJson.locations as ForecastDossier[];
 const dossierBySlug = new Map(dossiers.map((dossier) => [dossier.slug, dossier]));

@@ -11,7 +11,7 @@ import {
   wordCount,
 } from "./city-faq.ts";
 import { h1For, titleFor } from "./forecast-copy.ts";
-import type { ForecastDossier } from "./forecast-places";
+import { SEO_BLOCK_FLAGS, type ForecastDossier } from "./forecast-places.ts";
 import type { ForecastPoint, ForecastSnapshot } from "./snapshots";
 
 const dossiers = (
@@ -170,9 +170,12 @@ test("stale UNKNOWN city FAQs keep magnetic latitude and drop leftover tonight v
 test("FAQ merge and city H2 stay off except Illinois and Maine", () => {
   for (const item of dossiers) {
     const enabled = item.slug === "illinois" || item.slug === "maine";
-    assert.equal(Boolean(item.faqMerge), enabled, item.slug);
-    assert.equal(Boolean(item.descriptiveNearbyAnchors), enabled, item.slug);
-    assert.equal(Boolean(item.topToolEntry), enabled, item.slug);
+    for (const flag of SEO_BLOCK_FLAGS) {
+      if (flag === "predictionBlock" || flag === "leadInNameTonight") continue;
+      assert.equal(Boolean(item[flag]), enabled, `${item.slug} ${flag}`);
+    }
+    assert.equal(Boolean(item.predictionBlock), item.slug === "illinois", item.slug);
+    assert.equal(Boolean(item.leadInNameTonight), item.slug === "maine", item.slug);
     if (item.slug === "maine") {
       assert.equal(
         item.cityH2Override,

@@ -2,16 +2,26 @@ import Link from "next/link";
 
 import styles from "@/app/forecast/[slug]/page.module.css";
 import { evergreenVisibilityAnswer } from "@/lib/city-faq";
-import { whatTimeTonightCopy } from "@/lib/forecast-copy";
-import type { ForecastDossier } from "@/lib/forecast-places";
-import type { ForecastPoint, ForecastSnapshot, SnapshotRow } from "@/lib/snapshots";
+import {
+  ovalReachSentence,
+  showNorthSouthSplit,
+  whatTimeTonightCopy,
+} from "@/lib/forecast-copy";
+import {
+  seoFlag,
+  type ForecastDossier,
+  type ForecastSamplePoint,
+} from "@/lib/forecast-places";
+import type { ForecastSnapshot, SnapshotRow } from "@/lib/snapshots";
 
 const NOAA_SWPC_AURORA =
   "https://www.swpc.noaa.gov/products/aurora-30-minute-forecast";
 
-function displayReach(value: string | null | undefined): string {
-  if (!value) return "unknown in the current snapshot";
-  return value.replaceAll("_", " ");
+function pointById(
+  dossier: ForecastDossier,
+  id: string,
+): ForecastSamplePoint | undefined {
+  return dossier.sample_points.find((point) => point.id === id);
 }
 
 function pointStatus(
@@ -21,6 +31,10 @@ function pointStatus(
 ): string {
   if (cannotJudge || !snapshot) return "UNKNOWN";
   return snapshot.points.find((point) => point.id === pointId)?.status ?? "UNKNOWN";
+}
+
+function magLat(point: ForecastSamplePoint): string {
+  return point.magnetic_latitude.toFixed(1);
 }
 
 export function TopToolEntry({ enabled }: { enabled?: boolean }) {
@@ -43,7 +57,7 @@ export function WhatTimeTonight({
   bestWindow: string;
   windows: Array<{ start: string; end: string; skip: boolean }>;
 }) {
-  if (dossier.slug !== "illinois" && dossier.slug !== "maine") return null;
+  if (!seoFlag(dossier, "whatTimeTonight")) return null;
   return (
     <section className={styles.section}>
       <h2>What time can you see the northern lights in {dossier.name} tonight?</h2>
@@ -63,18 +77,23 @@ export function EvergreenVisibility({
   snapshot: ForecastSnapshot | null;
   cannotJudge: boolean;
 }) {
-  if (dossier.slug !== "illinois" && dossier.slug !== "maine") return null;
-  const north = pointStatus(snapshot, "presque-isle", cannotJudge);
-  const south = pointStatus(snapshot, "portland", cannotJudge);
+  if (!seoFlag(dossier, "evergreenBlock")) return null;
+  const northPoint = pointById(dossier, "presque-isle");
+  const southPoint = pointById(dossier, "portland");
+  const north = northPoint ? pointStatus(snapshot, northPoint.id, cannotJudge) : null;
+  const south = southPoint ? pointStatus(snapshot, southPoint.id, cannotJudge) : null;
+  const showSplit =
+    Boolean(northPoint && southPoint) && showNorthSouthSplit(north, south);
+
   return (
     <section className={styles.section}>
       <h2>Can you see the northern lights in {dossier.name}?</h2>
       <p>{evergreenVisibilityAnswer(dossier, status)}</p>
-      {dossier.slug === "maine" ? (
+      {showSplit && northPoint && southPoint ? (
         <p>
-          Presque Isle sits at magnetic latitude 56.0; Portland at 53.0. The same
-          night can differ: tonight {north} in Aroostook (Presque Isle) and {south}{" "}
-          in Portland.
+          {northPoint.name} sits at magnetic latitude {magLat(northPoint)};{" "}
+          {southPoint.name} at {magLat(southPoint)}. The same night can differ:
+          tonight {north} in {northPoint.name} and {south} in {southPoint.name}.
         </p>
       ) : null}
       <p>
@@ -91,10 +110,15 @@ export function IllinoisCityAnchors({
   dossier: ForecastDossier;
   chicago: SnapshotRow | null;
 }) {
-  if (dossier.slug !== "illinois") return null;
+  if (!seoFlag(dossier, "cityAnchors")) return null;
+  if (!dossier.nearby_slugs.includes("chicago")) return null;
   const chicagoStatus = chicago?.status ?? "UNKNOWN";
   return (
     <section className={styles.section}>
+      <h2>
+        {dossier.cityAnchorsHeading ??
+          "Can you see the northern lights in Chicago or Naperville?"}
+      </h2>
       <h3>Can you see the northern lights in Chicago?</h3>
       <p>
         Rarely from the city itself: Chicago’s skyglow hides all but strong
@@ -112,6 +136,25 @@ export function IllinoisCityAnchors({
   );
 }
 
+function MaineCityHeading({
+  point,
+  status,
+  blurb,
+}: {
+  point: ForecastSamplePoint;
+  status: string;
+  blurb: string;
+}) {
+  return (
+    <>
+      <h3>Can you see the northern lights in {point.name}?</h3>
+      <p>
+        {blurb} (magnetic latitude {magLat(point)}). Tonight: {status}.
+      </p>
+    </>
+  );
+}
+
 export function MaineCityAnchors({
   dossier,
   snapshot,
@@ -121,26 +164,33 @@ export function MaineCityAnchors({
   snapshot: ForecastSnapshot | null;
   cannotJudge: boolean;
 }) {
-  if (dossier.slug !== "maine") return null;
+  if (!seoFlag(dossier, "cityAnchors")) return null;
+  const portland = pointById(dossier, "portland");
+  const bangor = pointById(dossier, "bangor");
+  const aroostook = pointById(dossier, "presque-isle");
+  if (!portland || !bangor || !aroostook) return null;
   return (
     <section className={styles.section}>
-      <h3>Can you see the northern lights in Portland?</h3>
-      <p>
-        Sometimes, on stronger storms — Portland is the bright southern end of
-        Maine (magnetic latitude 53.0). Tonight:{" "}
-        {pointStatus(snapshot, "portland", cannotJudge)}.
-      </p>
-      <h3>Can you see the northern lights in Bangor?</h3>
-      <p>
-        Often the in-state default — Bangor is the headline point (magnetic
-        latitude 54.1). Tonight: {pointStatus(snapshot, "bangor", cannotJudge)}.
-      </p>
-      <h3>Can you see the northern lights in Aroostook (Presque Isle)?</h3>
-      <p>
-        Yes more often than the coast — Aroostook (Presque Isle) is the darker,
-        higher-latitude north (magnetic latitude 56.0). Tonight:{" "}
-        {pointStatus(snapshot, "presque-isle", cannotJudge)}.
-      </p>
+      <h2>
+        {dossier.cityAnchorsHeading ??
+          dossier.cityH2Override ??
+          "Tonight in Portland, Bangor, and Aroostook"}
+      </h2>
+      <MaineCityHeading
+        point={portland}
+        status={pointStatus(snapshot, portland.id, cannotJudge)}
+        blurb="Sometimes, on stronger storms — Portland is the bright southern end of Maine"
+      />
+      <MaineCityHeading
+        point={bangor}
+        status={pointStatus(snapshot, bangor.id, cannotJudge)}
+        blurb="Often the in-state default — Bangor is the headline point"
+      />
+      <MaineCityHeading
+        point={aroostook}
+        status={pointStatus(snapshot, aroostook.id, cannotJudge)}
+        blurb="Yes more often than the coast — Aroostook (Presque Isle) is the darker, higher-latitude north"
+      />
     </section>
   );
 }
@@ -154,17 +204,16 @@ export function IllinoisPrediction({
   headlinePoint: string;
   snapshot: ForecastSnapshot | null;
 }) {
-  if (dossier.slug !== "illinois") return null;
-  const point: ForecastPoint | undefined = snapshot?.points.find(
+  if (!seoFlag(dossier, "predictionBlock")) return null;
+  const point = snapshot?.points.find(
     (candidate) => candidate.id === dossier.primary_verdict_point,
   );
-  const reach = displayReach(point?.aurora_reach);
   return (
     <section className={styles.section}>
-      <h2>Northern lights Illinois prediction</h2>
+      <h2>Northern lights {dossier.name} prediction</h2>
       <p>
-        Our Illinois prediction is the 30-minute table above, recalculated from
-        NOAA SWPC data. Tonight’s oval reach at {headlinePoint} is {reach}. See
+        Our {dossier.name} prediction is the 30-minute table above, recalculated
+        from NOAA SWPC data. {ovalReachSentence(headlinePoint, point?.aurora_reach)} See
         the{" "}
         <a href={NOAA_SWPC_AURORA} rel="noopener noreferrer">
           NOAA SWPC aurora forecast

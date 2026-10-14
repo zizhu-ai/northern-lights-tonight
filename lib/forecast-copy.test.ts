@@ -8,7 +8,9 @@ import {
   h1For,
   nearbyAnchorText,
   nearbyWindowLine,
+  ovalReachSentence,
   repeatedDossierSentences,
+  showNorthSouthSplit,
   seoDescription,
   titleFor,
   whatTimeTonightCopy,
@@ -95,6 +97,54 @@ test("nearby window line and anchors stay gated", () => {
   assert.equal(nearbyWindowLine("10:00 PM–11:00 PM CT"), "Best window: 10:00 PM–11:00 PM CT");
   assert.equal(nearbyAnchorText(ohio, "Indiana"), "Indiana");
   assert.equal(nearbyAnchorText(illinois, "Wisconsin"), "Northern lights Wisconsin tonight");
+});
+
+test("Illinois and Maine descriptions stay natural, bind the verdict, and stay under 160 characters", () => {
+  const illinois = dossiers.find((item) => item.slug === "illinois");
+  const maine = dossiers.find((item) => item.slug === "maine");
+  assert.ok(illinois && maine);
+  const il = seoDescription(illinois, "Rockford", {
+    status: "NO",
+    mainIssue: "Aurora activity is not expected to reach Illinois tonight.",
+    bestWindow: "—",
+  });
+  assert.ok(il.toLowerCase().includes("northern lights illinois"));
+  assert.match(il, /\bNO\b/);
+  assert.equal(il.includes("Northern Illinois, on strong storms"), false);
+  assert.ok(il.length <= 160, il.length);
+  assert.ok(il.length >= 70, il.length);
+  const me = seoDescription(maine, "Bangor", {
+    status: "NO",
+    mainIssue: "Aurora activity is not expected to reach Maine tonight.",
+    bestWindow: "—",
+  });
+  assert.ok(me.toLowerCase().includes("northern lights in maine"));
+  assert.match(me, /\bNO\b/);
+  assert.equal(me.includes("Tonight from Bangor:"), false);
+  assert.match(me, /Bangor is NO tonight/);
+  assert.ok(me.length <= 160, me.length);
+  assert.ok(me.length >= 70, me.length);
+});
+
+test("Maine north-south split is hidden when both points share a status", () => {
+  assert.equal(showNorthSouthSplit("NO", "NO"), false);
+  assert.equal(showNorthSouthSplit("MAYBE", "NO"), true);
+  assert.equal(showNorthSouthSplit(null, "NO"), false);
+});
+
+test("oval reach copy does not say is none", () => {
+  assert.equal(
+    ovalReachSentence("Rockford", "none"),
+    "Tonight the oval does not reach Rockford.",
+  );
+  assert.equal(
+    ovalReachSentence("Rockford", "horizon"),
+    "Tonight the oval reaches the horizon at Rockford.",
+  );
+  assert.equal(
+    ovalReachSentence("Rockford", null),
+    "Tonight’s oval reach at Rockford is unknown in the current snapshot.",
+  );
 });
 
 test("Maine lead uses in Maine tonight and what-time copy binds the window", () => {

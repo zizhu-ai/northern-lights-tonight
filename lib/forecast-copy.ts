@@ -40,10 +40,28 @@ export function titleFor(dossier: ForecastDossier): string {
 
 export function forecastLead(dossier: ForecastDossier, answer: string): string {
   if (answer.toLowerCase().includes("northern lights tonight")) return answer;
-  if (dossier.slug === "maine") {
-    return `Northern lights in Maine tonight: ${answer}`;
+  if (dossier.leadInNameTonight) {
+    return `Northern lights in ${dossier.name} tonight: ${answer}`;
   }
   return `Northern lights tonight in ${dossier.name}: ${answer}`;
+}
+
+export function showNorthSouthSplit(
+  north: string | null | undefined,
+  south: string | null | undefined,
+): boolean {
+  return Boolean(north && south && north !== south);
+}
+
+export function ovalReachSentence(
+  headlinePointName: string,
+  reach: string | null | undefined,
+): string {
+  if (!reach) return `Tonight’s oval reach at ${headlinePointName} is unknown in the current snapshot.`;
+  if (reach === "none") return `Tonight the oval does not reach ${headlinePointName}.`;
+  if (reach === "horizon") return `Tonight the oval reaches the horizon at ${headlinePointName}.`;
+  if (reach === "overhead") return `Tonight the oval may reach overhead at ${headlinePointName}.`;
+  return `Tonight’s oval reach at ${headlinePointName} is ${reach.replaceAll("_", " ")}.`;
 }
 
 export function seoDescription(
@@ -55,21 +73,21 @@ export function seoDescription(
     ? ` Best window ${state.bestWindow}.`
     : "";
 
-  if (dossier.slug === "illinois") {
-    const illinoisWindow = hasKnownWindow(state.bestWindow)
-      ? `, best window ${state.bestWindow}`
-      : "";
+  if (dossier.customSeoDescription && dossier.leadInNameTonight) {
+    const maineWindow = hasKnownWindow(state.bestWindow) ? `, ${state.bestWindow}` : "";
     return clampSeoText(
-      `Northern lights Illinois tonight: ${state.status} from ${headlinePointName}${illinoisWindow}. Can you see them in Illinois? Northern Illinois, on strong storms.`,
+      `Can you see the northern lights in ${dossier.name}? Often on moderate storms, best in Aroostook and the North Woods. ${headlinePointName} is ${state.status} tonight${maineWindow}.`,
       70,
       160,
     );
   }
 
-  if (dossier.slug === "maine") {
-    const maineWindow = hasKnownWindow(state.bestWindow) ? `, ${state.bestWindow}` : "";
+  if (dossier.customSeoDescription) {
+    const illinoisWindow = hasKnownWindow(state.bestWindow)
+      ? `, best window ${state.bestWindow}`
+      : "";
     return clampSeoText(
-      `Can you see the northern lights in Maine? Often on moderate storms, best in Aroostook and the North Woods. Tonight from ${headlinePointName}: ${state.status}${maineWindow}.`,
+      `Northern lights ${dossier.name} tonight: ${state.status} from ${headlinePointName}${illinoisWindow}. They reach northern Illinois on strong storms, not the whole state.`,
       70,
       160,
     );

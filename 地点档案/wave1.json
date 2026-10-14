@@ -778,7 +778,14 @@
       "faqMerge": true,
       "cityH2Override": "Can you see the northern lights in Portland, Bangor, or Aroostook?",
       "descriptiveNearbyAnchors": true,
-      "topToolEntry": true
+      "topToolEntry": true,
+      "whatTimeTonight": true,
+      "evergreenBlock": true,
+      "whereToSee": true,
+      "cityAnchors": true,
+      "cityAnchorsHeading": "Tonight in Portland, Bangor, and Aroostook",
+      "customSeoDescription": true,
+      "leadInNameTonight": true
     },
     {
       "slug": "minnesota",
@@ -953,7 +960,14 @@
       "status": "dossier_filled",
       "faqMerge": true,
       "descriptiveNearbyAnchors": true,
-      "topToolEntry": true
+      "topToolEntry": true,
+      "whatTimeTonight": true,
+      "evergreenBlock": true,
+      "whereToSee": true,
+      "cityAnchors": true,
+      "cityAnchorsHeading": "Can you see the northern lights in Chicago or Naperville?",
+      "predictionBlock": true,
+      "customSeoDescription": true
     },
     {
       "slug": "oregon",

@@ -15,6 +15,7 @@ import copy from "@/content/ui-copy.json";
 import {
   getForecastDossier,
   getHeadlinePoint,
+  seoFlag,
   WAVE_ONE_SLUG_SET,
   type ForecastDossier,
 } from "@/lib/forecast-places";
@@ -173,7 +174,7 @@ export default async function ForecastPage({ params }: PageProps) {
       <div className={styles.shell}>
         <div
           className={styles.verdictSlot}
-          id={dossier.slug === "illinois" || dossier.slug === "maine" ? "verdict" : undefined}
+          id={seoFlag(dossier, "evergreenBlock") ? "verdict" : undefined}
         >
           <ForecastViewTracker
             pageType="forecast"
@@ -240,7 +241,7 @@ export default async function ForecastPage({ params }: PageProps) {
           snapshot={state.snapshot}
         />
 
-        {dossier.slug === "illinois" || dossier.slug === "maine" ? null : (
+        {seoFlag(dossier, "whereToSee") ? null : (
           <section className={styles.section}>
             <h2>What to do</h2>
             <ul className={styles.actionList}>
@@ -302,13 +303,6 @@ export default async function ForecastPage({ params }: PageProps) {
                 How to see the northern lights
               </Link>
             </li>
-            {dossier.slug === "illinois" || dossier.slug === "maine" ? (
-              <li>
-                <Link href="/guides/where-to-see-northern-lights">
-                  Where to see the northern lights
-                </Link>
-              </li>
-            ) : null}
           </ul>
         </section>
       </div>
