@@ -11,11 +11,12 @@ import {
   nearbyAnchorText,
   nearbyWindowLine,
   seoDescription,
+  seoLeadPhrase,
   titleFor,
 } from "./forecast-copy.ts";
 import type { ForecastDossier } from "./forecast-places.ts";
 import { getHeadlinePoint, SEO_BLOCK_FLAGS } from "./forecast-places.ts";
-import { clampSeoText, titleCasePhrase } from "./site.ts";
+import { clampSeoSentences } from "./site.ts";
 
 const dossiers = (
   JSON.parse(readFileSync(new URL("../地点档案/wave1.json", import.meta.url), "utf8")) as {
@@ -27,16 +28,24 @@ const OTHER_PAGES = dossiers.filter(
   (dossier) => dossier.slug !== "illinois" && dossier.slug !== "maine",
 );
 
-function legacyDescription(
+function expectedDescription(
   dossier: ForecastDossier,
   headline: string,
   state: { status: string; mainIssue: string; bestWindow: string },
 ): string {
-  const phrase = titleCasePhrase(dossier.primary_keyword);
-  return `${phrase} tonight: ${state.status} from ${headline}. Best window ${state.bestWindow}. ${state.mainIssue}`;
+  const windowBit =
+    state.bestWindow && state.bestWindow !== copy.verdict.unknown_window
+      ? ` Best window ${state.bestWindow}.`
+      : "";
+  const lead = seoLeadPhrase(dossier.primary_keyword);
+  return clampSeoSentences(
+    `${lead}: ${state.status} from ${headline} (aurora borealis).${windowBit} ${state.mainIssue}`,
+    70,
+    160,
+  );
 }
 
-test("other 22 forecast pages only change the Best-window fragment", () => {
+test("other 22 forecast pages keep scoped SEO blocks and the new description contract", () => {
   assert.equal(OTHER_PAGES.length, 22);
   for (const dossier of OTHER_PAGES) {
     const headline = getHeadlinePoint(dossier).name;
@@ -45,28 +54,32 @@ test("other 22 forecast pages only change the Best-window fragment", () => {
       mainIssue: `Aurora activity is not expected to reach ${dossier.name} tonight.`,
       bestWindow: copy.verdict.unknown_window,
     };
-    const oldNo = legacyDescription(dossier, headline, noWindow);
     const newNo = seoDescription(dossier, headline, noWindow);
-    assert.ok(oldNo.includes(`Best window ${copy.verdict.unknown_window}.`), dossier.slug);
     assert.equal(newNo.includes("Best window"), false, dossier.slug);
-    assert.equal(
-      newNo,
-      clampSeoText(oldNo.replace(` Best window ${copy.verdict.unknown_window}.`, ""), 70, 160),
-      `${dossier.slug} description should differ only by omitting Best window —.`,
-    );
+    assert.equal(newNo.includes("Tonight " + dossier.name + " tonight"), false, dossier.slug);
+    assert.match(newNo, /aurora borealis/i);
+    assert.equal(newNo, expectedDescription(dossier, headline, noWindow), dossier.slug);
+    assert.ok(newNo.length <= 160, `${dossier.slug} ${newNo.length}`);
+    assert.ok(newNo.length >= 70, `${dossier.slug} ${newNo.length}`);
 
     const withWindow = {
       status: "MAYBE",
       mainIssue: "Clouds are the main uncertainty.",
       bestWindow: "10:00 PM–12:00 AM ET",
     };
+    const withWindowDesc = seoDescription(dossier, headline, withWindow);
     assert.equal(
-      seoDescription(dossier, headline, withWindow),
-      clampSeoText(legacyDescription(dossier, headline, withWindow), 70, 160),
+      withWindowDesc,
+      expectedDescription(dossier, headline, withWindow),
       `${dossier.slug} keeps the window sentence when a window exists`,
     );
+    assert.match(withWindowDesc, /Best window 10:00 PM–12:00 AM ET\./);
+    assert.match(withWindowDesc, /aurora borealis/i);
 
     assert.equal(titleFor(dossier), titleFor({ ...dossier, faqMerge: true }));
+    if (dossier.slug !== "alaska") {
+      assert.ok(titleFor(dossier).endsWith(": Visibility & Best Time"), dossier.slug);
+    }
     assert.equal(h1For(dossier), `Northern Lights Tonight in ${dossier.name}`);
     assert.equal(cityFaqHeading(dossier), cityFaqHeading({ ...dossier, faqMerge: true }));
     assert.equal(nearbyAnchorText(dossier, "Wisconsin"), "Wisconsin");
@@ -88,6 +101,20 @@ test("other 22 forecast pages only change the Best-window fragment", () => {
     }
     assert.equal(stateKeywordFaqs(dossier, null).length, 3);
   }
+});
+
+test("sitewide SEO descriptions name aurora borealis without dropping the main term", () => {
+  for (const [key, value] of Object.entries(copy.seo)) {
+    assert.match(value, /aurora borealis/i, key);
+    assert.ok(value.length <= 160, `${key} ${value.length}`);
+    if (key !== "fallback_description") {
+      assert.ok(value.length >= 70, `${key} ${value.length}`);
+    }
+  }
+  assert.match(copy.seo.home, /^Check northern lights tonight/);
+  assert.match(copy.seo.how_to, /^How to see northern lights tonight/);
+  assert.match(copy.seo.best_time, /^Best time to see the northern lights/);
+  assert.match(copy.seo.where, /^Where to see northern lights/);
 });
 
 test("Michigan nearby data links Illinois and Maine", () => {
