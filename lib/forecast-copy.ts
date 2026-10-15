@@ -1,7 +1,7 @@
 import copy from "../content/ui-copy.json" with { type: "json" };
 
 // @ts-ignore TS5097
-import { clampSeoText, titleCasePhrase } from "./site.ts";
+import { clampSeoSentences, titleCasePhrase } from "./site.ts";
 import type { ForecastDossier } from "./forecast-places";
 import type { ForecastWindow } from "./snapshots";
 
@@ -31,11 +31,16 @@ export function titleFor(dossier: ForecastDossier): string {
   if (dossier.slug === "alaska") {
     return "Northern Lights Tonight in Alaska: Season & Places";
   }
-  const full = `Northern Lights Tonight in ${dossier.name}: Visibility & Best Time`;
-  if (full.length <= 60) return full;
-  const shorter = `Northern Lights Tonight in ${dossier.name}`;
-  if (shorter.length <= 60) return shorter;
-  return clampSeoText(`Northern Lights Tonight ${dossier.name}`, 15, 60);
+  return `Northern Lights Tonight in ${dossier.name}: Visibility & Best Time`;
+}
+
+/** Lead used in the default forecast meta description. Tonight appears once. */
+export function seoLeadPhrase(primaryKeyword: string): string {
+  const phrase = titleCasePhrase(primaryKeyword);
+  if (/\btonight\b/i.test(phrase)) {
+    return phrase.replace(/^(Northern Lights Tonight) (?!in\b)/i, "$1 in ");
+  }
+  return `${phrase} tonight`;
 }
 
 export function forecastLead(dossier: ForecastDossier, answer: string): string {
@@ -75,8 +80,8 @@ export function seoDescription(
 
   if (dossier.customSeoDescription && dossier.leadInNameTonight) {
     const maineWindow = hasKnownWindow(state.bestWindow) ? `, ${state.bestWindow}` : "";
-    return clampSeoText(
-      `Can you see the northern lights in ${dossier.name}? Often on moderate storms, best in Aroostook and the North Woods. ${headlinePointName} is ${state.status} tonight${maineWindow}.`,
+    return clampSeoSentences(
+      `Can you see the northern lights (aurora borealis) in ${dossier.name}? Often on moderate storms, best in Aroostook. ${headlinePointName} is ${state.status} tonight${maineWindow}.`,
       70,
       160,
     );
@@ -86,16 +91,16 @@ export function seoDescription(
     const illinoisWindow = hasKnownWindow(state.bestWindow)
       ? `, best window ${state.bestWindow}`
       : "";
-    return clampSeoText(
-      `Northern lights ${dossier.name} tonight: ${state.status} from ${headlinePointName}${illinoisWindow}. They reach northern Illinois on strong storms, not the whole state.`,
+    return clampSeoSentences(
+      `Northern lights ${dossier.name} tonight: ${state.status} from ${headlinePointName}${illinoisWindow}. Aurora borealis reaches northern Illinois on strong storms only.`,
       70,
       160,
     );
   }
 
-  const phrase = titleCasePhrase(dossier.primary_keyword);
-  return clampSeoText(
-    `${phrase} tonight: ${state.status} from ${headlinePointName}.${windowBit} ${state.mainIssue}`,
+  const lead = seoLeadPhrase(dossier.primary_keyword);
+  return clampSeoSentences(
+    `${lead}: ${state.status} from ${headlinePointName} (aurora borealis).${windowBit} ${state.mainIssue}`,
     70,
     160,
   );

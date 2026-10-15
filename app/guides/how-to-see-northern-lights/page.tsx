@@ -12,19 +12,19 @@ import styles from "../../part4.module.css";
 
 const FILE_NAME = "how-to-see-northern-lights.md";
 const PAGE_URL = `${SITE_URL}/guides/how-to-see-northern-lights`;
+const TITLE = "How to See the Northern Lights (Aurora Borealis)";
 
 export const dynamic = "force-static";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { title } = await loadGuideContent(FILE_NAME);
   return {
-    title,
+    title: TITLE,
     description: copy.seo.how_to,
     alternates: { canonical: PAGE_URL },
     robots: { index: true, follow: true },
     openGraph: ogFor(
       "/guides/how-to-see-northern-lights",
-      title,
+      TITLE,
       copy.seo.how_to,
     ),
   };

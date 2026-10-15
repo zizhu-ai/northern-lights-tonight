@@ -136,15 +136,15 @@
     "example": "10:40 PM MT"
   },
   "seo": {
-    "fallback_description": "Local aurora go / maybe / no for the US.",
-    "about": "About Northern Lights Tonight, our GO, MAYBE, and NO forecast method, current US coverage, public data sources, and how to contact us.",
-    "home": "Check northern lights tonight for US cities and states. Local GO, MAYBE, or NO from NOAA and clouds, not one national Kp number.",
-    "near_me": "Find the nearest supported northern lights forecast by US city or ZIP, with local GO / MAYBE / NO guidance for places we cover tonight.",
-    "best_time": "Best time to see northern lights in the US, by season, time of night, latitude, and darkness — not one national clock.",
-    "how_to": "How to see northern lights tonight: face north, wait in real darkness, and read GO / MAYBE / NO on a local page.",
-    "where": "Where to see northern lights in the US tonight, ranked from live local readings, plus standing regions versus event-only states.",
-    "methodology": "How we decide GO, MAYBE, NO, or UNKNOWN from NOAA OVATION, Kp, darkness, and clouds. No fake percent chance.",
-    "privacy": "Privacy policy for Northern Lights Tonight: location is used once, analytics can be opted out, and we do not sell personal data.",
-    "terms": "Terms of use for Northern Lights Tonight, including forecast limits, NOAA disclaimer, and outdoor travel at your own risk."
+    "fallback_description": "Local aurora borealis go / maybe / no for the US.",
+    "about": "About Northern Lights Tonight, our GO, MAYBE, and NO aurora borealis forecast method, current US coverage, public data sources, and how to contact us.",
+    "home": "Check northern lights tonight for US cities and states. Local GO, MAYBE, or NO for the aurora borealis from NOAA and clouds, not one national Kp number.",
+    "near_me": "Find the nearest supported northern lights forecast by US city or ZIP, with a local GO / MAYBE / NO for the aurora borealis in places we cover tonight.",
+    "best_time": "Best time to see the northern lights (aurora borealis) in the US, by season, time of night, latitude, and darkness — not one national clock.",
+    "how_to": "How to see northern lights tonight: face north, wait in real darkness, and read the local aurora borealis GO / MAYBE / NO.",
+    "where": "Where to see northern lights in the US tonight, ranked from live local aurora borealis readings, plus standing regions versus event-only states.",
+    "methodology": "How we decide GO, MAYBE, NO, or UNKNOWN for the aurora borealis from NOAA OVATION, Kp, darkness, and clouds. No fake percent chance.",
+    "privacy": "Privacy policy for Northern Lights Tonight, a US aurora borealis forecast: location is used once, analytics can be opted out, and we do not sell personal data.",
+    "terms": "Terms of use for Northern Lights Tonight, a US aurora borealis forecast, including forecast limits, NOAA disclaimer, and outdoor travel at your own risk."
   }
 }
