@@ -24,11 +24,17 @@ a single bounded concurrency group, and a five-minute job timeout.
 
 ## Health and failure contract
 
-The checker always requests exactly:
+The checker requests:
 
 ```text
-https://aurora-tonight.com/api/health
+https://aurora-tonight.mengyu699.workers.dev/api/health
 ```
+
+That workers.dev URL is the default because Cloudflare free Bot Fight Mode
+managed-challenges GitHub Actions runner IPs on `aurora-tonight.com/api/health`
+and cannot be skipped. Override the target with the `HEALTH_URL` environment
+variable (workflow default is the workers.dev URL; a repository variable of the
+same name also overrides it). Expected-JSON checks are unchanged.
 
 It tries at most three times, with a 60-second timeout on each attempt. A check
 succeeds only for HTTP 200 and a JSON object where:
@@ -37,15 +43,28 @@ succeeds only for HTTP 200 and a JSON object where:
 - `checked_age_seconds` is a finite number greater than or equal to 0 and less
   than 600.
 
+On non-200 or non-JSON responses the checker records status, `content-type`,
+`server`, `cf-ray`, `cf-mitigated`, and a ~300-character stripped body snippet.
+It reads the body as text first and only then attempts `JSON.parse`.
+
 A successful attempt exits zero immediately and sends no Feishu message. Only
-after all three attempts fail does the checker send one text alert. The alert
-contains only a bounded sanitized reason, UTC time, the fixed health URL, and
-the GitHub run URL; raw response content and the webhook are never included.
-After a successful alert, the process still exits nonzero so GitHub's own
-failure notification remains a fallback. A missing webhook fails configuration
-before any health request. Feishu HTTP failures, malformed responses, and
-nonzero application error codes also fail generically without exposing the
-secret or response body.
+after all three attempts fail does the checker send one text alert. Site-down
+alerts keep the existing wording (bounded reason, UTC time, health URL, GitHub
+run URL). Cloudflare challenge responses (`cf-mitigated` present, or HTTP
+403/503 HTML containing "Just a moment" / "Attention Required" / "cf-chl" /
+"error code: 10xx") use the title "监控被 Cloudflare 拦截（网站未必宕机）" and
+include cf-ray, cf-mitigated, and the snippet so they are not paged as outages.
+The webhook is never included. After a successful alert, the process still
+exits nonzero so GitHub's own failure notification remains a fallback.
+
+The checker also probes the public `https://aurora-tonight.com/api/health` once.
+A public-edge Cloudflare block is recorded only as a `Note: public edge blocked`
+line (or an info log when the workers.dev check succeeded). It never sends a
+down alert by itself.
+
+A missing webhook fails configuration before any health request. Feishu HTTP
+failures, malformed responses, and nonzero application error codes also fail
+generically without exposing the secret or response body.
 
 Preview may persist last-known-good state on the remote LKG API instead of
 Hobby Blob when `AURORA_LKG_BASE_URL` and both LKG tokens are set. Production
