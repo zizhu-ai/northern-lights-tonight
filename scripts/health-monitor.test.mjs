@@ -1,8 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-const HEALTH_URL = "https://aurora-tonight.mengyu699.workers.dev/api/health";
-const PUBLIC_HEALTH_URL = "https://aurora-tonight.com/api/health";
+const HEALTH_URL = "https://aurora-tonight.com/api/health";
+const PUBLIC_HEALTH_URL = HEALTH_URL;
+const WORKERS_DEV_HEALTH_URL =
+  "https://aurora-tonight.mengyu699.workers.dev/api/health";
 const WEBHOOK = "https://open.feishu.cn/open-apis/bot/v2/hook/TEST_SECRET_SENTINEL";
 const RUN_URL = "https://github.com/example/aurora/actions/runs/123456";
 const NOW = new Date("2026-08-25T08:00:00.000Z");
@@ -68,7 +70,13 @@ const challengeHtml = `<!DOCTYPE html>
   </body>
 </html>`;
 
-const diagnosticsFor = async (status, body, headers = {}) => {
+const workersDevDisabledHtml = `<!DOCTYPE html>
+<html>
+  <head><title>Error 1042</title></head>
+  <body>error code: 1042</body>
+</html>`;
+
+const diagnosticsFor = async (status, body, headers = {}, healthUrl = HEALTH_URL) => {
   const { snippetFromBody, classifyMonitorFailure, headerValue } = await loadMonitor();
   const res = response(status, body, headers);
   const bodyText = typeof body === "string" ? body : JSON.stringify(body);
@@ -78,6 +86,7 @@ const diagnosticsFor = async (status, body, headers = {}) => {
       contentType: headerValue(res.headers, "content-type"),
       cfMitigated: headerValue(res.headers, "cf-mitigated"),
       bodyText,
+      healthUrl,
     }),
     contentType: headerValue(res.headers, "content-type"),
     server: headerValue(res.headers, "server"),
@@ -91,7 +100,7 @@ const options = (overrides = {}) => ({
   webhook: WEBHOOK,
   githubRunUrl: RUN_URL,
   now: () => NOW,
-  logger: { error() {} },
+  logger: { error() {}, info() {}, log() {} },
   timeoutSignal: (milliseconds) => {
     assert.equal(milliseconds, 60_000);
     return { timeout: milliseconds };
@@ -99,14 +108,21 @@ const options = (overrides = {}) => ({
   ...overrides,
 });
 
-test("monitor defaults to the workers.dev health URL", async () => {
-  const { DEFAULT_HEALTH_URL, HEALTH_URL: exported, resolveHealthUrl } =
-    await loadMonitor();
+test("monitor defaults to the public custom-domain health URL", async () => {
+  const {
+    DEFAULT_HEALTH_URL,
+    HEALTH_URL: exported,
+    PUBLIC_HEALTH_URL: exportedPublic,
+    WORKERS_DEV_HEALTH_URL: exportedWorkers,
+    resolveHealthUrl,
+  } = await loadMonitor();
   assert.equal(DEFAULT_HEALTH_URL, HEALTH_URL);
   assert.equal(exported, HEALTH_URL);
+  assert.equal(exportedPublic, HEALTH_URL);
+  assert.equal(exportedWorkers, WORKERS_DEV_HEALTH_URL);
   assert.equal(resolveHealthUrl(undefined), HEALTH_URL);
   assert.equal(resolveHealthUrl("  "), HEALTH_URL);
-  assert.equal(resolveHealthUrl(PUBLIC_HEALTH_URL), PUBLIC_HEALTH_URL);
+  assert.equal(resolveHealthUrl(WORKERS_DEV_HEALTH_URL), WORKERS_DEV_HEALTH_URL);
 });
 
 test("classifier treats challenge HTML 403 as Cloudflare blocked", async () => {
@@ -165,6 +181,68 @@ test("classifier treats cf-mitigated header as Cloudflare blocked", async () => 
   assert.equal(result.kind, "cloudflare_blocked");
   assert.equal(result.cfMitigated, "challenge");
   assert.equal(result.cfRay, "aabbccdd11223344-LAX");
+});
+
+test("classifier treats workers.dev 1042 as bypass unavailable, not site down", async () => {
+  const { checkHealthOnce, classifyMonitorFailure } = await loadMonitor();
+
+  assert.equal(
+    classifyMonitorFailure({
+      httpStatus: 404,
+      contentType: "text/html",
+      bodyText: workersDevDisabledHtml,
+      healthUrl: WORKERS_DEV_HEALTH_URL,
+    }),
+    "cloudflare_bypass_unavailable",
+  );
+  assert.equal(
+    classifyMonitorFailure({
+      httpStatus: 404,
+      contentType: "text/plain",
+      bodyText: "error code: 1042",
+      healthUrl: WORKERS_DEV_HEALTH_URL,
+    }),
+    "cloudflare_bypass_unavailable",
+  );
+  assert.equal(
+    classifyMonitorFailure({
+      httpStatus: 404,
+      contentType: "text/html",
+      bodyText: "",
+      healthUrl: WORKERS_DEV_HEALTH_URL,
+    }),
+    "cloudflare_bypass_unavailable",
+  );
+
+  const result = await checkHealthOnce(
+    async () => response(404, workersDevDisabledHtml, { server: "cloudflare" }),
+    { timeoutSignal: () => ({ timeout: 60_000 }), healthUrl: WORKERS_DEV_HEALTH_URL },
+  );
+  assert.equal(result.ok, false);
+  assert.equal(result.kind, "cloudflare_bypass_unavailable");
+  assert.equal(result.httpStatus, 404);
+  assert.match(result.bodySnippet, /error code: 1042/);
+});
+
+test("classifier treats an app 404 on the custom domain as site down", async () => {
+  const { checkHealthOnce, classifyMonitorFailure } = await loadMonitor();
+
+  assert.equal(
+    classifyMonitorFailure({
+      httpStatus: 404,
+      contentType: "application/json",
+      bodyText: JSON.stringify({ error: "not found" }),
+      healthUrl: PUBLIC_HEALTH_URL,
+    }),
+    "site_down",
+  );
+
+  const result = await checkHealthOnce(async () => response(404, { error: "not found" }), {
+    timeoutSignal: () => ({ timeout: 60_000 }),
+    healthUrl: PUBLIC_HEALTH_URL,
+  });
+  assert.equal(result.kind, "site_down");
+  assert.equal(result.reason, "HTTP 404");
 });
 
 test("classifier treats 503 JSON as site down", async () => {
@@ -293,9 +371,8 @@ test("a successful first attempt sends no Feishu request", async () => {
   );
 
   assert.deepEqual(result, { ok: true, attempts: 1 });
-  assert.equal(calls.length, 2);
+  assert.equal(calls.length, 1);
   assert.equal(calls[0].url, HEALTH_URL);
-  assert.equal(calls[1].url, PUBLIC_HEALTH_URL);
   assert.equal(calls[0].init.signal.timeout, 60_000);
 });
 
@@ -307,8 +384,7 @@ test("a later successful retry exits cleanly without alerting", async () => {
     options({
       fetchImpl: async (url) => {
         urls.push(url);
-        if (url === PUBLIC_HEALTH_URL) return response(200, healthyBody(1));
-        return urls.filter((item) => item === HEALTH_URL).length === 1
+        return urls.length === 1
           ? response(503, { raw: "do not log" })
           : response(200, healthyBody(1));
       },
@@ -316,7 +392,7 @@ test("a later successful retry exits cleanly without alerting", async () => {
   );
 
   assert.deepEqual(result, { ok: true, attempts: 2 });
-  assert.deepEqual(urls, [HEALTH_URL, HEALTH_URL, PUBLIC_HEALTH_URL]);
+  assert.deepEqual(urls, [HEALTH_URL, HEALTH_URL]);
 });
 
 test("three failed attempts send exactly one sanitized alert and still reject", async () => {
@@ -327,11 +403,10 @@ test("three failed attempts send exactly one sanitized alert and still reject", 
   await assert.rejects(
     runHealthMonitor(
       options({
-        logger: { error: (line) => logs.push(line) },
+        logger: { error: (line) => logs.push(line), info() {} },
         fetchImpl: async (url, init) => {
           calls.push({ url, init });
           if (url === HEALTH_URL) throw new Error("RAW_ERROR_AND_SECRET_MUST_NOT_LEAK");
-          if (url === PUBLIC_HEALTH_URL) throw new Error("PUBLIC_EDGE_TIMEOUT");
           return response(200, { code: 0 });
         },
       }),
@@ -339,16 +414,16 @@ test("three failed attempts send exactly one sanitized alert and still reject", 
     /health monitor reported failure/i,
   );
 
-  assert.equal(calls.length, 5);
+  assert.equal(calls.length, 4);
   assert.deepEqual(
-    calls.slice(0, 4).map(({ url }) => url),
-    [HEALTH_URL, HEALTH_URL, HEALTH_URL, PUBLIC_HEALTH_URL],
+    calls.slice(0, 3).map(({ url }) => url),
+    [HEALTH_URL, HEALTH_URL, HEALTH_URL],
   );
-  assert.equal(calls[4].url, WEBHOOK);
-  assert.equal(calls[4].init.method, "POST");
-  assert.equal(calls[4].init.headers["content-type"], "application/json");
+  assert.equal(calls[3].url, WEBHOOK);
+  assert.equal(calls[3].init.method, "POST");
+  assert.equal(calls[3].init.headers["content-type"], "application/json");
 
-  const payload = JSON.parse(calls[4].init.body);
+  const payload = JSON.parse(calls[3].init.body);
   assert.equal(payload.msg_type, "text");
   assert.match(payload.content.text, /Northern Lights Tonight/);
   assert.match(payload.content.text, /request failed/);
@@ -360,6 +435,7 @@ test("three failed attempts send exactly one sanitized alert and still reject", 
   assert.match(payload.content.text, /Consecutive failures \(this run\): 3/);
   assert.match(payload.content.text, /Failure signature: [a-f0-9]{16}/);
   assert.doesNotMatch(payload.content.text, /监控被 Cloudflare/);
+  assert.doesNotMatch(payload.content.text, /not treating as site down/);
 
   const emitted = JSON.stringify({ logs, payload });
   assert.doesNotMatch(emitted, /RAW_ERROR_AND_SECRET_MUST_NOT_LEAK/);
@@ -376,7 +452,6 @@ test("HTTP failures include status and structured location and data-source detai
       options({
         fetchImpl: async (url, init) => {
           if (url === HEALTH_URL) return response(503, unhealthyBody());
-          if (url === PUBLIC_HEALTH_URL) return response(200, healthyBody());
           alertText = JSON.parse(init.body).content.text;
           return response(200, { code: 0 });
         },
@@ -399,42 +474,7 @@ test("HTTP failures include status and structured location and data-source detai
   assert.doesNotMatch(alertText, /监控被 Cloudflare/);
 });
 
-test("Cloudflare challenge on the monitor URL uses the blocked-not-down Feishu title", async () => {
-  const { runHealthMonitor } = await loadMonitor();
-  let alertText;
-
-  await assert.rejects(
-    runHealthMonitor(
-      options({
-        fetchImpl: async (url, init) => {
-          if (url === HEALTH_URL) {
-            return response(403, challengeHtml, {
-              "cf-mitigated": "challenge",
-              "cf-ray": "deadbeef12345678-IAD",
-              server: "cloudflare",
-            });
-          }
-          if (url === PUBLIC_HEALTH_URL) {
-            return response(403, challengeHtml, { "cf-mitigated": "challenge" });
-          }
-          alertText = JSON.parse(init.body).content.text;
-          return response(200, { code: 0 });
-        },
-      }),
-    ),
-    /health monitor reported failure/i,
-  );
-
-  assert.match(alertText, /监控被 Cloudflare 拦截（网站未必宕机）/);
-  assert.doesNotMatch(alertText, /Northern Lights Tonight health monitor failure/);
-  assert.match(alertText, /cf-ray: deadbeef12345678-IAD/);
-  assert.match(alertText, /cf-mitigated: challenge/);
-  assert.match(alertText, /Body snippet: /);
-  assert.match(alertText, /Just a moment/);
-  assert.match(alertText, /Note: public edge blocked/);
-});
-
-test("public edge block is an info note and does not page as an outage", async () => {
+test("Cloudflare challenge on the public URL logs and exits successfully without Feishu", async () => {
   const { runHealthMonitor } = await loadMonitor();
   const calls = [];
   const infos = [];
@@ -444,7 +484,145 @@ test("public edge block is an info note and does not page as an outage", async (
       logger: { error() {}, info: (line) => infos.push(line) },
       fetchImpl: async (url, init) => {
         calls.push({ url, init });
-        if (url === HEALTH_URL) return response(200, healthyBody(1));
+        if (url === WEBHOOK) {
+          throw new Error("Feishu must not be called for a Cloudflare challenge");
+        }
+        return response(403, challengeHtml, {
+          "cf-mitigated": "challenge",
+          "cf-ray": "deadbeef12345678-IAD",
+          server: "cloudflare",
+        });
+      },
+    }),
+  );
+
+  assert.equal(result.ok, true);
+  assert.equal(result.skippedAlert, true);
+  assert.equal(result.kind, "cloudflare_blocked");
+  assert.equal(result.cfMitigated, "challenge");
+  assert.equal(result.cfRay, "deadbeef12345678-IAD");
+  assert.equal(calls.length, 3);
+  assert.deepEqual(
+    calls.map(({ url }) => url),
+    [HEALTH_URL, HEALTH_URL, HEALTH_URL],
+  );
+  assert.equal(infos.length, 1);
+  assert.match(infos[0], /Cloudflare challenge \(not treating as site down\)/);
+  assert.match(infos[0], /cf-ray: deadbeef12345678-IAD/);
+  assert.match(infos[0], /cf-mitigated: challenge/);
+  assert.match(infos[0], /Just a moment/);
+  assert.doesNotMatch(infos[0], /Northern Lights Tonight health monitor failure/);
+});
+
+test("workers.dev 1042 plus public Cloudflare challenge does not page as site down", async () => {
+  const { runHealthMonitor } = await loadMonitor();
+  const calls = [];
+  const infos = [];
+
+  const result = await runHealthMonitor(
+    options({
+      healthUrl: WORKERS_DEV_HEALTH_URL,
+      logger: { error() {}, info: (line) => infos.push(line) },
+      fetchImpl: async (url) => {
+        calls.push(url);
+        if (url === WORKERS_DEV_HEALTH_URL) {
+          return response(404, workersDevDisabledHtml, { server: "cloudflare" });
+        }
+        if (url === PUBLIC_HEALTH_URL) {
+          return response(403, challengeHtml, {
+            "cf-mitigated": "challenge",
+            "cf-ray": "a51662ea5a6b44fb-ATL",
+          });
+        }
+        throw new Error("Feishu must not be called for bypass-unavailable plus challenge");
+      },
+    }),
+  );
+
+  assert.equal(result.ok, true);
+  assert.equal(result.skippedAlert, true);
+  assert.equal(result.kind, "cloudflare_bypass_unavailable");
+  assert.match(result.publicProbeNote, /Note: public edge blocked/);
+  assert.match(result.publicProbeNote, /a51662ea5a6b44fb-ATL/);
+  assert.deepEqual(calls, [
+    WORKERS_DEV_HEALTH_URL,
+    WORKERS_DEV_HEALTH_URL,
+    WORKERS_DEV_HEALTH_URL,
+    PUBLIC_HEALTH_URL,
+  ]);
+  assert.match(infos[0], /bypass unavailable \(not treating as site down\)/);
+  assert.match(infos[0], /error code: 1042/);
+});
+
+test("workers.dev 1042 succeeds when the public edge returns healthy JSON", async () => {
+  const { runHealthMonitor } = await loadMonitor();
+  const calls = [];
+
+  const result = await runHealthMonitor(
+    options({
+      healthUrl: WORKERS_DEV_HEALTH_URL,
+      fetchImpl: async (url) => {
+        calls.push(url);
+        if (url === WORKERS_DEV_HEALTH_URL) {
+          return response(404, "error code: 1042");
+        }
+        if (url === PUBLIC_HEALTH_URL) return response(200, healthyBody(1));
+        throw new Error("Feishu must not be called when the public edge is healthy");
+      },
+    }),
+  );
+
+  assert.equal(result.ok, true);
+  assert.equal(result.skippedAlert, true);
+  assert.equal(result.publicConfirmed, true);
+  assert.equal(result.kind, "cloudflare_bypass_unavailable");
+  assert.deepEqual(calls, [
+    WORKERS_DEV_HEALTH_URL,
+    WORKERS_DEV_HEALTH_URL,
+    WORKERS_DEV_HEALTH_URL,
+    PUBLIC_HEALTH_URL,
+  ]);
+});
+
+test("workers.dev 1042 still alerts when the public edge returns a real outage", async () => {
+  const { runHealthMonitor } = await loadMonitor();
+  let alertText;
+
+  await assert.rejects(
+    runHealthMonitor(
+      options({
+        healthUrl: WORKERS_DEV_HEALTH_URL,
+        fetchImpl: async (url, init) => {
+          if (url === WORKERS_DEV_HEALTH_URL) {
+            return response(404, workersDevDisabledHtml);
+          }
+          if (url === PUBLIC_HEALTH_URL) return response(503, unhealthyBody());
+          alertText = JSON.parse(init.body).content.text;
+          return response(200, { code: 0 });
+        },
+      }),
+    ),
+    /health monitor reported failure/i,
+  );
+
+  assert.match(alertText, /Northern Lights Tonight health monitor failure/);
+  assert.match(alertText, new RegExp(PUBLIC_HEALTH_URL.replaceAll("/", "\\/")));
+  assert.match(alertText, /HTTP status: 503/);
+  assert.match(alertText, /persistence: degraded/);
+});
+
+test("HEALTH_URL override that is healthy does not page a public-edge challenge", async () => {
+  const { runHealthMonitor } = await loadMonitor();
+  const calls = [];
+  const infos = [];
+
+  const result = await runHealthMonitor(
+    options({
+      healthUrl: WORKERS_DEV_HEALTH_URL,
+      logger: { error() {}, info: (line) => infos.push(line) },
+      fetchImpl: async (url, init) => {
+        calls.push({ url, init });
+        if (url === WORKERS_DEV_HEALTH_URL) return response(200, healthyBody(1));
         if (url === PUBLIC_HEALTH_URL) {
           return response(403, challengeHtml, {
             "cf-mitigated": "challenge",
@@ -463,7 +641,7 @@ test("public edge block is an info note and does not page as an outage", async (
   assert.deepEqual(infos, [result.publicProbeNote]);
   assert.deepEqual(
     calls.map(({ url }) => url),
-    [HEALTH_URL, PUBLIC_HEALTH_URL],
+    [WORKERS_DEV_HEALTH_URL, PUBLIC_HEALTH_URL],
   );
 });
 
@@ -481,7 +659,7 @@ test("HEALTH_URL env override is used for the primary probe", async () => {
         return response(200, healthyBody(1));
       },
       now: () => NOW,
-      logger: { error() {} },
+      logger: { error() {}, info() {} },
       timeoutSignal: () => ({ timeout: 60_000 }),
     },
   );
@@ -503,13 +681,13 @@ test("dry-run skips webhook delivery but preserves the failing exit code", async
         throw new Error("simulated request failure");
       },
       now: () => NOW,
-      logger: { error() {} },
+      logger: { error() {}, info() {} },
       timeoutSignal: () => ({ timeout: 60_000 }),
     },
   );
 
   assert.equal(exitCode, 1);
-  assert.deepEqual(urls, [HEALTH_URL, HEALTH_URL, HEALTH_URL, PUBLIC_HEALTH_URL]);
+  assert.deepEqual(urls, [HEALTH_URL, HEALTH_URL, HEALTH_URL]);
 });
 
 test("a missing webhook fails before any health request", async () => {
@@ -540,10 +718,9 @@ test("health response content and webhook never enter errors or logs", async () 
   try {
     await runHealthMonitor(
       options({
-        logger: { error: (line) => logs.push(line) },
+        logger: { error: (line) => logs.push(line), info() {} },
         fetchImpl: async (url) => {
           if (url === HEALTH_URL) return response(200, new Error(rawSentinel));
-          if (url === PUBLIC_HEALTH_URL) return response(200, healthyBody());
           return response(200, { StatusCode: 0 });
         },
       }),
@@ -575,7 +752,6 @@ test("Feishu HTTP, malformed JSON, and nonzero application errors fail generical
               healthAttempts += 1;
               return response(503, { private: "content" });
             }
-            if (url === PUBLIC_HEALTH_URL) return response(200, healthyBody());
             return feishuResponse;
           },
         }),
@@ -589,4 +765,46 @@ test("Feishu HTTP, malformed JSON, and nonzero application errors fail generical
     );
     assert.equal(healthAttempts, 3);
   }
+});
+
+test("HTTP 200 challenge HTML is inconclusive and does not page Feishu", async () => {
+  const { runHealthMonitor } = await loadMonitor();
+  const infos = [];
+
+  const result = await runHealthMonitor(
+    options({
+      logger: { error() {}, info: (line) => infos.push(line) },
+      fetchImpl: async (url) => {
+        if (url === WEBHOOK) throw new Error("Feishu must not be called for 200 challenge HTML");
+        return response(200, challengeHtml, { "content-type": "text/html; charset=UTF-8" });
+      },
+    }),
+  );
+
+  assert.equal(result.ok, true);
+  assert.equal(result.skippedAlert, true);
+  assert.equal(result.kind, "cloudflare_blocked");
+  assert.match(infos[0], /Cloudflare challenge \(not treating as site down\)/);
+});
+
+test("invalid JSON without a Cloudflare challenge still fails the job", async () => {
+  const { main } = await loadMonitor();
+  const urls = [];
+
+  const exitCode = await main(
+    { GITHUB_RUN_URL: RUN_URL },
+    {
+      dryRun: true,
+      fetchImpl: async (url) => {
+        urls.push(url);
+        return response(200, "not-json", { "content-type": "text/plain" });
+      },
+      now: () => NOW,
+      logger: { error() {}, info() {} },
+      timeoutSignal: () => ({ timeout: 60_000 }),
+    },
+  );
+
+  assert.equal(exitCode, 1);
+  assert.deepEqual(urls, [HEALTH_URL, HEALTH_URL, HEALTH_URL]);
 });

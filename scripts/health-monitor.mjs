@@ -1,15 +1,24 @@
 import { createHash } from "node:crypto";
 import { pathToFileURL } from "node:url";
 
-export const DEFAULT_HEALTH_URL =
-  "https://aurora-tonight.mengyu699.workers.dev/api/health";
 export const PUBLIC_HEALTH_URL = "https://aurora-tonight.com/api/health";
+export const WORKERS_DEV_HEALTH_URL =
+  "https://aurora-tonight.mengyu699.workers.dev/api/health";
+export const DEFAULT_HEALTH_URL = PUBLIC_HEALTH_URL;
 export const HEALTH_URL = DEFAULT_HEALTH_URL;
 const REQUEST_TIMEOUT_MS = 60_000;
 const MAX_ATTEMPTS = 3;
 const BODY_SNIPPET_MAX = 300;
-const CLOUDFLARE_CHALLENGE_RE =
-  /Just a moment|Attention Required|cf-chl|error code:\s*10\d{2}/i;
+const CLOUDFLARE_CHALLENGE_UI_RE =
+  /Just a moment|Attention Required|cf-chl/i;
+const CLOUDFLARE_ERROR_CODE_RE = /error code:\s*10\d{2}/i;
+const CLOUDFLARE_1042_RE = /error code:\s*1042/i;
+
+export const MONITOR_KIND = Object.freeze({
+  SITE_DOWN: "site_down",
+  CLOUDFLARE_BLOCKED: "cloudflare_blocked",
+  BYPASS_UNAVAILABLE: "cloudflare_bypass_unavailable",
+});
 
 const isObject = (value) =>
   typeof value === "object" && value !== null && !Array.isArray(value);
@@ -17,6 +26,22 @@ const isObject = (value) =>
 export function resolveHealthUrl(value) {
   const trimmed = String(value ?? "").trim();
   return trimmed || DEFAULT_HEALTH_URL;
+}
+
+export function isWorkersDevHealthUrl(value) {
+  try {
+    const hostname = new URL(String(value ?? "")).hostname.toLowerCase();
+    return hostname === "workers.dev" || hostname.endsWith(".workers.dev");
+  } catch {
+    return false;
+  }
+}
+
+export function isInconclusiveMonitorKind(kind) {
+  return (
+    kind === MONITOR_KIND.CLOUDFLARE_BLOCKED ||
+    kind === MONITOR_KIND.BYPASS_UNAVAILABLE
+  );
 }
 
 export function headerValue(headers, name) {
@@ -51,16 +76,30 @@ export function classifyMonitorFailure({
   contentType = null,
   cfMitigated = null,
   bodyText = "",
+  healthUrl = "",
 } = {}) {
   if (String(cfMitigated ?? "").trim() !== "") {
-    return "cloudflare_blocked";
+    return MONITOR_KIND.CLOUDFLARE_BLOCKED;
   }
+  const text = String(bodyText ?? "");
   const html = /text\/html/i.test(String(contentType ?? ""));
   const challengeStatus = httpStatus === 403 || httpStatus === 503;
-  if (challengeStatus && html && CLOUDFLARE_CHALLENGE_RE.test(String(bodyText ?? ""))) {
-    return "cloudflare_blocked";
+  if (
+    (challengeStatus || html) &&
+    CLOUDFLARE_CHALLENGE_UI_RE.test(text)
+  ) {
+    return MONITOR_KIND.CLOUDFLARE_BLOCKED;
   }
-  return "site_down";
+  if (CLOUDFLARE_1042_RE.test(text)) {
+    return MONITOR_KIND.BYPASS_UNAVAILABLE;
+  }
+  if (challengeStatus && html && CLOUDFLARE_ERROR_CODE_RE.test(text)) {
+    return MONITOR_KIND.CLOUDFLARE_BLOCKED;
+  }
+  if (httpStatus === 404 && isWorkersDevHealthUrl(healthUrl)) {
+    return MONITOR_KIND.BYPASS_UNAVAILABLE;
+  }
+  return MONITOR_KIND.SITE_DOWN;
 }
 
 const sanitizeHttpReason = (status) =>
@@ -72,7 +111,7 @@ const failureResult = ({
   reason,
   httpStatus = null,
   failureItems,
-  kind = "site_down",
+  kind = MONITOR_KIND.SITE_DOWN,
   contentType = null,
   server = null,
   cfRay = null,
@@ -154,6 +193,11 @@ const readResponseText = async (response) => {
   throw new Error("missing text()");
 };
 
+const logInfo = (logger, text) => {
+  if (typeof logger?.info === "function") logger.info(text);
+  else if (typeof logger?.log === "function") logger.log(text);
+};
+
 export async function checkHealthOnce(
   fetchImpl,
   { timeoutSignal = AbortSignal.timeout, healthUrl = DEFAULT_HEALTH_URL } = {},
@@ -171,7 +215,7 @@ export async function checkHealthOnce(
     return failureResult({
       reason: "request failed",
       failureItems: ["request transport failed"],
-      kind: "site_down",
+      kind: MONITOR_KIND.SITE_DOWN,
     });
   }
 
@@ -192,6 +236,7 @@ export async function checkHealthOnce(
     contentType,
     cfMitigated,
     bodyText,
+    healthUrl,
   });
   const diagnostics = {
     kind,
@@ -284,22 +329,18 @@ const buildAlertText = ({
   publicProbeNote,
 }) => {
   const failureSignature = buildFailureSignature(failure);
-  const lines =
-    failure.kind === "cloudflare_blocked"
-      ? ["监控被 Cloudflare 拦截（网站未必宕机）"]
-      : ["Northern Lights Tonight health monitor failure"];
-  lines.push(
+  const lines = [
+    "Northern Lights Tonight health monitor failure",
     `Reason: ${failure.reason}`,
     `Check time (ISO): ${checkedAt}`,
     `Triggered URL: ${healthUrl}`,
     `HTTP status: ${failure.httpStatus ?? "unavailable"}`,
     `Failure items: ${failure.failureItems.join("; ")}`,
-  );
-  if (failure.kind === "cloudflare_blocked") {
+  ];
+  if (failure.cfRay || failure.cfMitigated) {
     lines.push(
       `cf-ray: ${failure.cfRay ?? "unavailable"}`,
       `cf-mitigated: ${failure.cfMitigated ?? "unavailable"}`,
-      `Body snippet: ${failure.bodySnippet || "unavailable"}`,
     );
   }
   if (publicProbeNote) {
@@ -350,10 +391,34 @@ const sendFeishuAlert = async ({ fetchImpl, webhook, text, timeoutSignal }) => {
 };
 
 const publicEdgeNote = (result, publicHealthUrl) => {
-  if (!result || result.ok || result.kind !== "cloudflare_blocked") return null;
+  if (!result || result.ok || !isInconclusiveMonitorKind(result.kind)) {
+    return null;
+  }
   const cfRay = result.cfRay ?? "unavailable";
   const cfMitigated = result.cfMitigated ?? "unavailable";
-  return `Note: public edge blocked (${publicHealthUrl}; cf-ray=${cfRay}; cf-mitigated=${cfMitigated})`;
+  const label =
+    result.kind === MONITOR_KIND.BYPASS_UNAVAILABLE
+      ? "bypass unavailable"
+      : "blocked";
+  return `Note: public edge ${label} (${publicHealthUrl}; cf-ray=${cfRay}; cf-mitigated=${cfMitigated})`;
+};
+
+const formatInconclusiveLog = ({ failure, healthUrl, publicProbeNote }) => {
+  const title =
+    failure.kind === MONITOR_KIND.CLOUDFLARE_BLOCKED
+      ? "Health monitor: Cloudflare challenge (not treating as site down)"
+      : "Health monitor: workers.dev/bypass unavailable (not treating as site down)";
+  const lines = [
+    title,
+    `Triggered URL: ${healthUrl}`,
+    `Reason: ${failure.reason}`,
+    `HTTP status: ${failure.httpStatus ?? "unavailable"}`,
+    `cf-ray: ${failure.cfRay ?? "unavailable"}`,
+    `cf-mitigated: ${failure.cfMitigated ?? "unavailable"}`,
+    `Body snippet: ${failure.bodySnippet || "unavailable"}`,
+  ];
+  if (publicProbeNote) lines.push(publicProbeNote);
+  return lines.join("\n");
 };
 
 export async function runHealthMonitor({
@@ -397,21 +462,16 @@ export async function runHealthMonitor({
 
   const shouldProbePublic =
     probePublicUrl && resolvedPublicUrl !== resolvedHealthUrl;
-  const publicProbeNote = shouldProbePublic
-    ? publicEdgeNote(
-        await checkHealthOnce(fetchImpl, {
-          timeoutSignal,
-          healthUrl: resolvedPublicUrl,
-        }),
-        resolvedPublicUrl,
-      )
+  const publicResult = shouldProbePublic
+    ? await checkHealthOnce(fetchImpl, {
+        timeoutSignal,
+        healthUrl: resolvedPublicUrl,
+      })
     : null;
+  const publicProbeNote = publicEdgeNote(publicResult, resolvedPublicUrl);
 
   if (succeeded) {
-    if (publicProbeNote) {
-      if (typeof logger.info === "function") logger.info(publicProbeNote);
-      else if (typeof logger.log === "function") logger.log(publicProbeNote);
-    }
+    if (publicProbeNote) logInfo(logger, publicProbeNote);
     return {
       ok: true,
       attempts,
@@ -419,12 +479,56 @@ export async function runHealthMonitor({
     };
   }
 
+  if (isInconclusiveMonitorKind(lastFailure.kind)) {
+    if (publicResult?.ok) {
+      const note = formatInconclusiveLog({
+        failure: lastFailure,
+        healthUrl: resolvedHealthUrl,
+        publicProbeNote:
+          "Public edge confirmed healthy; primary URL is not authoritative.",
+      });
+      logInfo(logger, note);
+      return {
+        ok: true,
+        attempts,
+        skippedAlert: true,
+        kind: lastFailure.kind,
+        publicConfirmed: true,
+        healthUrl: resolvedHealthUrl,
+        cfRay: lastFailure.cfRay,
+        cfMitigated: lastFailure.cfMitigated,
+      };
+    }
+    if (!publicResult || isInconclusiveMonitorKind(publicResult.kind)) {
+      const note = formatInconclusiveLog({
+        failure: lastFailure,
+        healthUrl: resolvedHealthUrl,
+        publicProbeNote,
+      });
+      logInfo(logger, note);
+      return {
+        ok: true,
+        attempts,
+        skippedAlert: true,
+        kind: lastFailure.kind,
+        healthUrl: resolvedHealthUrl,
+        httpStatus: lastFailure.httpStatus,
+        cfRay: lastFailure.cfRay,
+        cfMitigated: lastFailure.cfMitigated,
+        ...(publicProbeNote ? { publicProbeNote } : {}),
+      };
+    }
+    lastFailure = publicResult;
+  }
+
+  const alertHealthUrl =
+    lastFailure === publicResult ? resolvedPublicUrl : resolvedHealthUrl;
   const alertText = buildAlertText({
     failure: lastFailure,
     checkedAt: now().toISOString(),
     githubRunUrl: normalizedRunUrl,
     consecutiveFailures: MAX_ATTEMPTS,
-    healthUrl: resolvedHealthUrl,
+    healthUrl: alertHealthUrl,
     publicProbeNote,
   });
   logger.error(alertText);

@@ -61,7 +61,9 @@ approval_boundaries:
 ## Supersession
 
 For this validation release, this addendum replaces the static, rendered-page,
-and external-provider sections of `docs/operations/monitoring.md`. The only
-installed monitor is the two-hour health check described here. The application
-still enforces the 600-second request-time freshness contract independently of
-monitoring.
+and external-provider sections of `docs/operations/monitoring.md`. The live
+contract is `docs/operations/monitoring.md`: the authoritative target is
+`https://aurora-tonight.com/api/health`, Cloudflare bot-challenge /
+workers.dev-disabled responses do not page Feishu as site-down, and the
+schedule follows the workflow cron. The application still enforces the
+600-second request-time freshness contract independently of monitoring.

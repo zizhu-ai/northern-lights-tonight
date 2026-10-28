@@ -25,5 +25,5 @@ jobs:
         env:
           FEISHU_MONITOR_WEBHOOK: ${{ secrets.FEISHU_MONITOR_WEBHOOK }}
           GITHUB_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-          HEALTH_URL: ${{ vars.HEALTH_URL || 'https://aurora-tonight.mengyu699.workers.dev/api/health' }}
+          HEALTH_URL: ${{ vars.HEALTH_URL || 'https://aurora-tonight.com/api/health' }}
         run: node scripts/health-monitor.mjs
