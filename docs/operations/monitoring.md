@@ -19,22 +19,23 @@ delayed or disabled.
    send a test alert without approval of the exact destination and message.
 
 GitHub scheduled workflows run from the default branch and may be delayed. The
-workflow runs at minute 17 every two hours, has read-only repository permission,
+workflow runs once per day at 03:17 UTC, has read-only repository permission,
 a single bounded concurrency group, and a five-minute job timeout.
 
 ## Health and failure contract
 
-The checker requests:
+The authoritative checker target is the public custom domain:
 
 ```text
-https://aurora-tonight.mengyu699.workers.dev/api/health
+https://aurora-tonight.com/api/health
 ```
 
-That workers.dev URL is the default because Cloudflare free Bot Fight Mode
-managed-challenges GitHub Actions runner IPs on `aurora-tonight.com/api/health`
-and cannot be skipped. Override the target with the `HEALTH_URL` environment
-variable (workflow default is the workers.dev URL; a repository variable of the
-same name also overrides it). Expected-JSON checks are unchanged.
+Override the target with the `HEALTH_URL` environment variable (workflow
+default is the custom-domain URL; a repository variable of the same name also
+overrides it). `*.workers.dev` is not the production health URL. If a run still
+points at workers.dev, a Cloudflare disabled-subdomain response (HTTP 404 with
+`error code: 1042`, or any 404 on a `*.workers.dev` host) is a bypass/config
+issue, not a site outage.
 
 It tries at most three times, with a 60-second timeout on each attempt. A check
 succeeds only for HTTP 200 and a JSON object where:
@@ -47,20 +48,30 @@ On non-200 or non-JSON responses the checker records status, `content-type`,
 `server`, `cf-ray`, `cf-mitigated`, and a ~300-character stripped body snippet.
 It reads the body as text first and only then attempts `JSON.parse`.
 
-A successful attempt exits zero immediately and sends no Feishu message. Only
-after all three attempts fail does the checker send one text alert. Site-down
-alerts keep the existing wording (bounded reason, UTC time, health URL, GitHub
-run URL). Cloudflare challenge responses (`cf-mitigated` present, or HTTP
-403/503 HTML containing "Just a moment" / "Attention Required" / "cf-chl" /
-"error code: 10xx") use the title "监控被 Cloudflare 拦截（网站未必宕机）" and
-include cf-ray, cf-mitigated, and the snippet so they are not paged as outages.
-The webhook is never included. After a successful alert, the process still
-exits nonzero so GitHub's own failure notification remains a fallback.
+A successful attempt exits zero immediately and sends no Feishu message. GitHub
+Actions runner IPs are often managed-challenged by Cloudflare Bot Fight Mode on
+the public edge. Those responses (`cf-mitigated` present, challenge HTML such as
+"Just a moment" / "Attention Required" / "cf-chl", or workers.dev 1042/404 as
+above) are inconclusive: the job logs the URL, status, cf-ray, cf-mitigated, and
+snippet, then exits zero without a Feishu page. They must not be titled
+"Northern Lights Tonight health monitor failure".
 
-The checker also probes the public `https://aurora-tonight.com/api/health` once.
-A public-edge Cloudflare block is recorded only as a `Note: public edge blocked`
-line (or an info log when the workers.dev check succeeded). It never sends a
-down alert by itself.
+Only a confirmed outage sends one text alert after all three attempts fail:
+invalid or missing health JSON, `status` outside `[ok, degraded]`, stale
+`checked_age_seconds`, degraded/invalid sources or persistence reported by a
+real health body, HTTP errors that are not a Cloudflare challenge, or a
+transport failure that is not a challenge. Site-down alerts keep the existing
+wording (bounded reason, UTC time, health URL, GitHub run URL) plus cf-ray /
+cf-mitigated when those headers are present. The webhook is never included.
+After a successful alert, the process still exits nonzero so GitHub's own
+failure notification remains a fallback.
+
+If `HEALTH_URL` is overridden to a different URL than the public edge, the
+checker probes `https://aurora-tonight.com/api/health` once for diagnostics. A
+public-edge Cloudflare block is recorded only as a `Note: public edge blocked`
+line (or an info log when the override check succeeded). If the override is
+inconclusive (challenge or workers.dev 1042) and the public edge returns a real
+unhealthy JSON body, that public result is treated as the outage.
 
 A missing webhook fails configuration before any health request. Feishu HTTP
 failures, malformed responses, and nonzero application error codes also fail
@@ -72,11 +83,11 @@ stays on Blob until that cutover. See [lkg-store.md](lkg-store.md).
 
 ## Hobby Blob budget
 
-At one health run every two hours, the monitor runs about 360 times per rolling
-30 days. Even if every run triggers a stale refresh, the current resolver's
-minimum two gets and two puts produce about 720 simple and 720 advanced Blob
-operations without contention. This monitor-only bound remains below the Hobby
-allowances of 10,000 simple and 2,000 advanced operations per rolling 30 days.
+At one health run per day, the monitor runs about 30 times per rolling 30 days.
+Even if every run triggers a stale refresh, the current resolver's minimum two
+gets and two puts produce about 60 simple and 60 advanced Blob operations
+without contention. This monitor-only bound remains below the Hobby allowances
+of 10,000 simple and 2,000 advanced operations per rolling 30 days.
 
 Real traffic, retries, failures, lease competition, and takeovers are additional
 and are not included in that bound. If either rolling-30-day counter reaches 70%
