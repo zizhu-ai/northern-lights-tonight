@@ -10,10 +10,12 @@ import type { AnalyticsPageType, VerdictAnalyticsStatus } from "@/lib/search-eve
 export function ForecastViewTracker({
   pageType,
   state,
+  placeSlug,
   verdict,
 }: {
   pageType: Extract<AnalyticsPageType, "home" | "forecast" | "view">;
-  state?: string;
+  state?: string | null;
+  placeSlug?: string | null;
   verdict: VerdictAnalyticsStatus;
 }) {
   const pathname = usePathname();
@@ -21,12 +23,12 @@ export function ForecastViewTracker({
   useEffect(() => {
     const props = prepareForecastViewEvent(
       window.location.href,
-      { pageType, state, verdict },
+      { pageType, state, placeSlug, verdict },
       forecastViewOnce,
     );
     if (!props) return;
     void trackBrowserProductEvent("forecast_view", props);
-  }, [pageType, pathname, state, verdict]);
+  }, [pageType, pathname, placeSlug, state, verdict]);
 
   return null;
 }

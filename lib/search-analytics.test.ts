@@ -7,11 +7,13 @@ import type { ForecastDossier } from "./forecast-places";
 import { prepareForecastViewEvent } from "./forecast-view-event.ts";
 // @ts-ignore TS5097
 import {
+  analyticsStateParam,
   analyticsStateSlug,
   faqAnalyticsId,
   isAllowedProductEventName,
   pageTypeFromPath,
   PRODUCT_EVENT_NAMES,
+  resolveAnalyticsState,
   sanitizeProductEventProps,
   trackProductEvent,
   type ProductEventName,
@@ -84,12 +86,13 @@ test("forecast_view after SPA navigation uses the new sanitized page_location on
 
   const ohio = prepareForecastViewEvent(
     "https://aurora-tonight.com/forecast/ohio",
-    { pageType: "forecast", state: "ohio", verdict: "GO" },
+    { pageType: "forecast", state: "ohio", placeSlug: "ohio", verdict: "GO" },
     once,
   );
   assert.deepEqual(ohio, {
     page_type: "forecast",
     state: "ohio",
+    place_slug: "ohio",
     verdict: "GO",
     page_location: "https://aurora-tonight.com/forecast/ohio",
   });
@@ -101,7 +104,7 @@ test("forecast_view after SPA navigation uses the new sanitized page_location on
   assert.equal(
     prepareForecastViewEvent(
       "https://aurora-tonight.com/forecast/ohio?utm_source=share",
-      { pageType: "forecast", state: "ohio", verdict: "MAYBE" },
+      { pageType: "forecast", state: "ohio", placeSlug: "ohio", verdict: "MAYBE" },
       once,
     ),
     null,
@@ -109,53 +112,80 @@ test("forecast_view after SPA navigation uses the new sanitized page_location on
 
   const indiana = prepareForecastViewEvent(
     "https://aurora-tonight.com/forecast/indiana",
-    { pageType: "forecast", state: "indiana", verdict: "NO" },
+    { pageType: "forecast", state: "indiana", placeSlug: "indiana", verdict: "NO" },
     once,
   );
   assert.equal(indiana?.page_location, "https://aurora-tonight.com/forecast/indiana");
   assert.equal(indiana?.state, "indiana");
+  assert.equal(indiana?.place_slug, "indiana");
   assert.deepEqual(capture("forecast_view", indiana!), [
     { name: "forecast_view", props: indiana },
   ]);
 
   const pin = prepareForecastViewEvent(
     "https://aurora-tonight.com/view?lat=40.123&lng=-86.100&name=Home",
-    { pageType: "view", verdict: "UNKNOWN" },
+    { pageType: "view", state: "indiana", placeSlug: "view", verdict: "UNKNOWN" },
     once,
   );
   assert.equal(pin?.page_location, "https://aurora-tonight.com/view");
+  assert.equal(pin?.state, "indiana");
+  assert.equal(pin?.place_slug, "view");
   assert.equal("lat" in (pin ?? {}), false);
   assert.equal("name" in (pin ?? {}), false);
 });
 
-test("forecast_view param shape is page_type, optional state, and verdict", () => {
-  const home = capture("forecast_view", {
+test("forecast_view always sends state and place_slug, never empty or omitted", () => {
+  const once = { lastPageLocation: null as string | null };
+
+  const home = prepareForecastViewEvent(
+    "https://aurora-tonight.com/",
+    { pageType: "home", state: "us", placeSlug: "home", verdict: "MAYBE" },
+    once,
+  );
+  assert.deepEqual(home, {
     page_type: "home",
+    state: "us",
+    place_slug: "home",
+    verdict: "MAYBE",
+    page_location: "https://aurora-tonight.com/",
+  });
+
+  const missing = prepareForecastViewEvent(
+    "https://aurora-tonight.com/forecast/seattle",
+    { pageType: "forecast", state: "", placeSlug: "seattle", verdict: "NO" },
+    once,
+  );
+  assert.equal(missing?.state, "unknown");
+  assert.equal(missing?.place_slug, "seattle");
+
+  const viewUnknown = prepareForecastViewEvent(
+    "https://aurora-tonight.com/view?lat=-33.8&lng=151.2&name=Sydney",
+    { pageType: "view", verdict: "UNAVAILABLE" },
+    once,
+  );
+  assert.equal(viewUnknown?.state, "unknown");
+  assert.equal(viewUnknown?.place_slug, "view");
+
+  const captured = capture("forecast_view", {
+    page_type: "home",
+    state: "us",
+    place_slug: "home",
     verdict: "MAYBE",
     q: "fort collins",
   });
-  assert.deepEqual(home, [
-    { name: "forecast_view", props: { page_type: "home", verdict: "MAYBE" } },
-  ]);
-
-  const forecast = capture("forecast_view", {
-    page_type: "forecast",
-    state: "ohio",
-    verdict: "GO",
-  });
-  assert.deepEqual(forecast, [
+  assert.deepEqual(captured, [
     {
       name: "forecast_view",
-      props: { page_type: "forecast", state: "ohio", verdict: "GO" },
+      props: {
+        page_type: "home",
+        state: "us",
+        place_slug: "home",
+        verdict: "MAYBE",
+      },
     },
   ]);
-
-  const view = capture("forecast_view", {
-    page_type: "view",
-    verdict: "UNAVAILABLE",
-  });
-  assert.deepEqual(view[0]?.props, { page_type: "view", verdict: "UNAVAILABLE" });
-  assert.equal("state" in (view[0]?.props ?? {}), false);
+  assert.equal("place" in (captured[0]?.props ?? {}), false);
+  assert.equal("name" in (captured[0]?.props ?? {}), false);
 });
 
 test("search_submit and search_match expose source method query_kind and destination without the raw query", () => {
@@ -193,6 +223,26 @@ test("search_submit and search_match expose source method query_kind and destina
     },
   ]);
   assert.equal("name" in (match[0]?.props ?? {}), false);
+
+  const suggestion = capture("search_match", {
+    source: "home",
+    result: "success",
+    query_kind: "text",
+    method: "suggestion",
+    destination: "forecast",
+  });
+  assert.deepEqual(suggestion, [
+    {
+      name: "search_match",
+      props: {
+        source: "home",
+        result: "success",
+        query_kind: "text",
+        method: "suggestion",
+        destination: "forecast",
+      },
+    },
+  ]);
 });
 
 test("state_nav param shape is from_page_type and to_state", () => {
@@ -245,4 +295,36 @@ test("analyticsStateSlug uses parent_slug for city dossiers and omits unmapped c
   assert.equal(analyticsStateSlug(bySlug("chicago")), "illinois");
   assert.equal(analyticsStateSlug(bySlug("fairbanks")), "alaska");
   assert.equal(analyticsStateSlug(bySlug("seattle")), undefined);
+  assert.equal(analyticsStateParam(bySlug("ohio")), "ohio");
+  assert.equal(analyticsStateParam(bySlug("chicago")), "illinois");
+  assert.equal(analyticsStateParam(bySlug("seattle")), "unknown");
+  assert.equal(analyticsStateParam(null), "unknown");
+  assert.equal(resolveAnalyticsState(""), "unknown");
+  assert.equal(resolveAnalyticsState("  colorado "), "colorado");
+});
+
+test("use-place-search suggestion navigation wires search_submit and search_match", () => {
+  const source = readFileSync(new URL("../components/use-place-search.ts", import.meta.url), "utf8");
+  assert.match(source, /function navigatePlace\(place: Place\)/);
+  assert.match(
+    source,
+    /trackBrowserProductEvent\("search_submit",\s*\{[\s\S]*?method:\s*"suggestion"/,
+  );
+  assert.match(
+    source,
+    /trackBrowserProductEvent\("search_match",\s*\{[\s\S]*?method:\s*"suggestion"/,
+  );
+});
+
+test("state_nav link tracks on pointerdown before navigation", () => {
+  const source = readFileSync(new URL("../components/state-nav-link.tsx", import.meta.url), "utf8");
+  assert.match(source, /trackBrowserProductEvent\("state_nav"/);
+  assert.match(source, /onPointerDown/);
+  assert.match(source, /from_page_type/);
+  assert.match(source, /to_state/);
+});
+
+test("browser product events request beacon transport", () => {
+  const source = readFileSync(new URL("./search-analytics.ts", import.meta.url), "utf8");
+  assert.match(source, /transport_type:\s*"beacon"/);
 });

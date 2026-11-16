@@ -10,7 +10,10 @@ export type ForecastViewOnceState = { lastPageLocation: string | null };
 
 export type ForecastViewInput = {
   pageType: Extract<AnalyticsPageType, "home" | "forecast" | "view">;
-  state?: string;
+  /** US state slug, region, or explicit fallback such as `us` / `unknown`. */
+  state?: string | null;
+  /** Location slug for this view (`home`, `view`, or a forecast slug). */
+  placeSlug?: string | null;
   verdict: VerdictAnalyticsStatus;
 };
 
@@ -35,10 +38,14 @@ export function prepareForecastViewEvent(
   const viewKey = forecastViewKey(page_location);
   if (once.lastPageLocation === viewKey) return null;
   once.lastPageLocation = viewKey;
+  const trimmedState = input.state?.trim();
+  const place_slug = input.placeSlug?.trim() || input.pageType;
   return {
     page_type: input.pageType,
     verdict: input.verdict,
     page_location,
-    ...(input.state ? { state: input.state } : {}),
+    // Never omit state: GA4 shows (not set) when the param is absent/empty.
+    state: trimmedState || "unknown",
+    place_slug,
   };
 }

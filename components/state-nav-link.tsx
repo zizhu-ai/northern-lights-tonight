@@ -6,6 +6,13 @@ import type { ReactNode } from "react";
 import { trackBrowserProductEvent } from "@/lib/search-analytics";
 import type { AnalyticsPageType } from "@/lib/search-event";
 
+function trackStateNav(fromPageType: AnalyticsPageType, toState: string) {
+  void trackBrowserProductEvent("state_nav", {
+    from_page_type: fromPageType,
+    to_state: toState,
+  });
+}
+
 export function StateNavLink({
   href,
   toState,
@@ -23,11 +30,17 @@ export function StateNavLink({
     <Link
       className={className}
       href={href}
-      onClick={() => {
-        void trackBrowserProductEvent("state_nav", {
-          from_page_type: fromPageType,
-          to_state: toState,
-        });
+      // pointerdown fires before Next soft/full navigation commits, so the
+      // beacon-backed state_nav hit is queued even when click handlers race unload.
+      onPointerDown={(event) => {
+        if (event.button !== 0) return;
+        trackStateNav(fromPageType, toState);
+      }}
+      onClick={(event) => {
+        // Keyboard activation / accessibility paths may skip pointerdown.
+        if (event.detail === 0) {
+          trackStateNav(fromPageType, toState);
+        }
       }}
     >
       {children}

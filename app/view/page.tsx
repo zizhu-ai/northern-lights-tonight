@@ -14,7 +14,7 @@ import {
   type ForecastDossier,
 } from "@/lib/forecast-places";
 import { haversineMiles } from "@/lib/place-search";
-import { analyticsStateSlug } from "@/lib/search-event";
+import { analyticsStateParam, analyticsStateSlug } from "@/lib/search-event";
 import {
   formatUpdatedAt,
   formatWindow,
@@ -123,7 +123,12 @@ export default async function ViewPage({ searchParams }: ViewPageProps) {
 
       <div className={styles.inner}>
         <div className={styles.verdictSlot}>
-          <ForecastViewTracker pageType="view" verdict={status} />
+          <ForecastViewTracker
+            pageType="view"
+            state={unavailable ? "unknown" : analyticsStateParam(nearby[0] ?? null)}
+            placeSlug="view"
+            verdict={status}
+          />
           <VerdictCard
             status={status}
             bestWindow={bestWindow}
