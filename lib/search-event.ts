@@ -63,6 +63,8 @@ export type ProductEventProps = {
   page_type?: AnalyticsPageType;
   from_page_type?: AnalyticsPageType;
   state?: string;
+  /** Forecast / view location slug. Named place_slug because `place` / `name` are blocked. */
+  place_slug?: string;
   to_state?: string;
   verdict?: VerdictAnalyticsStatus;
   faq_id?: string;
@@ -132,4 +134,26 @@ export function analyticsStateSlug(dossier: {
   if (dossier.location_type === "state") return dossier.slug;
   if (dossier.parent_slug) return dossier.parent_slug;
   return undefined;
+}
+
+/** Always returns a non-empty state dimension for GA4 (never omit / empty). */
+export function analyticsStateParam(
+  dossier: {
+    slug: string;
+    location_type: "state" | "city";
+    parent_slug?: string | null;
+  } | null | undefined,
+  fallback = "unknown",
+): string {
+  if (!dossier) return fallback;
+  return analyticsStateSlug(dossier) ?? fallback;
+}
+
+/** Normalize optional analytics state strings to a non-empty GA4 param. */
+export function resolveAnalyticsState(
+  state: string | null | undefined,
+  fallback = "unknown",
+): string {
+  const trimmed = state?.trim();
+  return trimmed ? trimmed : fallback;
 }

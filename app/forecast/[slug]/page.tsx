@@ -44,7 +44,11 @@ import {
   WhatTimeTonight,
 } from "@/components/forecast-seo-blocks";
 import { cityFaqHeading, localFaqsForPage } from "@/lib/city-faq";
-import { analyticsStateSlug, faqAnalyticsId } from "@/lib/search-event";
+import {
+  analyticsStateParam,
+  analyticsStateSlug,
+  faqAnalyticsId,
+} from "@/lib/search-event";
 import {
   forecastLead,
   h1For,
@@ -178,7 +182,8 @@ export default async function ForecastPage({ params }: PageProps) {
         >
           <ForecastViewTracker
             pageType="forecast"
-            state={analyticsStateSlug(dossier) ?? dossier.slug}
+            state={analyticsStateParam(dossier)}
+            placeSlug={dossier.slug}
             verdict={state.presented.status}
           />
           <VerdictCard

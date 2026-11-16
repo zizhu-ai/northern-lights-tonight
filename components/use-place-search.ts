@@ -71,8 +71,24 @@ export function usePlaceSearch(source: SearchAnalyticsSource) {
     setMatches([]);
     setSuggestions([]);
     setError(null);
+    const kind = queryKind(query);
+    const destination = place.slug ? "forecast" : "view";
+    // Suggestion / ambiguous-pick path previously skipped search_* and only
+    // fired result_shown, which left search_match near zero in GA4.
+    void trackBrowserProductEvent("search_submit", {
+      source,
+      query_kind: kind,
+      method: "suggestion",
+    });
+    void trackBrowserProductEvent("search_match", {
+      source,
+      result: "success",
+      query_kind: kind,
+      method: "suggestion",
+      destination,
+    });
     setChecking(checkingAfterLookup("navigate"));
-    goTo(routeForPlace(place), place.slug ? "forecast" : "view");
+    goTo(routeForPlace(place), destination);
   }
 
   function updateQuery(nextQuery: string) {

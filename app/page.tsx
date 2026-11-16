@@ -75,7 +75,12 @@ export default async function HomePage() {
 
       <div className={styles.inner}>
         <div className={`${styles.verdictSlot} ${styles.verdictSlotWide}`}>
-          <ForecastViewTracker pageType="home" verdict={overview.presented.status} />
+          <ForecastViewTracker
+            pageType="home"
+            state="us"
+            placeSlug="home"
+            verdict={overview.presented.status}
+          />
           <VerdictCard
             presented={overview.presented}
             changePlace

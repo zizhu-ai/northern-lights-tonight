@@ -16,11 +16,13 @@ import {
 
 export type { ProductEventName, ProductEventProps, SearchQueryKind };
 export {
+  analyticsStateParam,
   analyticsStateSlug,
   faqAnalyticsId,
   isAllowedProductEventName,
   pageTypeFromPath,
   PRODUCT_EVENT_NAMES,
+  resolveAnalyticsState,
   sanitizeProductEventProps,
 } from "@/lib/search-event";
 
@@ -62,6 +64,8 @@ export async function trackBrowserProductEvent(
       data = { ...data, page_location };
       syncGtagPageLocation(measurementId, page_location);
     }
-    queueGtag("event", event, data);
+    // Beacon transport so click-then-navigate events (state_nav, search_*)
+    // survive full document loads and fast App Router transitions.
+    queueGtag("event", event, { ...data, transport_type: "beacon" });
   });
 }
